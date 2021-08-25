@@ -8,3 +8,4 @@
 .cxx
 local.properties
 /.idea/
+/buildSrc/build/
