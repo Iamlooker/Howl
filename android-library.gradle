@@ -1,0 +1,68 @@
+ext {
+    composeVersion = "1.0.1"
+    hiltVersion = "2.38.1"
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdk = Android.compileSdk
+
+    defaultConfig {
+        minSdk Android.minSdk
+        targetSdk Android.targetSdk
+        versionCode Android.versionCode
+        versionName Android.versionName
+
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildTypes {
+        all {
+            minifyEnabled = true
+            proguardFiles(
+                    getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+        freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+    }
+    buildFeatures {
+        compose true
+        buildConfig false
+        aidl false
+        renderScript false
+        resValues false
+        shaders false
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion Compose.composeVersion
+    }
+    packagingOptions {
+        resources {
+            excludes += Other.excludes
+        }
+    }
+}
+
+dependencies {
+    implementation AndroidX.core
+    implementation AndroidX.lifecycleViewModel
+    implementation AndroidX.lifecycleViewModelCompose
+
+    implementation Compose.activity
+    implementation Compose.icons
+    implementation Compose.material
+    implementation Compose.ui
+}

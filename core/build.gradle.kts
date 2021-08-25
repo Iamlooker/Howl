@@ -1,0 +1,1 @@
+apply ("$rootDir/library.gradle.kts")

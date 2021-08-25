@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="Theme.HowlMusic" parent="android:Theme.Material.Light">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.HowlMusic.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
