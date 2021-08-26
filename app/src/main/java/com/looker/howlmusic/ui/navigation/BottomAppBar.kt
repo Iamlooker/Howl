@@ -4,6 +4,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,6 +22,7 @@ fun BottomAppBar(navController: NavController, items: Array<HomeSections>) {
         BottomNavigation(
             backgroundColor = MaterialTheme.colors.background,
             contentColor = MaterialTheme.colors.primary,
+            elevation = 0.dp
         ) {
             val currentDestination = navBackStackEntry?.destination
             items.forEach { screen ->

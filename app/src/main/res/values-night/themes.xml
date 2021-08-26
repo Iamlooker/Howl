@@ -1,6 +1,6 @@
 <resources>
 
     <style name="Theme.HowlMusic" parent="android:Theme.Material">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

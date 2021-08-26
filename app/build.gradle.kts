@@ -53,7 +53,7 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += Other.excludes
+            excludes += Libs.Excludes.exclude
         }
     }
 }
@@ -68,6 +68,7 @@ dependencies {
 
     implementation(Libs.Core.core)
 
+    implementation(Libs.Accompanist.insets)
     implementation(Libs.Compose.activity)
     implementation(Libs.Compose.icons)
     implementation(Libs.Compose.material)

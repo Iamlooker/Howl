@@ -1,5 +1,10 @@
 object Libs {
 
+    object Accompanist {
+        private const val accompanistVersion = "0.17.0"
+        const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
+    }
+
     object Classpath {
         private const val gradleVersion = "7.0.1"
         const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
@@ -42,6 +47,10 @@ object Libs {
     object Palette {
         private const val paletteVersion = "1.0.0"
         const val palette = "androidx.palette:palette-ktx:$paletteVersion"
+    }
+
+    object Excludes {
+        const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
     }
 }
 

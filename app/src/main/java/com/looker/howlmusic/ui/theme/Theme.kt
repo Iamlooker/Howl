@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui.theme
 
+import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -8,8 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = OrangeDark,
-    secondary = SkyDark,
+    primary = primaryColor,
+    primaryVariant = primaryDarkColor,
+    onPrimary = primaryTextColor,
+    secondary = secondaryColor,
+    secondaryVariant = secondaryDarkColor,
+    onSecondary = secondaryTextColor,
     background = BlackGrey,
     surface = GreyOnBlack,
     onSurface = Color.White,
@@ -17,8 +22,12 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Orange,
-    secondary = Sky,
+    primary = primaryColor,
+    primaryVariant = primaryLightColor,
+    onPrimary = primaryTextColor,
+    secondary = secondaryColor,
+    secondaryVariant = secondaryLightColor,
+    onSecondary = secondaryTextColor,
     background = Color.White,
     surface = WhiteOnWhite,
     onSurface = BlackGrey,
