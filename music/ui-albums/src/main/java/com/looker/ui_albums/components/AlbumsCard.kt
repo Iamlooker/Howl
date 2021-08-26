@@ -33,11 +33,12 @@ object AlbumsExtensions {
 @Composable
 fun AlbumsCard(
     modifier: Modifier = Modifier,
-    album: Album
+    album: Album,
+    onClick: () -> Unit = {}
 ) {
     val cardWidth = LocalContext.current.itemSize(false, 2, 20.dp)
     AlbumsCard(
-        modifier.padding(10.dp), album, cardWidth
+        modifier.padding(10.dp), album, cardWidth, onClick
     )
 }
 
@@ -45,7 +46,8 @@ fun AlbumsCard(
 private fun AlbumsCard(
     modifier: Modifier = Modifier,
     album: Album,
-    cardWidth: Dp
+    cardWidth: Dp,
+    onClick: () -> Unit
 ) {
     val backgroundColor = rememberDominantColorState()
 
@@ -68,7 +70,8 @@ private fun AlbumsCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
         backgroundColor = animatedColor,
-        elevation = 0.dp
+        elevation = 0.dp,
+        onClick = onClick
     ) {
         AlbumsItem(
             album = album,
