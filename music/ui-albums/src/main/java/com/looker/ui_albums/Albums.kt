@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -43,10 +44,13 @@ fun Albums(viewModel: AlbumsViewModel = viewModel()) {
                 )
             }
         ) {
-            AlbumsList(albumsList = viewModel.getAlbumsList(), onAlbumClick = {
-                album = it
-                scope.launch { state.show() }
-            })
+            AlbumsList(
+                albumsList = viewModel.getAlbumsList(),
+                onAlbumClick = {
+                    album = it
+                    scope.launch { state.show() }
+                }
+            )
         }
     }
 }
@@ -76,15 +80,16 @@ fun AlbumsList(
 @ExperimentalMaterialApi
 @Composable
 fun BottomSheets(
+    modifier: Modifier = Modifier,
     state: ModalBottomSheetState,
     onSheetContent: @Composable ColumnScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
-
     ModalBottomSheetLayout(
+        modifier = modifier,
         sheetState = state,
         sheetContent = onSheetContent,
         content = content,
-        sheetBackgroundColor = MaterialTheme.colors.background
+        sheetShape = RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
     )
 }
