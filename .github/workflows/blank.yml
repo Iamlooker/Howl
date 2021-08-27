@@ -1,0 +1,40 @@
+name: Build Debug APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ alpha ]
+
+
+jobs:
+  apk:
+    name: Starting Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Restore Gradle cache
+        uses: actions/cache@v2.1.4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-grad
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build APK
+        run: bash ./gradlew assembleDebug --stacktrace
+
+      - name: Send APK
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: Sending HowlMusic Debug APK
+          document: app/build/outputs/apk/debug/app-debug.apk
