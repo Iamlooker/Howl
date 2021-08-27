@@ -89,7 +89,7 @@ fun AlbumsList(
     onAlbumClick: (Album) -> Unit
 ) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(2),
+        cells = GridCells.Adaptive(200.dp),
         contentPadding = rememberInsetsPaddingValues(
             insets = LocalWindowInsets.current.systemBars,
             applyTop = true
