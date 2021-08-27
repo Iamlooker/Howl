@@ -1,11 +1,14 @@
 package com.looker.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -24,10 +27,16 @@ fun MaterialCard(
     onClick: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
+
+    val animateColor by animateColorAsState(
+        targetValue = backgroundColor,
+        animationSpec = TweenSpec(500)
+    )
+
     Card(
         modifier = modifier,
         shape = shape,
-        backgroundColor = backgroundColor,
+        backgroundColor = animateColor,
         contentColor = contentColor,
         interactionSource = MutableInteractionSource(),
         indication = rememberRipple(color = rippleColor),

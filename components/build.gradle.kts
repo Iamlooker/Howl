@@ -1,4 +1,4 @@
-apply ("$rootDir/android-library.gradle")
+apply("$rootDir/android-library.gradle")
 
 val implementation by configurations
 

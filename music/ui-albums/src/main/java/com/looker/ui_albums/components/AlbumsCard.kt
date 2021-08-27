@@ -1,13 +1,10 @@
 package com.looker.ui_albums.components
 
 import android.net.Uri
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,26 +48,17 @@ private fun AlbumsCard(
 ) {
     val backgroundColor = rememberDominantColorState()
 
-    val albumArtUri = album.albumId.artworkUri
-
-    LaunchedEffect(albumArtUri) {
+    LaunchedEffect(album) {
         launch {
             backgroundColor.updateColorsFromImageUrl(album.albumId.artworkUri.toString())
         }
     }
 
-    val animatedColor by animateColorAsState(
-        targetValue = backgroundColor.color.copy(0.3f),
-        animationSpec = TweenSpec(
-            durationMillis = 500
-        )
-    )
-
     MaterialCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
-        backgroundColor = animatedColor,
         elevation = 0.dp,
+        backgroundColor = backgroundColor.color.copy(0.4f),
         onClick = onClick
     ) {
         AlbumsItem(
@@ -98,7 +86,8 @@ fun AlbumsItem(
         )
         AlbumsItemText(
             modifier = Modifier.padding(horizontal = 8.dp),
-            album = album
+            albumName = album.albumName,
+            artistName = album.artistName
         )
         Spacer(modifier = Modifier.height(8.dp))
     }
@@ -107,18 +96,19 @@ fun AlbumsItem(
 @Composable
 fun AlbumsItemText(
     modifier: Modifier = Modifier,
-    album: Album,
+    albumName: String,
+    artistName: String,
     textColor: Color = MaterialTheme.colors.onBackground
 ) {
     WrappedText(
         modifier = modifier,
-        text = album.albumName,
+        text = albumName,
         textAlign = TextAlign.Center,
         textColor = textColor
     )
     WrappedText(
         modifier = modifier,
-        text = album.artistName,
+        text = artistName,
         style = MaterialTheme.typography.body2,
         textAlign = TextAlign.Center,
         textColor = textColor
