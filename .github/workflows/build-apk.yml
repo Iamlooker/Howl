@@ -36,6 +36,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: New HowlMusic Build
           document: app/build/outputs/apk/debug/app-debug.apk
           
       - name: Sleep for 10s
