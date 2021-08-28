@@ -1,4 +1,4 @@
-package com.looker.data_songs.data
+package com.looker.data_songs
 
 import android.net.Uri
 import androidx.core.net.toUri

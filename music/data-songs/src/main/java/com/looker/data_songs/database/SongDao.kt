@@ -1,9 +1,10 @@
-package com.looker.data_songs.data
+package com.looker.data_songs.database
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.looker.data_songs.data.Song
 
 @Dao
 interface SongDao {

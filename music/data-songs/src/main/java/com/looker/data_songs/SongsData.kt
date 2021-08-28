@@ -1,15 +1,36 @@
 package com.looker.data_songs
 
 import android.content.Context
-import com.looker.data_songs.ContentType.externalUri
-import com.looker.data_songs.ContentType.isMusic
-import com.looker.data_songs.ContentType.path
-import com.looker.data_songs.ContentType.songsProjections
-import com.looker.data_songs.ContentType.sortOrderSong
+import android.net.Uri
+import android.provider.MediaStore
+import com.looker.data_songs.SongsConstants.externalUri
+import com.looker.data_songs.SongsConstants.isMusic
+import com.looker.data_songs.SongsConstants.path
+import com.looker.data_songs.SongsConstants.songsProjections
+import com.looker.data_songs.SongsConstants.sortOrderSong
 import com.looker.data_songs.data.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
+
+private object SongsConstants {
+    val songsProjections = arrayOf(
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.Media.ALBUM_ID,
+        MediaStore.Audio.Media.TITLE,
+        MediaStore.Audio.Media.ARTIST,
+        MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.DURATION
+    )
+
+    val externalUri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+
+    const val isMusic = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+    const val sortOrderSong = MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC"
+
+    val Long.path: Uri
+        get() = Uri.parse("$externalUri/$this")
+}
 
 class SongsData(context: Context) {
 

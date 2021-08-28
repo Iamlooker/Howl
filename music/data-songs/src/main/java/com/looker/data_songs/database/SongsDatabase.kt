@@ -1,10 +1,12 @@
-package com.looker.data_songs.data
+package com.looker.data_songs.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.looker.data_songs.Converters
+import com.looker.data_songs.data.Song
 
 
 @Database(
