@@ -1,23 +1,18 @@
 package com.looker.ui_songs
 
-import android.app.Application
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.data_songs.SongsData
 import com.looker.data_songs.data.Song
+import com.looker.data_songs.data.SongsRepository
 import kotlinx.coroutines.launch
 
-class SongsViewModel(application: Application) : AndroidViewModel(application) {
+class SongsViewModel(private val repository: SongsRepository) : ViewModel() {
 
-    private val app = application
-
-    fun getSongsList(): List<Song> {
-        var list by mutableStateOf<List<Song>>(listOf())
+    suspend fun getSongsList(context: Context): List<Song> {
+        var list = listOf<Song>()
         viewModelScope.launch {
-            list = SongsData(app).getSongsList()
+            list = repository.getAllSongs(context)
         }
         return list
     }

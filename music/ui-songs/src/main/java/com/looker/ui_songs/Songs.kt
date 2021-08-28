@@ -8,19 +8,41 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.data_songs.data.Song
+import com.looker.data_songs.data.SongsRepository
 import com.looker.ui_songs.components.SongsCard
+import kotlinx.coroutines.launch
 
 @Composable
-fun Songs(viewModel: SongsViewModel = viewModel()) {
+fun Songs(
+    viewModel: SongsViewModel = viewModel(
+        factory = SongsViewModelFactory(SongsRepository())
+    )
+) {
+    val context = LocalContext.current
+
+    val songsList = remember {
+        mutableStateOf<List<Song>>(listOf())
+    }
+
+    LaunchedEffect(songsList) {
+        launch {
+            songsList.value = viewModel.getSongsList(context)
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
-    ) { SongsList(songsList = viewModel.getSongsList()) }
+    ) { SongsList(songsList = songsList.value) }
 }
 
 @Composable

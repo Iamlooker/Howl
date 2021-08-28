@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
                     BoxWithConstraints(Modifier.padding(contentPadding)) {
                         NavHost(
                             navController = navController,
-                            startDestination = HomeSections.ALBUMS.route,
+                            startDestination = HomeSections.SONGS.route,
                             builder = {
                                 addHomeGraph()
                             }
