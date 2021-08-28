@@ -1,5 +1,7 @@
 package com.looker.ui_albums
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -50,13 +52,21 @@ private fun Albums(
             albumsList = albumsList,
             onAlbumClick = {
                 viewModel.albumIndex = albumsList.indexOf(it)
-                scope.launch { state.show() }
+                scope.launch {
+                    state.animateTo(
+                        ModalBottomSheetValue.HalfExpanded,
+                        spring(
+                            dampingRatio = Spring.DampingRatioLowBouncy,
+                            stiffness = Spring.StiffnessLow
+                        )
+                    )
+                }
             }
         )
 
         val sheetColor = rememberDominantColorState()
 
-        LaunchedEffect(viewModel.albumIndex) {
+        LaunchedEffect(currentAlbum) {
             launch {
                 sheetColor.updateColorsFromImageUrl(currentAlbum.albumId.artworkUri.toString())
             }
@@ -75,6 +85,7 @@ private fun Albums(
                         imageSize = 250.dp
                     )
                     SongsList(songsList = viewModel.getSongsPerAlbum(currentAlbum.albumId))
+                    Spacer(Modifier.height(50.dp))
                 }
             }
         )
@@ -112,6 +123,7 @@ fun BottomSheets(
 ) {
     ModalBottomSheetLayout(
         modifier = modifier,
+        sheetElevation = 0.dp,
         sheetState = state,
         sheetContent = sheetContent,
         content = content,
