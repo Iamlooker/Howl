@@ -81,7 +81,6 @@ private fun Albums(
     }
 }
 
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumsList(

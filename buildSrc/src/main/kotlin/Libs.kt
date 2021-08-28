@@ -44,13 +44,19 @@ object Libs {
             "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     }
 
+    object Excludes {
+        const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
+    }
+
     object Palette {
         private const val paletteVersion = "1.0.0"
         const val palette = "androidx.palette:palette-ktx:$paletteVersion"
     }
 
-    object Excludes {
-        const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
+    object Room {
+        private const val roomVersion = "2.3.0"
+        const val room = "androidx.room:room-runtime:$roomVersion"
+        const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
     }
 }
 
