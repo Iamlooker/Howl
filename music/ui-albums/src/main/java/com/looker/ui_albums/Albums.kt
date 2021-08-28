@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
@@ -20,6 +21,8 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.components.backgroundGradient
 import com.looker.components.rememberDominantColorState
 import com.looker.data_albums.data.Album
+import com.looker.data_albums.data.AlbumsRepository
+import com.looker.data_songs.data.SongsRepository
 import com.looker.ui_albums.components.AlbumsCard
 import com.looker.ui_albums.components.AlbumsExtensions.artworkUri
 import com.looker.ui_albums.components.AlbumsItem
@@ -35,7 +38,9 @@ fun Albums() {
 @Composable
 private fun Albums(
     modifier: Modifier = Modifier,
-    viewModel: AlbumsViewModel = viewModel()
+    viewModel: AlbumsViewModel = viewModel(
+        factory = AlbumsViewModelFactory(AlbumsRepository(), SongsRepository())
+    )
 ) {
     Surface(
         modifier = modifier,
@@ -45,13 +50,13 @@ private fun Albums(
         val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        val albumsList = viewModel.getAlbumsList()
+        val albumsList = viewModel.getAlbumsList(LocalContext.current)
         val currentAlbum = viewModel.currentAlbum.value
 
         AlbumsList(
             albumsList = albumsList,
             onAlbumClick = {
-                viewModel.albumIndex = albumsList.indexOf(it)
+                viewModel.currentAlbum.value = it
                 scope.launch {
                     state.animateTo(
                         ModalBottomSheetValue.HalfExpanded,
@@ -84,7 +89,12 @@ private fun Albums(
                         album = currentAlbum,
                         imageSize = 250.dp
                     )
-                    SongsList(songsList = viewModel.getSongsPerAlbum(currentAlbum.albumId))
+                    SongsList(
+                        songsList = viewModel.getSongsPerAlbum(
+                            LocalContext.current,
+                            currentAlbum.albumId
+                        )
+                    )
                     Spacer(Modifier.height(50.dp))
                 }
             }

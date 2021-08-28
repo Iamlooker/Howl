@@ -8,7 +8,8 @@ object Libs {
     object Classpath {
         private const val gradleVersion = "7.0.1"
         const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
-        const val gradleKotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
+        const val gradleKotlin =
+            "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
     }
 
     object Core {
@@ -51,12 +52,6 @@ object Libs {
     object Palette {
         private const val paletteVersion = "1.0.0"
         const val palette = "androidx.palette:palette-ktx:$paletteVersion"
-    }
-
-    object Room {
-        private const val roomVersion = "2.3.0"
-        const val room = "androidx.room:room-runtime:$roomVersion"
-        const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
     }
 }
 

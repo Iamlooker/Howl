@@ -22,7 +22,13 @@ import com.looker.ui_songs.components.SongsCard
 import kotlinx.coroutines.launch
 
 @Composable
+fun Songs() {
+    Songs(modifier = Modifier.fillMaxSize())
+}
+
+@Composable
 fun Songs(
+    modifier: Modifier = Modifier,
     viewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(SongsRepository())
     )
@@ -40,7 +46,7 @@ fun Songs(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         color = MaterialTheme.colors.background
     ) { SongsList(songsList = songsList.value) }
 }

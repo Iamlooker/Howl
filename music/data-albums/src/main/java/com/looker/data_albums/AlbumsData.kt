@@ -1,16 +1,31 @@
 package com.looker.data_albums
 
 import android.content.Context
-import com.looker.data_albums.ContentType.albumsProjections
-import com.looker.data_albums.ContentType.externalUri
-import com.looker.data_albums.ContentType.isMusic
-import com.looker.data_albums.ContentType.sortOrderAlbum
+import android.net.Uri
+import android.provider.MediaStore
+import com.looker.data_albums.AlbumsConstants.albumsProjections
+import com.looker.data_albums.AlbumsConstants.externalUri
+import com.looker.data_albums.AlbumsConstants.isMusic
+import com.looker.data_albums.AlbumsConstants.sortOrderAlbum
 import com.looker.data_albums.data.Album
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
-class AlbumsData(private val context: Context) {
+private object AlbumsConstants {
+    val albumsProjections = arrayOf(
+        MediaStore.Audio.Media.ALBUM_ID,
+        MediaStore.Audio.Media.ALBUM,
+        MediaStore.Audio.Media.ARTIST,
+    )
+
+    val externalUri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+
+    const val isMusic = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+    const val sortOrderAlbum = MediaStore.Audio.Media.ALBUM + " COLLATE NOCASE ASC"
+}
+
+class AlbumsData(context: Context) {
 
     suspend fun getAlbumsList() = createAlbumsList()
 

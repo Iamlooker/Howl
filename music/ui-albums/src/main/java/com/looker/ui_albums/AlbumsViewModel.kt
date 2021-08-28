@@ -1,38 +1,36 @@
 package com.looker.ui_albums
 
-import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.data_albums.AlbumsData
 import com.looker.data_albums.data.Album
-import com.looker.data_songs.SongsData
+import com.looker.data_albums.data.AlbumsRepository
 import com.looker.data_songs.data.Song
+import com.looker.data_songs.data.SongsRepository
 import kotlinx.coroutines.launch
 
-class AlbumsViewModel(application: Application) : AndroidViewModel(application) {
+class AlbumsViewModel(
+    private val albumsRepository: AlbumsRepository,
+    private val songsRepository: SongsRepository
+) : ViewModel() {
 
-    private val app = application
+    val currentAlbum = mutableStateOf(Album(0))
 
-    var albumIndex by mutableStateOf(0)
-
-    val currentAlbum
-        get() = mutableStateOf(getAlbumsList()[albumIndex])
-
-    fun getAlbumsList(): List<Album> {
+    fun getAlbumsList(context: Context): List<Album> {
         var list by mutableStateOf<List<Album>>(listOf())
         viewModelScope.launch {
-            list = AlbumsData(app).getAlbumsList()
+            list = albumsRepository.getAllAlbums(context)
         }
         return list.distinct()
     }
 
-    fun getSongsPerAlbum(albumId: Long): List<Song> {
+    fun getSongsPerAlbum(context: Context, albumId: Long): List<Song> {
         var list by mutableStateOf<List<Song>>(listOf())
         viewModelScope.launch {
-            list = SongsData(app).getSongsList().filter {
+            list = songsRepository.getAllSongs(context).filter {
                 it.albumId == albumId
             }
         }
