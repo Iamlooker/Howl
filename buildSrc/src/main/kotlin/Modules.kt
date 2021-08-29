@@ -4,6 +4,7 @@ object Modules {
     const val core = ":core"
     const val components = ":components"
     const val constants = ":constants"
+    const val onBoarding = ":on-boarding"
     const val music = ":music"
     const val uiSongs = ":music:ui-songs"
     const val uiAlbums = ":music:ui-albums"
