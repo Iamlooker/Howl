@@ -1,7 +1,9 @@
 package com.looker.ui_albums
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -13,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,14 +51,15 @@ private fun Albums(
         color = MaterialTheme.colors.background
     ) {
 
+        val context = LocalContext.current
+
         val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        val albumsList = viewModel.getAlbumsList(LocalContext.current)
         val currentAlbum = viewModel.currentAlbum.value
 
         AlbumsList(
-            albumsList = albumsList,
+            albumsList = viewModel.getAlbumsList(context),
             onAlbumClick = {
                 viewModel.currentAlbum.value = it
                 scope.launch {
@@ -83,7 +88,7 @@ private fun Albums(
                 Column(
                     modifier = Modifier.backgroundGradient(sheetColor.color.copy(0.4f))
                 ) {
-                    Spacer(Modifier.height(50.dp))
+                    ShowHint(viewModel.getIcon(state))
                     AlbumsItem(
                         modifier = Modifier.fillMaxWidth(),
                         album = currentAlbum,
@@ -91,7 +96,7 @@ private fun Albums(
                     )
                     SongsList(
                         songsList = viewModel.getSongsPerAlbum(
-                            LocalContext.current,
+                            context,
                             currentAlbum.albumId
                         )
                     )
@@ -141,4 +146,22 @@ fun BottomSheets(
         scrimColor = MaterialTheme.colors.background.copy(0.1f),
         sheetShape = RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
     )
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun ShowHint(icon: ImageVector) {
+    Crossfade(
+        targetState = icon,
+        animationSpec = tween(500)
+    ) { currentIcon ->
+        Icon(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .alpha(0.6f),
+            imageVector = currentIcon,
+            contentDescription = "Swipe Action"
+        )
+    }
 }
