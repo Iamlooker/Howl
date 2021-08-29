@@ -19,9 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.looker.constants.Constants.fadeInDuration
 import com.looker.onboarding.components.ButtonWithIcon
@@ -35,29 +33,9 @@ fun OnBoardingPage(
     navigate: () -> Unit,
 ) {
 
-    val color = viewModel.buttonColor
+    val buttonColor = viewModel.buttonColor
     val buttonText = viewModel.buttonText
     val buttonIcon = viewModel.buttonIcon
-
-    val bannerText = AnnotatedString(
-        "Whoops",
-        SpanStyle(
-            MaterialTheme.colors.onBackground,
-            fontSize = 24.sp
-        )
-    ) + AnnotatedString(
-        " Nothing ",
-        SpanStyle(
-            color = color,
-            fontSize = 24.sp
-        )
-    ) + AnnotatedString(
-        "Here",
-        SpanStyle(
-            MaterialTheme.colors.onBackground,
-            fontSize = 24.sp
-        )
-    )
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -74,10 +52,10 @@ fun OnBoardingPage(
     val scope = rememberCoroutineScope()
 
     OnBoardImage(
-        bannerText = bannerText,
+        bannerText = viewModel.bannerText(MaterialTheme.colors.onBackground),
         buttonText = buttonText,
         buttonIcon = buttonIcon,
-        buttonColor = color
+        buttonColor = buttonColor
     ) {
         handlePermissions(
             context,

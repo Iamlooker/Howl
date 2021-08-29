@@ -8,6 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 
 class OnBoardingViewModel : ViewModel() {
@@ -31,5 +35,33 @@ class OnBoardingViewModel : ViewModel() {
         buttonText = "Denied"
         buttonIcon = Icons.Default.Cancel
         buttonColor = orange
+    }
+
+    fun bannerText(onBackground: Color) = buildAnnotatedString {
+
+        withStyle(
+            style = SpanStyle(
+                color = onBackground,
+                fontSize = 24.sp
+            )
+        ) {
+            append("Whoops")
+        }
+        withStyle(
+            style = SpanStyle(
+                color = buttonColor,
+                fontSize = 24.sp
+            )
+        ) {
+            append(" Nothing ")
+        }
+        withStyle(
+            style = SpanStyle(
+                color = onBackground,
+                fontSize = 24.sp
+            )
+        ) {
+            append("Here")
+        }
     }
 }
