@@ -10,7 +10,6 @@ rootProject.name = "HowlMusic"
 include(":app")
 include(":constants")
 include(":components")
-include(":core")
 
 include(":music")
 include(":music:ui-songs")
