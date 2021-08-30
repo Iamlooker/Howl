@@ -3,44 +3,45 @@ package com.looker.howlmusic.ui.navigation
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
-fun BottomAppBar(navController: NavController, items: Array<HomeSections>) {
-
+fun BottomAppBar(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    items: List<HomeSections>
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    val sections = remember { HomeSections.values() }
-    val routes = remember { sections.map { it.route } }
-
-    if (currentRoute in routes) {
-        BottomNavigation(
-            backgroundColor = MaterialTheme.colors.background,
-            contentColor = MaterialTheme.colors.primary,
-            elevation = 0.dp
-        ) {
-            val currentDestination = navBackStackEntry?.destination
-            items.forEach { screen ->
-                BottomNavigationItem(
-                    icon = { Icon(screen.icon, contentDescription = null) },
-                    label = { Text(screen.title) },
-                    selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                    alwaysShowLabel = false,
-                    selectedContentColor = MaterialTheme.colors.primary,
-                    unselectedContentColor = MaterialTheme.colors.surface,
-                    onClick = {
-                        navController.navigate(screen.route) {
-                            launchSingleTop = true
-                            restoreState = true
+    val currentDestination = navBackStackEntry?.destination
+    BottomNavigation(
+        modifier = modifier,
+        backgroundColor = MaterialTheme.colors.background,
+        contentColor = MaterialTheme.colors.primary,
+        elevation = 0.dp
+    ) {
+        items.forEach { screen ->
+            BottomNavigationItem(
+                icon = { Icon(screen.icon, contentDescription = null) },
+                label = { Text(screen.title) },
+                selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                alwaysShowLabel = false,
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = MaterialTheme.colors.surface,
+                onClick = {
+                    navController.navigate(screen.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
+                        launchSingleTop = true
+                        restoreState = true
                     }
-                )
-            }
+                }
+            )
         }
     }
 }

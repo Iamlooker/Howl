@@ -2,7 +2,8 @@
 
     <style name="Theme.HowlMusic" parent="android:Theme.Material.Light">
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="Theme.HowlMusic.NoActionBar">
