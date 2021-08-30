@@ -6,5 +6,5 @@ dependencies {
     implementation(project(Modules.components))
     implementation(project(Modules.dataSongs))
 
-    implementation(Libs.Accompanist.insets)
+    implementation(Accompanist.insets)
 }

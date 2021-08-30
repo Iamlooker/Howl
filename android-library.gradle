@@ -45,20 +45,21 @@ android {
     }
     packagingOptions {
         resources {
-            excludes += Other.excludes
+            excludes += Excludes.exclude
         }
     }
 }
 
 dependencies {
-    implementation AndroidX.core
-    implementation AndroidX.lifecycleViewModel
-    implementation AndroidX.lifecycleViewModelCompose
+    implementation Core.core
+    implementation Lifecycle.lifecycleViewModel
+    implementation Lifecycle.lifecycleViewModelCompose
 
     implementation Compose.activity
     implementation Compose.icons
     implementation Compose.material
     implementation Compose.ui
+
     debugImplementation Compose.tooling
     debugImplementation Compose.preview
 }

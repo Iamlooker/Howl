@@ -8,5 +8,5 @@ dependencies {
     implementation(project(Modules.dataAlbums))
     implementation(project(Modules.dataSongs))
 
-    implementation(Libs.Accompanist.insets)
+    implementation(Accompanist.insets)
 }

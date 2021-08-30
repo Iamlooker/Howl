@@ -49,11 +49,11 @@ android {
         shaders = false
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Libs.Compose.composeVersion
+        kotlinCompilerExtensionVersion = Compose.composeVersion
     }
     packagingOptions {
         resources {
-            excludes += Libs.Excludes.exclude
+            excludes += Excludes.exclude
         }
     }
 }
@@ -67,15 +67,15 @@ dependencies {
     implementation(project(Modules.dataSongs))
     implementation(project(Modules.dataAlbums))
 
-    implementation(Libs.Core.core)
+    implementation(Core.core)
 
-    implementation(Libs.Accompanist.insets)
-    implementation(Libs.Compose.activity)
-    implementation(Libs.Compose.icons)
-    implementation(Libs.Compose.material)
-    implementation(Libs.Compose.navigation)
-    implementation(Libs.Compose.tooling)
-    implementation(Libs.Compose.ui)
+    implementation(Accompanist.insets)
+    implementation(Compose.activity)
+    implementation(Compose.icons)
+    implementation(Compose.material)
+    implementation(Compose.navigation)
+    implementation(Compose.tooling)
+    implementation(Compose.ui)
 
-    debugImplementation(Libs.Compose.preview)
+    debugImplementation(Compose.preview)
 }
