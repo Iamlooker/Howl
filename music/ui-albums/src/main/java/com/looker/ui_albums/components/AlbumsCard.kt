@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +35,8 @@ fun AlbumsCard(
     album: Album,
     onClick: () -> Unit = {}
 ) {
-    val cardWidth = LocalContext.current.itemSize(false, 2, 20.dp)
+    val context = LocalContext.current
+    val cardWidth = remember { context.itemSize(false, 2, 20.dp) }
     AlbumsCard(
         modifier.padding(10.dp), album, cardWidth, onClick
     )

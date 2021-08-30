@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -29,7 +30,11 @@ object SongsExtensions {
 @Composable
 fun SongsCard(modifier: Modifier = Modifier, song: Song) {
 
-    val itemHeight = LocalContext.current.itemSize(true, 14)
+    val context = LocalContext.current
+
+    val itemHeight = remember {
+        context.itemSize(true, 14)
+    }
 
     Box(modifier = modifier) {
         SongsCard(modifier = modifier, song = song, cardHeight = itemHeight)
