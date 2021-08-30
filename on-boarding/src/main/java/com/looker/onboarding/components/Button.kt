@@ -17,7 +17,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ButtonWithIcon(
+fun AnimatedButton(
     buttonText: String,
     buttonIcon: ImageVector,
     buttonColor: Color,

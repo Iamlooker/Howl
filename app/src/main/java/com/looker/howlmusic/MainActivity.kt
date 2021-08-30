@@ -17,7 +17,6 @@ import com.looker.howlmusic.ui.navigation.addHomeGraph
 import com.looker.onboarding.OnBoardingPage
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

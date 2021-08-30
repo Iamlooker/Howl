@@ -22,7 +22,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.looker.constants.Constants.fadeInDuration
-import com.looker.onboarding.components.ButtonWithIcon
+import com.looker.onboarding.components.AnimatedButton
 import com.looker.onboarding.utils.handlePermissions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -120,7 +120,7 @@ fun OnBoardContent(
                 textAlign = TextAlign.Center
             )
 
-            ButtonWithIcon(
+            AnimatedButton(
                 buttonText = buttonText,
                 buttonIcon = buttonIcon,
                 buttonColor = buttonColor,
