@@ -12,15 +12,15 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.looker.howlmusic.ui.navigation.BottomAppBar
 import com.looker.howlmusic.ui.navigation.HomeNavGraph
-import com.looker.howlmusic.ui.navigation.HomeSections
+import com.looker.howlmusic.ui.navigation.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 
 @Composable
 fun AppTheme() {
     HowlMusicTheme {
         val items = listOf(
-            HomeSections.SONGS,
-            HomeSections.ALBUMS
+            HomeScreens.SONGS,
+            HomeScreens.ALBUMS
         )
         val navController = rememberNavController()
         ProvideWindowInsets {
