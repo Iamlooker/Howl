@@ -1,4 +1,4 @@
-package com.looker.howlmusic.ui.navigation
+package com.looker.howlmusic.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Album
@@ -11,8 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.looker.howlmusic.checkReadPermission
-import com.looker.howlmusic.ui.navigation.MainScreens.HOME
-import com.looker.howlmusic.ui.navigation.MainScreens.ON_BOARDING
+import com.looker.howlmusic.ui.components.MainScreens.HOME
+import com.looker.howlmusic.ui.components.MainScreens.ON_BOARDING
 import com.looker.onboarding.OnBoardingPage
 import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs

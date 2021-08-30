@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
-import com.looker.howlmusic.ui.navigation.BottomAppBar
-import com.looker.howlmusic.ui.navigation.HomeNavGraph
-import com.looker.howlmusic.ui.navigation.HomeScreens
+import com.looker.howlmusic.ui.components.BottomAppBar
+import com.looker.howlmusic.ui.components.HomeNavGraph
+import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 
 @Composable

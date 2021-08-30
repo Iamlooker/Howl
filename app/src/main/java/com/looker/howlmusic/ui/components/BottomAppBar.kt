@@ -1,4 +1,4 @@
-package com.looker.howlmusic.ui.navigation
+package com.looker.howlmusic.ui.components
 
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
