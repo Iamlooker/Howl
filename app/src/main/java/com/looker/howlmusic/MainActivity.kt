@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,8 +23,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var startDestination = HomeSections.SONGS.route
-        if (!checkReadPermission(this)) startDestination = "on-boarding"
+        val startDestination = if (!checkReadPermission(this)) "on-boarding"
+        else HomeSections.SONGS.route
 
         setContent {
             val items = remember { HomeSections.values() }
@@ -32,22 +35,36 @@ class MainActivity : ComponentActivity() {
                         BottomAppBar(navController = navController, items = items)
                     }
                 ) { contentPadding ->
-                    BoxWithConstraints(Modifier.padding(contentPadding)) {
-                        NavHost(
-                            navController = navController,
-                            startDestination = startDestination,
-                            builder = {
-                                composable("on-boarding") {
-                                    OnBoardingPage {
-                                        navController.navigate(HomeSections.SONGS.route)
-                                    }
-                                }
-                                addHomeGraph()
-                            }
-                        )
-                    }
+                    MainLayout(
+                        startDestination = startDestination,
+                        navController = navController,
+                        contentPadding = contentPadding
+                    )
                 }
             }
         }
     }
+}
+
+@Composable
+fun MainLayout(
+    startDestination: String,
+    navController: NavHostController,
+    contentPadding: PaddingValues
+) {
+    BoxWithConstraints(Modifier.padding(contentPadding)) {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+            builder = {
+                composable("on-boarding") {
+                    OnBoardingPage {
+                        navController.navigate(HomeSections.SONGS.route)
+                    }
+                }
+                addHomeGraph()
+            }
+        )
+    }
+
 }

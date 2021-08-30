@@ -2,6 +2,7 @@ package com.looker.ui_albums.components
 
 import android.net.Uri
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,14 +57,15 @@ private fun AlbumsCard(
 
     MaterialCard(
         modifier = modifier,
-        shape = MaterialTheme.shapes.large,
         elevation = 0.dp,
         backgroundColor = backgroundColor.color.copy(0.4f),
         onClick = onClick
     ) {
         AlbumsItem(
             album = album,
-            imageSize = cardWidth
+            imageHeight = cardWidth,
+            imageWidth = cardWidth,
+            imageBackgroundColor = backgroundColor.color.copy(0.4f)
         )
     }
 }
@@ -72,7 +74,10 @@ private fun AlbumsCard(
 fun AlbumsItem(
     modifier: Modifier = Modifier,
     album: Album,
-    imageSize: Dp
+    imageHeight: Dp,
+    imageWidth: Dp,
+    imageBackgroundColor: Color = MaterialTheme.colors.surface,
+    imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
 ) {
     Column(
         modifier = modifier
@@ -81,8 +86,14 @@ fun AlbumsItem(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         HowlImage(
+            modifier = Modifier
+                .size(
+                    width = imageWidth,
+                    height = imageHeight
+                ),
             data = album.albumId.artworkUri,
-            modifier = Modifier.size(imageSize)
+            imageFillerColor = imageBackgroundColor,
+            shape = imageShape,
         )
         AlbumsItemText(
             modifier = Modifier.padding(horizontal = 8.dp),

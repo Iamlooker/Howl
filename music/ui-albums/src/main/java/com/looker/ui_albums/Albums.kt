@@ -92,7 +92,9 @@ private fun Albums(
                     AlbumsItem(
                         modifier = Modifier.fillMaxWidth(),
                         album = currentAlbum,
-                        imageSize = 250.dp
+                        imageHeight = 250.dp,
+                        imageWidth = 250.dp,
+                        imageShape = MaterialTheme.shapes.large
                     )
                     SongsList(
                         songsList = viewModel.getSongsPerAlbum(
@@ -144,7 +146,7 @@ fun BottomSheets(
         content = content,
         sheetBackgroundColor = MaterialTheme.colors.background,
         scrimColor = MaterialTheme.colors.background.copy(0.1f),
-        sheetShape = RoundedCornerShape(topStart = 14.dp, topEnd = 14.dp)
+        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
     )
 }
 

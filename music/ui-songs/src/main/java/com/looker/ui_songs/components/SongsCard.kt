@@ -1,6 +1,5 @@
 package com.looker.ui_songs.components
 
-import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -22,9 +21,6 @@ import com.looker.ui_songs.components.SongsExtensions.artworkUri
 import kotlinx.coroutines.launch
 
 object SongsExtensions {
-
-    val Context.cardHeight
-        get() = this.resources.displayMetrics.heightPixels.dp / (14 * this.resources.displayMetrics.density)
 
     val Long.artworkUri: Uri?
         get() = Uri.parse("content://media/external/audio/albumart/$this")
@@ -70,7 +66,6 @@ fun SongItem(song: Song, imageSize: Dp) {
     HowlImage(
         data = song.albumId.artworkUri,
         modifier = Modifier.size(imageSize),
-        size = 100,
         shape = MaterialTheme.shapes.medium
     )
     Spacer(modifier = Modifier.width(10.dp))
