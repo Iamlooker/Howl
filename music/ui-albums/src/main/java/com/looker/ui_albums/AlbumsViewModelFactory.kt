@@ -2,11 +2,10 @@ package com.looker.ui_albums
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.looker.data_albums.data.AlbumsRepository
-import com.looker.data_songs.data.SongsRepository
+import com.looker.data_music.data.SongsRepository
 
 class AlbumsViewModelFactory(
-    private val albumsRepository: AlbumsRepository,
+    private val albumsRepository: com.looker.data_music.data.AlbumsRepository,
     private val songsRepository: SongsRepository
 ) :
     ViewModelProvider.Factory {

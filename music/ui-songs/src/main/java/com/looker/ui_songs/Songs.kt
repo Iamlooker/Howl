@@ -16,8 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.looker.data_songs.data.Song
-import com.looker.data_songs.data.SongsRepository
+import com.looker.data_music.data.Song
+import com.looker.data_music.data.SongsRepository
 import com.looker.ui_songs.components.SongsCard
 import kotlinx.coroutines.launch
 
@@ -27,7 +27,7 @@ fun Songs() {
 }
 
 @Composable
-fun Songs(
+private fun Songs(
     modifier: Modifier = Modifier,
     viewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(SongsRepository())

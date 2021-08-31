@@ -25,7 +25,7 @@ fun HowlImage(
         modifier = modifier
             .clip(shape)
             .background(imageFillerColor),
-        contentScale = ContentScale.FillHeight,
+        contentScale = ContentScale.FillWidth,
         painter = rememberImagePainter(
             data = data,
             builder = {

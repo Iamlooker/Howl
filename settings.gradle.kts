@@ -13,7 +13,6 @@ include(":components")
 
 include(":music")
 include(":music:ui-songs")
-include(":music:data-songs")
-include(":music:data-albums")
+include(":music:data-music")
 include(":music:ui-albums")
 include(":on-boarding")

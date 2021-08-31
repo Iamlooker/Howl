@@ -17,21 +17,22 @@ android {
 
     buildTypes {
         all {
-            minifyEnabled = true
             proguardFiles(
-                    getDefaultProguardFile("proguard-android.txt"),
-                    "proguard-rules.pro"
+                    getDefaultProguardFile("proguard-android.txt")
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
         freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
     }
+
     buildFeatures {
         compose = true
         buildConfig = false
@@ -40,9 +41,11 @@ android {
         resValues = false
         shaders = false
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = Compose.composeVersion
     }
+
     packagingOptions {
         resources {
             excludes += Excludes.exclude

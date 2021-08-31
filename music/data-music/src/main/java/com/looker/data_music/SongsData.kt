@@ -1,14 +1,14 @@
-package com.looker.data_songs
+package com.looker.data_music
 
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.looker.data_songs.SongsConstants.externalUri
-import com.looker.data_songs.SongsConstants.isMusic
-import com.looker.data_songs.SongsConstants.path
-import com.looker.data_songs.SongsConstants.songsProjections
-import com.looker.data_songs.SongsConstants.sortOrderSong
-import com.looker.data_songs.data.Song
+import com.looker.data_music.SongsConstants.externalUri
+import com.looker.data_music.SongsConstants.isMusic
+import com.looker.data_music.SongsConstants.path
+import com.looker.data_music.SongsConstants.songsProjections
+import com.looker.data_music.SongsConstants.sortOrderSong
+import com.looker.data_music.data.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow

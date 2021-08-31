@@ -1,4 +1,4 @@
-package com.looker.data_albums.data
+package com.looker.data_music.data
 
 data class Album(
     val albumId: Long,

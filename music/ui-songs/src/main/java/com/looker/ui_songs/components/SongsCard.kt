@@ -16,15 +16,11 @@ import com.looker.components.HowlImage
 import com.looker.components.MaterialCard
 import com.looker.components.WrappedText
 import com.looker.components.rememberDominantColorState
-import com.looker.data_songs.data.Song
-import com.looker.ui_songs.components.SongsExtensions.artworkUri
+import com.looker.data_music.data.Song
 import kotlinx.coroutines.launch
 
-object SongsExtensions {
-
-    val Long.artworkUri: Uri?
-        get() = Uri.parse("content://media/external/audio/albumart/$this")
-}
+private val Long.artworkUri: Uri?
+    get() = Uri.parse("content://media/external/audio/albumart/$this")
 
 @Composable
 fun SongsCard(modifier: Modifier = Modifier, song: Song) {

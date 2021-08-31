@@ -1,13 +1,13 @@
-package com.looker.data_albums
+package com.looker.data_music
 
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
-import com.looker.data_albums.AlbumsConstants.albumsProjections
-import com.looker.data_albums.AlbumsConstants.externalUri
-import com.looker.data_albums.AlbumsConstants.isMusic
-import com.looker.data_albums.AlbumsConstants.sortOrderAlbum
-import com.looker.data_albums.data.Album
+import com.looker.data_music.AlbumsConstants.albumsProjections
+import com.looker.data_music.AlbumsConstants.externalUri
+import com.looker.data_music.AlbumsConstants.isMusic
+import com.looker.data_music.AlbumsConstants.sortOrderAlbum
+import com.looker.data_music.data.Album
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow

@@ -11,9 +11,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,12 +22,12 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.components.backgroundGradient
 import com.looker.components.rememberDominantColorState
-import com.looker.data_albums.data.Album
-import com.looker.data_albums.data.AlbumsRepository
-import com.looker.data_songs.data.SongsRepository
+import com.looker.data_music.data.Album
+import com.looker.data_music.data.Song
+import com.looker.data_music.data.SongsRepository
 import com.looker.ui_albums.components.AlbumsCard
-import com.looker.ui_albums.components.AlbumsExtensions.artworkUri
 import com.looker.ui_albums.components.AlbumsItem
+import com.looker.ui_albums.components.artworkUri
 import com.looker.ui_songs.SongsList
 import kotlinx.coroutines.launch
 
@@ -43,7 +41,10 @@ fun Albums() {
 private fun Albums(
     modifier: Modifier = Modifier,
     viewModel: AlbumsViewModel = viewModel(
-        factory = AlbumsViewModelFactory(AlbumsRepository(), SongsRepository())
+        factory = AlbumsViewModelFactory(
+            com.looker.data_music.data.AlbumsRepository(),
+            SongsRepository()
+        )
     )
 ) {
     Surface(
@@ -57,11 +58,21 @@ private fun Albums(
         val scope = rememberCoroutineScope()
 
         val currentAlbum = viewModel.currentAlbum.value
+        val albumsList = remember {
+            mutableStateOf<List<Album>>(listOf())
+        }
+        val songsList = remember {
+            mutableStateOf<List<Song>>(listOf())
+        }
+
+        LaunchedEffect(albumsList) {
+            albumsList.value = viewModel.getAlbumsList(context)
+        }
 
         AlbumsList(
-            albumsList = viewModel.getAlbumsList(context),
+            albumsList = albumsList.value,
             onAlbumClick = {
-                viewModel.currentAlbum.value = it
+                viewModel.currentAlbum.value = this
                 scope.launch {
                     state.animateTo(
                         ModalBottomSheetValue.HalfExpanded,
@@ -76,18 +87,21 @@ private fun Albums(
 
         val sheetColor = rememberDominantColorState()
 
-        LaunchedEffect(currentAlbum) {
-            launch {
-                sheetColor.updateColorsFromImageUrl(currentAlbum.albumId.artworkUri.toString())
-            }
-        }
-
         BottomSheets(
             state = state,
             sheetContent = {
                 Column(
                     modifier = Modifier.backgroundGradient(sheetColor.color.copy(0.4f))
                 ) {
+
+                    val bottomSheetContext = LocalContext.current
+
+                    LaunchedEffect(currentAlbum) {
+                        launch {
+                            songsList.value = viewModel.getSongsPerAlbum(bottomSheetContext)
+                            sheetColor.updateColorsFromImageUrl(currentAlbum.albumId.artworkUri.toString())
+                        }
+                    }
                     ShowHint(viewModel.getIcon(state))
                     AlbumsItem(
                         modifier = Modifier.fillMaxWidth(),
@@ -96,12 +110,7 @@ private fun Albums(
                         imageWidth = 250.dp,
                         imageShape = MaterialTheme.shapes.large
                     )
-                    SongsList(
-                        songsList = viewModel.getSongsPerAlbum(
-                            context,
-                            currentAlbum.albumId
-                        )
-                    )
+                    SongsList(songsList = songsList.value)
                     Spacer(Modifier.height(50.dp))
                 }
             }
@@ -113,7 +122,7 @@ private fun Albums(
 @Composable
 fun AlbumsList(
     albumsList: List<Album>,
-    onAlbumClick: (Album) -> Unit
+    onAlbumClick: Album.() -> Unit
 ) {
     LazyVerticalGrid(
         cells = GridCells.Adaptive(200.dp),
@@ -124,7 +133,7 @@ fun AlbumsList(
     ) {
         items(albumsList) { album ->
             AlbumsCard(album = album) {
-                onAlbumClick(album)
+                album.onAlbumClick()
             }
         }
     }
