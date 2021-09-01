@@ -11,7 +11,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +21,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.looker.constants.Constants.fadeInDuration
 import com.looker.onboarding.components.AnimatedButton
 import com.looker.onboarding.utils.checkReadPermission
 import com.looker.onboarding.utils.handlePermissions
@@ -51,7 +49,6 @@ fun OnBoardingPage(
     )
 
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(buttonText) {
         launch {
@@ -69,12 +66,7 @@ fun OnBoardingPage(
         handlePermissions(
             context,
             permissionLauncher,
-            onGranted = {
-                viewModel.onPermissionGranted()
-                scope.launch {
-                    delay(fadeInDuration.toLong())
-                }
-            },
+            onGranted = { viewModel.onPermissionGranted() },
             onDenied = { viewModel.onPermissionDenied() }
         )
     }
