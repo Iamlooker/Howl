@@ -4,7 +4,7 @@ object Accompanist {
 }
 
 object Classpath {
-    private const val gradleVersion = "7.0.1"
+    private const val gradleVersion = "7.0.2"
     const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
     const val gradleKotlin =
         "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
@@ -37,6 +37,13 @@ object Compose {
 
 object Excludes {
     const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
+}
+
+object ExoPlayer {
+    private const val exoplayerVersion = "2.15.0"
+    const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
+    const val exoplayerMediaSession =
+        "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
 
 object Lifecycle {

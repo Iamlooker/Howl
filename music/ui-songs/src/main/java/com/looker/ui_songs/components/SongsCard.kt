@@ -23,19 +23,24 @@ private val Long.artworkUri: Uri?
     get() = Uri.parse("content://media/external/audio/albumart/$this")
 
 @Composable
-fun SongsCard(modifier: Modifier = Modifier, song: Song) {
+fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit = {}) {
 
     val context = LocalContext.current
 
     val itemHeight = context.itemSize(true, 14)
 
     Box(modifier = modifier) {
-        SongsCard(modifier = modifier, song = song, cardHeight = itemHeight)
+        SongsCard(modifier = modifier, song = song, cardHeight = itemHeight, onClick = onClick)
     }
 }
 
 @Composable
-private fun SongsCard(modifier: Modifier = Modifier, song: Song, cardHeight: Dp) {
+private fun SongsCard(
+    modifier: Modifier = Modifier,
+    song: Song,
+    cardHeight: Dp,
+    onClick: () -> Unit
+) {
 
     val backgroundColor = rememberDominantColorState()
 
@@ -48,7 +53,8 @@ private fun SongsCard(modifier: Modifier = Modifier, song: Song, cardHeight: Dp)
     MaterialCard(
         modifier = modifier.padding(10.dp),
         rippleColor = backgroundColor.color.copy(0.2f),
-        elevation = 0.dp
+        elevation = 0.dp,
+        onClick = onClick
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
