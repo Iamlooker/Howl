@@ -23,7 +23,7 @@ fun BottomAppBar(
     if (currentDestination?.route in routes) {
         BottomNavigation(
             modifier = modifier,
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colors.surface,
             contentColor = MaterialTheme.colors.primary,
             elevation = 0.dp
         ) {
@@ -34,7 +34,7 @@ fun BottomAppBar(
                     selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                     alwaysShowLabel = false,
                     selectedContentColor = MaterialTheme.colors.primary,
-                    unselectedContentColor = MaterialTheme.colors.surface,
+                    unselectedContentColor = MaterialTheme.colors.onSurface,
                     onClick = {
                         navController.navigate(screen.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
