@@ -1,7 +1,6 @@
 package com.looker.components
 
 import android.content.Context
-import android.graphics.Bitmap
 import androidx.collection.LruCache
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -58,7 +57,7 @@ class DominantColorState(
 }
 
 @Immutable
-private data class DominantColors(val color: Color, val onColor: Color)
+data class DominantColors(val color: Color, val onColor: Color)
 
 
 private suspend fun calculateColorFromImageUrl(
@@ -88,25 +87,5 @@ private suspend fun calculateColorFromImageUrl(
     val dominant = swatch?.getDominantColor(0)
 
     return if (vibrant == 0) dominant?.let { Color(it) }
-    else vibrant?.let { Color(it) }
-}
-
-fun calculateColorFromBitmap(
-    bitmap: Bitmap?,
-    getDominant: Boolean = true,
-): Color? {
-
-    val swatch = bitmap?.let {
-        Palette.Builder(it)
-            .resizeBitmapArea(0)
-            .clearFilters()
-            .maximumColorCount(8)
-            .generate()
-    }
-
-    val vibrant = swatch?.getVibrantColor(0)
-    val dominant = swatch?.getDominantColor(0)
-
-    return if (getDominant) dominant?.let { Color(it) }
     else vibrant?.let { Color(it) }
 }
