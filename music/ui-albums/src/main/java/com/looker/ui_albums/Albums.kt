@@ -2,6 +2,7 @@ package com.looker.ui_albums
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -14,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -102,7 +104,7 @@ private fun Albums(
                             sheetColor.updateColorsFromImageUrl(currentAlbum.albumId.artworkUri.toString())
                         }
                     }
-                    ShowHint(viewModel.getIcon(state))
+                    ShowHint(viewModel.getIcon(state), state.overflow.value)
                     AlbumsItem(
                         modifier = Modifier.fillMaxWidth(),
                         album = currentAlbum,
@@ -161,7 +163,10 @@ fun BottomSheets(
 
 @ExperimentalMaterialApi
 @Composable
-fun ShowHint(icon: ImageVector) {
+fun ShowHint(icon: ImageVector, angle: Float) {
+
+    val animatedAngle by animateFloatAsState(targetValue = angle)
+
     Crossfade(
         targetState = icon,
         animationSpec = tween(500)
@@ -170,9 +175,11 @@ fun ShowHint(icon: ImageVector) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .alpha(0.6f),
+                .alpha(0.6f)
+                .rotate(animatedAngle),
             imageVector = currentIcon,
             contentDescription = "Swipe Action"
         )
     }
+
 }
