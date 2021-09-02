@@ -1,13 +1,12 @@
 package com.looker.howlmusic.ui.components
 
+import android.annotation.SuppressLint
 import android.app.WallpaperManager
-import androidx.annotation.RequiresPermission
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -15,9 +14,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.palette.graphics.Palette
+import com.looker.components.calculateColorFromBitmap
 
-@RequiresPermission(value = "android.permission.READ_EXTERNAL_STORAGE")
+@SuppressLint("MissingPermission")
 @Composable
 fun BottomAppBar(
     modifier: Modifier = Modifier,
@@ -28,11 +27,7 @@ fun BottomAppBar(
     val wallpaperManager = WallpaperManager.getInstance(LocalContext.current)
     val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
 
-    val colorSwatch = Palette.Builder(wallpaperBitmap)
-        .resizeBitmapArea(0)
-        .clearFilters()
-        .maximumColorCount(8)
-        .generate()
+    val wallpaperColor = remember { calculateColorFromBitmap(wallpaperBitmap)?.copy(0.4f) }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -40,7 +35,7 @@ fun BottomAppBar(
     if (currentDestination?.route in routes) {
         BottomNavigation(
             modifier = modifier,
-            backgroundColor = Color(colorSwatch.getDominantColor(0)).copy(0.4f),
+            backgroundColor = wallpaperColor ?: MaterialTheme.colors.surface,
             contentColor = MaterialTheme.colors.primary,
             elevation = 0.dp
         ) {

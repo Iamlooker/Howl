@@ -65,6 +65,7 @@ dependencies {
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.uiAlbums))
     implementation(project(Modules.dataMusic))
+    implementation(project(Modules.components))
 
     implementation(Core.core)
 
@@ -75,7 +76,6 @@ dependencies {
     implementation(Compose.navigation)
     implementation(Compose.ui)
 
-    implementation(Palette.palette)
 
     debugImplementation(Compose.tooling)
     debugImplementation(Compose.preview)
