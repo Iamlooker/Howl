@@ -5,8 +5,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -14,6 +15,18 @@ import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
+import com.looker.onboarding.OnBoardingPage
+
+@Composable
+fun HowlApp() {
+    val context = LocalContext.current
+    var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
+
+    if (canReadStorage) AppTheme()
+    else OnBoardingPage {
+        canReadStorage = it
+    }
+}
 
 @Composable
 fun AppTheme() {

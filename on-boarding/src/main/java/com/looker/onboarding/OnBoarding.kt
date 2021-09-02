@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnBoardingPage(
     viewModel: OnBoardingViewModel = viewModel(),
-    navigate: () -> Unit,
+    navigate: (Boolean) -> Unit,
 ) {
 
     val buttonColor = viewModel.buttonColor
@@ -53,7 +53,7 @@ fun OnBoardingPage(
     LaunchedEffect(buttonText) {
         launch {
             delay(500)
-            if (checkReadPermission(context)) navigate()
+            if (checkReadPermission(context)) navigate(checkReadPermission(context))
         }
     }
 

@@ -5,21 +5,17 @@ import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.looker.howlmusic.checkReadPermission
 import com.looker.howlmusic.ui.components.MainScreens.HOME
-import com.looker.howlmusic.ui.components.MainScreens.ON_BOARDING
-import com.looker.onboarding.OnBoardingPage
 import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs
 
 object MainScreens {
-    const val ON_BOARDING = "on-boarding"
     const val HOME = "home"
+    // TODO: 9/2/2021 Add Settings
 }
 
 sealed class HomeScreens(
@@ -33,18 +29,11 @@ sealed class HomeScreens(
 
 @Composable
 fun HomeNavGraph(navController: NavHostController) {
-    val startDestination = if (!checkReadPermission(LocalContext.current)) ON_BOARDING
-    else HOME
+    val startDestination = HOME
     NavHost(
         navController = navController,
         startDestination = startDestination,
         builder = {
-            composable(ON_BOARDING) {
-                OnBoardingPage {
-                    navController.navigate(HOME)
-                }
-            }
-
             navigation(
                 route = HOME,
                 startDestination = HomeScreens.SONGS.route
