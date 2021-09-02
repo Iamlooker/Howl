@@ -20,4 +20,5 @@ object ComponentConstants {
     }
 
     const val colorAnimationDuration = 1000
+    const val wallpaperSurfaceAlpha = 0.2f
 }

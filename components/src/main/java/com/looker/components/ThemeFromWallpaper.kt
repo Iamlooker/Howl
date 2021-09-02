@@ -9,6 +9,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
+import com.looker.components.ComponentConstants.colorAnimationDuration
+import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -19,12 +21,12 @@ fun WallpaperTheme(
 
     val colors = MaterialTheme.colors.copy(
         surface = animateColorAsState(
-            dominantColorState.color.copy(0.2f),
-            tween(1000)
+            dominantColorState.color,
+            tween(colorAnimationDuration)
         ).value,
         onSurface = animateColorAsState(
             dominantColorState.onColor,
-            tween(1000)
+            tween(colorAnimationDuration)
         ).value
     )
     MaterialTheme(colors = colors, content = content)
@@ -64,8 +66,8 @@ class DominantColorStateWallpaper(
     private fun calculateDominantColor(bitmap: Bitmap): DominantColors? {
         return cache?.get(bitmap) ?: calculateColorFromBitmap(bitmap)?.let { dominantColor ->
             DominantColors(
-                color = dominantColor,
-                onColor = dominantColor.copy(alpha = 0.4f)
+                color = dominantColor.copy(wallpaperSurfaceAlpha),
+                onColor = dominantColor
             )
                 .also { result -> cache?.put(bitmap, result) }
         }
