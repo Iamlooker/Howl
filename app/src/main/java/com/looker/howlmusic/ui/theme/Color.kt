@@ -6,7 +6,6 @@ import androidx.compose.ui.graphics.Color
 
 
 val Orange = Color(0xFFFF9E80)
-val OrangeLight = Color(0xFFFFd0b0)
 val Green = Color(0xFF69f0AE)
 val GreenLight = Color(0xFF9fffE0)
 
@@ -19,9 +18,9 @@ val HowlColorsDark = darkColors(
 )
 
 val HowlColorsLight = lightColors(
-    primary = OrangeLight,
+    primary = Orange,
     onPrimary = Color.Black,
-    primaryVariant = OrangeLight,
+    primaryVariant = Orange,
     secondary = GreenLight,
     onSecondary = Color.Black
 )
