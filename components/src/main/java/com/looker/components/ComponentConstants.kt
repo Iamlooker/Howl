@@ -19,4 +19,5 @@ object ComponentConstants {
         return itemSize - padding
     }
 
+    const val colorAnimationDuration = 1000
 }
