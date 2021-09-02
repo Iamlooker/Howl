@@ -75,6 +75,8 @@ dependencies {
     implementation(Compose.navigation)
     implementation(Compose.ui)
 
+    implementation(Palette.palette)
+
     debugImplementation(Compose.tooling)
     debugImplementation(Compose.preview)
 }
