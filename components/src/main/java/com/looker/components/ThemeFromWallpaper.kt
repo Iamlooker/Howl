@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
 import com.looker.components.ComponentConstants.colorAnimationDuration
-import com.looker.components.ComponentConstants.wallpaperBackgroundAlpha
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
 @Composable
@@ -26,10 +25,6 @@ fun WallpaperTheme(
         ).value,
         onSurface = animateColorAsState(
             contentColorFor(backgroundColor = dominantColorState.color),
-            tween(colorAnimationDuration)
-        ).value,
-        background = animateColorAsState(
-            dominantColorState.color.copy(wallpaperBackgroundAlpha),
             tween(colorAnimationDuration)
         ).value
     )
