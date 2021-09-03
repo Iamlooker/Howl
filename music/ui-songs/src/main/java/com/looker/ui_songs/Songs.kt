@@ -1,6 +1,5 @@
 package com.looker.ui_songs
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -58,7 +57,6 @@ fun SongsList(
 ) {
     LazyColumn(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center,
         contentPadding = rememberInsetsPaddingValues(
             insets = LocalWindowInsets.current.systemBars,
             applyTop = true

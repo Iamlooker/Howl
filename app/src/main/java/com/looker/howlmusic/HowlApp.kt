@@ -26,9 +26,9 @@ import com.looker.onboarding.OnBoardingPage
 fun HowlApp() {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
+    val wallpaperManager = WallpaperManager.getInstance(context)
 
     if (canReadStorage) {
-        val wallpaperManager = WallpaperManager.getInstance(context)
         val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
         AppTheme(wallpaperBitmap)
     } else OnBoardingPage {
