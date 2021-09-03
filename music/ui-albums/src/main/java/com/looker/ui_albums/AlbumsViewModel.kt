@@ -7,7 +7,9 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowDropUp
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.looker.data_music.data.Album
 import com.looker.data_music.data.Song
@@ -20,7 +22,7 @@ class AlbumsViewModel(
     private val songsRepository: SongsRepository
 ) : ViewModel() {
 
-    val currentAlbum = mutableStateOf(Album(0))
+    var currentAlbum by mutableStateOf(Album(0))
 
     @ExperimentalMaterialApi
     fun getIcon(state: ModalBottomSheetState) = when (state.targetValue) {
@@ -34,6 +36,6 @@ class AlbumsViewModel(
 
     suspend fun getSongsPerAlbum(context: Context): List<Song> =
         withContext(Dispatchers.IO) {
-            songsRepository.getAllSongs(context).filter { it.albumId == currentAlbum.value.albumId }
+            songsRepository.getAllSongs(context).filter { it.albumId == currentAlbum.albumId }
         }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.looker.components.BottomSheets
 import com.looker.components.backgroundGradient
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Album
@@ -59,11 +59,11 @@ private fun Albums(
         val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        val currentAlbum = viewModel.currentAlbum.value
+        val currentAlbum = viewModel.currentAlbum
         val albumsList = remember {
             mutableStateOf<List<Album>>(listOf())
         }
-        val songsList = remember {
+        var songsList by remember {
             mutableStateOf<List<Song>>(listOf())
         }
 
@@ -74,7 +74,7 @@ private fun Albums(
         AlbumsList(
             albumsList = albumsList.value,
             onAlbumClick = {
-                viewModel.currentAlbum.value = this
+                viewModel.currentAlbum = this
                 scope.launch {
                     state.animateTo(
                         ModalBottomSheetValue.HalfExpanded,
@@ -100,20 +100,15 @@ private fun Albums(
 
                     LaunchedEffect(currentAlbum) {
                         launch {
-                            songsList.value = viewModel.getSongsPerAlbum(bottomSheetContext)
+                            songsList = viewModel.getSongsPerAlbum(bottomSheetContext)
                             sheetColor.updateColorsFromImageUrl(currentAlbum.albumId.artworkUri.toString())
                         }
                     }
-                    ShowHint(viewModel.getIcon(state), state.overflow.value)
-                    AlbumsItem(
-                        modifier = Modifier.fillMaxWidth(),
-                        album = currentAlbum,
-                        imageHeight = 250.dp,
-                        imageWidth = 250.dp,
-                        imageShape = MaterialTheme.shapes.large
+                    BottomSheetHandle(viewModel.getIcon(state), state.overflow.value)
+                    BottomSheetsContent(
+                        currentAlbum = viewModel.currentAlbum,
+                        songsList = songsList
                     )
-                    SongsList(songsList = songsList.value)
-                    Spacer(Modifier.height(50.dp))
                 }
             }
         )
@@ -141,29 +136,25 @@ fun AlbumsList(
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
-fun BottomSheets(
+fun BottomSheetsContent(
     modifier: Modifier = Modifier,
-    state: ModalBottomSheetState,
-    sheetContent: @Composable ColumnScope.() -> Unit,
-    content: @Composable () -> Unit = {}
+    currentAlbum: Album,
+    songsList: List<Song>
 ) {
-    ModalBottomSheetLayout(
-        modifier = modifier,
-        sheetElevation = 0.dp,
-        sheetState = state,
-        sheetContent = sheetContent,
-        content = content,
-        sheetBackgroundColor = MaterialTheme.colors.background,
-        scrimColor = MaterialTheme.colors.background.copy(0.1f),
-        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+    AlbumsItem(
+        modifier = modifier.fillMaxWidth(),
+        album = currentAlbum,
+        imageHeight = 250.dp,
+        imageWidth = 250.dp,
+        imageShape = MaterialTheme.shapes.large
     )
+    SongsList(songsList = songsList)
+    Spacer(Modifier.height(50.dp))
 }
 
-@ExperimentalMaterialApi
 @Composable
-fun ShowHint(icon: ImageVector, angle: Float) {
+fun BottomSheetHandle(icon: ImageVector, angle: Float) {
 
     val animatedAngle by animateFloatAsState(targetValue = angle)
 
@@ -181,5 +172,4 @@ fun ShowHint(icon: ImageVector, angle: Float) {
             contentDescription = "Swipe Action"
         )
     }
-
 }
