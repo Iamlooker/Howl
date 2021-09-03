@@ -40,7 +40,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: New HowlMusic Build
-          document: app/build/outputs/apk/debug/app-debug.apk
+          document: app/build/outputs/apk/debug/HowlMusic-debug.apk
 
       - name: Send Changelog
         uses: appleboy/telegram-action@master
