@@ -21,7 +21,7 @@ fun WallpaperTheme(
             dominantColorState.color.copy(wallpaperSurfaceAlpha),
             tween(colorAnimationDuration)
         ).value,
-        onSurface = animateColorAsState(
+        primary = animateColorAsState(
             dominantColorState.onColor,
             tween(colorAnimationDuration)
         ).value
@@ -60,25 +60,12 @@ class DominantColorStateWallpaper(
         onColor = result?.onColor ?: defaultOnColor
     }
 
-    private fun calculateDominantColor(bitmap: Bitmap): DominantColors? {
-        return cache?.get(bitmap) ?: calculateColorFromBitmap(bitmap)?.let { dominantColor ->
-            DominantColors(
-                color = dominantColor,
-                onColor = dominantColor
-            )
-                .also { result -> cache?.put(bitmap, result) }
-        }
+    private fun calculateDominantColor(bitmap: Bitmap): DominantColors {
+        return cache?.get(bitmap) ?: DominantColors(
+            color = bitmap.getDominantColor() ?: defaultColor,
+            onColor = bitmap.getVibrantColor() ?: defaultOnColor
+        )
+            .also { result -> cache?.put(bitmap, result) }
+
     }
-}
-
-private fun calculateColorFromBitmap(
-    bitmap: Bitmap?,
-    getDominant: Boolean = true,
-): Color? {
-
-    val vibrant = bitmap.getVibrantColor()
-    val dominant = bitmap.getDominantColor()
-
-    return if (getDominant) dominant
-    else vibrant
 }
