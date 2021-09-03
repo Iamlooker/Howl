@@ -1,6 +1,5 @@
 package com.looker.components
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import androidx.collection.LruCache
 import androidx.compose.animation.animateColorAsState
@@ -10,9 +9,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
 import com.looker.components.ComponentConstants.colorAnimationDuration
+import com.looker.components.ComponentConstants.wallpaperBackgroundAlpha
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
-@SuppressLint("MissingPermission")
 @Composable
 fun WallpaperTheme(
     dominantColorState: DominantColorStateWallpaper = rememberWallpaperColor(),
@@ -21,11 +20,15 @@ fun WallpaperTheme(
 
     val colors = MaterialTheme.colors.copy(
         surface = animateColorAsState(
-            dominantColorState.color,
+            dominantColorState.color.copy(wallpaperSurfaceAlpha),
             tween(colorAnimationDuration)
         ).value,
         onSurface = animateColorAsState(
             dominantColorState.onColor,
+            tween(colorAnimationDuration)
+        ).value,
+        background = animateColorAsState(
+            dominantColorState.color.copy(wallpaperBackgroundAlpha),
             tween(colorAnimationDuration)
         ).value
     )
@@ -57,8 +60,8 @@ class DominantColorStateWallpaper(
         else -> null
     }
 
-    fun updateColorsFromBitmap(bitmap: Bitmap) {
-        val result = calculateDominantColor(bitmap)
+    fun updateColorsFromBitmap(bitmap: Bitmap?) {
+        val result = bitmap?.let { calculateDominantColor(it) }
         color = result?.color ?: defaultColor
         onColor = result?.onColor ?: defaultOnColor
     }
@@ -66,7 +69,7 @@ class DominantColorStateWallpaper(
     private fun calculateDominantColor(bitmap: Bitmap): DominantColors? {
         return cache?.get(bitmap) ?: calculateColorFromBitmap(bitmap)?.let { dominantColor ->
             DominantColors(
-                color = dominantColor.copy(wallpaperSurfaceAlpha),
+                color = dominantColor,
                 onColor = dominantColor
             )
                 .also { result -> cache?.put(bitmap, result) }

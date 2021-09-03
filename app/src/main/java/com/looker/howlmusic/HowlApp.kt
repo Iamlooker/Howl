@@ -1,7 +1,7 @@
 package com.looker.howlmusic
 
-import android.annotation.SuppressLint
 import android.app.WallpaperManager
+import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -27,25 +27,22 @@ fun HowlApp() {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 
-    if (canReadStorage) AppTheme()
-    else OnBoardingPage {
+    if (canReadStorage) {
+        val wallpaperManager = WallpaperManager.getInstance(context)
+        val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
+        AppTheme(wallpaperBitmap)
+    } else OnBoardingPage {
         canReadStorage = it
     }
 }
 
-@SuppressLint("MissingPermission")
 @Composable
-fun AppTheme() {
+fun AppTheme(wallpaper: Bitmap? = null) {
     HowlMusicTheme {
-        val context = LocalContext.current
-
-        val wallpaperManager = WallpaperManager.getInstance(context)
-        val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
-
         val dominantColor = rememberWallpaperColor()
 
-        LaunchedEffect(wallpaperBitmap) {
-            dominantColor.updateColorsFromBitmap(wallpaperBitmap)
+        LaunchedEffect(wallpaper) {
+            dominantColor.updateColorsFromBitmap(wallpaper)
         }
 
         WallpaperTheme(dominantColor) {
