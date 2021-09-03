@@ -7,7 +7,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.palette.graphics.Palette
 import com.looker.components.ComponentConstants.colorAnimationDuration
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
@@ -77,17 +76,9 @@ private fun calculateColorFromBitmap(
     getDominant: Boolean = true,
 ): Color? {
 
-    val swatch = bitmap?.let {
-        Palette.Builder(it)
-            .resizeBitmapArea(0)
-            .clearFilters()
-            .maximumColorCount(8)
-            .generate()
-    }
+    val vibrant = bitmap.getVibrantColor()
+    val dominant = bitmap.getDominantColor()
 
-    val vibrant = swatch?.getVibrantColor(0)
-    val dominant = swatch?.getDominantColor(0)
-
-    return if (getDominant) dominant?.let { Color(it) }
-    else vibrant?.let { Color(it) }
+    return if (getDominant) dominant
+    else vibrant
 }

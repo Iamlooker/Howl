@@ -1,5 +1,6 @@
 package com.looker.components
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.palette.graphics.Palette
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 
@@ -37,3 +39,19 @@ fun HowlImage(
         contentDescription = null
     )
 }
+
+fun Bitmap?.getVibrantColor(): Color? = this?.let {
+    Palette.Builder(it)
+        .resizeBitmapArea(0)
+        .clearFilters()
+        .maximumColorCount(8)
+        .generate()
+}?.getVibrantColor(0)?.toColor()
+
+fun Bitmap?.getDominantColor(): Color? = this?.let {
+    Palette.Builder(it)
+        .resizeBitmapArea(0)
+        .clearFilters()
+        .maximumColorCount(8)
+        .generate()
+}?.getDominantColor(0)?.toColor()

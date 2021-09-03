@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
-import androidx.palette.graphics.Palette
 import coil.Coil
 import coil.request.ImageRequest
 import coil.request.SuccessResult
@@ -24,6 +23,8 @@ fun Color.contrastAgainst(background: Color): Float {
 
     return max(fgLuminance, bgLuminance) / min(fgLuminance, bgLuminance)
 }
+
+fun Int.toColor() = Color(this)
 
 @Composable
 fun rememberDominantColorState(
@@ -91,17 +92,9 @@ private suspend fun calculateColorFromImageUrl(
         else -> null
     }
 
-    val swatch = bitmap?.let {
-        Palette.Builder(it)
-            .resizeBitmapArea(0)
-            .clearFilters()
-            .maximumColorCount(8)
-            .generate()
-    }
+    val vibrant = bitmap.getVibrantColor()
+    val dominant = bitmap.getDominantColor()
 
-    val vibrant = swatch?.getVibrantColor(0)
-    val dominant = swatch?.getDominantColor(0)
-
-    return if (vibrant == 0) dominant?.let { Color(it) }
-    else vibrant?.let { Color(it) }
+    return if (vibrant == Color(0)) dominant
+    else vibrant
 }
