@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import com.looker.components.ComponentConstants.colorAnimationDuration
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
@@ -22,7 +23,7 @@ fun WallpaperTheme(
             tween(colorAnimationDuration)
         ).value,
         primary = animateColorAsState(
-            dominantColorState.onColor,
+            dominantColorState.onColor.compositeOver(dominantColorState.color),
             tween(colorAnimationDuration)
         ).value
     )
