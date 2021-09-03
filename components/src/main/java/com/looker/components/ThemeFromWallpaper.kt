@@ -19,7 +19,7 @@ fun WallpaperTheme(
 
     val colors = MaterialTheme.colors.copy(
         surface = animateColorAsState(
-            dominantColorState.color.copy(wallpaperSurfaceAlpha),
+            dominantColorState.color.copy(wallpaperSurfaceAlpha).compositeOverDayNight(),
             tween(colorAnimationDuration)
         ).value,
         primary = animateColorAsState(
