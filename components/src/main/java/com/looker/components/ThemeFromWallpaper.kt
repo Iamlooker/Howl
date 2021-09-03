@@ -5,6 +5,7 @@ import androidx.collection.LruCache
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.palette.graphics.Palette
@@ -24,7 +25,7 @@ fun WallpaperTheme(
             tween(colorAnimationDuration)
         ).value,
         onSurface = animateColorAsState(
-            dominantColorState.onColor,
+            contentColorFor(backgroundColor = dominantColorState.color),
             tween(colorAnimationDuration)
         ).value,
         background = animateColorAsState(
@@ -69,8 +70,7 @@ class DominantColorStateWallpaper(
     private fun calculateDominantColor(bitmap: Bitmap): DominantColors? {
         return cache?.get(bitmap) ?: calculateColorFromBitmap(bitmap)?.let { dominantColor ->
             DominantColors(
-                color = dominantColor,
-                onColor = dominantColor
+                color = dominantColor
             )
                 .also { result -> cache?.put(bitmap, result) }
         }
