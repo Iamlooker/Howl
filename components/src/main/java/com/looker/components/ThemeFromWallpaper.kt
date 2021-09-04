@@ -7,7 +7,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import com.looker.components.ComponentConstants.colorAnimationDuration
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
@@ -21,10 +20,6 @@ fun WallpaperTheme(
         surface = animateColorAsState(
             dominantColorState.color.copy(wallpaperSurfaceAlpha).compositeOverDayNight(),
             tween(colorAnimationDuration)
-        ).value,
-        primary = animateColorAsState(
-            dominantColorState.onColor.compositeOver(dominantColorState.color),
-            tween(colorAnimationDuration)
         ).value
     )
     MaterialTheme(colors = colors, content = content)
@@ -33,21 +28,17 @@ fun WallpaperTheme(
 @Composable
 fun rememberWallpaperColor(
     defaultColor: Color = MaterialTheme.colors.surface,
-    defaultOnColor: Color = MaterialTheme.colors.onSurface,
     cacheSize: Int = 1,
 ): DominantColorStateWallpaper = remember {
-    DominantColorStateWallpaper(defaultColor, defaultOnColor, cacheSize)
+    DominantColorStateWallpaper(defaultColor, cacheSize)
 }
 
 @Stable
 class DominantColorStateWallpaper(
     private val defaultColor: Color,
-    private val defaultOnColor: Color,
     cacheSize: Int = 1,
 ) {
     var color by mutableStateOf(defaultColor)
-        private set
-    var onColor by mutableStateOf(defaultOnColor)
         private set
 
     private val cache = when {
@@ -58,13 +49,11 @@ class DominantColorStateWallpaper(
     fun updateColorsFromBitmap(bitmap: Bitmap?) {
         val result = bitmap?.let { calculateDominantColor(it) }
         color = result?.color ?: defaultColor
-        onColor = result?.onColor ?: defaultOnColor
     }
 
     private fun calculateDominantColor(bitmap: Bitmap): DominantColors {
         return cache?.get(bitmap) ?: DominantColors(
-            color = bitmap.getDominantColor() ?: defaultColor,
-            onColor = bitmap.getVibrantColor() ?: defaultOnColor
+            color = bitmap.getDominantColor() ?: defaultColor
         )
             .also { result -> cache?.put(bitmap, result) }
 

@@ -31,7 +31,7 @@ fun BottomAppBar(
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                 alwaysShowLabel = false,
                 selectedContentColor = MaterialTheme.colors.primary,
-                unselectedContentColor = MaterialTheme.colors.onPrimary,
+                unselectedContentColor = MaterialTheme.colors.primaryVariant,
                 onClick = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) {
