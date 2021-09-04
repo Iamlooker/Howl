@@ -46,7 +46,7 @@ private fun Songs(
 
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colors.background
+        color = MaterialTheme.colors.surface
     ) { SongsList(songsList = songsList.value) }
 }
 
