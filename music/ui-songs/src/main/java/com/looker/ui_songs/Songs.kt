@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.looker.components.HowlSurface
 import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
 import com.looker.ui_songs.components.SongsCard
@@ -44,10 +43,7 @@ private fun Songs(
         }
     }
 
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colors.surface
-    ) { SongsList(songsList = songsList.value) }
+    HowlSurface(modifier = modifier) { SongsList(songsList = songsList.value) }
 }
 
 @Composable

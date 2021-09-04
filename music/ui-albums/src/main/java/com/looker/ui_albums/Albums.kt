@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.components.BottomSheets
+import com.looker.components.HowlSurface
 import com.looker.components.backgroundGradient
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Album
@@ -49,10 +50,7 @@ private fun Albums(
         )
     )
 ) {
-    Surface(
-        modifier = modifier,
-        color = MaterialTheme.colors.surface
-    ) {
+    HowlSurface(modifier = modifier) {
 
         val context = LocalContext.current
 

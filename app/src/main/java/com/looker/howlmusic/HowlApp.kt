@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -14,6 +13,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
+import com.looker.components.HowlSurface
 import com.looker.components.WallpaperTheme
 import com.looker.components.rememberWallpaperColor
 import com.looker.howlmusic.ui.components.BottomAppBar
@@ -52,7 +52,7 @@ fun AppTheme(wallpaper: Bitmap? = null) {
             )
             val navController = rememberNavController()
             ProvideWindowInsets {
-                Surface(modifier = Modifier.fillMaxSize()) {
+                HowlSurface(modifier = Modifier.fillMaxSize()) {
                     Scaffold(
                         bottomBar = {
                             BottomAppBar(
