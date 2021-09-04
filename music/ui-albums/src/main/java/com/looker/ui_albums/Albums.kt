@@ -51,7 +51,7 @@ private fun Albums(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colors.background
+        color = MaterialTheme.colors.surface
     ) {
 
         val context = LocalContext.current
