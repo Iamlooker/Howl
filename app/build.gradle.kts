@@ -64,6 +64,7 @@ dependencies {
     implementation(project(Modules.onBoarding))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.uiAlbums))
+    implementation(project(Modules.uiPlayer))
     implementation(project(Modules.dataMusic))
     implementation(project(Modules.components))
 
