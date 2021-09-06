@@ -15,7 +15,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.looker.components.HowlSurface
 import com.looker.components.WallpaperTheme
-import com.looker.components.rememberWallpaperColor
+import com.looker.components.rememberDominantColorState
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
@@ -39,7 +39,7 @@ fun HowlApp() {
 @Composable
 fun AppTheme(wallpaper: Bitmap? = null) {
     HowlMusicTheme {
-        val dominantColor = rememberWallpaperColor()
+        val dominantColor = rememberDominantColorState()
 
         LaunchedEffect(wallpaper) {
             dominantColor.updateColorsFromBitmap(wallpaper)

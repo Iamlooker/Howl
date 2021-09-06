@@ -23,7 +23,7 @@ object Coil {
 object Compose {
     private const val activityComposeVersion = "1.3.1"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
-    const val composeVersion = "1.0.1"
+    const val composeVersion = "1.0.2"
 
     const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
     const val material = "androidx.compose.material:material:$composeVersion"

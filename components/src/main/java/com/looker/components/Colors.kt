@@ -1,6 +1,7 @@
 package com.looker.components
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.collection.LruCache
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -25,22 +26,18 @@ fun Int.toColor() = Color(this)
 fun rememberDominantColorState(
     context: Context = LocalContext.current,
     defaultColor: Color = MaterialTheme.colors.surface,
-    defaultOnColor: Color = MaterialTheme.colors.onSurface,
     cacheSize: Int = 12,
 ): DominantColorState = remember {
-    DominantColorState(context, defaultColor, defaultOnColor, cacheSize)
+    DominantColorState(context, defaultColor, cacheSize)
 }
 
 @Stable
 class DominantColorState(
     private val context: Context,
     private val defaultColor: Color,
-    private val defaultOnColor: Color,
     cacheSize: Int = 50,
 ) {
     var color by mutableStateOf(defaultColor)
-        private set
-    var onColor by mutableStateOf(defaultOnColor)
         private set
 
     private val cache = when {
@@ -48,20 +45,32 @@ class DominantColorState(
         else -> null
     }
 
-    suspend fun updateColorsFromImageUrl(url: String) {
-        val result = calculateDominantColor(url)
-        color = result?.color ?: defaultColor
-        onColor = result?.onColor ?: defaultOnColor
+    private val cacheBitmap = when {
+        cacheSize > 0 -> LruCache<Bitmap, DominantColors>(cacheSize)
+        else -> null
     }
 
-    private suspend fun calculateDominantColor(url: String): DominantColors? {
+    suspend fun updateColorsFromImageUrl(url: String) {
+        val result = calculateDominantColorFromUrl(url)
+        color = result?.color ?: defaultColor
+    }
+
+    fun updateColorsFromBitmap(bitmap: Bitmap?) {
+        val result = bitmap?.let { calculateDominantColorFromBitmap(it) }
+        color = result?.color ?: defaultColor
+    }
+
+    private suspend fun calculateDominantColorFromUrl(url: String): DominantColors? {
         return cache?.get(url) ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
-            DominantColors(
-                color = dominantColor,
-                onColor = dominantColor.copy(alpha = 0.4f)
-            )
-                .also { result -> cache?.put(url, result) }
+            DominantColors(color = dominantColor).also { result -> cache?.put(url, result) }
         }
+    }
+
+    private fun calculateDominantColorFromBitmap(bitmap: Bitmap): DominantColors {
+        return cacheBitmap?.get(bitmap) ?: DominantColors(
+            color = bitmap.getDominantColor() ?: defaultColor
+        )
+            .also { result -> cacheBitmap?.put(bitmap, result) }
     }
 }
 
