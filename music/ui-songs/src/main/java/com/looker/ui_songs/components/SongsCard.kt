@@ -87,6 +87,9 @@ fun SongItemText(modifier: Modifier = Modifier, songName: String, artistName: St
         horizontalAlignment = Alignment.Start
     ) {
         WrappedText(text = songName)
-        WrappedText(text = artistName, style = MaterialTheme.typography.caption)
+        WrappedText(
+            text = artistName,
+            style = MaterialTheme.typography.caption
+        )
     }
 }
