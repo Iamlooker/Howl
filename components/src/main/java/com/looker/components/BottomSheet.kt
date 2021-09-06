@@ -25,7 +25,7 @@ fun BottomSheets(
         sheetContent = sheetContent,
         content = content,
         sheetBackgroundColor = MaterialTheme.colors.background,
-        scrimColor = MaterialTheme.colors.background.copy(0.1f),
+        scrimColor = MaterialTheme.colors.background.copy(0.3f),
         sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
     )
 }
