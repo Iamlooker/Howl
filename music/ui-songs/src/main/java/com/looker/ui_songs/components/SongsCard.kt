@@ -52,7 +52,6 @@ private fun SongsCard(
 
     MaterialCard(
         modifier = modifier.padding(10.dp),
-        rippleColor = backgroundColor.color.copy(0.2f),
         elevation = 0.dp,
         onClick = onClick
     ) {

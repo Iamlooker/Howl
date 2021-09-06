@@ -56,6 +56,7 @@ private fun AlbumsCard(
         modifier = modifier,
         elevation = 0.dp,
         backgroundColor = backgroundColor.color.copy(0.4f),
+        rippleColor = backgroundColor.color,
         onClick = onClick
     ) {
         AlbumsItem(

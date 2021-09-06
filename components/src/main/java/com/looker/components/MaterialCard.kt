@@ -22,7 +22,7 @@ fun MaterialCard(
     elevation: Dp = 3.dp,
     contentColor: Color = MaterialTheme.colors.onBackground,
     backgroundColor: Color = MaterialTheme.colors.background,
-    rippleColor: Color = Color.Unspecified,
+    rippleColor: Color = MaterialTheme.colors.primary,
     shape: Shape = MaterialTheme.shapes.medium,
     onClick: () -> Unit = {},
     content: @Composable () -> Unit
