@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.net.toUri
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -21,6 +22,7 @@ import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.onboarding.OnBoardingPage
+import com.looker.ui_player.Player
 
 @Composable
 fun HowlApp() {
@@ -75,4 +77,13 @@ fun AppContent() {
             HomeNavGraph(navController = navController)
         }
     }
+}
+
+@Composable
+fun TestPlayer() {
+    Player(
+        songName = "Baila Conmigo",
+        artistName = "Selena Gomez, Rauw Alejandro",
+        albumArt = "content://media/external/audio/albumart/1411304503959395383".toUri()
+    )
 }
