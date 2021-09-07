@@ -1,7 +1,6 @@
 package com.looker.components
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -19,7 +18,7 @@ import coil.compose.rememberImagePainter
 @Composable
 fun HowlImage(
     modifier: Modifier = Modifier,
-    data: Uri?,
+    data: Any?,
     imageFillerColor: Color = MaterialTheme.colors.surface,
     shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {

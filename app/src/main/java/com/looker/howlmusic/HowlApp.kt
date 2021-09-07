@@ -46,26 +46,31 @@ fun AppTheme(wallpaper: Bitmap? = null) {
         }
 
         WallpaperTheme(dominantColor) {
-            val items = listOf(
-                HomeScreens.SONGS,
-                HomeScreens.ALBUMS
-            )
-            val navController = rememberNavController()
-            ProvideWindowInsets {
-                HowlSurface(modifier = Modifier.fillMaxSize()) {
-                    Scaffold(
-                        bottomBar = {
-                            BottomAppBar(
-                                modifier = Modifier.navigationBarsPadding(),
-                                navController = navController,
-                                items = items
-                            )
-                        }
-                    ) {
-                        Box(modifier = Modifier.padding(it)) {
-                            HomeNavGraph(navController = navController)
-                        }
-                    }
+            AppContent()
+        }
+    }
+}
+
+@Composable
+fun AppContent() {
+    val items = listOf(
+        HomeScreens.SONGS,
+        HomeScreens.ALBUMS
+    )
+    val navController = rememberNavController()
+    ProvideWindowInsets {
+        HowlSurface(modifier = Modifier.fillMaxSize()) {
+            Scaffold(
+                bottomBar = {
+                    BottomAppBar(
+                        modifier = Modifier.navigationBarsPadding(),
+                        navController = navController,
+                        items = items
+                    )
+                }
+            ) {
+                Box(modifier = Modifier.padding(it)) {
+                    HomeNavGraph(navController = navController)
                 }
             }
         }
