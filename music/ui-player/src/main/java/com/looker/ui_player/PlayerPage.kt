@@ -1,15 +1,12 @@
 package com.looker.ui_player
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Slider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.SkipNext
@@ -17,10 +14,6 @@ import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -28,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import com.looker.components.ButtonWithIcon
 import com.looker.components.HowlImage
 import com.looker.components.HowlSurface
 import com.looker.components.WrappedText
@@ -52,7 +46,7 @@ fun Player(
             )
             SongText(songName = songName, artistName = artistName)
             Spacer(Modifier.height(80.dp))
-            IconButtonSet()
+            PlaybackControls()
         }
     }
 }
@@ -77,7 +71,7 @@ fun SongText(
     }
 }
 
-private fun decoupledConstraints(margin: Dp): ConstraintSet {
+private fun playerConstraints(margin: Dp): ConstraintSet {
     return ConstraintSet {
         val playButton = createRefFor("playButton")
         val skipNextButton = createRefFor("skipNextButton")
@@ -112,7 +106,7 @@ private fun decoupledConstraints(margin: Dp): ConstraintSet {
 
 
 @Composable
-fun IconButtonSet() {
+fun PlaybackControls() {
 
     val playButtonColors = buttonColors(
         backgroundColor = MaterialTheme.colors.primary
@@ -122,100 +116,71 @@ fun IconButtonSet() {
         backgroundColor = MaterialTheme.colors.surface
     )
 
-    var default by remember {
+    var progressValue by remember {
         mutableStateOf(0f)
     }
+
+    val progress by animateFloatAsState(targetValue = progressValue)
 
     var start by remember {
         mutableStateOf(false)
     }
 
-    val animate by animateFloatAsState(
-        targetValue = default,
-        animationSpec = spring()
-    )
-
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth(),
-        constraintSet = decoupledConstraints(20.dp)
+        constraintSet = playerConstraints(20.dp)
     ) {
-        Button(
+        ButtonWithIcon(
             modifier = Modifier.layoutId("playButton"),
             onClick = { start = !start },
+            icon = Icons.Rounded.PlayArrow,
             shape = RoundedCornerShape(50),
-            colors = playButtonColors
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.PlayArrow,
-                contentDescription = "play"
-            )
-        }
-        Button(
+            buttonColors = playButtonColors,
+            contentDescription = "play"
+        )
+
+        ButtonWithIcon(
             modifier = Modifier.layoutId("skipNextButton"),
-            onClick = { default += 100f },
+            onClick = { progressValue = progressValue.seekForward() },
+            icon = Icons.Rounded.SkipNext,
             shape = CircleShape,
-            colors = skipButtonColors
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.SkipNext,
-                contentDescription = "skipNext"
-            )
-        }
-        Button(
+            buttonColors = skipButtonColors,
+            contentDescription = "next"
+        )
+
+        ButtonWithIcon(
             modifier = Modifier.layoutId("skipPrevButton"),
-            onClick = { default -= 100f },
+            onClick = { progressValue = progressValue.seekBack() },
+            icon = Icons.Rounded.SkipPrevious,
             shape = CircleShape,
-            colors = skipButtonColors
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.SkipPrevious,
-                contentDescription = "skipPrevButton"
-            )
-        }
-        SeekbarCanvas(
+            buttonColors = skipButtonColors,
+            contentDescription = "previous"
+        )
+
+        SeekBar(
             modifier = Modifier.layoutId("progressBar"),
-            progress = animate
+            progress = progress,
+            onValueChanged = { progressValue = it }
         )
     }
 }
 
 @Composable
-fun SeekbarCanvas(
+fun SeekBar(
     modifier: Modifier = Modifier,
-    progress: Float = 0f,
-    backgroundColor: Color = MaterialTheme.colors.surface,
-    primaryColor: Color = MaterialTheme.colors.primary,
-    seekBarWidth: Float = 10f
+    progress: Float,
+    onValueChanged: (Float) -> Unit
 ) {
-    BoxWithConstraints(modifier) {
-        val boxScope = this
-        val maxSeekLength = boxScope.constraints.maxWidth.toFloat()
-        Canvas(modifier = Modifier.matchParentSize(), onDraw = {
-            drawRoundRect(
-                color = backgroundColor,
-                size = Size(maxSeekLength, seekBarWidth),
-                cornerRadius = CornerRadius(5f, 5f)
-            )
-            if (progress > 0 && progress < maxSeekLength) {
-                drawCircle(
-                    color = primaryColor,
-                    radius = 10f,
-                    center = Offset(progress, seekBarWidth / 2)
-                )
-                drawRoundRect(
-                    color = primaryColor,
-                    size = Size(progress, seekBarWidth),
-                    cornerRadius = CornerRadius(5f, 5f)
-                )
-            }
-        })
-    }
+    Slider(
+        modifier = modifier,
+        value = progress,
+        onValueChange = onValueChanged
+    )
 }
 
 @Preview
 @Composable
 fun PlayerPreview() {
-//    SeekbarCanvas()
     Player(
         songName = "Baila Conmigo",
         artistName = "Selena Gomez, Rauw Alejandro",
@@ -223,3 +188,10 @@ fun PlayerPreview() {
     )
 }
 
+fun Float.seekForward(by: Float = 0.1f): Float =
+    if (this.plus(by) >= 1f) 1f
+    else this.plus(by)
+
+fun Float.seekBack(by: Float = 0.1f): Float =
+    if (this.minus(by) <= 0f) 0f
+    else this.minus(by)
