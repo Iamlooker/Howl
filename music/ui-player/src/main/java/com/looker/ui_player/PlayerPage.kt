@@ -1,15 +1,14 @@
 package com.looker.ui_player
 
-import android.net.Uri
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Icon
-import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -18,6 +17,10 @@ import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -25,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.net.toUri
 import com.looker.components.HowlImage
 import com.looker.components.HowlSurface
 import com.looker.components.WrappedText
@@ -35,7 +37,7 @@ fun Player(
     modifier: Modifier = Modifier,
     songName: String,
     artistName: String,
-    albumArtUri: Uri
+    albumArt: Any
 ) {
     HowlSurface(modifier = modifier.fillMaxSize()) {
         Column(
@@ -45,7 +47,7 @@ fun Player(
         ) {
             HowlImage(
                 modifier = Modifier.size(300.dp),
-                data = albumArtUri,
+                data = albumArt,
                 shape = CircleShape
             )
             SongText(songName = songName, artistName = artistName)
@@ -99,7 +101,7 @@ private fun decoupledConstraints(margin: Dp): ConstraintSet {
             height = Dimension.value(60.dp)
         }
         constrain(progressBar) {
-            top.linkTo(playButton.bottom, margin = margin)
+            top.linkTo(skipNextButton.bottom, margin = margin)
             start.linkTo(skipPrevButton.end, margin = margin)
             end.linkTo(parent.end, margin = margin)
             bottom.linkTo(parent.bottom, margin = margin * 2)
@@ -150,7 +152,7 @@ fun IconButtonSet() {
         }
         Button(
             modifier = Modifier.layoutId("skipNextButton"),
-            onClick = { default += 0.1f },
+            onClick = { default += 100f },
             shape = CircleShape,
             colors = skipButtonColors
         ) {
@@ -161,7 +163,7 @@ fun IconButtonSet() {
         }
         Button(
             modifier = Modifier.layoutId("skipPrevButton"),
-            onClick = { default -= 0.1f },
+            onClick = { default -= 100f },
             shape = CircleShape,
             colors = skipButtonColors
         ) {
@@ -170,19 +172,54 @@ fun IconButtonSet() {
                 contentDescription = "skipPrevButton"
             )
         }
-        LinearProgressIndicator(
+        SeekbarCanvas(
             modifier = Modifier.layoutId("progressBar"),
             progress = animate
         )
     }
 }
 
+@Composable
+fun SeekbarCanvas(
+    modifier: Modifier = Modifier,
+    progress: Float = 0f,
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    primaryColor: Color = MaterialTheme.colors.primary,
+    seekBarWidth: Float = 10f
+) {
+    BoxWithConstraints(modifier) {
+        val boxScope = this
+        val maxSeekLength = boxScope.constraints.maxWidth.toFloat()
+        Canvas(modifier = Modifier.matchParentSize(), onDraw = {
+            drawRoundRect(
+                color = backgroundColor,
+                size = Size(maxSeekLength, seekBarWidth),
+                cornerRadius = CornerRadius(5f, 5f)
+            )
+            if (progress > 0 && progress < maxSeekLength) {
+                drawCircle(
+                    color = primaryColor,
+                    radius = 10f,
+                    center = Offset(progress, seekBarWidth / 2)
+                )
+                drawRoundRect(
+                    color = primaryColor,
+                    size = Size(progress, seekBarWidth),
+                    cornerRadius = CornerRadius(5f, 5f)
+                )
+            }
+        })
+    }
+}
+
 @Preview
 @Composable
 fun PlayerPreview() {
+//    SeekbarCanvas()
     Player(
         songName = "Baila Conmigo",
         artistName = "Selena Gomez, Rauw Alejandro",
-        albumArtUri = "content://media/external/audio/albumart/1411304503959395383".toUri()
+        albumArt = R.drawable.error_image
     )
 }
+
