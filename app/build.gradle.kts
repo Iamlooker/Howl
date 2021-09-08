@@ -76,9 +76,6 @@ dependencies {
     implementation(Compose.icons)
     implementation(Compose.material)
     implementation(Compose.navigation)
+    implementation(Compose.tooling)
     implementation(Compose.ui)
-
-
-    debugImplementation(Compose.tooling)
-    debugImplementation(Compose.preview)
 }
