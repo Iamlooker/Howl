@@ -15,7 +15,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -175,16 +174,6 @@ fun SeekBar(
         modifier = modifier,
         value = progress,
         onValueChange = onValueChanged
-    )
-}
-
-@Preview
-@Composable
-fun PlayerPreview() {
-    Player(
-        songName = "Baila Conmigo",
-        artistName = "Selena Gomez, Rauw Alejandro",
-        albumArt = R.drawable.error_image
     )
 }
 
