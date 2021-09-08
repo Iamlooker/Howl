@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.compositeOver
 import com.looker.components.ComponentConstants.colorAnimationDuration
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 
@@ -15,7 +16,8 @@ fun WallpaperTheme(
 
     val colors = MaterialTheme.colors.copy(
         surface = animateColorAsState(
-            dominantColorState.color.copy(wallpaperSurfaceAlpha).compositeOverDayNight(),
+            dominantColorState.color.copy(wallpaperSurfaceAlpha)
+                .compositeOver(MaterialTheme.colors.background),
             tween(colorAnimationDuration)
         ).value
     )

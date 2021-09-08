@@ -35,6 +35,14 @@ object Compose {
     const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
+object Coroutines {
+    private const val coroutinesVersion = "1.5.2-native-mt"
+    const val coroutinesCore =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    const val coroutinesAndroid =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+}
+
 object Excludes {
     const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
 }

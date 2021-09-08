@@ -76,6 +76,7 @@ dependencies {
     implementation(Compose.material)
     implementation(Compose.navigation)
     implementation(Compose.ui)
+    implementation(Coroutines.coroutinesAndroid)
 
 
     debugImplementation(Compose.tooling)

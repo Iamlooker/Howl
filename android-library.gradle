@@ -57,6 +57,7 @@ dependencies {
     implementation Core.core
     implementation Lifecycle.lifecycleViewModel
     implementation Lifecycle.lifecycleViewModelCompose
+    implementation Coroutines.coroutinesAndroid
 
     implementation Compose.activity
     implementation Compose.icons

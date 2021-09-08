@@ -3,22 +3,14 @@ package com.looker.components
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.collection.LruCache
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-
-@Composable
-fun Color.compositeOverDayNight() =
-    if (isSystemInDarkTheme()) this.compositeOver(Color.DarkGray)
-    else this.compositeOver(Color.White)
-
 
 fun Int.toColor() = Color(this)
 
