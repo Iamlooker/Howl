@@ -95,8 +95,8 @@ fun AlbumsItem(
         )
         AlbumsItemText(
             modifier = Modifier.padding(horizontal = 8.dp),
-            albumName = album.albumName,
-            artistName = album.artistName
+            albumName = album.albumName ?: "No Album Name",
+            artistName = album.artistName ?: "No Artist Name Available"
         )
         Spacer(modifier = Modifier.height(8.dp))
     }

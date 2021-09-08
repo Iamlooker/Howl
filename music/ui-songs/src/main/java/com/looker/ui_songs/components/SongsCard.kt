@@ -73,8 +73,8 @@ fun SongItem(song: Song, imageSize: Dp) {
     )
     Spacer(modifier = Modifier.width(10.dp))
     SongItemText(
-        songName = song.songName,
-        artistName = song.artistName
+        songName = song.songName ?: "No Song Name",
+        artistName = song.artistName ?: "No Artist Name Available"
     )
 }
 
