@@ -13,7 +13,6 @@ fun WallpaperTheme(
     dominantColorState: DominantColorState = rememberDominantColorState(),
     content: @Composable () -> Unit
 ) {
-
     val colors = MaterialTheme.colors.copy(
         surface = animateColorAsState(
             dominantColorState.color.copy(wallpaperSurfaceAlpha)
