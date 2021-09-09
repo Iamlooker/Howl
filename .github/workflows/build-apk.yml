@@ -47,9 +47,6 @@ jobs:
       - name: Build APK
         run: bash ./gradlew assembleDebug --stacktrace
 
-      - name: Stop Gradle daemon
-        run: ./gradlew --stop
-
       - name: Rename APK
         run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/HowlMusic-debug.apk
 
