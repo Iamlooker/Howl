@@ -22,7 +22,7 @@ object ComponentConstants {
         return itemSize - padding
     }
 
-    const val defaultFadeInDuration = 700
+    const val defaultFadeInDuration = 200
     const val wallpaperSurfaceAlpha = 0.1f
 
     fun <T> tweenAnimation(
