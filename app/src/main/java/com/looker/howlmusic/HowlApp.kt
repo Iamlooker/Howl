@@ -4,25 +4,23 @@ import android.app.WallpaperManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.net.toUri
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
+import com.looker.components.ComponentConstants.defaultBottomNavigationHeight
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
-import com.looker.howlmusic.ui.components.BottomAppBar
-import com.looker.howlmusic.ui.components.HomeNavGraph
-import com.looker.howlmusic.ui.components.HomeScreens
+import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
-import com.looker.ui_player.Player
 
 @Composable
 fun HowlApp() {
@@ -30,33 +28,38 @@ fun HowlApp() {
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
     val wallpaperManager = WallpaperManager.getInstance(context)
 
-    if (canReadStorage) {
-        val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
-        AppTheme(wallpaperBitmap)
-    } else OnBoardingPage {
-        canReadStorage = it
+    HowlMusicTheme {
+        if (canReadStorage) {
+            val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
+            AppTheme(wallpaperBitmap)
+        } else OnBoardingPage {
+            canReadStorage = it
+        }
     }
 }
 
 @Composable
 fun AppTheme(wallpaper: Bitmap? = null) {
-    HowlMusicTheme {
-        val dominantColor = rememberDominantColorState()
+    val dominantColor = rememberDominantColorState()
 
-        LaunchedEffect(wallpaper) {
-            dominantColor.updateColorsFromBitmap(wallpaper)
-        }
+    LaunchedEffect(wallpaper) {
+        dominantColor.updateColorsFromBitmap(wallpaper)
+    }
 
-        WallpaperTheme(dominantColor) {
-            ProvideWindowInsets {
-                HowlSurface(modifier = Modifier.fillMaxSize()) {
-                    AppContent()
-                }
+    WallpaperTheme(dominantColor) {
+        ProvideWindowInsets {
+            HowlSurface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+            ) {
+                AppContent()
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AppContent() {
     val items = listOf(
@@ -64,26 +67,27 @@ fun AppContent() {
         HomeScreens.ALBUMS
     )
     val navController = rememberNavController()
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    )
+    val currentFloat = bottomSheetScaffoldState.currentFraction
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier.navigationBarsPadding(),
+                modifier = Modifier.height(defaultBottomNavigationHeight * (1f - currentFloat)),
                 navController = navController,
                 items = items
             )
         }
-    ) {
-        Box(modifier = Modifier.padding(it)) {
-            HomeNavGraph(navController = navController)
+    ) { bottomBarPadding ->
+        AppBottomSheet(
+            modifier = Modifier.padding(bottomBarPadding),
+            bottomSheetScaffoldState = bottomSheetScaffoldState,
+            currentFloat = currentFloat
+        ) { bottomSheetPadding ->
+            Box(modifier = Modifier.padding(bottomSheetPadding)) {
+                HomeNavGraph(navController = navController)
+            }
         }
     }
-}
-
-@Composable
-fun TestPlayer() {
-    Player(
-        songName = "Baila Conmigo",
-        artistName = "Selena Gomez, Rauw Alejandro",
-        albumArt = "content://media/external/audio/albumart/1411304503959395383".toUri()
-    )
 }

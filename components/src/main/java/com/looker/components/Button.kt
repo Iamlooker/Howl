@@ -2,13 +2,11 @@ package com.looker.components
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun CircleIconButton(
@@ -16,6 +14,7 @@ fun CircleIconButton(
     icon: ImageVector,
     shape: CornerBasedShape = CircleShape,
     buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
+    buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 0.dp),
     onClick: () -> Unit,
     contentDescription: String?
 ) {
@@ -23,7 +22,8 @@ fun CircleIconButton(
         modifier = modifier,
         onClick = onClick,
         shape = shape,
-        colors = buttonColors
+        colors = buttonColors,
+        elevation = buttonElevation
     ) {
         Icon(
             imageVector = icon,

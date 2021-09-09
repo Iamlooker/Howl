@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.CircleIconButton
 import com.looker.components.HowlImage
 import com.looker.components.HowlSurface
@@ -34,7 +35,11 @@ fun Player(
     artistName: String,
     albumArt: Any
 ) {
-    HowlSurface(modifier = modifier.fillMaxSize()) {
+    HowlSurface(
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+    ) {
 
         ConstraintLayout(constraintSet = playerConstraints(20.dp)) {
             HowlImage(
