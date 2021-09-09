@@ -1,7 +1,6 @@
 package com.looker.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -15,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.colorAnimationDuration
+import com.looker.components.ComponentConstants.tweenAnimation
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -33,7 +32,7 @@ fun MaterialCard(
 
     val animateColor by animateColorAsState(
         targetValue = backgroundColor,
-        animationSpec = tween(colorAnimationDuration)
+        animationSpec = tweenAnimation()
     )
 
     Card(

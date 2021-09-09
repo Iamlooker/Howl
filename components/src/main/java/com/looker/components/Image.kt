@@ -30,7 +30,6 @@ fun HowlImage(
         painter = rememberImagePainter(
             data = data,
             builder = {
-                crossfade(true)
                 placeholder(R.drawable.white_background)
                 error(R.drawable.error_image)
             }

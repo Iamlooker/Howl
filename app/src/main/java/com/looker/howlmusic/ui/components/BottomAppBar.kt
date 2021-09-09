@@ -3,7 +3,6 @@ package com.looker.howlmusic.ui.components
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -26,7 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.looker.components.ComponentConstants.colorAnimationDuration
+import com.looker.components.ComponentConstants.tweenAnimation
 
 @Composable
 fun BottomAppBar(
@@ -51,9 +50,7 @@ fun BottomAppBar(
                 unselectedContentColor = MaterialTheme.colors.primaryVariant,
                 onSelected = {
                     navController.navigate(screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true
                         restoreState = true
                     }
@@ -79,13 +76,13 @@ fun RowScope.BottomNavigationItems(
     val backgroundColor by animateColorAsState(
         targetValue = if (selected) unselectedContentColor.copy(0.4f)
         else Color.Transparent,
-        animationSpec = tween(colorAnimationDuration)
+        animationSpec = tweenAnimation()
     )
 
     val itemColor by animateColorAsState(
         targetValue = if (selected) selectedContentColor
         else unselectedContentColor,
-        animationSpec = tween(colorAnimationDuration)
+        animationSpec = tweenAnimation()
     )
 
     val selectedLabel = if (selected) label
@@ -107,12 +104,11 @@ fun RowScope.BottomNavigationItems(
         contentAlignment = Alignment.Center
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(imageVector = icon, tint = itemColor, contentDescription = null)
             Text(
-                modifier = Modifier.animateContentSize(animationSpec = tween(colorAnimationDuration)),
+                modifier = Modifier.animateContentSize(animationSpec = tweenAnimation()),
                 text = selectedLabel,
                 color = itemColor
             )
