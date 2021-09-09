@@ -100,18 +100,29 @@ fun RowScope.BottomNavigationItems(
                 indication = null,
                 interactionSource = interactionSource
             )
-            .fillMaxSize(),
+            .height(56.dp), // Default BottomNavigation height
         contentAlignment = Alignment.Center
     ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Icon(imageVector = icon, tint = itemColor, contentDescription = null)
-            Text(
-                modifier = Modifier.animateContentSize(animationSpec = tweenAnimation()),
-                text = selectedLabel,
-                color = itemColor
-            )
-        }
+        BaselineBottomNavigationItem(icon = icon, label = selectedLabel, itemColor = itemColor)
+    }
+}
+
+@Composable
+fun BaselineBottomNavigationItem(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    label: String,
+    itemColor: Color
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(imageVector = icon, tint = itemColor, contentDescription = null)
+        Text(
+            modifier = Modifier.animateContentSize(animationSpec = tweenAnimation()),
+            text = label,
+            color = itemColor
+        )
     }
 }

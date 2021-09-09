@@ -1,9 +1,11 @@
 package com.looker.ui_player
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
@@ -20,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import com.looker.components.ButtonWithIcon
+import com.looker.components.CircleIconButton
 import com.looker.components.HowlImage
 import com.looker.components.HowlSurface
 import com.looker.components.WrappedText
@@ -33,29 +35,129 @@ fun Player(
     albumArt: Any
 ) {
     HowlSurface(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+
+        ConstraintLayout(constraintSet = playerConstraints(20.dp)) {
             HowlImage(
-                modifier = Modifier.size(300.dp),
+                modifier = Modifier
+                    .size(300.dp)
+                    .layoutId("albumArt"),
                 data = albumArt,
                 shape = CircleShape
             )
-            SongText(songName = songName, artistName = artistName)
-            Spacer(Modifier.height(80.dp))
-            PlaybackControls()
+            SongText(
+                modifier = modifier.layoutId("songDetails"),
+                songName = songName,
+                artistName = artistName
+            )
+            PlaybackControls(modifier = modifier.layoutId("controls"))
         }
+    }
+}
+
+private fun playerConstraints(margin: Dp): ConstraintSet = ConstraintSet {
+    val albumArt = createRefFor("albumArt")
+    val songDetails = createRefFor("songDetails")
+    val controls = createRefFor("controls")
+
+    constrain(albumArt) {
+        top.linkTo(parent.top, margin = margin)
+        centerHorizontallyTo(parent)
+    }
+    constrain(songDetails) {
+        top.linkTo(albumArt.bottom, margin = margin)
+        bottom.linkTo(controls.top, margin = margin)
+        centerHorizontallyTo(parent)
+    }
+    constrain(controls) {
+        bottom.linkTo(parent.bottom)
+        centerHorizontallyTo(parent)
+        width = Dimension.fillToConstraints
+    }
+}
+
+private fun controlsConstraints(margin: Dp): ConstraintSet = ConstraintSet {
+    val playButton = createRefFor("playButton")
+    val skipNextButton = createRefFor("skipNextButton")
+    val skipPrevButton = createRefFor("skipPrevButton")
+    val progressBar = createRefFor("progressBar")
+
+    constrain(playButton) {
+        start.linkTo(parent.start, margin = margin)
+        end.linkTo(skipNextButton.start, margin = margin)
+        bottom.linkTo(skipPrevButton.top, margin = margin)
+        width = Dimension.fillToConstraints
+        height = Dimension.value(60.dp)
+    }
+    constrain(skipNextButton) {
+        end.linkTo(parent.end, margin = margin)
+        bottom.linkTo(progressBar.top, margin = margin)
+        height = Dimension.value(60.dp)
+    }
+    constrain(skipPrevButton) {
+        start.linkTo(parent.start, margin = margin)
+        bottom.linkTo(parent.bottom, margin = margin * 2)
+        height = Dimension.value(60.dp)
+    }
+    constrain(progressBar) {
+        start.linkTo(skipPrevButton.end, margin = margin)
+        end.linkTo(parent.end, margin = margin)
+        bottom.linkTo(parent.bottom, margin = margin * 2)
+        width = Dimension.fillToConstraints
+        height = Dimension.value(60.dp)
+    }
+}
+
+@Composable
+fun PlaybackControls(modifier: Modifier = Modifier) {
+    val playButtonColors = buttonColors(backgroundColor = MaterialTheme.colors.primary)
+
+    val skipButtonColors = buttonColors(backgroundColor = MaterialTheme.colors.surface)
+
+    var progressValue by remember { mutableStateOf(0f) }
+
+    val progress by animateFloatAsState(targetValue = progressValue)
+
+    ConstraintLayout(modifier = modifier, constraintSet = controlsConstraints(20.dp)) {
+        CircleIconButton(
+            modifier = Modifier.layoutId("playButton"),
+            onClick = {},
+            icon = Icons.Rounded.PlayArrow,
+            buttonColors = playButtonColors,
+            contentDescription = "play"
+        )
+
+        CircleIconButton(
+            modifier = Modifier.layoutId("skipNextButton"),
+            onClick = { progressValue = progressValue.seekForward() },
+            icon = Icons.Rounded.SkipNext,
+            buttonColors = skipButtonColors,
+            contentDescription = "next"
+        )
+
+        CircleIconButton(
+            modifier = Modifier.layoutId("skipPrevButton"),
+            onClick = { progressValue = progressValue.seekBack() },
+            icon = Icons.Rounded.SkipPrevious,
+            buttonColors = skipButtonColors,
+            contentDescription = "previous"
+        )
+
+        SeekBar(
+            modifier = Modifier.layoutId("progressBar"),
+            progress = progress,
+            onValueChanged = { progressValue = it }
+        )
     }
 }
 
 @Composable
 fun SongText(
+    modifier: Modifier = Modifier,
     songName: String,
     artistName: String
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
@@ -70,99 +172,6 @@ fun SongText(
     }
 }
 
-private fun playerConstraints(margin: Dp): ConstraintSet {
-    return ConstraintSet {
-        val playButton = createRefFor("playButton")
-        val skipNextButton = createRefFor("skipNextButton")
-        val skipPrevButton = createRefFor("skipPrevButton")
-        val progressBar = createRefFor("progressBar")
-
-        constrain(playButton) {
-            start.linkTo(parent.start, margin = margin)
-            end.linkTo(skipNextButton.start, margin = margin)
-            width = Dimension.fillToConstraints
-            height = Dimension.value(60.dp)
-        }
-        constrain(skipNextButton) {
-            end.linkTo(parent.end, margin = margin)
-            height = Dimension.value(60.dp)
-        }
-        constrain(skipPrevButton) {
-            start.linkTo(parent.start, margin = margin)
-            top.linkTo(playButton.bottom, margin = margin)
-            bottom.linkTo(parent.bottom, margin = margin * 2)
-            height = Dimension.value(60.dp)
-        }
-        constrain(progressBar) {
-            top.linkTo(skipNextButton.bottom, margin = margin)
-            start.linkTo(skipPrevButton.end, margin = margin)
-            end.linkTo(parent.end, margin = margin)
-            bottom.linkTo(parent.bottom, margin = margin * 2)
-            width = Dimension.fillToConstraints
-        }
-    }
-}
-
-
-@Composable
-fun PlaybackControls() {
-
-    val playButtonColors = buttonColors(
-        backgroundColor = MaterialTheme.colors.primary
-    )
-
-    val skipButtonColors = buttonColors(
-        backgroundColor = MaterialTheme.colors.surface
-    )
-
-    var progressValue by remember {
-        mutableStateOf(0f)
-    }
-
-    val progress by animateFloatAsState(targetValue = progressValue)
-
-    var start by remember {
-        mutableStateOf(false)
-    }
-
-    ConstraintLayout(
-        modifier = Modifier.fillMaxWidth(),
-        constraintSet = playerConstraints(20.dp)
-    ) {
-        ButtonWithIcon(
-            modifier = Modifier.layoutId("playButton"),
-            onClick = { start = !start },
-            icon = Icons.Rounded.PlayArrow,
-            shape = RoundedCornerShape(50),
-            buttonColors = playButtonColors,
-            contentDescription = "play"
-        )
-
-        ButtonWithIcon(
-            modifier = Modifier.layoutId("skipNextButton"),
-            onClick = { progressValue = progressValue.seekForward() },
-            icon = Icons.Rounded.SkipNext,
-            shape = CircleShape,
-            buttonColors = skipButtonColors,
-            contentDescription = "next"
-        )
-
-        ButtonWithIcon(
-            modifier = Modifier.layoutId("skipPrevButton"),
-            onClick = { progressValue = progressValue.seekBack() },
-            icon = Icons.Rounded.SkipPrevious,
-            shape = CircleShape,
-            buttonColors = skipButtonColors,
-            contentDescription = "previous"
-        )
-
-        SeekBar(
-            modifier = Modifier.layoutId("progressBar"),
-            progress = progress,
-            onValueChanged = { progressValue = it }
-        )
-    }
-}
 
 @Composable
 fun SeekBar(
