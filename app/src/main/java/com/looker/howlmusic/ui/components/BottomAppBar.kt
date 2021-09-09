@@ -76,7 +76,7 @@ fun RowScope.BottomNavigationItems(
 ) {
 
     val backgroundColor by animateColorAsState(
-        targetValue = if (selected) unselectedContentColor
+        targetValue = if (selected) unselectedContentColor.copy(0.4f)
         else Color.Transparent,
         animationSpec = tween(500)
     )
@@ -94,7 +94,7 @@ fun RowScope.BottomNavigationItems(
         modifier = modifier
             .weight(1f)
             .clip(MaterialTheme.shapes.small)
-            .background(backgroundColor.copy(0.4f))
+            .background(backgroundColor)
             .selectable(
                 selected = selected,
                 onClick = onSelected,
