@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui.components
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -89,7 +91,7 @@ fun RowScope.BottomNavigationItems(
     val selectedLabel = if (selected) label
     else ""
 
-    Box(
+    BoxWithConstraints(
         modifier = modifier
             .weight(1f)
             .clip(MaterialTheme.shapes.small)
@@ -104,7 +106,14 @@ fun RowScope.BottomNavigationItems(
             .height(defaultBottomNavigationHeight),
         contentAlignment = Alignment.Center
     ) {
-        BaselineBottomNavigationItem(icon = icon, label = selectedLabel, itemColor = itemColor)
+        Crossfade(targetState = if (this.maxHeight < 45.dp) 0f else 1f) {
+            BaselineBottomNavigationItem(
+                modifier = Modifier.alpha(it),
+                icon = icon,
+                label = selectedLabel,
+                itemColor = itemColor
+            )
+        }
     }
 }
 
