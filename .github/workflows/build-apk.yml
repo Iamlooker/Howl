@@ -5,16 +5,11 @@ on:
   push:
     branches: [ alpha ]
 
-
 jobs:
   apk:
 
-    name: Build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    name: Build on Ubuntu
+    runs-on: ubuntu-latest
     env:
       NDK_CCACHE: ${{ github.workspace }}/ccache
       CCACHE_DIR: ${{ github.workspace }}/.ccache
