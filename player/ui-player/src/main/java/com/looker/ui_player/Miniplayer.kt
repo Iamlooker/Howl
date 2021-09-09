@@ -11,7 +11,6 @@ import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.looker.components.HowlImage
 import com.looker.components.WrappedText
@@ -82,14 +81,4 @@ fun MiniPlayerSongText(
             style = MaterialTheme.typography.caption
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MiniPlayerPreview() {
-    MiniPlayer(
-        songName = "Name",
-        artistName = "Name",
-        albumArt = R.drawable.error_image
-    )
 }
