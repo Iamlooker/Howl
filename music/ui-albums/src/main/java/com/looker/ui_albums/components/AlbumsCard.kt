@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.itemSize
+import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.HowlImage
 import com.looker.components.MaterialCard
 import com.looker.components.WrappedText
@@ -31,7 +31,7 @@ fun AlbumsCard(
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val cardWidth = context.itemSize(false, 2, 20.dp)
+    val cardWidth = context.calculateItemSize(false, 2, 20.dp)
     AlbumsCard(
         modifier.padding(10.dp), album, cardWidth, onClick
     )

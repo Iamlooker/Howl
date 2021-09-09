@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.looker.components.ComponentConstants.colorAnimationDuration
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -32,7 +33,7 @@ fun MaterialCard(
 
     val animateColor by animateColorAsState(
         targetValue = backgroundColor,
-        animationSpec = tween(500)
+        animationSpec = tween(colorAnimationDuration)
     )
 
     Card(

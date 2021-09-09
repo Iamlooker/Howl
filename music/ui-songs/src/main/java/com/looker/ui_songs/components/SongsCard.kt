@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.itemSize
+import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.HowlImage
 import com.looker.components.MaterialCard
 import com.looker.components.WrappedText
@@ -27,7 +27,7 @@ fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit = {
 
     val context = LocalContext.current
 
-    val itemHeight = context.itemSize(true, 14)
+    val itemHeight = context.calculateItemSize(true, 14)
 
     Box(modifier = modifier) {
         SongsCard(modifier = modifier, song = song, cardHeight = itemHeight, onClick = onClick)

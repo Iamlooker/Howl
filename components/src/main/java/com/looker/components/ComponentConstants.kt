@@ -5,7 +5,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object ComponentConstants {
-    fun Context.itemSize(height: Boolean, count: Int, padding: Dp = 0.dp): Dp {
+    fun Context.calculateItemSize(height: Boolean, count: Int, padding: Dp = 0.dp): Dp {
         val screenDensity = this.resources.displayMetrics.density
         val screenHeight = this.resources.displayMetrics.heightPixels
         val screenWidth = this.resources.displayMetrics.widthPixels
@@ -19,6 +19,6 @@ object ComponentConstants {
         return itemSize - padding
     }
 
-    const val colorAnimationDuration = 1000
+    const val colorAnimationDuration = 700
     const val wallpaperSurfaceAlpha = 0.1f
 }

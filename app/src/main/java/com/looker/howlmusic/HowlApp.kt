@@ -15,12 +15,12 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.looker.components.HowlSurface
-import com.looker.components.WallpaperTheme
 import com.looker.components.rememberDominantColorState
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
+import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
 import com.looker.ui_player.Player
 

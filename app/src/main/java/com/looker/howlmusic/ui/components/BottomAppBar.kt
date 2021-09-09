@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.looker.components.ComponentConstants.colorAnimationDuration
 
 @Composable
 fun BottomAppBar(
@@ -78,13 +79,13 @@ fun RowScope.BottomNavigationItems(
     val backgroundColor by animateColorAsState(
         targetValue = if (selected) unselectedContentColor.copy(0.4f)
         else Color.Transparent,
-        animationSpec = tween(500)
+        animationSpec = tween(colorAnimationDuration)
     )
 
     val itemColor by animateColorAsState(
         targetValue = if (selected) selectedContentColor
         else unselectedContentColor,
-        animationSpec = tween(500)
+        animationSpec = tween(colorAnimationDuration)
     )
 
     val selectedLabel = if (selected) label
@@ -111,7 +112,7 @@ fun RowScope.BottomNavigationItems(
         ) {
             Icon(imageVector = icon, tint = itemColor, contentDescription = null)
             Text(
-                modifier = Modifier.animateContentSize(animationSpec = tween(500)),
+                modifier = Modifier.animateContentSize(animationSpec = tween(colorAnimationDuration)),
                 text = selectedLabel,
                 color = itemColor
             )

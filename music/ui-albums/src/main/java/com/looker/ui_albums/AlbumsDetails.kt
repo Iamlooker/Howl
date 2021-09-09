@@ -1,7 +1,6 @@
 package com.looker.ui_albums
 
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,7 +57,6 @@ fun AlbumBottomSheetItem(
 fun AlbumBottomSheetHandle(icon: ImageVector) {
     Crossfade(
         targetState = icon,
-        animationSpec = tween(500)
     ) { currentIcon ->
         Icon(
             modifier = Modifier
