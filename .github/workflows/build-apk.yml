@@ -42,7 +42,7 @@ jobs:
           path: |
             ${{ github.workspace }}/.ccache
             ~/.gradle/caches/build-cache-*
-            key: ${{ runner.os }}-build-cache-${{ github.sha }}
+            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
             restore-keys: ${{ runner.os }}-build-cache-
 
       - name: Build APK
