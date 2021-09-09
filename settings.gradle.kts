@@ -7,7 +7,10 @@ dependencyResolutionManagement {
 }
 rootProject.name = "HowlMusic"
 
+include(":on-boarding")
+
 include(":app")
+
 include(":constants")
 include(":components")
 
@@ -15,5 +18,7 @@ include(":music")
 include(":music:ui-songs")
 include(":music:data-music")
 include(":music:ui-albums")
-include(":on-boarding")
-include(":music:ui-player")
+
+
+include(":player")
+include(":player:ui-player")

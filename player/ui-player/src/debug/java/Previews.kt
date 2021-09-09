@@ -7,8 +7,8 @@ import com.looker.ui_player.R
 @Composable
 fun PlayerPreview() {
     Player(
-        songName = "Baila Conmigo",
-        artistName = "Selena Gomez, Rauw Alejandro",
+        songName = "Test Name",
+        artistName = "Test Artist 1, Test Artist 2",
         albumArt = R.drawable.error_image
     )
 }
