@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -77,8 +78,7 @@ fun AlbumHeader(
     AlbumsItem(
         modifier = modifier.fillMaxWidth(),
         album = album,
-        imageHeight = 250.dp,
-        imageWidth = 250.dp
+        imageSize = Size(250f, 250f)
     )
 }
 
