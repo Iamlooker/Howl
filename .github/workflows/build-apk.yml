@@ -8,28 +8,53 @@ on:
 
 jobs:
   apk:
-    name: Starting Build
-    runs-on: ubuntu-latest
+
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    env:
+      NDK_CCACHE: ${{ github.workspace }}/ccache
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+
     steps:
       - name: Checkout
         uses: actions/checkout@v1
-
-      - name: Restore Gradle cache
-        uses: actions/cache@v2.1.4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-grad
 
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
+      - name: Set up ccache
+        run: bash .github/ccache.sh
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            !~/.gradle/caches/build-cache-*
+            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Cache build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ github.workspace }}/.ccache
+            ~/.gradle/caches/build-cache-*
+            key: ${{ runner.os }}-build-cache-${{ github.sha }}
+            restore-keys: ${{ runner.os }}-build-cache-
+
       - name: Build APK
         run: bash ./gradlew assembleDebug --stacktrace
+
+      - name: Stop Gradle daemon
+        run: ./gradlew --stop
 
       - name: Rename APK
         run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/HowlMusic-debug.apk
