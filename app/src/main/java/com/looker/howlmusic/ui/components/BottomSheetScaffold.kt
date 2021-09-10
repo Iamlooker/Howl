@@ -12,7 +12,7 @@ import com.looker.howlmusic.R
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.Player
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun AppBottomSheet(
     modifier: Modifier = Modifier,
@@ -47,7 +47,7 @@ fun AppBottomSheet(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 val BottomSheetScaffoldState.currentFraction: Float
     get() {
         return try {
