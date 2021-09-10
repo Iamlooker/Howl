@@ -4,17 +4,17 @@ import android.app.WallpaperManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
-import com.looker.components.ComponentConstants.defaultBottomNavigationHeight
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.howlmusic.ui.components.*
@@ -74,7 +74,7 @@ fun AppContent() {
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier.height(defaultBottomNavigationHeight * (1f - currentFloat)),
+                modifier = Modifier.offset(0.dp, (56.dp * currentFloat)),
                 navController = navController,
                 items = items
             )
