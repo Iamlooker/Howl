@@ -1,5 +1,5 @@
 object Accompanist {
-    private const val accompanistVersion = "0.17.0"
+    private const val accompanistVersion = "0.18.0"
     const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
