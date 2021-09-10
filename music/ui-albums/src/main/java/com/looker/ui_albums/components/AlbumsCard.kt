@@ -1,6 +1,5 @@
 package com.looker.ui_albums.components
 
-import android.net.Uri
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -15,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HowlImage
@@ -23,9 +23,6 @@ import com.looker.components.WrappedText
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Album
 import kotlinx.coroutines.launch
-
-val Long.artworkUri: Uri?
-    get() = Uri.parse("content://media/external/audio/albumart/$this")
 
 @Composable
 fun AlbumsCard(

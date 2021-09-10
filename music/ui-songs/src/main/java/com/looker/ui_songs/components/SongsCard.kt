@@ -1,6 +1,5 @@
 package com.looker.ui_songs.components
 
-import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -11,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.HowlImage
 import com.looker.components.MaterialCard
@@ -18,9 +18,6 @@ import com.looker.components.WrappedText
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Song
 import kotlinx.coroutines.launch
-
-private val Long.artworkUri: Uri?
-    get() = Uri.parse("content://media/external/audio/albumart/$this")
 
 @Composable
 fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit = {}) {

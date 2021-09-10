@@ -38,11 +38,7 @@ fun AppBottomSheet(
                     artistName = "Name",
                     albumArt = R.drawable.empty
                 )
-                Player(
-                    songName = "Name",
-                    artistName = "Name",
-                    albumArt = R.drawable.empty
-                )
+                Player()
             }
         },
         scaffoldState = bottomSheetScaffoldState,

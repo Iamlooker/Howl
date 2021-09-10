@@ -1,16 +1,18 @@
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.looker.ui_player.*
+import com.looker.ui_player.MiniPlayer
+import com.looker.ui_player.Player
+import com.looker.ui_player.R
+import com.looker.ui_player.components.PlayAndSkipButton
+import com.looker.ui_player.components.PreviousAndQueue
 
 @Preview
 @Composable
 fun PlayerPreview() {
-    Player(
-        songName = "Test Name",
-        artistName = "Test Artist 1, Test Artist 2",
-        albumArt = R.drawable.error_image
-    )
+    Player()
 }
 
 @Preview(showBackground = true)
@@ -27,7 +29,7 @@ fun MiniPlayerPreview() {
 @Composable
 fun ControllerPreview() {
     Column {
-        PlayAndSkipButton()
+        PlayAndSkipButton(playIcon = Icons.Default.PlayArrow) {}
         PreviousAndQueue()
     }
 }

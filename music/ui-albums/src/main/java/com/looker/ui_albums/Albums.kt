@@ -18,13 +18,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.components.BottomSheets
+import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Album
 import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
 import com.looker.ui_albums.components.AlbumsCard
-import com.looker.ui_albums.components.artworkUri
 import kotlinx.coroutines.launch
 
 @Composable
