@@ -6,6 +6,7 @@ import androidx.collection.LruCache
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
@@ -13,6 +14,13 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 
 fun Int.toColor() = Color(this)
+
+@Composable
+fun Color.compositeOverBackground(
+    alpha: Float = 0.3f,
+    backgroundColor: Color = MaterialTheme.colors.background
+): Color =
+    this.copy(alpha).compositeOver(backgroundColor)
 
 @Composable
 fun rememberDominantColorState(

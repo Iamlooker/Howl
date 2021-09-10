@@ -7,5 +7,4 @@ dependencies {
     implementation(Palette.palette)
     implementation(Coil.coil)
     implementation(Accompanist.insets)
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02")
 }

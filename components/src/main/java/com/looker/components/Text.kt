@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 fun WrappedText(
     modifier: Modifier = Modifier,
     text: String?,
-    textColor: Color = MaterialTheme.colors.onBackground,
+    textColor: Color = Color.Unspecified,
     style: TextStyle = MaterialTheme.typography.body1,
     textAlign: TextAlign = TextAlign.Start,
 ) {
