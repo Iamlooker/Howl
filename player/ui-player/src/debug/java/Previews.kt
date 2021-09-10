@@ -1,8 +1,7 @@
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.looker.ui_player.MiniPlayer
-import com.looker.ui_player.Player
-import com.looker.ui_player.R
+import com.looker.ui_player.*
 
 @Preview
 @Composable
@@ -22,4 +21,13 @@ fun MiniPlayerPreview() {
         artistName = "Name",
         albumArt = R.drawable.error_image
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ControllerPreview() {
+    Column {
+        PlayAndSkipButton()
+        PreviousAndQueue()
+    }
 }

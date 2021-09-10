@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.*
@@ -125,8 +124,8 @@ fun SeekBar(
 @Composable
 fun PlayAndSkipButton(
     modifier: Modifier = Modifier,
-    playButtonColors: ButtonColors,
-    skipButtonColors: ButtonColors,
+    playButtonColors: ButtonColors = buttonColors(),
+    skipButtonColors: ButtonColors = buttonColors(),
     playClick: () -> Unit = {},
     skipNextClick: () -> Unit = {}
 ) {
@@ -161,7 +160,7 @@ fun PlayAndSkipButton(
 @Composable
 fun PreviousAndQueue(
     modifier: Modifier = Modifier,
-    skipButtonColors: ButtonColors,
+    skipButtonColors: ButtonColors = buttonColors(),
     skipPrevClick: () -> Unit = {}
 ) {
     Row(
@@ -210,21 +209,6 @@ fun QueueHeader(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.caption
             )
         }
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun ControllerPreview() {
-    val playButtonColors = buttonColors(
-        backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(),
-        contentColor = MaterialTheme.colors.primary
-    )
-
-    val skipButtonColors = buttonColors(backgroundColor = MaterialTheme.colors.surface)
-    Column {
-        PlayAndSkipButton(playButtonColors = playButtonColors, skipButtonColors = skipButtonColors)
-        PreviousAndQueue(skipButtonColors = skipButtonColors)
     }
 }
 

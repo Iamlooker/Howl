@@ -1,13 +1,16 @@
 package com.looker.howlmusic.ui.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.howlmusic.R
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.Player
@@ -20,6 +23,11 @@ fun AppBottomSheet(
     currentFloat: Float,
     content: @Composable (PaddingValues) -> Unit
 ) {
+    val sheetBackgroundColor by animateColorAsState(
+        targetValue = if (currentFloat == 0f) MaterialTheme.colors.surface
+        else MaterialTheme.colors.background, animationSpec = tweenAnimation()
+    )
+
     BottomSheetScaffold(
         modifier = modifier,
         sheetContent = {
@@ -38,8 +46,8 @@ fun AppBottomSheet(
             }
         },
         scaffoldState = bottomSheetScaffoldState,
+        sheetBackgroundColor = sheetBackgroundColor,
         sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-        sheetBackgroundColor = MaterialTheme.colors.background,
         sheetPeekHeight = 56.dp,
         sheetElevation = 0.dp
     ) { totalPadding ->
