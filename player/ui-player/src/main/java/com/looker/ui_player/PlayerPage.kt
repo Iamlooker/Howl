@@ -1,5 +1,6 @@
 package com.looker.ui_player
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -8,8 +9,10 @@ import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Slider
+import androidx.compose.material.SliderDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.*
@@ -20,6 +23,7 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.*
+import com.looker.components.ComponentConstants.tweenAnimation
 
 @Composable
 fun Player(
@@ -38,7 +42,7 @@ fun Player(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AlbumArt(modifier = Modifier.size(300.dp), albumArt = albumArt)
+            AlbumArt(modifier = Modifier.size(400.dp, 300.dp), albumArt = albumArt)
             SongText(songName = songName, artistName = artistName)
             Spacer(modifier = Modifier.height(50.dp))
             PlaybackControls(modifier = Modifier.fillMaxWidth())
@@ -79,10 +83,36 @@ fun PlaybackControls(modifier: Modifier = Modifier) {
 
 @Composable
 fun AlbumArt(modifier: Modifier = Modifier, albumArt: Any) {
-    HowlImage(
-        modifier = modifier,
-        data = albumArt,
-        shape = CircleShape
+    Box {
+        HowlImage(
+            modifier = modifier,
+            data = albumArt,
+            shape = CircleShape
+        )
+        ShuffleButton(modifier = Modifier.align(Alignment.BottomEnd))
+    }
+}
+
+@Composable
+fun ShuffleButton(modifier: Modifier = Modifier) {
+
+    var shuffle by remember {
+        mutableStateOf(false)
+    }
+
+    val shuffleColor by animateColorAsState(
+        targetValue = if (shuffle) MaterialTheme.colors.secondary.compositeOverBackground()
+        else MaterialTheme.colors.surface, animationSpec = tweenAnimation()
+    )
+
+    val shuffleButtonColors = buttonColors(backgroundColor = shuffleColor)
+
+    ShapedIconButton(
+        modifier = modifier.padding(20.dp),
+        icon = Icons.Rounded.Shuffle,
+        buttonColors = shuffleButtonColors,
+        onClick = { shuffle = !shuffle },
+        contentDescription = "Shuffle Button"
     )
 }
 
@@ -114,10 +144,15 @@ fun SeekBar(
     progress: Float,
     onValueChanged: (Float) -> Unit
 ) {
+    val sliderColors = SliderDefaults.colors(
+        inactiveTrackColor = MaterialTheme.colors.surface
+    )
+
     Slider(
         modifier = modifier,
         value = progress,
-        onValueChange = onValueChanged
+        onValueChange = onValueChanged,
+        colors = sliderColors
     )
 }
 
@@ -135,7 +170,7 @@ fun PlayAndSkipButton(
             .padding(20.dp),
         horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        CircleIconButton(
+        ShapedIconButton(
             modifier = Modifier
                 .height(60.dp)
                 .weight(3f),
@@ -145,7 +180,7 @@ fun PlayAndSkipButton(
             contentDescription = "play"
         )
 
-        CircleIconButton(
+        ShapedIconButton(
             modifier = Modifier
                 .height(60.dp)
                 .weight(1f),
@@ -169,7 +204,7 @@ fun PreviousAndQueue(
             .padding(20.dp),
         horizontalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        CircleIconButton(
+        ShapedIconButton(
             modifier = Modifier
                 .height(60.dp)
                 .weight(1f),

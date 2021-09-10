@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CircleIconButton(
+fun ShapedIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     shape: CornerBasedShape = CircleShape,
