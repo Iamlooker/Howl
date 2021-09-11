@@ -47,6 +47,7 @@ fun Player(
                 playIcon = viewModel.playIcon,
                 onPlayPause = { viewModel.onPlayPause() }
             )
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

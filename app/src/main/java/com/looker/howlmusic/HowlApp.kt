@@ -79,9 +79,8 @@ fun AppContent() {
                 items = items
             )
         }
-    ) { bottomBarPadding ->
+    ) {
         AppBottomSheet(
-            modifier = Modifier.padding(bottomBarPadding),
             bottomSheetScaffoldState = bottomSheetScaffoldState,
             currentFloat = currentFloat
         ) { bottomSheetPadding ->

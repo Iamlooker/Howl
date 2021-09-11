@@ -44,7 +44,7 @@ fun AppBottomSheet(
         scaffoldState = bottomSheetScaffoldState,
         sheetBackgroundColor = sheetBackgroundColor,
         sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-        sheetPeekHeight = 56.dp,
+        sheetPeekHeight = 112.dp,
         sheetElevation = 0.dp
     ) { totalPadding ->
         content(totalPadding)
