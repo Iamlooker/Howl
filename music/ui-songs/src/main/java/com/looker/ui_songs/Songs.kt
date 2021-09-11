@@ -37,19 +37,26 @@ private fun Songs(
         mutableStateOf<List<Song>>(listOf())
     }
 
+    val player = viewModel.buildPlayer(context)
+
     LaunchedEffect(songsList) {
         launch {
             songsList.value = viewModel.getSongsList(context)
         }
     }
 
-    HowlSurface(modifier = modifier) { SongsList(songsList = songsList.value) }
+    HowlSurface(modifier = modifier) {
+        SongsList(songsList = songsList.value) {
+            viewModel.playSong(player, it)
+        }
+    }
 }
 
 @Composable
 fun SongsList(
     modifier: Modifier = Modifier,
-    songsList: List<Song>
+    songsList: List<Song>,
+    onSongClick: (Song) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier,
@@ -59,7 +66,10 @@ fun SongsList(
         )
     ) {
         items(songsList) { song ->
-            SongsCard(modifier = Modifier.fillMaxWidth(), song = song)
+            SongsCard(
+                modifier = Modifier.fillMaxWidth(),
+                song = song,
+                onClick = { onSongClick(song) })
         }
     }
 }

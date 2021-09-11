@@ -22,3 +22,4 @@ include(":music:ui-albums")
 
 include(":player")
 include(":player:ui-player")
+include(":player:player-service")

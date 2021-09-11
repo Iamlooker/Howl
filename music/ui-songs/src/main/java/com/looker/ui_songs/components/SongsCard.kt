@@ -20,7 +20,7 @@ import com.looker.data_music.data.Song
 import kotlinx.coroutines.launch
 
 @Composable
-fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit = {}) {
+fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit) {
 
     val context = LocalContext.current
 

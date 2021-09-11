@@ -4,9 +4,6 @@ val implementation by configurations
 
 dependencies {
     implementation(project(Modules.components))
-    implementation(project(Modules.dataMusic))
-    implementation(project(Modules.playerService))
-
-    implementation(Accompanist.insets)
+    implementation(project(Modules.constants))
     implementation(ExoPlayer.exoplayerCore)
 }
