@@ -4,10 +4,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.compositeOver
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.ComponentConstants.wallpaperSurfaceAlpha
 import com.looker.components.DominantColorState
+import com.looker.components.compositeOverBackground
 import com.looker.components.rememberDominantColorState
 
 @Composable
@@ -33,8 +33,7 @@ fun WallpaperTheme(
 ) {
     val colors = MaterialTheme.colors.copy(
         surface = animateColorAsState(
-            dominantColorState.color.copy(wallpaperSurfaceAlpha)
-                .compositeOver(MaterialTheme.colors.background),
+            dominantColorState.color.compositeOverBackground(wallpaperSurfaceAlpha),
             tweenAnimation()
         ).value
     )

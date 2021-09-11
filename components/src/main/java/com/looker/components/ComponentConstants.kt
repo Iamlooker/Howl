@@ -29,7 +29,7 @@ object ComponentConstants {
 
     val defaultBottomNavigationHeight = 56.dp // Default BottomNavigation height
     const val defaultFadeInDuration = 400
-    const val wallpaperSurfaceAlpha = 0.1f
+    const val wallpaperSurfaceAlpha = 0.2f
 
     fun <T> tweenAnimation(
         durationMillis: Int = defaultFadeInDuration,
