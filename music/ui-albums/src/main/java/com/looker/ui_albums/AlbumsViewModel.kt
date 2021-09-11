@@ -12,13 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.looker.data_music.data.Album
+import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AlbumsViewModel(
-    private val albumsRepository: com.looker.data_music.data.AlbumsRepository,
+    private val albumsRepository: AlbumsRepository,
     private val songsRepository: SongsRepository
 ) : ViewModel() {
 
