@@ -22,6 +22,7 @@ import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Album
+import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
 import com.looker.ui_albums.components.AlbumsCard
@@ -38,7 +39,7 @@ private fun Albums(
     modifier: Modifier = Modifier,
     viewModel: AlbumsViewModel = viewModel(
         factory = AlbumsViewModelFactory(
-            com.looker.data_music.data.AlbumsRepository(),
+            AlbumsRepository(),
             SongsRepository()
         )
     )
