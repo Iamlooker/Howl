@@ -1,5 +1,3 @@
-import Hilt.hiltVersion
-
 object Accompanist {
     private const val accompanistVersion = "0.18.0"
     const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
@@ -7,7 +5,6 @@ object Accompanist {
 
 object Classpath {
     private const val gradleVersion = "7.0.2"
-    const val hiltClasspath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
     const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
     const val gradleKotlin =
         "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
@@ -48,12 +45,6 @@ object ExoPlayer {
         "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
 
-object Hilt {
-    const val hiltVersion = "2.38.1"
-    const val hilt = "com.google.dagger:hilt-android:$hiltVersion"
-    const val hiltCompiler = "com.google.dagger:hilt-android-compiler:$hiltVersion"
-}
-
 object Lifecycle {
     private const val lifecycleVersion = "2.3.1"
     const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
@@ -64,10 +55,6 @@ object Lifecycle {
 object Palette {
     private const val paletteVersion = "1.0.0"
     const val palette = "androidx.palette:palette-ktx:$paletteVersion"
-}
-
-object Plugins {
-    const val hiltPlugin = "dagger.hilt.android.plugin"
 }
 
 object Version {

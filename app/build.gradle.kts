@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id(Plugins.hiltPlugin)
 }
 
 android {
@@ -79,9 +78,6 @@ dependencies {
     implementation(Compose.material)
     implementation(Compose.navigation)
     implementation(Compose.ui)
-
-    implementation(Hilt.hilt)
-    kapt(Hilt.hiltCompiler)
 
     debugImplementation(Compose.tooling)
 }

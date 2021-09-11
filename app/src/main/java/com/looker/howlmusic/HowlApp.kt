@@ -1,6 +1,5 @@
 package com.looker.howlmusic
 
-import android.app.Application
 import android.app.WallpaperManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
@@ -22,10 +21,6 @@ import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
-import dagger.hilt.android.HiltAndroidApp
-
-@HiltAndroidApp
-class HowlApp : Application()
 
 @Composable
 fun App() {
