@@ -1,5 +1,7 @@
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
+apply plugin: Plugins.hiltPlugin
 
 android {
     compileSdk = Android.compileSdk
@@ -62,6 +64,9 @@ dependencies {
     implementation Compose.icons
     implementation Compose.material
     implementation Compose.ui
+
+    implementation Hilt.hilt
+    kapt Hilt.hiltCompiler
 
     debugImplementation Compose.tooling
 }

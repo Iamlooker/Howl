@@ -1,5 +1,6 @@
 package com.looker.howlmusic
 
+import android.app.Application
 import android.app.WallpaperManager
 import android.graphics.Bitmap
 import androidx.compose.foundation.layout.Box
@@ -21,9 +22,13 @@ import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class HowlApp : Application()
 
 @Composable
-fun HowlApp() {
+fun App() {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
     val wallpaperManager = WallpaperManager.getInstance(context)
@@ -32,9 +37,7 @@ fun HowlApp() {
         if (canReadStorage) {
             val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
             AppTheme(wallpaperBitmap)
-        } else OnBoardingPage {
-            canReadStorage = it
-        }
+        } else OnBoardingPage { canReadStorage = it }
     }
 }
 
