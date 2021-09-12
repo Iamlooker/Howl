@@ -7,7 +7,6 @@ dependencies {
     implementation(project(Modules.dataMusic))
     implementation(project(Modules.playerService))
 
-    implementation(Accompanist.insets)
     implementation(ExoPlayer.exoplayerCore)
     implementation(Lifecycle.lifecycleViewModelCompose)
 }
