@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
-import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.howlmusic.ui.components.*
@@ -90,7 +89,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     modifier = Modifier.statusBarsPadding(),
                     songName = "Name",
                     artistName = "Name",
-                    albumArt = (1387043947104130875).toLong().artworkUri ?: R.drawable.empty,
+                    albumArt = "https://picsum.photos/400/300",
                     icon = viewModel.shufflePlay(currentFraction),
                     toggled = viewModel.toggle(currentFraction),
                     toggleAction = { viewModel.onToggle(currentFraction) }
