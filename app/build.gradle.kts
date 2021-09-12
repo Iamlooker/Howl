@@ -1,7 +1,6 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
 }
 
 android {
@@ -80,8 +79,4 @@ dependencies {
     implementation(Compose.ui)
 
     debugImplementation(Compose.tooling)
-}
-
-kapt {
-    correctErrorTypes = true
 }
