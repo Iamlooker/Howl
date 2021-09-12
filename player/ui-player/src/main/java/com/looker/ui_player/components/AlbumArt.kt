@@ -5,14 +5,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.looker.components.HowlImage
 
 @Composable
 fun AlbumArtAndUtils(
     modifier: Modifier = Modifier,
     albumArt: Any,
-    shuffle: Boolean,
-    onShuffle: () -> Unit
+    icon: ImageVector,
+    toggled: Boolean,
+    onToggle: () -> Unit,
+    contentDescription: String?
 ) {
     Box {
         HowlImage(
@@ -20,10 +23,12 @@ fun AlbumArtAndUtils(
             data = albumArt,
             shape = CircleShape
         )
-        ShuffleButton(
+        ToggleButton(
             modifier = Modifier.align(Alignment.BottomEnd),
-            shuffle = shuffle,
-            onShuffle = onShuffle
+            icon = icon,
+            toggled = toggled,
+            onToggle = onToggle,
+            contentDescription = contentDescription
         )
     }
 }

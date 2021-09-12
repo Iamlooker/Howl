@@ -15,8 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.components.BottomSheets
 import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
@@ -108,13 +106,7 @@ fun AlbumsList(
     albumsList: List<Album>,
     onAlbumClick: Album.() -> Unit
 ) {
-    LazyVerticalGrid(
-        cells = GridCells.Adaptive(200.dp),
-        contentPadding = rememberInsetsPaddingValues(
-            insets = LocalWindowInsets.current.systemBars,
-            applyTop = true
-        )
-    ) {
+    LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
         items(albumsList) { album ->
             AlbumsCard(album = album) {
                 album.onAlbumClick()

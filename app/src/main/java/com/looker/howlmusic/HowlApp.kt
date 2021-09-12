@@ -2,25 +2,30 @@ package com.looker.howlmusic
 
 import android.app.WallpaperManager
 import android.graphics.Bitmap
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.BackdropValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.statusBarsPadding
+import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
+import com.looker.ui_player.NewMiniPlayer
+import com.looker.ui_player.components.PlaybackControls
 
 @Composable
 fun App() {
@@ -59,32 +64,47 @@ fun AppTheme(wallpaper: Bitmap? = null) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AppContent() {
+fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val items = listOf(
         HomeScreens.SONGS,
         HomeScreens.ALBUMS
     )
     val navController = rememberNavController()
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
-    )
-    val currentFloat = bottomSheetScaffoldState.currentFraction
+    val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                modifier = Modifier.offset(0.dp, (56.dp * currentFloat)),
                 navController = navController,
                 items = items
             )
         }
     ) {
-        AppBottomSheet(
-            bottomSheetScaffoldState = bottomSheetScaffoldState,
-            currentFloat = currentFloat
-        ) { bottomSheetPadding ->
-            Box(modifier = Modifier.padding(bottomSheetPadding)) {
-                HomeNavGraph(navController = navController)
+        val currentFraction = backdropState.currentFraction
+        Backdrop(
+            modifier = Modifier.padding(it),
+            state = backdropState,
+            currentFraction = currentFraction,
+            playing = viewModel.playing.value,
+            header = {
+                NewMiniPlayer(
+                    modifier = Modifier.statusBarsPadding(),
+                    songName = "Name",
+                    artistName = "Name",
+                    albumArt = (1387043947104130875).toLong().artworkUri ?: R.drawable.empty,
+                    icon = viewModel.shufflePlay(currentFraction),
+                    toggled = true,
+                    toggleAction = {}
+                )
+            },
+            frontLayerContent = { HomeNavGraph(navController = navController) },
+            backLayerContent = {
+                PlaybackControls(
+                    playIcon = viewModel.playIcon,
+                    progressValue = 0.5f,
+                    onPlayPause = { viewModel.onPlayPause() },
+                    onSeek = {}
+                )
             }
-        }
+        )
     }
 }

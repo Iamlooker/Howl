@@ -1,6 +1,8 @@
 package com.looker.ui_player
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,8 +37,10 @@ fun Player(
             AlbumArtAndUtils(
                 modifier = Modifier.size(400.dp, 300.dp),
                 albumArt = viewModel.albumArt,
-                shuffle = shuffle.value,
-                onShuffle = { viewModel.onShuffle() }
+                icon = Icons.Rounded.Shuffle,
+                toggled = shuffle.value,
+                onToggle = { viewModel.onShuffle() },
+                contentDescription = "Shuffle Toggle"
             )
             SongText(songName = viewModel.songName, artistName = viewModel.artistName)
             Spacer(modifier = Modifier.height(50.dp))

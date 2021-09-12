@@ -11,8 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.looker.components.HowlSurface
 import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
@@ -58,13 +56,7 @@ fun SongsList(
     songsList: List<Song>,
     onSongClick: (Song) -> Unit = {}
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = rememberInsetsPaddingValues(
-            insets = LocalWindowInsets.current.systemBars,
-            applyTop = true
-        )
-    ) {
+    LazyColumn(modifier = modifier) {
         items(songsList) { song ->
             SongsCard(
                 modifier = Modifier.fillMaxWidth(),
