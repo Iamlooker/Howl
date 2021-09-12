@@ -9,8 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,9 +37,9 @@ fun OnBoardingPage(
     navigate: (Boolean) -> Unit,
 ) {
 
-    val buttonColor = viewModel.buttonColor
-    val buttonText = viewModel.buttonText
-    val buttonIcon = viewModel.buttonIcon
+    val buttonText by viewModel.buttonText.observeAsState("Grant Permission")
+    val buttonIcon by viewModel.buttonIcon.observeAsState(Icons.Rounded.Close)
+    val buttonColor by viewModel.buttonColor.observeAsState(MaterialTheme.colors.primary)
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),

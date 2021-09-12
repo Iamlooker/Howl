@@ -22,7 +22,7 @@ fun Backdrop(
 ) {
 
     val sheetBackgroundColor by animateColorAsState(
-        targetValue = if (currentFraction == 0f) MaterialTheme.colors.surface
+        targetValue = if (currentFraction < 1f) MaterialTheme.colors.surface
         else MaterialTheme.colors.background, animationSpec = tweenAnimation()
     )
 
@@ -38,7 +38,8 @@ fun Backdrop(
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
         backLayerBackgroundColor = sheetBackgroundColor,
-        peekHeight = peekHeight
+        peekHeight = peekHeight,
+        frontLayerShape = MaterialTheme.shapes.large
     )
 }
 

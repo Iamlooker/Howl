@@ -26,6 +26,6 @@ fun MiniPlayerPreview() {
 fun ControllerPreview() {
     Column {
         PlayAndSkipButton(playIcon = Icons.Default.PlayArrow) {}
-        PreviousAndQueue()
+        PreviousAndQueue {}
     }
 }

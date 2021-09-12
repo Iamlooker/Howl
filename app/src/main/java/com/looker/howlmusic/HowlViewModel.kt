@@ -3,38 +3,38 @@ package com.looker.howlmusic
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Shuffle
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class HowlViewModel : ViewModel() {
 
-    val playing = mutableStateOf(false)
-    val shuffle = mutableStateOf(false)
-    val progress = mutableStateOf(0f)
 
-    fun shufflePlay(pos: Float): ImageVector =
-        if (pos == 1f) Icons.Rounded.Shuffle
-        else playIcon()
+    private val _playing = MutableLiveData(false)
+    private val _shuffle = MutableLiveData(false)
+    private val _progress = MutableLiveData(0f)
+    private val _playIcon = MutableLiveData(Icons.Rounded.PlayArrow)
+
+    val playing: LiveData<Boolean> = _playing
+    val shuffle: LiveData<Boolean> = _shuffle
+    val progress: LiveData<Float> = _progress
+    val playIcon: LiveData<ImageVector> = _playIcon
 
     fun onPlayPause() {
-        playing.value = !playing.value
+        _playing.value = _playing.value?.not()
     }
 
-    fun playIcon(): ImageVector =
-        if (playing.value) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-
-    fun toggle(pos: Float): Boolean =
-        if (pos == 1f) shuffle.value
-        else playing.value
-
     fun onToggle(pos: Float) {
-        if (pos == 1f) shuffle.value = !shuffle.value
-        else playing.value = !playing.value
+        if (pos > 0f) _shuffle.value = _shuffle.value?.not()
+        else onPlayPause()
     }
 
     fun onSeek(seekTo: Float) {
-        progress.value = seekTo
+        _progress.value = seekTo
+    }
+
+    init {
+        if (playing.value == false) _playIcon.value = Icons.Rounded.Pause
     }
 }

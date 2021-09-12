@@ -9,4 +9,5 @@ dependencies {
 
     implementation(Accompanist.insets)
     implementation(ExoPlayer.exoplayerCore)
+    implementation(Lifecycle.lifecycleViewModelCompose)
 }

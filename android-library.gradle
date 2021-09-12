@@ -55,8 +55,6 @@ android {
 
 dependencies {
     implementation Core.core
-    implementation Lifecycle.lifecycleViewModel
-    implementation Lifecycle.lifecycleViewModelCompose
 
     implementation Compose.activity
     implementation Compose.icons

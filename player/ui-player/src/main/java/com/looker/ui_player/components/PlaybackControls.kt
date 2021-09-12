@@ -20,7 +20,8 @@ fun PlaybackControls(
     playIcon: ImageVector,
     onPlayPause: () -> Unit,
     progressValue: Float,
-    onSeek: (Float) -> Unit
+    onSeek: (Float) -> Unit,
+    openQueue: () -> Unit
 ) {
     val playButtonColors = ButtonDefaults.buttonColors(
         backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(),
@@ -42,7 +43,7 @@ fun PlaybackControls(
             playIcon = playIcon,
             playClick = onPlayPause
         )
-        PreviousAndQueue(skipButtonColors = skipButtonColors)
+        PreviousAndQueue(skipButtonColors = skipButtonColors, openQueue = openQueue)
     }
 }
 
@@ -88,7 +89,8 @@ fun PlayAndSkipButton(
 fun PreviousAndQueue(
     modifier: Modifier = Modifier,
     skipButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    skipPrevClick: () -> Unit = {}
+    skipPrevClick: () -> Unit = {},
+    openQueue: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -108,7 +110,8 @@ fun PreviousAndQueue(
         QueueHeader(
             modifier = Modifier
                 .height(60.dp)
-                .weight(3f)
+                .weight(3f),
+            openQueue = openQueue
         )
     }
 }

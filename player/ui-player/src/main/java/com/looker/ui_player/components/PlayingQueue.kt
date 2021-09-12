@@ -1,6 +1,7 @@
 package com.looker.ui_player.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
@@ -14,7 +15,10 @@ import com.looker.components.WrappedText
 import com.looker.components.compositeOverBackground
 
 @Composable
-fun QueueHeader(modifier: Modifier = Modifier) {
+fun QueueHeader(
+    modifier: Modifier = Modifier,
+    openQueue: () -> Unit
+) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -34,6 +38,7 @@ fun QueueHeader(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .clip(CircleShape)
                     .background(MaterialTheme.colors.primaryVariant.compositeOverBackground())
+                    .clickable(onClick = openQueue)
                     .padding(8.dp),
                 text = "Next Song Name",
                 textAlign = TextAlign.Center,

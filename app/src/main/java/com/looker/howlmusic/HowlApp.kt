@@ -6,7 +6,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -79,8 +82,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         }
     ) {
-        val playing by remember { viewModel.playing }
-        val progress by remember { viewModel.progress }
+        val playing by viewModel.playing.observeAsState(false)
+        val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
+        val progress by viewModel.progress.observeAsState(0f)
+        val shuffle by viewModel.shuffle.observeAsState(false)
+        val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
 
         val currentFraction = backdropState.currentFraction
         Backdrop(
@@ -90,15 +96,15 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             playing = playing,
             header = {
                 PlayerHeader(
-                    icon = viewModel.shufflePlay(currentFraction),
-                    toggled = viewModel.toggle(currentFraction),
+                    icon = if (currentFraction > 0f) shuffleIcon else playIcon,
+                    toggled = if (currentFraction > 0f) shuffle else playing,
                     toggleAction = { viewModel.onToggle(currentFraction) }
                 )
             },
             frontLayerContent = { HomeNavGraph(navController = navController) },
             backLayerContent = {
                 Controls(
-                    playIcon = viewModel.playIcon(),
+                    playIcon = playIcon,
                     progress = progress,
                     onPlayPause = { viewModel.onPlayPause() },
                     onSeek = { seekTo -> viewModel.onSeek(seekTo) }
@@ -150,7 +156,9 @@ fun Controls(
             progressValue = progress,
             onPlayPause = { onPlayPause() },
             onSeek = { seekTo -> onSeek(seekTo) }
-        )
+        ) {
+
+        }
         Spacer(Modifier.statusBarsHeight())
     }
 }

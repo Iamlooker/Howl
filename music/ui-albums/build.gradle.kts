@@ -6,6 +6,7 @@ dependencies {
     implementation(project(Modules.components))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.dataMusic))
+    implementation(Lifecycle.lifecycleViewModelCompose)
 
     implementation(Accompanist.insets)
 }

@@ -77,6 +77,7 @@ dependencies {
     implementation(Compose.material)
     implementation(Compose.navigation)
     implementation(Compose.ui)
+    implementation(Compose.runtimeLiveData)
 
     debugImplementation(Compose.tooling)
 }
