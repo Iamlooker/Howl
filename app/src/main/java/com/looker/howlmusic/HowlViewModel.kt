@@ -1,7 +1,6 @@
 package com.looker.howlmusic
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
@@ -14,10 +13,12 @@ import androidx.lifecycle.ViewModel
 class HowlViewModel : ViewModel() {
 
     val playing = mutableStateOf(false)
+    val shuffle = mutableStateOf(false)
+    val progress = mutableStateOf(0f)
 
     fun shufflePlay(pos: Float): ImageVector =
         if (pos == 1f) Icons.Rounded.Shuffle
-        else Icons.Default.PlayArrow
+        else playIcon
 
 
     fun onPlayPause() {
@@ -26,4 +27,17 @@ class HowlViewModel : ViewModel() {
     }
 
     var playIcon by mutableStateOf(Icons.Rounded.PlayArrow)
+
+    fun toggle(pos: Float): Boolean =
+        if (pos == 1f) shuffle.value
+        else playing.value
+
+    fun onToggle(pos: Float) {
+        if (pos == 1f) shuffle.value = !shuffle.value
+        else playing.value = !playing.value
+    }
+
+    fun onSeek(seekTo: Float) {
+        progress.value = seekTo
+    }
 }

@@ -92,17 +92,17 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     artistName = "Name",
                     albumArt = (1387043947104130875).toLong().artworkUri ?: R.drawable.empty,
                     icon = viewModel.shufflePlay(currentFraction),
-                    toggled = true,
-                    toggleAction = {}
+                    toggled = viewModel.toggle(currentFraction),
+                    toggleAction = { viewModel.onToggle(currentFraction) }
                 )
             },
             frontLayerContent = { HomeNavGraph(navController = navController) },
             backLayerContent = {
                 PlaybackControls(
                     playIcon = viewModel.playIcon,
-                    progressValue = 0.5f,
+                    progressValue = viewModel.progress.value,
                     onPlayPause = { viewModel.onPlayPause() },
-                    onSeek = {}
+                    onSeek = { seekTo -> viewModel.onSeek(seekTo) }
                 )
             }
         )
