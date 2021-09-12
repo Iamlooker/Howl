@@ -9,6 +9,7 @@ import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -78,45 +79,78 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         }
     ) {
+        val playing by remember { viewModel.playing }
+        val progress by remember { viewModel.progress }
+
         val currentFraction = backdropState.currentFraction
         Backdrop(
             modifier = Modifier.padding(it),
             state = backdropState,
             currentFraction = currentFraction,
-            playing = viewModel.playing.value,
+            playing = playing,
             header = {
-                Column {
-                    Icon(
-                        modifier = Modifier
-                            .statusBarsHeight()
-                            .fillMaxWidth()
-                            .align(Alignment.CenterHorizontally),
-                        imageVector = Icons.Rounded.ArrowDropDown,
-                        contentDescription = "Pull Down"
-                    )
-                    MiniPlayer(
-                        modifier = Modifier.padding(20.dp),
-                        songName = "Name",
-                        artistName = "Name",
-                        albumArt = "https://picsum.photos/400/300",
-                        icon = viewModel.shufflePlay(currentFraction),
-                        toggled = viewModel.toggle(currentFraction),
-                        toggleAction = { viewModel.onToggle(currentFraction) }
-                    )
-                }
+                PlayerHeader(
+                    icon = viewModel.shufflePlay(currentFraction),
+                    toggled = viewModel.toggle(currentFraction),
+                    toggleAction = { viewModel.onToggle(currentFraction) }
+                )
             },
             frontLayerContent = { HomeNavGraph(navController = navController) },
             backLayerContent = {
-                Column {
-                    PlaybackControls(
-                        playIcon = viewModel.playIcon,
-                        progressValue = viewModel.progress.value,
-                        onPlayPause = { viewModel.onPlayPause() },
-                        onSeek = { seekTo -> viewModel.onSeek(seekTo) }
-                    )
-                    Spacer(Modifier.statusBarsHeight())
-                }
+                Controls(
+                    playIcon = viewModel.playIcon(),
+                    progress = progress,
+                    onPlayPause = { viewModel.onPlayPause() },
+                    onSeek = { seekTo -> viewModel.onSeek(seekTo) }
+                )
             }
         )
+    }
+}
+
+@Composable
+fun PlayerHeader(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    toggled: Boolean,
+    toggleAction: () -> Unit
+) {
+    Column(modifier) {
+        Icon(
+            modifier = Modifier
+                .statusBarsHeight()
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
+            imageVector = Icons.Rounded.ArrowDropDown,
+            contentDescription = "Pull Down"
+        )
+        MiniPlayer(
+            modifier = Modifier.padding(20.dp),
+            songName = "Name",
+            artistName = "Name",
+            albumArt = "https://picsum.photos/400/300",
+            icon = icon,
+            toggled = toggled,
+            toggleAction = toggleAction
+        )
+    }
+}
+
+@Composable
+fun Controls(
+    modifier: Modifier = Modifier,
+    playIcon: ImageVector,
+    progress: Float,
+    onPlayPause: () -> Unit,
+    onSeek: (Float) -> Unit
+) {
+    Column(modifier) {
+        PlaybackControls(
+            playIcon = playIcon,
+            progressValue = progress,
+            onPlayPause = { onPlayPause() },
+            onSeek = { seekTo -> onSeek(seekTo) }
+        )
+        Spacer(Modifier.statusBarsHeight())
     }
 }

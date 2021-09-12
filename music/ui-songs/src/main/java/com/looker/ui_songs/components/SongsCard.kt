@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.artworkUri
@@ -82,7 +83,10 @@ fun SongItemText(modifier: Modifier = Modifier, songName: String, artistName: St
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        WrappedText(text = songName)
+        WrappedText(
+            text = songName,
+            fontWeight = FontWeight.SemiBold
+        )
         WrappedText(
             text = artistName,
             style = MaterialTheme.typography.caption

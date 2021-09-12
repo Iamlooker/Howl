@@ -6,6 +6,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.looker.components.WrappedText
 
@@ -18,11 +19,12 @@ fun SongText(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         WrappedText(
             text = songName,
-            style = MaterialTheme.typography.h5
+            style = MaterialTheme.typography.h5,
+            fontWeight = FontWeight.Bold
         )
         WrappedText(
             text = artistName,

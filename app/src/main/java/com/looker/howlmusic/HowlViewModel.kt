@@ -4,9 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 
@@ -18,15 +16,14 @@ class HowlViewModel : ViewModel() {
 
     fun shufflePlay(pos: Float): ImageVector =
         if (pos == 1f) Icons.Rounded.Shuffle
-        else playIcon
-
+        else playIcon()
 
     fun onPlayPause() {
         playing.value = !playing.value
-        playIcon = if (playing.value) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
     }
 
-    var playIcon by mutableStateOf(Icons.Rounded.PlayArrow)
+    fun playIcon(): ImageVector =
+        if (playing.value) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
 
     fun toggle(pos: Float): Boolean =
         if (pos == 1f) shuffle.value
