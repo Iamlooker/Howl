@@ -2,28 +2,28 @@ package com.looker.howlmusic
 
 import android.app.WallpaperManager
 import android.graphics.Bitmap
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BackdropValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberBackdropScaffoldState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
-import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.statusBarsHeight
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
-import com.looker.ui_player.NewMiniPlayer
+import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 
 @Composable
@@ -85,24 +85,37 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             currentFraction = currentFraction,
             playing = viewModel.playing.value,
             header = {
-                NewMiniPlayer(
-                    modifier = Modifier.statusBarsPadding(),
-                    songName = "Name",
-                    artistName = "Name",
-                    albumArt = "https://picsum.photos/400/300",
-                    icon = viewModel.shufflePlay(currentFraction),
-                    toggled = viewModel.toggle(currentFraction),
-                    toggleAction = { viewModel.onToggle(currentFraction) }
-                )
+                Column {
+                    Icon(
+                        modifier = Modifier
+                            .statusBarsHeight()
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally),
+                        imageVector = Icons.Rounded.ArrowDropDown,
+                        contentDescription = "Pull Down"
+                    )
+                    MiniPlayer(
+                        modifier = Modifier.padding(20.dp),
+                        songName = "Name",
+                        artistName = "Name",
+                        albumArt = "https://picsum.photos/400/300",
+                        icon = viewModel.shufflePlay(currentFraction),
+                        toggled = viewModel.toggle(currentFraction),
+                        toggleAction = { viewModel.onToggle(currentFraction) }
+                    )
+                }
             },
             frontLayerContent = { HomeNavGraph(navController = navController) },
             backLayerContent = {
-                PlaybackControls(
-                    playIcon = viewModel.playIcon,
-                    progressValue = viewModel.progress.value,
-                    onPlayPause = { viewModel.onPlayPause() },
-                    onSeek = { seekTo -> viewModel.onSeek(seekTo) }
-                )
+                Column {
+                    PlaybackControls(
+                        playIcon = viewModel.playIcon,
+                        progressValue = viewModel.progress.value,
+                        onPlayPause = { viewModel.onPlayPause() },
+                        onSeek = { seekTo -> viewModel.onSeek(seekTo) }
+                    )
+                    Spacer(Modifier.statusBarsHeight())
+                }
             }
         )
     }

@@ -7,21 +7,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.ui_player.components.AlbumArtAndUtils
-import com.looker.ui_player.components.MiniPlayerItem
 import com.looker.ui_player.components.SongText
 
 @Composable
 fun MiniPlayer(
-    modifier: Modifier = Modifier,
-    albumArt: Any,
-    songName: String,
-    artistName: String
-) {
-    MiniPlayerItem(modifier, albumArt, songName, artistName)
-}
-
-@Composable
-fun NewMiniPlayer(
     modifier: Modifier = Modifier,
     albumArt: Any,
     songName: String,
