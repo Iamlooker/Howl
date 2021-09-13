@@ -143,7 +143,7 @@ fun FrontLayer(
         Crossfade(handleIcon) { icon ->
             Icon(
                 modifier = Modifier
-                    .statusBarsHeight()
+                    .height(40.dp)
                     .fillMaxWidth()
                     .clickable(onClick = openPlayer)
                     .align(Alignment.CenterHorizontally)
