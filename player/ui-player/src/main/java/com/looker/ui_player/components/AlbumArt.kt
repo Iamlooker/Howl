@@ -1,6 +1,7 @@
 package com.looker.ui_player.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,7 @@ fun AlbumArtAndUtils(
 ) {
     Box {
         HowlImage(
-            modifier = modifier,
+            modifier = modifier.fillMaxWidth(),
             data = albumArt,
             shape = CircleShape
         )

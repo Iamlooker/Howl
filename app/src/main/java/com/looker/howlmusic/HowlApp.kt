@@ -89,7 +89,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val progress by viewModel.progress.observeAsState(0f)
         val shuffle by viewModel.shuffle.observeAsState(false)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
-        val albumArt = "https://picsum.photos/400/300"
+        val albumArt = "https://picsum.photos/4000/3000"
 
         val currentFraction = backdropState.currentFraction
         Backdrop(
@@ -123,7 +123,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 @Composable
 fun PlayerHeader(
     modifier: Modifier = Modifier,
-    albumArt: Any = "https://picsum.photos/400/300",
+    albumArt: Any,
     songName: String = "No Name",
     artistName: String = "No Name",
     icon: ImageVector,
