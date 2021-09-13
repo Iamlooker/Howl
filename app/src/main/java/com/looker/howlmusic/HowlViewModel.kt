@@ -38,7 +38,7 @@ class HowlViewModel : ViewModel() {
     }
 
     fun handleIcon(pos: Float): ImageVector =
-        if (pos > 0f) Icons.Rounded.ArrowDropUp
+        if (pos == 1f) Icons.Rounded.ArrowDropUp
         else Icons.Rounded.ArrowDropDown
 
 
