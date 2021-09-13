@@ -6,5 +6,7 @@ dependencies {
     implementation(project(Modules.components))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.dataMusic))
+
+    implementation(Compose.runtimeLiveData)
     implementation(Lifecycle.lifecycleViewModelCompose)
 }

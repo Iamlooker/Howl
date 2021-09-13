@@ -23,17 +23,17 @@ import com.looker.ui_songs.SongsList
 
 @ExperimentalMaterialApi
 @Composable
-fun AlbumsBottomSheet(
+fun AlbumsBottomSheetContent(
     modifier: Modifier = Modifier,
     currentAlbum: Album,
-    iconState: ImageVector,
+    handleIcon: ImageVector,
     songsList: List<Song>,
     dominantColor: Color = MaterialTheme.colors.surface
 ) {
     AlbumBottomSheetItem(
         modifier = modifier,
         album = currentAlbum,
-        handleIcon = iconState,
+        handleIcon = handleIcon,
         albumDominantColor = dominantColor,
         songsList = songsList
     )

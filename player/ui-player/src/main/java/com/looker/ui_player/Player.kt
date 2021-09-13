@@ -33,7 +33,7 @@ fun MiniPlayer(
             icon = icon,
             toggled = toggled,
             onToggle = toggleAction,
-            contentDescription = "PlayToggle"
+            contentDescription = "Play"
         )
         SongText(songName = songName, artistName = artistName)
     }

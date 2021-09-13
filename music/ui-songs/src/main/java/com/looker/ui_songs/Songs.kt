@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,20 +31,18 @@ private fun Songs(
 ) {
     val context = LocalContext.current
 
-    val songsList = remember {
-        mutableStateOf<List<Song>>(listOf())
-    }
+    val songsList by viewModel.songsList.observeAsState(initial = listOf())
 
     val player = viewModel.buildPlayer(context)
 
     LaunchedEffect(songsList) {
         launch {
-            songsList.value = viewModel.getSongsList(context)
+            viewModel.getSongsList(context)
         }
     }
 
     HowlSurface(modifier = modifier) {
-        SongsList(songsList = songsList.value) {
+        SongsList(songsList = songsList) {
             viewModel.playSong(player, it)
         }
     }

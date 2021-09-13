@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
@@ -91,10 +92,12 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
         val progress by viewModel.progress.observeAsState(0f)
         val shuffle by viewModel.shuffle.observeAsState(false)
+        val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
         val albumArt = "https://picsum.photos/4000/3000"
 
         val currentFraction = backdropState.currentFraction
+        LaunchedEffect(currentFraction) { viewModel.setHandleIcon(currentFraction) }
         Backdrop(
             modifier = Modifier.padding(it),
             state = backdropState,
@@ -113,7 +116,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             frontLayerContent = {
                 FrontLayer(
                     navController = navController,
-                    handleIcon = viewModel.handleIcon(currentFraction)
+                    handleIcon = handleIcon
                 ) {
                     scope.launch { backdropState.reveal() }
                 }

@@ -13,14 +13,16 @@ import androidx.lifecycle.ViewModel
 class HowlViewModel : ViewModel() {
 
 
-    private val _playing = MutableLiveData(false)
-    private val _shuffle = MutableLiveData(false)
-    private val _progress = MutableLiveData(0f)
-    private val _playIcon = MutableLiveData(Icons.Rounded.PlayArrow)
+    private val _playing = MutableLiveData<Boolean>()
+    private val _shuffle = MutableLiveData<Boolean>()
+    private val _progress = MutableLiveData<Float>()
+    private val _playIcon = MutableLiveData<ImageVector>()
+    private val _handleIcon = MutableLiveData<ImageVector>()
 
     val playing: LiveData<Boolean> = _playing
     val shuffle: LiveData<Boolean> = _shuffle
     val progress: LiveData<Float> = _progress
+    val handleIcon: LiveData<ImageVector> = _handleIcon
     val playIcon: LiveData<ImageVector>
         get() {
             _playIcon.value = if (_playing.value == true) Icons.Rounded.Pause
@@ -37,9 +39,10 @@ class HowlViewModel : ViewModel() {
         else onPlayPause()
     }
 
-    fun handleIcon(pos: Float): ImageVector =
-        if (pos == 1f) Icons.Rounded.ArrowDropUp
+    fun setHandleIcon(pos: Float) {
+        _handleIcon.value = if (pos == 1f) Icons.Rounded.ArrowDropUp
         else Icons.Rounded.ArrowDropDown
+    }
 
 
     fun onSeek(seekTo: Float) {
