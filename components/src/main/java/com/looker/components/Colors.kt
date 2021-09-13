@@ -17,7 +17,7 @@ fun Int.toColor() = Color(this)
 
 @Composable
 fun Color.compositeOverBackground(
-    alpha: Float = 0.4f,
+    alpha: Float = 0.3f,
     backgroundColor: Color = MaterialTheme.colors.background
 ): Color =
     this.copy(alpha).compositeOver(backgroundColor)

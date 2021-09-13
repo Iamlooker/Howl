@@ -1,6 +1,8 @@
 package com.looker.howlmusic
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,6 +36,11 @@ class HowlViewModel : ViewModel() {
         if (pos > 0f) _shuffle.value = _shuffle.value?.not()
         else onPlayPause()
     }
+
+    fun handleIcon(pos: Float): ImageVector =
+        if (pos > 0f) Icons.Rounded.ArrowDropUp
+        else Icons.Rounded.ArrowDropDown
+
 
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo

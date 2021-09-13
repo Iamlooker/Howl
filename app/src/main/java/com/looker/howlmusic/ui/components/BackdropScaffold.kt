@@ -1,7 +1,6 @@
 package com.looker.howlmusic.ui.components
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -41,11 +40,6 @@ fun Backdrop(
         animationSpec = tweenAnimation(durationMillis = 700, easing = LinearOutSlowInEasing)
     )
 
-    val peekHeight by animateDpAsState(
-        targetValue = if (playing) 400.dp else 50.dp,
-        animationSpec = tweenAnimation()
-    )
-
     BackdropScaffold(
         modifier = modifier.backgroundGradient(
             color = backgroundColor.color.copy(0.3f),
@@ -56,7 +50,7 @@ fun Backdrop(
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
         backLayerBackgroundColor = MaterialTheme.colors.background,
-        peekHeight = peekHeight,
+        peekHeight = if (playing) 400.dp else 50.dp,
         frontLayerShape = MaterialTheme.shapes.large
     )
 }

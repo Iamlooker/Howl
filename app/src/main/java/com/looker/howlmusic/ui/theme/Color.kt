@@ -20,7 +20,7 @@ val HowlColorsDark = darkColors(
 val HowlColorsLight = lightColors(
     primary = Orange,
     onPrimary = Color.Black,
-    primaryVariant = OrangeLight,
+    primaryVariant = Orange,
     secondary = Green,
     onSecondary = Color.Black
 )

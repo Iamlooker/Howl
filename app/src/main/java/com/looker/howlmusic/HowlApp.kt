@@ -2,10 +2,12 @@ package com.looker.howlmusic
 
 import android.app.WallpaperManager
 import android.graphics.Bitmap
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
@@ -17,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -103,10 +106,19 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     icon = if (currentFraction > 0f) shuffleIcon else playIcon,
                     albumArt = albumArt,
                     toggled = if (currentFraction > 0f) shuffle else playing,
+                    openPlayer = { scope.launch { backdropState.reveal() } },
                     toggleAction = { viewModel.onToggle(currentFraction) }
                 )
             },
-            frontLayerContent = { HomeNavGraph(navController = navController) },
+            frontLayerContent = {
+                FrontLayer(
+                    navController = navController,
+                    handleIcon = viewModel.handleIcon(currentFraction)
+                ) {
+                    scope.launch { backdropState.reveal() }
+                }
+
+            },
             backLayerContent = {
                 Controls(
                     playIcon = playIcon,
@@ -121,6 +133,30 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 }
 
 @Composable
+fun FrontLayer(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    handleIcon: ImageVector,
+    openPlayer: () -> Unit
+) {
+    Column(modifier) {
+        Crossfade(handleIcon) { icon ->
+            Icon(
+                modifier = Modifier
+                    .statusBarsHeight()
+                    .fillMaxWidth()
+                    .clickable(onClick = openPlayer)
+                    .align(Alignment.CenterHorizontally)
+                    .background(MaterialTheme.colors.background),
+                imageVector = icon,
+                contentDescription = "Pull Down"
+            )
+        }
+        HomeNavGraph(navController = navController)
+    }
+}
+
+@Composable
 fun PlayerHeader(
     modifier: Modifier = Modifier,
     albumArt: Any,
@@ -128,19 +164,15 @@ fun PlayerHeader(
     artistName: String = "No Name",
     icon: ImageVector,
     toggled: Boolean,
+    openPlayer: () -> Unit,
     toggleAction: () -> Unit
 ) {
     Column(modifier) {
-        Icon(
-            modifier = Modifier
-                .statusBarsHeight()
-                .fillMaxWidth()
-                .align(Alignment.CenterHorizontally),
-            imageVector = Icons.Rounded.ArrowDropDown,
-            contentDescription = "Pull Down"
-        )
+        Spacer(Modifier.statusBarsHeight())
         MiniPlayer(
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier
+                .clickable(onClick = openPlayer)
+                .padding(20.dp),
             songName = songName,
             artistName = artistName,
             albumArt = albumArt,
