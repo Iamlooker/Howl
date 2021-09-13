@@ -1,13 +1,18 @@
 package com.looker.howlmusic.ui.components
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.tweenAnimation
+import com.looker.components.backgroundGradient
+import com.looker.components.rememberDominantColorState
+import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
@@ -16,14 +21,24 @@ fun Backdrop(
     state: BackdropScaffoldState,
     currentFraction: Float,
     playing: Boolean,
+    albumArt: Any? = null,
     header: @Composable () -> Unit,
     backLayerContent: @Composable () -> Unit,
     frontLayerContent: @Composable () -> Unit
 ) {
 
-    val sheetBackgroundColor by animateColorAsState(
-        targetValue = if (currentFraction < 1f) MaterialTheme.colors.surface
-        else MaterialTheme.colors.background, animationSpec = tweenAnimation()
+    val backgroundColor = rememberDominantColorState()
+
+    LaunchedEffect(albumArt) {
+        launch {
+            backgroundColor.updateColorsFromImageUrl(albumArt.toString())
+        }
+    }
+
+    val animateFloat by animateFloatAsState(
+        targetValue = if (currentFraction == 1f) 0.5f
+        else 1f,
+        animationSpec = tweenAnimation(durationMillis = 700, easing = LinearOutSlowInEasing)
     )
 
     val peekHeight by animateDpAsState(
@@ -32,12 +47,15 @@ fun Backdrop(
     )
 
     BackdropScaffold(
-        modifier = modifier,
+        modifier = modifier.backgroundGradient(
+            color = backgroundColor.color.copy(0.3f),
+            startYPercentage = animateFloat
+        ),
         scaffoldState = state,
         appBar = header,
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
-        backLayerBackgroundColor = sheetBackgroundColor,
+        backLayerBackgroundColor = MaterialTheme.colors.background,
         peekHeight = peekHeight,
         frontLayerShape = MaterialTheme.shapes.large
     )

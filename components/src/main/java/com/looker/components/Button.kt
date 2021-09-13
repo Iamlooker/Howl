@@ -1,5 +1,6 @@
 package com.looker.components
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -44,10 +45,12 @@ fun ShapedIconButton(
         colors = buttonColors,
         elevation = buttonElevation
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription
-        )
+        Crossfade(targetState = icon) {
+            Icon(
+                imageVector = it,
+                contentDescription = contentDescription
+            )
+        }
     }
 }
 

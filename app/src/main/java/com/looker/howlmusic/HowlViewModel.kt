@@ -19,7 +19,12 @@ class HowlViewModel : ViewModel() {
     val playing: LiveData<Boolean> = _playing
     val shuffle: LiveData<Boolean> = _shuffle
     val progress: LiveData<Float> = _progress
-    val playIcon: LiveData<ImageVector> = _playIcon
+    val playIcon: LiveData<ImageVector>
+        get() {
+            _playIcon.value = if (_playing.value == true) Icons.Rounded.Pause
+            else Icons.Rounded.PlayArrow
+            return _playIcon
+        }
 
     fun onPlayPause() {
         _playing.value = _playing.value?.not()
@@ -32,9 +37,5 @@ class HowlViewModel : ViewModel() {
 
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo
-    }
-
-    init {
-        if (playing.value == false) _playIcon.value = Icons.Rounded.Pause
     }
 }

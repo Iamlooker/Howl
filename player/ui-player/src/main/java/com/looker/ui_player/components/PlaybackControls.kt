@@ -1,5 +1,6 @@
 package com.looker.ui_player.components
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
@@ -19,7 +20,7 @@ fun PlaybackControls(
     modifier: Modifier = Modifier,
     playIcon: ImageVector,
     onPlayPause: () -> Unit,
-    progressValue: Float,
+    @FloatRange(from = 0.0, to = 1.0) progressValue: Float,
     onSeek: (Float) -> Unit,
     openQueue: () -> Unit
 ) {

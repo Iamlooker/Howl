@@ -29,6 +29,7 @@ import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
+import kotlinx.coroutines.launch
 
 @Composable
 fun App() {
@@ -72,6 +73,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         HomeScreens.SONGS,
         HomeScreens.ALBUMS
     )
+    val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
     Scaffold(
@@ -87,6 +89,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val progress by viewModel.progress.observeAsState(0f)
         val shuffle by viewModel.shuffle.observeAsState(false)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
+        val albumArt = "https://picsum.photos/400/300"
 
         val currentFraction = backdropState.currentFraction
         Backdrop(
@@ -94,9 +97,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             state = backdropState,
             currentFraction = currentFraction,
             playing = playing,
+            albumArt = albumArt,
             header = {
                 PlayerHeader(
                     icon = if (currentFraction > 0f) shuffleIcon else playIcon,
+                    albumArt = albumArt,
                     toggled = if (currentFraction > 0f) shuffle else playing,
                     toggleAction = { viewModel.onToggle(currentFraction) }
                 )
@@ -107,7 +112,8 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     playIcon = playIcon,
                     progress = progress,
                     onPlayPause = { viewModel.onPlayPause() },
-                    onSeek = { seekTo -> viewModel.onSeek(seekTo) }
+                    onSeek = { seekTo -> viewModel.onSeek(seekTo) },
+                    openQueue = { scope.launch { backdropState.conceal() } }
                 )
             }
         )
@@ -117,6 +123,9 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 @Composable
 fun PlayerHeader(
     modifier: Modifier = Modifier,
+    albumArt: Any = "https://picsum.photos/400/300",
+    songName: String = "No Name",
+    artistName: String = "No Name",
     icon: ImageVector,
     toggled: Boolean,
     toggleAction: () -> Unit
@@ -132,9 +141,9 @@ fun PlayerHeader(
         )
         MiniPlayer(
             modifier = Modifier.padding(20.dp),
-            songName = "Name",
-            artistName = "Name",
-            albumArt = "https://picsum.photos/400/300",
+            songName = songName,
+            artistName = artistName,
+            albumArt = albumArt,
             icon = icon,
             toggled = toggled,
             toggleAction = toggleAction
@@ -148,17 +157,17 @@ fun Controls(
     playIcon: ImageVector,
     progress: Float,
     onPlayPause: () -> Unit,
-    onSeek: (Float) -> Unit
+    onSeek: (Float) -> Unit,
+    openQueue: () -> Unit
 ) {
     Column(modifier) {
         PlaybackControls(
             playIcon = playIcon,
             progressValue = progress,
             onPlayPause = { onPlayPause() },
-            onSeek = { seekTo -> onSeek(seekTo) }
-        ) {
-
-        }
+            onSeek = { seekTo -> onSeek(seekTo) },
+            openQueue = openQueue
+        )
         Spacer(Modifier.statusBarsHeight())
     }
 }
