@@ -172,7 +172,7 @@ fun PlayerHeader(
         MiniPlayer(
             modifier = Modifier
                 .clickable(onClick = openPlayer)
-                .padding(20.dp),
+                .padding(vertical = 20.dp),
             songName = songName,
             artistName = artistName,
             albumArt = albumArt,

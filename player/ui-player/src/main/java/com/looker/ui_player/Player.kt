@@ -26,9 +26,9 @@ fun MiniPlayer(
     ) {
         AlbumArtAndUtils(
             modifier = Modifier
+                .fillMaxHeight(0.3f)
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .size(400.dp, 250.dp),
+                .padding(horizontal = 20.dp),
             albumArt = albumArt,
             icon = icon,
             toggled = toggled,
