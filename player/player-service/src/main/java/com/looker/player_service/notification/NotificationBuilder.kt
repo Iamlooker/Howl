@@ -38,7 +38,6 @@ class NotificationBuilder(
         setSmallIcon(R.drawable.ic_play)
         setCategory(CATEGORY_SERVICE)
         setShowWhen(false)
-        setLargeIcon(currentSong?.albumId?.bitmap(context))
         setContentTitle(currentSong?.songName)
         setContentText(currentSong?.artistName)
         setContentIntent(pendingIntent)

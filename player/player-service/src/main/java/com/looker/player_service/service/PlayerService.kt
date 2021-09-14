@@ -19,7 +19,7 @@ import com.looker.player_service.notification.NotificationBuilder
 class PlayerService : Service() {
 
     private var player: SimpleExoPlayer? = null
-    var currentSong: Song = Song("".toUri(), 3527531118039416256)
+    var currentSong: Song? = null
 
     private lateinit var mediaSession: MediaSession
     private lateinit var mediaSessionConnector: MediaSessionConnector
@@ -29,16 +29,7 @@ class PlayerService : Service() {
     override fun onCreate() {
         super.onCreate()
 
-        val metadata by lazy {
-            currentSong.duration.let {
-                MediaMetadata.Builder()
-                    .putLong(MediaMetadata.METADATA_KEY_DURATION, it)
-                    .build()
-            }
-        }
-
         mediaSession = MediaSession(this, "howlmusic")
-        mediaSession.setMetadata(metadata)
         mediaSessionConnector =
             MediaSessionConnector(MediaSessionCompat.fromMediaSession(this, mediaSession))
         mediaSessionConnector.setPlayer(player)
