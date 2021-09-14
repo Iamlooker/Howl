@@ -43,13 +43,12 @@ import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltAndroidApp
 class HowlApp : Application()
 
 @Composable
-fun App() {
+fun App(player: SimpleExoPlayer) {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
     val wallpaperManager = WallpaperManager.getInstance(context)
@@ -57,13 +56,13 @@ fun App() {
     HowlMusicTheme {
         if (canReadStorage) {
             val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
-            AppTheme(wallpaperBitmap)
+            AppTheme(wallpaperBitmap, player = player)
         } else OnBoardingPage { canReadStorage = it }
     }
 }
 
 @Composable
-fun AppTheme(wallpaper: Bitmap? = null) {
+fun AppTheme(wallpaper: Bitmap? = null, player: SimpleExoPlayer) {
     val dominantColor = rememberDominantColorState()
 
     LaunchedEffect(wallpaper) {
@@ -77,7 +76,7 @@ fun AppTheme(wallpaper: Bitmap? = null) {
                     .fillMaxSize()
                     .navigationBarsPadding()
             ) {
-                AppContent()
+                AppContent(player = player)
             }
         }
     }
@@ -85,14 +84,11 @@ fun AppTheme(wallpaper: Bitmap? = null) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AppContent(viewModel: HowlViewModel = viewModel()) {
+fun AppContent(viewModel: HowlViewModel = viewModel(), player: SimpleExoPlayer) {
 
     val context = LocalContext.current
 
     val playerService = PlayerService()
-
-    @Inject
-    var player: SimpleExoPlayer? = null
 
     val currentSong by viewModel.currentSong.observeAsState(Song("".toUri(), 0))
 
