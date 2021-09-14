@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -24,7 +26,6 @@ android {
             isShrinkResources = true
         }
         getByName("debug") {
-            isDebuggable = true
             applicationIdSuffix = ".debug"
         }
         all {
@@ -34,14 +35,11 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
+
     kotlinOptions {
-        jvmTarget = "11"
         freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
     }
+
     buildFeatures {
         compose = true
         buildConfig = false
@@ -50,9 +48,11 @@ android {
         resValues = false
         shaders = false
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = Compose.composeVersion
     }
+
     packagingOptions {
         resources {
             excludes += Excludes.exclude
@@ -61,6 +61,9 @@ android {
 }
 
 dependencies {
+    implementation("com.google.dagger:hilt-android:2.38.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.38.1")
+
 
     implementation(project(Modules.constants))
     implementation(project(Modules.onBoarding))
@@ -84,4 +87,9 @@ dependencies {
     implementation(ExoPlayer.exoplayerCore)
 
     debugImplementation(Compose.tooling)
+}
+
+kapt {
+    correctErrorTypes = true
+    generateStubs = true
 }

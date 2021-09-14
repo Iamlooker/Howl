@@ -1,5 +1,6 @@
 package com.looker.howlmusic
 
+import android.app.Application
 import android.app.WallpaperManager
 import android.content.Intent
 import android.graphics.Bitmap
@@ -39,7 +40,11 @@ import com.looker.onboarding.OnBoardingPage
 import com.looker.player_service.service.PlayerService
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
+
+@HiltAndroidApp
+class HowlApp : Application()
 
 @Composable
 fun App() {
