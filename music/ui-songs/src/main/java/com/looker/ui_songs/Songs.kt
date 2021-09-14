@@ -18,8 +18,8 @@ import com.looker.ui_songs.components.SongsCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun Songs() {
-    Songs(modifier = Modifier.fillMaxSize())
+fun Songs(onSongClick: (Song) -> Unit) {
+    Songs(modifier = Modifier.fillMaxSize(), onSongClick = onSongClick)
 }
 
 @Composable
@@ -27,13 +27,12 @@ private fun Songs(
     modifier: Modifier = Modifier,
     viewModel: SongsViewModel = viewModel(
         factory = SongsViewModelFactory(SongsRepository())
-    )
+    ),
+    onSongClick: (Song) -> Unit
 ) {
     val context = LocalContext.current
 
     val songsList by viewModel.songsList.observeAsState(initial = listOf())
-
-    val player = viewModel.buildPlayer(context)
 
     LaunchedEffect(songsList) {
         launch {
@@ -42,9 +41,7 @@ private fun Songs(
     }
 
     HowlSurface(modifier = modifier) {
-        SongsList(songsList = songsList) {
-            viewModel.playSong(player, it)
-        }
+        SongsList(songsList = songsList, onSongClick = onSongClick)
     }
 }
 

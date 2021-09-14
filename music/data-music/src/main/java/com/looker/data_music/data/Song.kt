@@ -8,5 +8,5 @@ data class Song(
     val songName: String? = "No Name",
     val artistName: String? = "No Name",
     val albumName: String? = "No Name",
-    val duration: Long
+    val duration: Long = 0
 )

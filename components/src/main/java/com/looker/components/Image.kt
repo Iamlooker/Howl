@@ -1,6 +1,10 @@
 package com.looker.components
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -13,6 +17,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.palette.graphics.Palette
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.looker.components.ComponentConstants.artworkUri
+
+fun Long.bitmap(context: Context): Bitmap {
+    val uri: Uri? = this.artworkUri
+    return when (val source = uri?.let { ImageDecoder.createSource(context.contentResolver, it) }) {
+        null -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
+        else -> ImageDecoder.decodeBitmap(source)
+    }
+}
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable

@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.looker.data_music.data.Song
 import com.looker.howlmusic.ui.components.MainScreens.HOME
 import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs
@@ -28,7 +29,10 @@ sealed class HomeScreens(
 }
 
 @Composable
-fun HomeNavGraph(navController: NavHostController) {
+fun HomeNavGraph(
+    navController: NavHostController,
+    onSongClick: (Song) -> Unit
+) {
     val startDestination = HOME
     NavHost(
         navController = navController,
@@ -38,7 +42,7 @@ fun HomeNavGraph(navController: NavHostController) {
                 route = HOME,
                 startDestination = HomeScreens.SONGS.route
             ) {
-                composable(HomeScreens.SONGS.route) { Songs() }
+                composable(HomeScreens.SONGS.route) { Songs(onSongClick = onSongClick) }
                 composable(HomeScreens.ALBUMS.route) { Albums() }
             }
         }

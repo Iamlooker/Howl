@@ -1,6 +1,7 @@
 package com.looker.howlmusic
 
 import android.app.WallpaperManager
+import android.content.Intent
 import android.graphics.Bitmap
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
@@ -19,18 +20,23 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
+import com.looker.data_music.data.Song
 import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.onboarding.OnBoardingPage
+import com.looker.player_service.service.PlayerService
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 import kotlinx.coroutines.launch
@@ -73,13 +79,30 @@ fun AppTheme(wallpaper: Bitmap? = null) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AppContent(viewModel: HowlViewModel = viewModel()) {
+
+    val context = LocalContext.current
+
+    val playerService = PlayerService()
+    val player = SimpleExoPlayer.Builder(context).build()
+
+    val currentSong by viewModel.currentSong.observeAsState(Song("".toUri(), 0))
+
+    val intent = Intent(context, playerService::class.java)
+
+    LaunchedEffect(intent) {
+        context.startForegroundService(intent)
+        playerService.currentSong = currentSong
+    }
+
     val items = listOf(
         HomeScreens.SONGS,
         HomeScreens.ALBUMS
     )
+
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -94,7 +117,6 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val shuffle by viewModel.shuffle.observeAsState(false)
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
-        val albumArt = "https://picsum.photos/4000/3000"
 
         val currentFraction = backdropState.currentFraction
         LaunchedEffect(currentFraction) { viewModel.setHandleIcon(currentFraction) }
@@ -103,11 +125,13 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             state = backdropState,
             currentFraction = currentFraction,
             playing = playing,
-            albumArt = albumArt,
+            albumArt = currentSong.albumId.artworkUri,
             header = {
                 PlayerHeader(
                     icon = if (currentFraction > 0f) shuffleIcon else playIcon,
-                    albumArt = albumArt,
+                    albumArt = currentSong.albumId.artworkUri,
+                    songName = currentSong.songName,
+                    artistName = currentSong.artistName,
                     toggled = if (currentFraction > 0f) shuffle else playing,
                     openPlayer = { scope.launch { backdropState.reveal() } },
                     toggleAction = { viewModel.onToggle(currentFraction) }
@@ -116,17 +140,22 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             frontLayerContent = {
                 FrontLayer(
                     navController = navController,
-                    handleIcon = handleIcon
-                ) {
-                    scope.launch { backdropState.reveal() }
-                }
+                    handleIcon = handleIcon,
+                    onSongClick = { song ->
+                        viewModel.onSongClicked(song)
+                        playerService.initPlayer(player, song.songUri)
+                    },
+                    openPlayer = {
+                        scope.launch { backdropState.reveal() }
+                    }
+                )
 
             },
             backLayerContent = {
                 Controls(
                     playIcon = playIcon,
                     progress = progress,
-                    onPlayPause = { viewModel.onPlayPause() },
+                    onPlayPause = { playerService.togglePlay() },
                     onSeek = { seekTo -> viewModel.onSeek(seekTo) },
                     openQueue = { scope.launch { backdropState.conceal() } }
                 )
@@ -140,7 +169,8 @@ fun FrontLayer(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     handleIcon: ImageVector,
-    openPlayer: () -> Unit
+    openPlayer: () -> Unit,
+    onSongClick: (Song) -> Unit
 ) {
     Column(modifier) {
         Crossfade(handleIcon) { icon ->
@@ -155,7 +185,10 @@ fun FrontLayer(
                 contentDescription = "Pull Down"
             )
         }
-        HomeNavGraph(navController = navController)
+        HomeNavGraph(
+            navController = navController,
+            onSongClick = onSongClick
+        )
     }
 }
 
@@ -163,8 +196,8 @@ fun FrontLayer(
 fun PlayerHeader(
     modifier: Modifier = Modifier,
     albumArt: Any,
-    songName: String = "No Name",
-    artistName: String = "No Name",
+    songName: String?,
+    artistName: String?,
     icon: ImageVector,
     toggled: Boolean,
     openPlayer: () -> Unit,
@@ -176,8 +209,8 @@ fun PlayerHeader(
             modifier = Modifier
                 .clickable(onClick = openPlayer)
                 .padding(vertical = 20.dp),
-            songName = songName,
-            artistName = artistName,
+            songName = songName ?: "Unknown",
+            artistName = artistName ?: "Unknown",
             albumArt = albumArt,
             icon = icon,
             toggled = toggled,

@@ -20,7 +20,6 @@ android {
             debuggable true
         }
         all {
-            minifyEnabled true
             proguardFiles(
                     getDefaultProguardFile("proguard-android.txt")
             )

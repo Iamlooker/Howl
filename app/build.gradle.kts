@@ -20,6 +20,7 @@ android {
 
     buildTypes {
         getByName("release") {
+            isMinifyEnabled = true
             isShrinkResources = true
         }
         getByName("debug") {
@@ -27,7 +28,6 @@ android {
             applicationIdSuffix = ".debug"
         }
         all {
-            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"
@@ -64,9 +64,11 @@ dependencies {
 
     implementation(project(Modules.constants))
     implementation(project(Modules.onBoarding))
+    implementation(project(Modules.dataMusic))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.uiAlbums))
     implementation(project(Modules.uiPlayer))
+    implementation(project(Modules.playerService))
     implementation(project(Modules.components))
 
     implementation(Core.core)
@@ -78,6 +80,8 @@ dependencies {
     implementation(Compose.navigation)
     implementation(Compose.ui)
     implementation(Compose.runtimeLiveData)
+
+    implementation(ExoPlayer.exoplayerCore)
 
     debugImplementation(Compose.tooling)
 }

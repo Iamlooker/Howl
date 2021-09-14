@@ -9,20 +9,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.looker.data_music.data.Song
 
 class HowlViewModel : ViewModel() {
-
 
     private val _playing = MutableLiveData<Boolean>()
     private val _shuffle = MutableLiveData<Boolean>()
     private val _progress = MutableLiveData<Float>()
     private val _playIcon = MutableLiveData<ImageVector>()
     private val _handleIcon = MutableLiveData<ImageVector>()
+    private val _currentSong = MutableLiveData<Song>()
 
     val playing: LiveData<Boolean> = _playing
     val shuffle: LiveData<Boolean> = _shuffle
     val progress: LiveData<Float> = _progress
     val handleIcon: LiveData<ImageVector> = _handleIcon
+    val currentSong: LiveData<Song> = _currentSong
     val playIcon: LiveData<ImageVector>
         get() {
             _playIcon.value = if (_playing.value == true) Icons.Rounded.Pause
@@ -44,6 +46,9 @@ class HowlViewModel : ViewModel() {
         else Icons.Rounded.ArrowDropDown
     }
 
+    fun onSongClicked(song: Song) {
+        _currentSong.value = song
+    }
 
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo
