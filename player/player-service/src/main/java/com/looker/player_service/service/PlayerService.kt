@@ -3,12 +3,10 @@ package com.looker.player_service.service
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.media.MediaMetadata
 import android.media.session.MediaSession
 import android.net.Uri
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.core.net.toUri
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
@@ -40,11 +38,11 @@ class PlayerService : Service() {
         startForeground(NOTIFICATION_ID, notification.build())
     }
 
-    private fun initPlayer(exoPlayer: SimpleExoPlayer) {
+    private fun initPlayer(exoPlayer: SimpleExoPlayer?) {
         player = exoPlayer
     }
 
-    fun initPlayer(exoPlayer: SimpleExoPlayer, songUri: Uri) {
+    fun initPlayer(exoPlayer: SimpleExoPlayer?, songUri: Uri) {
         initPlayer(exoPlayer)
         clearQueue()
         setMediaItem(songUri)

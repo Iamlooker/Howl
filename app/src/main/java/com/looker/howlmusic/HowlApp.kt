@@ -36,12 +36,14 @@ import com.looker.data_music.data.Song
 import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
+import com.looker.howlmusic.utils.checkReadPermission
 import com.looker.onboarding.OnBoardingPage
 import com.looker.player_service.service.PlayerService
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltAndroidApp
 class HowlApp : Application()
@@ -88,7 +90,9 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val context = LocalContext.current
 
     val playerService = PlayerService()
-    val player = SimpleExoPlayer.Builder(context).build()
+
+    @Inject
+    var player: SimpleExoPlayer? = null
 
     val currentSong by viewModel.currentSong.observeAsState(Song("".toUri(), 0))
 

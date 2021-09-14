@@ -1,4 +1,4 @@
-package com.looker.howlmusic
+package com.looker.howlmusic.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
