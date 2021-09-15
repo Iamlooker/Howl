@@ -38,8 +38,7 @@ fun Backdrop(
     }
 
     val animateFloat by animateFloatAsState(
-        targetValue = if (currentFraction == 1f) 0.5f
-        else 1f,
+        targetValue = if (currentFraction == 1f) 0.5f else 1f,
         animationSpec = tweenAnimation(durationMillis = 700, easing = LinearOutSlowInEasing)
     )
 
