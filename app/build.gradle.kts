@@ -20,13 +20,14 @@ android {
 
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = true
             isShrinkResources = true
         }
         getByName("debug") {
+            isDebuggable = true
             applicationIdSuffix = ".debug"
         }
         all {
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android.txt"),
                 "proguard-rules.pro"

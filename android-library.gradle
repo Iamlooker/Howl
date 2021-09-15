@@ -16,6 +16,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+        }
         all {
             proguardFiles(
                     getDefaultProguardFile("proguard-android.txt")
