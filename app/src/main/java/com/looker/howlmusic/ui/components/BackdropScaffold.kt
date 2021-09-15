@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.backgroundGradient
 import com.looker.components.rememberDominantColorState
@@ -27,6 +29,7 @@ fun Backdrop(
 ) {
 
     val backgroundColor = rememberDominantColorState()
+    val expandedPeekHeight = LocalContext.current.calculateItemSize(true, 3)
 
     LaunchedEffect(albumArt) {
         launch {
@@ -50,7 +53,7 @@ fun Backdrop(
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
         backLayerBackgroundColor = MaterialTheme.colors.background,
-        peekHeight = if (playing) 400.dp else 50.dp,
+        peekHeight = if (playing) expandedPeekHeight else 50.dp,
         frontLayerShape = MaterialTheme.shapes.large
     )
 }
