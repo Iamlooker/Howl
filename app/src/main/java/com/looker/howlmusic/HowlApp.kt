@@ -1,6 +1,5 @@
 package com.looker.howlmusic
 
-import android.app.Application
 import android.app.WallpaperManager
 import android.content.Intent
 import android.graphics.Bitmap
@@ -41,14 +40,10 @@ import com.looker.onboarding.OnBoardingPage
 import com.looker.player_service.service.PlayerService
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
-import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
 
-@HiltAndroidApp
-class HowlApp : Application()
-
 @Composable
-fun App(player: SimpleExoPlayer) {
+fun App() {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
     val wallpaperManager = WallpaperManager.getInstance(context)
@@ -56,13 +51,13 @@ fun App(player: SimpleExoPlayer) {
     HowlMusicTheme {
         if (canReadStorage) {
             val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
-            AppTheme(wallpaperBitmap, player = player)
+            AppTheme(wallpaperBitmap)
         } else OnBoardingPage { canReadStorage = it }
     }
 }
 
 @Composable
-fun AppTheme(wallpaper: Bitmap? = null, player: SimpleExoPlayer) {
+fun AppTheme(wallpaper: Bitmap? = null) {
     val dominantColor = rememberDominantColorState()
 
     LaunchedEffect(wallpaper) {
@@ -76,7 +71,7 @@ fun AppTheme(wallpaper: Bitmap? = null, player: SimpleExoPlayer) {
                     .fillMaxSize()
                     .navigationBarsPadding()
             ) {
-                AppContent(player = player)
+                AppContent()
             }
         }
     }
@@ -84,11 +79,12 @@ fun AppTheme(wallpaper: Bitmap? = null, player: SimpleExoPlayer) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AppContent(viewModel: HowlViewModel = viewModel(), player: SimpleExoPlayer) {
+fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
 
     val playerService = PlayerService()
+    val player = SimpleExoPlayer.Builder(context).build()
 
     val currentSong by viewModel.currentSong.observeAsState(Song("".toUri(), 0))
 

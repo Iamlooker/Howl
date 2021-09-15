@@ -48,7 +48,6 @@ object ExoPlayer {
 
 object Lifecycle {
     private const val lifecycleVersion = "2.3.1"
-    const val lifecycleViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     const val lifecycleViewModelCompose =
         "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
 }
