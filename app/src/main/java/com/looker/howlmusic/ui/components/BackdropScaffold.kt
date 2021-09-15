@@ -2,7 +2,10 @@ package com.looker.howlmusic.ui.components
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.material.*
+import androidx.compose.material.BackdropScaffold
+import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,7 +23,7 @@ import kotlinx.coroutines.launch
 fun Backdrop(
     modifier: Modifier = Modifier,
     state: BackdropScaffoldState,
-    currentFraction: Float,
+    playerVisible: Boolean,
     playing: Boolean,
     albumArt: Any? = null,
     header: @Composable () -> Unit,
@@ -38,7 +41,7 @@ fun Backdrop(
     }
 
     val animateFloat by animateFloatAsState(
-        targetValue = if (currentFraction == 1f) 0.5f else 1f,
+        targetValue = if (playerVisible) 0.5f else 1f,
         animationSpec = tweenAnimation(durationMillis = 700, easing = LinearOutSlowInEasing)
     )
 
@@ -56,22 +59,3 @@ fun Backdrop(
         frontLayerShape = MaterialTheme.shapes.large
     )
 }
-
-@ExperimentalMaterialApi
-val BackdropScaffoldState.currentFraction: Float
-    get() {
-        return try {
-            val fraction = progress.fraction
-            val targetValue = targetValue
-            val currentValue = currentValue
-
-            when {
-                currentValue == BackdropValue.Concealed && targetValue == BackdropValue.Revealed -> 0f
-                currentValue == BackdropValue.Revealed && targetValue == BackdropValue.Revealed -> 1f
-                currentValue == BackdropValue.Revealed && targetValue == BackdropValue.Concealed -> fraction
-                else -> 1f - fraction
-            }
-        } catch (e: NoSuchElementException) {
-            0f
-        }
-    }

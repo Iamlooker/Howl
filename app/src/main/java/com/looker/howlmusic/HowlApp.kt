@@ -32,7 +32,10 @@ import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.data_music.data.Song
-import com.looker.howlmusic.ui.components.*
+import com.looker.howlmusic.ui.components.Backdrop
+import com.looker.howlmusic.ui.components.BottomAppBar
+import com.looker.howlmusic.ui.components.HomeNavGraph
+import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.howlmusic.utils.checkReadPermission
@@ -93,10 +96,12 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val intent = Intent(context, playerService::class.java)
 
     LaunchedEffect(intent) {
-        context.startForegroundService(intent)
-        playerService.setPlayer(player)
-        viewModel.player = player
-        playerService.currentSong = currentSong
+        launch {
+            context.startForegroundService(intent)
+            playerService.setPlayer(player)
+            viewModel.player = player
+            playerService.currentSong = currentSong
+        }
     }
 
     val items = listOf(
@@ -116,7 +121,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         }
     ) {
-        val currentFraction = backdropState.currentFraction
+        val playerVisible = viewModel.playerVisible(backdropState)
 
         val playing by viewModel.playing.observeAsState(false)
         val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
@@ -125,42 +130,39 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
 
-        LaunchedEffect(currentFraction) {
-            viewModel.setHandleIcon(currentFraction)
+        LaunchedEffect(playerVisible) {
+            launch { viewModel.setHandleIcon(playerVisible) }
         }
 
         Backdrop(
             modifier = Modifier.padding(it),
             state = backdropState,
-            currentFraction = currentFraction,
+            playerVisible = playerVisible,
             playing = playing,
             albumArt = currentSong.albumId.artworkUri,
             header = {
                 PlayerHeader(
-                    icon = if (currentFraction > 0f) shuffleIcon else playIcon,
+                    icon = if (playerVisible) shuffleIcon else playIcon,
                     albumArt = currentSong.albumId.artworkUri,
                     songName = currentSong.songName,
                     artistName = currentSong.artistName,
-                    toggled = if (currentFraction > 0f) shuffle else playing,
+                    toggled = if (playerVisible) shuffle else playing,
                     openPlayer = { scope.launch { backdropState.reveal() } },
-                    toggleAction = { viewModel.onToggle(currentFraction) }
+                    toggleAction = { viewModel.onToggle(playerVisible) }
                 )
             },
             frontLayerContent = {
                 FrontLayer(
                     navController = navController,
                     handleIcon = handleIcon,
-                    onSongClick = { song ->
-                        viewModel.onSongClicked(song)
-                        playerService.playSong(song.songUri)
-                    },
-                    openPlayer = {
-                        scope.launch { backdropState.reveal() }
-                    }
+                    onSongClick = { song -> viewModel.onSongClicked(playerService, song) },
+                    openPlayer = { scope.launch { backdropState.reveal() } }
                 )
-
             },
             backLayerContent = {
+
+                viewModel.seekbar(player)
+
                 Controls(
                     playIcon = playIcon,
                     progress = progress,

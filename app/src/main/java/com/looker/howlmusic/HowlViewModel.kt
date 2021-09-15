@@ -1,5 +1,7 @@
 package com.looker.howlmusic
 
+import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.ArrowDropUp
@@ -9,8 +11,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.data_music.data.Song
+import com.looker.player_service.service.PlayerService
+import kotlinx.coroutines.launch
 
 class HowlViewModel : ViewModel() {
 
@@ -35,26 +40,38 @@ class HowlViewModel : ViewModel() {
             return _playIcon
         }
 
+    fun seekbar(exoplayer: SimpleExoPlayer) {
+        viewModelScope.launch {
+            _progress.value = if (exoplayer.contentDuration > 0) {
+                exoplayer.contentPosition.toFloat() / exoplayer.contentDuration
+            } else 0f
+        }
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    fun playerVisible(state: BackdropScaffoldState): Boolean = state.isRevealed
+
     fun onPlayPause() {
         if (player.isPlaying) player.pause()
         else player.play()
         _playing.value = player.isPlaying
     }
 
-    fun onToggle(pos: Float) {
-        if (pos > 0f) {
+    fun onToggle(playerVisible: Boolean) {
+        if (playerVisible) {
             player.shuffleModeEnabled = _shuffle.value ?: false
         } else onPlayPause()
     }
 
-    fun setHandleIcon(pos: Float) {
-        _handleIcon.value = if (pos == 1f) Icons.Rounded.ArrowDropUp
+    fun setHandleIcon(playerVisible: Boolean) {
+        _handleIcon.value = if (playerVisible) Icons.Rounded.ArrowDropUp
         else Icons.Rounded.ArrowDropDown
     }
 
-    fun onSongClicked(song: Song) {
+    fun onSongClicked(playerService: PlayerService, song: Song) {
         _playing.value = true
         _currentSong.value = song
+        playerService.playSong(song.songUri)
     }
 
     fun onSeek(seekTo: Float) {
