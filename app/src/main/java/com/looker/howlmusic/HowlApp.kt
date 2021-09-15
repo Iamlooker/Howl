@@ -84,7 +84,9 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val context = LocalContext.current
 
     val playerService = PlayerService()
-    val player = SimpleExoPlayer.Builder(context).build()
+    val player = remember {
+        SimpleExoPlayer.Builder(context).build()
+    }
 
     val currentSong by viewModel.currentSong.observeAsState(Song("".toUri(), 0))
 
@@ -92,6 +94,8 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     LaunchedEffect(intent) {
         context.startForegroundService(intent)
+        playerService.setPlayer(player)
+        viewModel.player = player
         playerService.currentSong = currentSong
     }
 
@@ -112,6 +116,8 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         }
     ) {
+        val currentFraction = backdropState.currentFraction
+
         val playing by viewModel.playing.observeAsState(false)
         val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
         val progress by viewModel.progress.observeAsState(0f)
@@ -119,8 +125,10 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
 
-        val currentFraction = backdropState.currentFraction
-        LaunchedEffect(currentFraction) { viewModel.setHandleIcon(currentFraction) }
+        LaunchedEffect(currentFraction) {
+            viewModel.setHandleIcon(currentFraction)
+        }
+
         Backdrop(
             modifier = Modifier.padding(it),
             state = backdropState,
@@ -144,7 +152,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     handleIcon = handleIcon,
                     onSongClick = { song ->
                         viewModel.onSongClicked(song)
-                        playerService.initPlayer(player, song.songUri)
+                        playerService.playSong(song.songUri)
                     },
                     openPlayer = {
                         scope.launch { backdropState.reveal() }
@@ -156,7 +164,9 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 Controls(
                     playIcon = playIcon,
                     progress = progress,
-                    onPlayPause = { playerService.togglePlay() },
+                    onPlayPause = { viewModel.onPlayPause() },
+                    skipNextClick = { viewModel.playNext() },
+                    skipPrevClick = { viewModel.playPrevious() },
                     onSeek = { seekTo -> viewModel.onSeek(seekTo) },
                     openQueue = { scope.launch { backdropState.conceal() } }
                 )
@@ -226,14 +236,18 @@ fun Controls(
     playIcon: ImageVector,
     progress: Float,
     onPlayPause: () -> Unit,
+    skipNextClick: () -> Unit,
     onSeek: (Float) -> Unit,
-    openQueue: () -> Unit
+    openQueue: () -> Unit,
+    skipPrevClick: () -> Unit
 ) {
     Column(modifier) {
         PlaybackControls(
             playIcon = playIcon,
             progressValue = progress,
             onPlayPause = { onPlayPause() },
+            skipNextClick = skipNextClick,
+            skipPrevClick = skipPrevClick,
             onSeek = { seekTo -> onSeek(seekTo) },
             openQueue = openQueue
         )

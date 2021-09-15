@@ -20,6 +20,8 @@ fun PlaybackControls(
     modifier: Modifier = Modifier,
     playIcon: ImageVector,
     onPlayPause: () -> Unit,
+    skipNextClick: () -> Unit,
+    skipPrevClick: () -> Unit,
     @FloatRange(from = 0.0, to = 1.0) progressValue: Float,
     onSeek: (Float) -> Unit,
     openQueue: () -> Unit
@@ -42,9 +44,14 @@ fun PlaybackControls(
             playButtonColors = playButtonColors,
             skipButtonColors = skipButtonColors,
             playIcon = playIcon,
-            playClick = onPlayPause
+            playClick = onPlayPause,
+            skipNextClick = skipNextClick
         )
-        PreviousAndQueue(skipButtonColors = skipButtonColors, openQueue = openQueue)
+        PreviousAndQueue(
+            skipButtonColors = skipButtonColors,
+            openQueue = openQueue,
+            skipPrevClick = skipPrevClick
+        )
     }
 }
 
@@ -54,8 +61,8 @@ fun PlayAndSkipButton(
     playIcon: ImageVector,
     playButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
     skipButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    playClick: () -> Unit = {},
-    skipNextClick: () -> Unit = {}
+    playClick: () -> Unit,
+    skipNextClick: () -> Unit
 ) {
 
     Row(
@@ -90,7 +97,7 @@ fun PlayAndSkipButton(
 fun PreviousAndQueue(
     modifier: Modifier = Modifier,
     skipButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    skipPrevClick: () -> Unit = {},
+    skipPrevClick: () -> Unit,
     openQueue: () -> Unit
 ) {
     Row(

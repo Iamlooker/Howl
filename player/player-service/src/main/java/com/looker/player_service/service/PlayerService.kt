@@ -38,12 +38,11 @@ class PlayerService : Service() {
         startForeground(NOTIFICATION_ID, notification.build())
     }
 
-    private fun initPlayer(exoPlayer: SimpleExoPlayer?) {
+    fun setPlayer(exoPlayer: SimpleExoPlayer?) {
         player = exoPlayer
     }
 
-    fun initPlayer(exoPlayer: SimpleExoPlayer?, songUri: Uri) {
-        initPlayer(exoPlayer)
+    fun playSong(songUri: Uri) {
         clearQueue()
         setMediaItem(songUri)
         prepare()
@@ -64,11 +63,6 @@ class PlayerService : Service() {
 
     fun play() {
         player?.play()
-    }
-
-    fun togglePlay() {
-        if (player?.isPlaying == true) player?.pause()
-        else player?.play()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_NOT_STICKY

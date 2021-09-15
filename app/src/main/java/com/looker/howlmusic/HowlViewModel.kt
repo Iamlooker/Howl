@@ -9,9 +9,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.data_music.data.Song
 
 class HowlViewModel : ViewModel() {
+
+    lateinit var player: SimpleExoPlayer
 
     private val _playing = MutableLiveData<Boolean>()
     private val _shuffle = MutableLiveData<Boolean>()
@@ -33,12 +36,15 @@ class HowlViewModel : ViewModel() {
         }
 
     fun onPlayPause() {
-        _playing.value = _playing.value?.not()
+        if (player.isPlaying) player.pause()
+        else player.play()
+        _playing.value = player.isPlaying
     }
 
     fun onToggle(pos: Float) {
-        if (pos > 0f) _shuffle.value = _shuffle.value?.not()
-        else onPlayPause()
+        if (pos > 0f) {
+            player.shuffleModeEnabled = _shuffle.value ?: false
+        } else onPlayPause()
     }
 
     fun setHandleIcon(pos: Float) {
@@ -47,10 +53,25 @@ class HowlViewModel : ViewModel() {
     }
 
     fun onSongClicked(song: Song) {
+        _playing.value = true
         _currentSong.value = song
     }
 
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo
+        seekSongTo(seekTo)
+    }
+
+    fun seekSongTo(progress: Float) {
+        val long: Long? = (_currentSong.value?.duration?.times(progress))?.toLong()
+        player.seekTo(long ?: 0)
+    }
+
+    fun playNext() {
+        if (player.hasNextWindow()) player.seekToNext()
+    }
+
+    fun playPrevious() {
+        if (player.hasPreviousWindow()) player.seekToPrevious()
     }
 }
