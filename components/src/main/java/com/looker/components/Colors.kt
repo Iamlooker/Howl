@@ -12,6 +12,7 @@ import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.request.ImageRequest
 import coil.request.SuccessResult
+import coil.size.Scale
 
 fun Int.toColor() = Color(this)
 
@@ -55,7 +56,7 @@ class DominantColorState(
         color = result?.color ?: defaultColor
     }
 
-    fun updateColorsFromBitmap(bitmap: Bitmap?) {
+    suspend fun updateColorsFromBitmap(bitmap: Bitmap?) {
         val result = bitmap?.let { calculateDominantColorFromBitmap(it) }
         color = result?.color ?: defaultColor
     }
@@ -66,7 +67,7 @@ class DominantColorState(
         }
     }
 
-    private fun calculateDominantColorFromBitmap(bitmap: Bitmap): DominantColors {
+    private suspend fun calculateDominantColorFromBitmap(bitmap: Bitmap): DominantColors {
         return cacheBitmap?.get(bitmap) ?: DominantColors(
             color = bitmap.getDominantColor() ?: defaultColor
         )
@@ -80,14 +81,14 @@ data class DominantColors(
     val onColor: Color = Color.Unspecified
 )
 
-
 private suspend fun calculateColorFromImageUrl(
     context: Context,
     imageUrl: String,
 ): Color? {
     val r = ImageRequest.Builder(context)
         .data(imageUrl)
-        .size(128).scale(coil.size.Scale.FILL)
+        .size(128)
+        .scale(Scale.FILL)
         .allowHardware(false)
         .build()
 

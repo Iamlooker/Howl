@@ -3,10 +3,12 @@ package com.looker.howlmusic
 import android.app.WallpaperManager
 import android.content.Intent
 import android.graphics.Bitmap
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
@@ -14,7 +16,6 @@ import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +28,7 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.looker.components.HandleIcon
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Song
@@ -177,19 +179,8 @@ fun FrontLayer(
     openPlayer: () -> Unit,
     onSongClick: (Song) -> Unit
 ) {
-    Column(modifier) {
-        Crossfade(handleIcon) { icon ->
-            Icon(
-                modifier = Modifier
-                    .height(40.dp)
-                    .fillMaxWidth()
-                    .clickable(onClick = openPlayer)
-                    .align(Alignment.CenterHorizontally)
-                    .background(MaterialTheme.colors.background),
-                imageVector = icon,
-                contentDescription = "Pull Down"
-            )
-        }
+    Column(modifier.background(MaterialTheme.colors.background)) {
+        HandleIcon(handleIcon) { openPlayer() }
         HomeNavGraph(
             navController = navController,
             onSongClick = onSongClick

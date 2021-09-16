@@ -6,14 +6,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.looker.components.ComponentConstants.DefaultCrossfadeInDuration
+import com.looker.components.ComponentConstants.tweenAnimation
+import com.looker.components.HandleIcon
 import com.looker.components.backgroundGradient
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
@@ -47,25 +48,9 @@ fun AlbumBottomSheetItem(
     songsList: List<Song>
 ) {
     Column(modifier = modifier.backgroundGradient(albumDominantColor)) {
-        AlbumBottomSheetHandle(icon = handleIcon)
+        HandleIcon(icon = handleIcon)
         AlbumHeader(album = album)
         AlbumSongsList(songsList = songsList)
-    }
-}
-
-@Composable
-fun AlbumBottomSheetHandle(icon: ImageVector) {
-    Crossfade(
-        targetState = icon,
-    ) { currentIcon ->
-        Icon(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .alpha(0.6f),
-            imageVector = currentIcon,
-            contentDescription = "Swipe Action"
-        )
     }
 }
 
@@ -74,11 +59,13 @@ fun AlbumHeader(
     modifier: Modifier = Modifier,
     album: Album
 ) {
-    AlbumsItem(
-        modifier = modifier.fillMaxWidth(),
-        album = album,
-        cardWidth = 250.dp
-    )
+    Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossfadeInDuration)) {
+        AlbumsItem(
+            modifier = modifier.fillMaxWidth(),
+            album = it,
+            cardWidth = 250.dp
+        )
+    }
 }
 
 @Composable
@@ -86,9 +73,11 @@ fun AlbumSongsList(
     modifier: Modifier = Modifier,
     songsList: List<Song>
 ) {
-    SongsList(
-        modifier = modifier.fillMaxWidth(),
-        songsList = songsList
-    )
+    Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossfadeInDuration)) {
+        SongsList(
+            modifier = modifier.fillMaxWidth(),
+            songsList = it
+        )
+    }
     Spacer(modifier = Modifier.height(50.dp))
 }

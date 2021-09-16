@@ -44,7 +44,7 @@ private fun Albums(
         )
     )
 ) {
-    HowlSurface(modifier = modifier) {
+    HowlSurface(modifier) {
 
         val context = LocalContext.current
 
@@ -81,7 +81,6 @@ private fun Albums(
                 )
             },
             content = {
-
                 LaunchedEffect(albumsList) {
                     launch { viewModel.getAlbumsList(context) }
                 }

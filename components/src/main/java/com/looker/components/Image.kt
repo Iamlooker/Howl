@@ -14,7 +14,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.palette.graphics.Palette
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import com.looker.components.ComponentConstants.DefaultCrossfadeInDuration
 import com.looker.components.ComponentConstants.tweenAnimation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -26,7 +29,7 @@ fun HowlImage(
 ) {
     Crossfade(
         targetState = data,
-        animationSpec = tweenAnimation()
+        animationSpec = tweenAnimation(DefaultCrossfadeInDuration)
     ) {
         Image(
             modifier = modifier
@@ -45,18 +48,22 @@ fun HowlImage(
     }
 }
 
-fun Bitmap?.getVibrantColor(): Color? = this?.let {
-    Palette.Builder(it)
-        .resizeBitmapArea(0)
-        .clearFilters()
-        .maximumColorCount(8)
-        .generate()
-}?.getVibrantColor(0)?.toColor()
+suspend fun Bitmap?.getVibrantColor(): Color? = withContext(Dispatchers.IO) {
+    this@getVibrantColor?.let {
+        Palette.Builder(it)
+            .resizeBitmapArea(0)
+            .clearFilters()
+            .maximumColorCount(8)
+            .generate()
+    }?.getVibrantColor(0)?.toColor()
+}
 
-fun Bitmap?.getDominantColor(): Color? = this?.let {
-    Palette.Builder(it)
-        .resizeBitmapArea(0)
-        .clearFilters()
-        .maximumColorCount(8)
-        .generate()
-}?.getDominantColor(0)?.toColor()
+suspend fun Bitmap?.getDominantColor(): Color? = withContext(Dispatchers.IO) {
+    this@getDominantColor?.let {
+        Palette.Builder(it)
+            .resizeBitmapArea(0)
+            .clearFilters()
+            .maximumColorCount(8)
+            .generate()
+    }?.getDominantColor(0)?.toColor()
+}
