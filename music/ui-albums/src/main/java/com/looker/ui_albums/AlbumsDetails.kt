@@ -77,7 +77,7 @@ fun AlbumHeader(
     AlbumsItem(
         modifier = modifier.fillMaxWidth(),
         album = album,
-        columnCount = 1.5f
+        cardWidth = 250.dp
     )
 }
 

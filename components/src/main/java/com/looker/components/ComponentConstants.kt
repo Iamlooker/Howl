@@ -23,12 +23,12 @@ object ComponentConstants {
         return itemSize - padding
     }
 
-    val defaultBottomNavigationHeight = 56.dp // Default BottomNavigation height
-    const val defaultFadeInDuration = 400
-    const val wallpaperSurfaceAlpha = 0.2f
+    val DefaultBottomNavigationHeight = 56.dp // Default BottomNavigation height
+    const val DefaultFadeInDuration = 400
+    const val WallpaperSurfaceAlpha = 0.2f
 
     fun <T> tweenAnimation(
-        durationMillis: Int = defaultFadeInDuration,
+        durationMillis: Int = DefaultFadeInDuration,
         delayMillis: Int = 0,
         easing: Easing = FastOutSlowInEasing
     ) = tween<T>(durationMillis, delayMillis, easing)

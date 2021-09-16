@@ -9,10 +9,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.*
+import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ComponentConstants.tweenAnimation
+import com.looker.components.HowlImage
+import com.looker.components.MaterialCard
+import com.looker.components.WrappedText
+import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Album
 import kotlinx.coroutines.launch
 
@@ -22,14 +28,21 @@ fun AlbumsCard(
     album: Album,
     onClick: () -> Unit = {}
 ) {
-    AlbumsCard(modifier.padding(10.dp), album, 2f, onClick)
+
+    val context = LocalContext.current
+
+    val cardWidth = remember {
+        context.calculateItemSize(false, 2, 20.dp)
+    }
+
+    AlbumsCard(modifier.padding(10.dp), album, cardWidth, onClick)
 }
 
 @Composable
 private fun AlbumsCard(
     modifier: Modifier = Modifier,
     album: Album,
-    count: Float,
+    cardWidth: Dp,
     onClick: () -> Unit
 ) {
     val backgroundColor = rememberDominantColorState()
@@ -49,7 +62,7 @@ private fun AlbumsCard(
     ) {
         AlbumsItem(
             album = album,
-            columnCount = count,
+            cardWidth = cardWidth,
             imageBackgroundColor = backgroundColor.color.copy(0.4f)
         )
     }
@@ -59,17 +72,17 @@ private fun AlbumsCard(
 fun AlbumsItem(
     modifier: Modifier = Modifier,
     album: Album,
-    columnCount: Float,
+    cardWidth: Dp,
     imageBackgroundColor: Color = MaterialTheme.colors.surface,
     imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
 ) {
-
     var defaultAlpha by remember {
         mutableStateOf(0f)
     }
-
     LaunchedEffect(defaultAlpha) {
-        launch { defaultAlpha = 1f }
+        launch {
+            defaultAlpha = 1f
+        }
     }
 
     val fadeIn by animateFloatAsState(
@@ -78,15 +91,14 @@ fun AlbumsItem(
     )
 
     Column(
-        modifier = modifier
-            .wrapContentSize(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         HowlImage(
             modifier = Modifier
                 .alpha(fadeIn)
-                .itemSize(false, columnCount, 20.dp),
+                .size(cardWidth),
             data = album.albumArt,
             imageFillerColor = imageBackgroundColor,
             shape = imageShape,

@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.looker.components.ComponentConstants.defaultBottomNavigationHeight
+import com.looker.components.ComponentConstants.DefaultBottomNavigationHeight
 import com.looker.components.ComponentConstants.tweenAnimation
 
 @Composable
@@ -103,7 +103,7 @@ fun RowScope.BottomNavigationItems(
                 indication = null,
                 interactionSource = interactionSource
             )
-            .height(defaultBottomNavigationHeight),
+            .height(DefaultBottomNavigationHeight),
         contentAlignment = Alignment.Center
     ) {
         Crossfade(targetState = if (this.maxHeight < 45.dp) 0f else 1f) {
