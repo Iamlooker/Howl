@@ -7,28 +7,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.artworkUri
-import com.looker.components.ComponentConstants.calculateItemSize
-import com.looker.components.HowlImage
-import com.looker.components.MaterialCard
-import com.looker.components.WrappedText
-import com.looker.components.rememberDominantColorState
-import com.looker.data_music.data.Song
+import com.looker.components.*
+import com.looker.domain_music.Song
 import kotlinx.coroutines.launch
 
 @Composable
 fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit) {
-
-    val context = LocalContext.current
-
-    val itemHeight = context.calculateItemSize(true, 14)
-
     Box(modifier = modifier) {
-        SongsCard(modifier = modifier, song = song, cardHeight = itemHeight, onClick = onClick)
+        SongsCard(modifier = modifier, song = song, count = 14f, onClick = onClick)
     }
 }
 
@@ -36,7 +24,7 @@ fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit) {
 private fun SongsCard(
     modifier: Modifier = Modifier,
     song: Song,
-    cardHeight: Dp,
+    count: Float,
     onClick: () -> Unit
 ) {
 
@@ -44,7 +32,7 @@ private fun SongsCard(
 
     LaunchedEffect(song) {
         launch {
-            backgroundColor.updateColorsFromImageUrl(song.albumId.artworkUri.toString())
+            backgroundColor.updateColorsFromImageUrl(song.albumArt)
         }
     }
 
@@ -57,22 +45,22 @@ private fun SongsCard(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = CenterVertically
         ) {
-            SongItem(song = song, imageSize = cardHeight)
+            SongItem(song = song, rowCounts = count)
         }
     }
 }
 
 @Composable
-fun SongItem(song: Song, imageSize: Dp) {
+fun SongItem(song: Song, rowCounts: Float) {
     HowlImage(
-        data = song.albumId.artworkUri,
-        modifier = Modifier.size(imageSize),
+        data = song.albumArt,
+        modifier = Modifier.itemSize(true, rowCounts),
         shape = MaterialTheme.shapes.medium
     )
     Spacer(modifier = Modifier.width(10.dp))
     SongItemText(
-        songName = song.songName ?: "No Song Name",
-        artistName = song.artistName ?: "No Artist Name Available"
+        songName = song.songName,
+        artistName = song.artistName
     )
 }
 

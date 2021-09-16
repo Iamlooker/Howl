@@ -11,13 +11,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.backgroundGradient
-import com.looker.data_music.data.Album
-import com.looker.data_music.data.Song
+import com.looker.domain_music.Album
+import com.looker.domain_music.Song
 import com.looker.ui_albums.components.AlbumsItem
 import com.looker.ui_songs.SongsList
 
@@ -78,7 +77,7 @@ fun AlbumHeader(
     AlbumsItem(
         modifier = modifier.fillMaxWidth(),
         album = album,
-        imageSize = Size(250f, 250f)
+        columnCount = 1.5f
     )
 }
 

@@ -1,8 +1,6 @@
 package com.looker.components
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,13 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.palette.graphics.Palette
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.ComponentConstants.tweenAnimation
-
-fun Long.bitmap(context: Context): Bitmap = when (val source =
-    this.artworkUri.let { ImageDecoder.createSource(context.contentResolver, it) }) {
-    else -> ImageDecoder.decodeBitmap(source)
-}
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable

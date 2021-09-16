@@ -20,12 +20,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.looker.components.BottomSheets
-import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
-import com.looker.data_music.data.Album
 import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.SongsRepository
+import com.looker.domain_music.Album
 import com.looker.ui_albums.components.AlbumsCard
 import kotlinx.coroutines.launch
 
@@ -65,7 +64,7 @@ private fun Albums(
 
                 LaunchedEffect(currentAlbum) {
                     launch {
-                        dominantColor.updateColorsFromImageUrl(currentAlbum.albumId.artworkUri.toString())
+                        dominantColor.updateColorsFromImageUrl(currentAlbum.albumArt)
                         viewModel.getSongsPerAlbum(context)
                     }
                 }

@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
+import com.looker.domain_music.Song
 import kotlinx.coroutines.launch
 
 class SongsViewModel(private val repository: SongsRepository) : ViewModel() {

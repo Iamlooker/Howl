@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.looker.components.HowlSurface
-import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
+import com.looker.domain_music.Song
 import com.looker.ui_songs.components.SongsCard
 import kotlinx.coroutines.launch
 

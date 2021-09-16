@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -28,10 +27,9 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.looker.components.ComponentConstants.artworkUri
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
-import com.looker.data_music.data.Song
+import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -64,7 +62,7 @@ fun AppTheme(wallpaper: Bitmap? = null) {
     val dominantColor = rememberDominantColorState()
 
     LaunchedEffect(wallpaper) {
-        dominantColor.updateColorsFromBitmap(wallpaper)
+        launch { dominantColor.updateColorsFromBitmap(wallpaper) }
     }
 
     WallpaperTheme(dominantColor) {
@@ -87,20 +85,17 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val context = LocalContext.current
 
     val playerService = PlayerService()
-    val player = remember {
-        SimpleExoPlayer.Builder(context).build()
-    }
+    val player = remember { SimpleExoPlayer.Builder(context).build() }
 
-    val currentSong by viewModel.currentSong.observeAsState(Song("".toUri(), 0))
+    val currentSong by viewModel.currentSong.observeAsState(Song("", 0))
 
     val intent = Intent(context, playerService::class.java)
 
     LaunchedEffect(intent) {
         launch {
-            context.startForegroundService(intent)
-            playerService.setPlayer(player)
             viewModel.player = player
-            playerService.currentSong = currentSong
+            playerService.setPlayer(player)
+            context.startForegroundService(intent)
         }
     }
 
@@ -139,11 +134,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             state = backdropState,
             playerVisible = playerVisible,
             playing = playing,
-            albumArt = currentSong.albumId.artworkUri,
+            albumArt = currentSong.albumArt,
             header = {
                 PlayerHeader(
                     icon = if (playerVisible) shuffleIcon else playIcon,
-                    albumArt = currentSong.albumId.artworkUri,
+                    albumArt = currentSong.albumArt,
                     songName = currentSong.songName,
                     artistName = currentSong.artistName,
                     toggled = if (playerVisible) shuffle else playing,
@@ -160,9 +155,6 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 )
             },
             backLayerContent = {
-
-                viewModel.seekbar(player)
-
                 Controls(
                     playIcon = playIcon,
                     progress = progress,
@@ -221,7 +213,7 @@ fun PlayerHeader(
         MiniPlayer(
             modifier = Modifier
                 .clickable(onClick = openPlayer)
-                .padding(vertical = 20.dp),
+                .padding(bottom = 20.dp),
             songName = songName ?: "Unknown",
             artistName = artistName ?: "Unknown",
             albumArt = albumArt,

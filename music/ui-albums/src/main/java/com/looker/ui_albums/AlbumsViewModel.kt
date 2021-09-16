@@ -12,10 +12,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.data_music.data.Album
 import com.looker.data_music.data.AlbumsRepository
-import com.looker.data_music.data.Song
 import com.looker.data_music.data.SongsRepository
+import com.looker.domain_music.Album
+import com.looker.domain_music.Song
 import kotlinx.coroutines.launch
 
 class AlbumsViewModel(

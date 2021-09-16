@@ -11,11 +11,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.looker.data_music.data.Song
+import com.looker.domain_music.Song
 import com.looker.player_service.service.PlayerService
-import kotlinx.coroutines.launch
 
 class HowlViewModel : ViewModel() {
 
@@ -40,15 +38,7 @@ class HowlViewModel : ViewModel() {
             return _playIcon
         }
 
-    fun seekbar(exoplayer: SimpleExoPlayer) {
-        viewModelScope.launch {
-            _progress.value = if (exoplayer.contentDuration > 0) {
-                exoplayer.contentPosition.toFloat() / exoplayer.contentDuration
-            } else 0f
-        }
-    }
-
-    @OptIn(ExperimentalMaterialApi::class)
+    @ExperimentalMaterialApi
     fun playerVisible(state: BackdropScaffoldState): Boolean = state.isRevealed
 
     fun onPlayPause() {

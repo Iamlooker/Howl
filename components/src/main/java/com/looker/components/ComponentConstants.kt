@@ -1,7 +1,6 @@
 package com.looker.components
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -9,9 +8,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object ComponentConstants {
-
-    val Long.artworkUri: Uri
-        get() = Uri.parse("content://media/external/audio/albumart/$this")
 
     fun Context.calculateItemSize(height: Boolean, count: Int, padding: Dp = 0.dp): Dp {
         val screenDensity = this.resources.displayMetrics.density

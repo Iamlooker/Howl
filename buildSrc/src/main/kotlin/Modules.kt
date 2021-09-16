@@ -5,7 +5,8 @@ object Modules {
     const val onBoarding = ":on-boarding"
     const val uiSongs = ":music:ui-songs"
     const val uiAlbums = ":music:ui-albums"
+    const val dataMusic = ":music:data-music"
+    const val domainMusic = ":music:domain-music"
     const val uiPlayer = ":player:ui-player"
     const val playerService = ":player:player-service"
-    const val dataMusic = ":music:data-music"
 }

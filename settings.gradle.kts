@@ -15,8 +15,9 @@ include(":constants")
 include(":components")
 
 include(":music")
-include(":music:ui-songs")
+include(":music:domain-music")
 include(":music:data-music")
+include(":music:ui-songs")
 include(":music:ui-albums")
 
 

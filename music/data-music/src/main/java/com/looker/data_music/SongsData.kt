@@ -5,10 +5,9 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.looker.data_music.SongsConstants.externalUri
 import com.looker.data_music.SongsConstants.isMusic
-import com.looker.data_music.SongsConstants.path
 import com.looker.data_music.SongsConstants.songsProjections
 import com.looker.data_music.SongsConstants.sortOrderSong
-import com.looker.data_music.data.Song
+import com.looker.domain_music.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -27,9 +26,6 @@ private object SongsConstants {
 
     const val isMusic = MediaStore.Audio.Media.IS_MUSIC + " != 0"
     const val sortOrderSong = MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC"
-
-    val Long.path: Uri
-        get() = Uri.parse("$externalUri/$this")
 }
 
 class SongsData(context: Context) {
@@ -62,15 +58,15 @@ class SongsData(context: Context) {
                 val artistName = songCursor.getString(3)
                 val albumName = songCursor.getString(4)
                 val songDurationMillis = songCursor.getLong(5)
-                val songUri = songId.path
+                val songUri = "$externalUri/$songId"
                 emit(
                     Song(
-                        songUri,
-                        albumId,
-                        songName,
-                        artistName,
-                        albumName,
-                        songDurationMillis
+                        songUri = songUri,
+                        albumId = albumId,
+                        songName = songName,
+                        artistName = artistName,
+                        albumName = albumName,
+                        duration = songDurationMillis
                     )
                 )
             } while (songCursor.moveToNext())

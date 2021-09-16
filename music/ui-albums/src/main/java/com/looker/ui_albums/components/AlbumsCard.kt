@@ -8,20 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.artworkUri
-import com.looker.components.ComponentConstants.calculateItemSize
+import com.looker.components.*
 import com.looker.components.ComponentConstants.tweenAnimation
-import com.looker.components.HowlImage
-import com.looker.components.MaterialCard
-import com.looker.components.WrappedText
-import com.looker.components.rememberDominantColorState
-import com.looker.data_music.data.Album
+import com.looker.domain_music.Album
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,25 +22,21 @@ fun AlbumsCard(
     album: Album,
     onClick: () -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val cardWidth = context.calculateItemSize(false, 2, 20.dp)
-    AlbumsCard(
-        modifier.padding(10.dp), album, cardWidth, onClick
-    )
+    AlbumsCard(modifier.padding(10.dp), album, 2f, onClick)
 }
 
 @Composable
 private fun AlbumsCard(
     modifier: Modifier = Modifier,
     album: Album,
-    cardWidth: Dp,
+    count: Float,
     onClick: () -> Unit
 ) {
     val backgroundColor = rememberDominantColorState()
 
     LaunchedEffect(album) {
         launch {
-            backgroundColor.updateColorsFromImageUrl(album.albumId.artworkUri.toString())
+            backgroundColor.updateColorsFromImageUrl(album.albumArt)
         }
     }
 
@@ -61,7 +49,7 @@ private fun AlbumsCard(
     ) {
         AlbumsItem(
             album = album,
-            imageSize = Size(cardWidth.value, cardWidth.value),
+            columnCount = count,
             imageBackgroundColor = backgroundColor.color.copy(0.4f)
         )
     }
@@ -71,7 +59,7 @@ private fun AlbumsCard(
 fun AlbumsItem(
     modifier: Modifier = Modifier,
     album: Album,
-    imageSize: Size,
+    columnCount: Float,
     imageBackgroundColor: Color = MaterialTheme.colors.surface,
     imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
 ) {
@@ -98,18 +86,15 @@ fun AlbumsItem(
         HowlImage(
             modifier = Modifier
                 .alpha(fadeIn)
-                .size(
-                    width = imageSize.width.dp,
-                    height = imageSize.height.dp
-                ),
-            data = album.albumId.artworkUri,
+                .itemSize(false, columnCount, 20.dp),
+            data = album.albumArt,
             imageFillerColor = imageBackgroundColor,
             shape = imageShape,
         )
         AlbumsItemText(
             modifier = Modifier.padding(horizontal = 8.dp),
-            albumName = album.albumName ?: "No Album Name",
-            artistName = album.artistName ?: "No Artist Name Available"
+            albumName = album.albumName,
+            artistName = album.artistName
         )
         Spacer(modifier = Modifier.height(8.dp))
     }

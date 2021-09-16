@@ -63,7 +63,7 @@ dependencies {
 
     implementation(project(Modules.constants))
     implementation(project(Modules.onBoarding))
-    implementation(project(Modules.dataMusic))
+    implementation(project(Modules.domainMusic))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.uiAlbums))
     implementation(project(Modules.uiPlayer))

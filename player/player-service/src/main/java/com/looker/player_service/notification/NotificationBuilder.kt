@@ -14,11 +14,10 @@ import android.media.session.MediaSession
 import android.media.session.PlaybackState.*
 import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat.CATEGORY_SERVICE
-import com.looker.components.bitmap
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_NAME
 import com.looker.constants.Constants.NOTIFICATION_ID
-import com.looker.data_music.data.Song
+import com.looker.domain_music.Song
 import com.looker.player_service.R
 
 class NotificationBuilder(
