@@ -87,7 +87,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val playerService = PlayerService()
     val player = SimpleExoPlayer.Builder(context).build()
 
-    val currentSong by viewModel.currentSong.observeAsState(Song("", 0))
+    val currentSong by viewModel.currentSong.observeAsState(Song("", 0, 0))
 
     val intent = Intent(context, playerService::class.java)
 

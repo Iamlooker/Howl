@@ -20,6 +20,7 @@ class PlayerService : Service() {
     val currentSong = Song(
         songUri = "",
         albumId = 0,
+        genreId = 0,
         songName = "Song Name",
         artistName = "Artist Name",
         albumName = "Album Name",

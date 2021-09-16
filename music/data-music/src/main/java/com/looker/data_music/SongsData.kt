@@ -16,6 +16,7 @@ private object SongsConstants {
     val songsProjections = arrayOf(
         MediaStore.Audio.Media._ID,
         MediaStore.Audio.Media.ALBUM_ID,
+        MediaStore.Audio.Genres._ID,
         MediaStore.Audio.Media.TITLE,
         MediaStore.Audio.Media.ARTIST,
         MediaStore.Audio.Media.ALBUM,
@@ -54,15 +55,17 @@ class SongsData(context: Context) {
             do {
                 val songId = songCursor.getLong(0)
                 val albumId = songCursor.getLong(1)
-                val songName = songCursor.getString(2)
-                val artistName = songCursor.getString(3)
-                val albumName = songCursor.getString(4)
-                val songDurationMillis = songCursor.getLong(5)
+                val genreId = songCursor.getLong(2)
+                val songName = songCursor.getString(3)
+                val artistName = songCursor.getString(4)
+                val albumName = songCursor.getString(5)
+                val songDurationMillis = songCursor.getLong(6)
                 val songUri = "$externalUri/$songId"
                 emit(
                     Song(
                         songUri = songUri,
                         albumId = albumId,
+                        genreId = genreId,
                         songName = songName,
                         artistName = artistName,
                         albumName = albumName,

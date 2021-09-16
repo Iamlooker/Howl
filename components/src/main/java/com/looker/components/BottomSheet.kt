@@ -16,7 +16,7 @@ fun BottomSheets(
     modifier: Modifier = Modifier,
     state: ModalBottomSheetState,
     sheetContent: @Composable ColumnScope.() -> Unit,
-    content: @Composable () -> Unit = {}
+    content: @Composable () -> Unit
 ) {
     ModalBottomSheetLayout(
         modifier = modifier,
