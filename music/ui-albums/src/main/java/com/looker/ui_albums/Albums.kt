@@ -56,6 +56,9 @@ private fun Albums(
         val songsList by viewModel.songsList.observeAsState(listOf())
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropUp)
 
+        LaunchedEffect(context) {
+            launch { viewModel.getAllSongs(context) }
+        }
 
         BottomSheets(
             state = state,
@@ -65,7 +68,7 @@ private fun Albums(
                 LaunchedEffect(currentAlbum) {
                     launch {
                         dominantColor.updateColorsFromImageUrl(currentAlbum.albumArt)
-                        viewModel.getSongsPerAlbum(context)
+                        viewModel.getSongsPerAlbum()
                     }
                 }
                 viewModel.getIcon(state)

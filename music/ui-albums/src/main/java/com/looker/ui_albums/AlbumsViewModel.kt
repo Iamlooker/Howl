@@ -27,6 +27,7 @@ class AlbumsViewModel(
     private val _songsList = MutableLiveData<List<Song>>()
     private val _currentAlbum = MutableLiveData<Album>()
     private val _handleIcon = MutableLiveData<ImageVector>()
+    private var allSongsList = listOf<Song>()
 
     val albumsList: LiveData<List<Album>> = _albumsList
     val songsList: LiveData<List<Song>> = _songsList
@@ -37,6 +38,12 @@ class AlbumsViewModel(
     suspend fun onAlbumClick(state: ModalBottomSheetState, album: Album) {
         _currentAlbum.value = album
         state.show()
+    }
+
+    fun getAllSongs(context: Context) {
+        viewModelScope.launch {
+            allSongsList = songsRepository.getAllSongs(context)
+        }
     }
 
     @ExperimentalMaterialApi
@@ -52,10 +59,9 @@ class AlbumsViewModel(
         viewModelScope.launch { _albumsList.value = albumsRepository.getAllAlbums(context) }
     }
 
-    fun getSongsPerAlbum(context: Context) {
+    fun getSongsPerAlbum() {
         viewModelScope.launch {
-            _songsList.value = songsRepository.getAllSongs(context)
-                .filter { it.albumId == _currentAlbum.value?.albumId }
+            _songsList.value = allSongsList.filter { it.albumId == _currentAlbum.value?.albumId }
         }
     }
 }
