@@ -1,6 +1,5 @@
 package com.looker.howlmusic.ui.components
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropScaffoldState
@@ -43,7 +42,7 @@ fun Backdrop(
 
     val animateFloat by animateFloatAsState(
         targetValue = if (playerVisible) 0.5f else 1f,
-        animationSpec = tweenAnimation(durationMillis = 700, easing = LinearOutSlowInEasing)
+        animationSpec = tweenAnimation()
     )
 
     BackdropScaffold(
