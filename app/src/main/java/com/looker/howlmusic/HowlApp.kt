@@ -45,7 +45,6 @@ import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun App() {
     val context = LocalContext.current
@@ -116,7 +115,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 items = items
             )
         }
-    ) {
+    ) { bottomNavigationPadding ->
         val scope = rememberCoroutineScope()
 
         val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
@@ -135,7 +134,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         LaunchedEffect(playerVisible) { launch { viewModel.setHandleIcon(playerVisible) } }
 
         Backdrop(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(bottomNavigationPadding),
             state = backdropState,
             playerVisible = playerVisible,
             playing = playing,
