@@ -32,6 +32,7 @@ fun Backdrop(
 ) {
 
     val backgroundColor = rememberDominantColorState()
+
     val expandedPeekHeight = LocalContext.current.calculateItemSize(true, 3)
 
     LaunchedEffect(albumArt) {
@@ -54,7 +55,7 @@ fun Backdrop(
         appBar = header,
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
-        backLayerBackgroundColor = MaterialTheme.colors.background,
+        backLayerBackgroundColor = MaterialTheme.colors.surface,
         peekHeight = if (playing) expandedPeekHeight else 50.dp,
         frontLayerShape = MaterialTheme.shapes.large
     )
