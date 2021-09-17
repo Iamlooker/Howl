@@ -9,16 +9,22 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.media.session.MediaSession
 import android.media.session.PlaybackState.*
 import androidx.annotation.DrawableRes
 import androidx.core.app.NotificationCompat.CATEGORY_SERVICE
+import com.looker.components.bitmap
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_NAME
 import com.looker.constants.Constants.NOTIFICATION_ID
 import com.looker.domain_music.Song
 import com.looker.player_service.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class NotificationBuilder(
     context: Context,
@@ -33,12 +39,28 @@ class NotificationBuilder(
         FLAG_IMMUTABLE
     )
 
+    var bitmap: Lazy<Bitmap> = lazy {
+        var pic: Bitmap = BitmapFactory.decodeResource(
+            context.resources,
+            com.looker.components.R.drawable.error_image
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            pic = currentSong?.albumArt?.bitmap(context) ?: BitmapFactory.decodeResource(
+                context.resources,
+                com.looker.components.R.drawable.error_image
+            )
+        }
+        pic
+    }
+
     init {
+
         setSmallIcon(R.drawable.ic_play)
         setCategory(CATEGORY_SERVICE)
         setShowWhen(false)
         setContentTitle(currentSong?.songName)
         setContentText(currentSong?.artistName)
+        setLargeIcon(bitmap.value)
         setContentIntent(pendingIntent)
         setVisibility(VISIBILITY_PUBLIC)
         addAction(buildAction(context, ACTION_SKIP_TO_PREVIOUS.toString(), R.drawable.ic_previous))
