@@ -10,22 +10,14 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.looker.constants.Constants.NOTIFICATION_ID
-import com.looker.domain_music.Song
+import com.looker.domain_music.emptySong
 import com.looker.player_service.notification.NotificationBuilder
 
 class PlayerService : Service() {
 
     private val serviceContext = this
     private var player: SimpleExoPlayer? = null
-    val currentSong = Song(
-        songUri = "",
-        albumId = 0,
-        genreId = 0,
-        songName = "Song Name",
-        artistName = "Artist Name",
-        albumName = "Album Name",
-        duration = 100000
-    )
+    val currentSong = emptySong
 
     private lateinit var mediaSession: MediaSession
     private lateinit var mediaSessionConnector: MediaSessionConnector

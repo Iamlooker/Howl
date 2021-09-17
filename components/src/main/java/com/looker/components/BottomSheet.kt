@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.DefaultCrossfadeInDuration
+import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -39,7 +39,7 @@ fun BottomSheets(
 fun HandleIcon(icon: ImageVector, onClick: () -> Unit = {}) {
     Crossfade(
         targetState = icon,
-        animationSpec = tweenAnimation(DefaultCrossfadeInDuration)
+        animationSpec = tweenAnimation(DefaultCrossfadeDuration)
     ) { currentIcon ->
         Icon(
             modifier = Modifier

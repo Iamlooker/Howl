@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.palette.graphics.Palette
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.looker.components.ComponentConstants.DefaultCrossfadeInDuration
+import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -29,7 +29,7 @@ fun HowlImage(
 ) {
     Crossfade(
         targetState = data,
-        animationSpec = tweenAnimation(DefaultCrossfadeInDuration)
+        animationSpec = tweenAnimation(DefaultCrossfadeDuration)
     ) {
         Image(
             modifier = modifier

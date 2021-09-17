@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -33,7 +34,7 @@ fun HomeNavGraph(
     navController: NavHostController,
     onSongClick: (Song) -> Unit
 ) {
-    val startDestination = HOME
+    val startDestination = remember { HOME }
     NavHost(
         navController = navController,
         startDestination = startDestination,

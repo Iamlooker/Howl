@@ -32,6 +32,7 @@ import com.looker.components.HandleIcon
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Song
+import com.looker.domain_music.emptySong
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -86,29 +87,27 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
 
+    val player = remember { SimpleExoPlayer.Builder(context).build() }
+
+
     val playerService = PlayerService()
-    val player = SimpleExoPlayer.Builder(context).build()
 
-    val currentSong by viewModel.currentSong.observeAsState(Song("", 0, 0))
+    SideEffect {
+        val intent = Intent(context, playerService::class.java)
 
-    val intent = Intent(context, playerService::class.java)
-
-    LaunchedEffect(intent) {
-        launch {
-            viewModel.player = player
-            playerService.setPlayer(player)
-            context.startForegroundService(intent)
-        }
+        playerService.setPlayer(player)
+        context.startForegroundService(intent)
+        context.stopService(intent)
     }
+
+    LaunchedEffect(player) { launch { viewModel.player = player } }
 
     val items = listOf(
         HomeScreens.SONGS,
         HomeScreens.ALBUMS
     )
 
-    val scope = rememberCoroutineScope()
     val navController = rememberNavController()
-    val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
     Scaffold(
         bottomBar = {
@@ -118,7 +117,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         }
     ) {
-        val playerVisible = viewModel.playerVisible(backdropState)
+        val scope = rememberCoroutineScope()
+
+        val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
+
+        val currentSong by viewModel.currentSong.observeAsState(emptySong)
 
         val playing by viewModel.playing.observeAsState(false)
         val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
@@ -127,9 +130,9 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
 
-        LaunchedEffect(playerVisible) {
-            launch { viewModel.setHandleIcon(playerVisible) }
-        }
+        val playerVisible = viewModel.playerVisible(backdropState)
+
+        LaunchedEffect(playerVisible) { launch { viewModel.setHandleIcon(playerVisible) } }
 
         Backdrop(
             modifier = Modifier.padding(it),

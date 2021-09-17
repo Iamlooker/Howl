@@ -10,3 +10,15 @@ data class Song(
     val albumArt: String = "content://media/external/audio/albumart/$albumId",
     val duration: Long = 0
 )
+
+val emptySong: Song =
+    Song(
+        songUri = "",
+        albumId = 0,
+        genreId = 0,
+        songName = "Placeholder Song",
+        artistName = "Placeholder Artist",
+        albumName = "Placeholder Album",
+        albumArt = "",
+        duration = 0
+    )

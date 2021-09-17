@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.DefaultCrossfadeInDuration
+import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HandleIcon
 import com.looker.components.backgroundGradient
@@ -59,7 +59,7 @@ fun AlbumHeader(
     modifier: Modifier = Modifier,
     album: Album
 ) {
-    Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossfadeInDuration)) {
+    Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
         AlbumsItem(
             modifier = modifier.fillMaxWidth(),
             album = it,
@@ -73,7 +73,7 @@ fun AlbumSongsList(
     modifier: Modifier = Modifier,
     songsList: List<Song>
 ) {
-    Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossfadeInDuration)) {
+    Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
         SongsList(
             modifier = modifier.fillMaxWidth(),
             songsList = it
