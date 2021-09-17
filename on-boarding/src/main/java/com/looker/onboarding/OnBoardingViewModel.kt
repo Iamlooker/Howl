@@ -37,13 +37,10 @@ class OnBoardingViewModel : ViewModel() {
         _buttonColor.value = orange
     }
 
-    fun bannerText(onBackground: Color) = buildAnnotatedString {
+    val bannerText = buildAnnotatedString {
 
         withStyle(
-            style = SpanStyle(
-                color = onBackground,
-                fontSize = 24.sp
-            )
+            style = SpanStyle(fontSize = 24.sp)
         ) {
             append("Whoops")
         }
@@ -56,10 +53,7 @@ class OnBoardingViewModel : ViewModel() {
             append(" Nothing ")
         }
         withStyle(
-            style = SpanStyle(
-                color = onBackground,
-                fontSize = 24.sp
-            )
+            style = SpanStyle(fontSize = 24.sp)
         ) {
             append("Here")
         }

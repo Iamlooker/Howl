@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +38,7 @@ fun OnBoardingPage(
     navigate: (Boolean) -> Unit,
 ) {
 
+    val bannerText = remember { viewModel.bannerText }
     val buttonText by viewModel.buttonText.observeAsState("Grant Permission")
     val buttonIcon by viewModel.buttonIcon.observeAsState(Icons.Rounded.Close)
     val buttonColor by viewModel.buttonColor.observeAsState(MaterialTheme.colors.primary)
@@ -62,7 +64,7 @@ fun OnBoardingPage(
     }
 
     OnBoardImage(
-        bannerText = viewModel.bannerText(MaterialTheme.colors.onBackground),
+        bannerText = bannerText,
         buttonText = buttonText,
         buttonIcon = buttonIcon,
         buttonColor = buttonColor
@@ -105,7 +107,6 @@ fun OnBoardContent(
     onClick: () -> Unit,
 ) {
     Surface(
-        color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
