@@ -24,9 +24,7 @@ fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit) {
 
     val cardHeight = remember { context.calculateItemSize(true, 14) }
 
-    Box(modifier = modifier) {
-        SongsCard(modifier, song, cardHeight, onClick)
-    }
+    SongsCard(modifier.padding(8.dp), song, cardHeight, onClick)
 }
 
 @Composable
@@ -37,8 +35,7 @@ private fun SongsCard(
     onClick: () -> Unit
 ) {
     MaterialCard(
-        modifier = modifier.padding(10.dp),
-        elevation = 0.dp,
+        modifier = modifier,
         onClick = onClick
     ) {
         Row(

@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -22,19 +23,13 @@ import com.looker.domain_music.Album
 import kotlinx.coroutines.launch
 
 @Composable
-fun AlbumsCard(
-    modifier: Modifier = Modifier,
-    album: Album,
-    onClick: () -> Unit = {}
-) {
+fun AlbumsCard(modifier: Modifier = Modifier, album: Album, onClick: () -> Unit) {
 
     val context = LocalContext.current
 
-    val cardWidth = remember {
-        context.calculateItemSize(false, 2, 20.dp)
-    }
+    val cardWidth = remember { context.calculateItemSize(false, 2, 16.dp) }
 
-    AlbumsCard(modifier.padding(10.dp), album, cardWidth, onClick)
+    AlbumsCard(modifier.padding(8.dp), album, cardWidth, onClick)
 }
 
 @Composable
@@ -54,7 +49,6 @@ private fun AlbumsCard(
 
     MaterialCard(
         modifier = modifier,
-        elevation = 0.dp,
         backgroundColor = backgroundColor.color.copy(0.4f),
         rippleColor = backgroundColor.color,
         onClick = onClick
@@ -99,20 +93,18 @@ fun AlbumsItem(
 fun AlbumsItemText(
     modifier: Modifier = Modifier,
     albumName: String,
-    artistName: String,
-    textColor: Color = MaterialTheme.colors.onBackground
+    artistName: String
 ) {
     WrappedText(
         modifier = modifier,
         text = albumName,
-        textAlign = TextAlign.Center,
-        textColor = textColor
+        fontWeight = FontWeight.SemiBold,
+        textAlign = TextAlign.Center
     )
     WrappedText(
         modifier = modifier,
         text = artistName,
         style = MaterialTheme.typography.body2,
-        textAlign = TextAlign.Center,
-        textColor = textColor
+        textAlign = TextAlign.Center
     )
 }
