@@ -25,9 +25,7 @@ fun Songs(onSongClick: (Song) -> Unit) {
 @Composable
 private fun Songs(
     modifier: Modifier = Modifier,
-    viewModel: SongsViewModel = viewModel(
-        factory = SongsViewModelFactory(SongsRepository())
-    ),
+    viewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(SongsRepository())),
     onSongClick: (Song) -> Unit
 ) {
     val context = LocalContext.current

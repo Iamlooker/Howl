@@ -1,20 +1,19 @@
 package com.looker.ui_albums.components
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.calculateItemSize
-import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HowlImage
 import com.looker.components.MaterialCard
 import com.looker.components.WrappedText
@@ -76,29 +75,13 @@ fun AlbumsItem(
     imageBackgroundColor: Color = MaterialTheme.colors.surface,
     imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
 ) {
-    var defaultAlpha by remember {
-        mutableStateOf(0f)
-    }
-    LaunchedEffect(defaultAlpha) {
-        launch {
-            defaultAlpha = 1f
-        }
-    }
-
-    val fadeIn by animateFloatAsState(
-        targetValue = defaultAlpha,
-        animationSpec = tweenAnimation()
-    )
-
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         HowlImage(
-            modifier = Modifier
-                .alpha(fadeIn)
-                .size(cardWidth),
+            modifier = Modifier.size(cardWidth),
             data = album.albumArt,
             imageFillerColor = imageBackgroundColor,
             shape = imageShape,
