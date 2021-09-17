@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id(Hilt.hiltPlugin)
 }
 
 android {
@@ -82,5 +84,13 @@ dependencies {
 
     implementation(ExoPlayer.exoplayerCore)
 
+    implementation(Hilt.hiltAndroid)
+    implementation(Hilt.hiltNavigation)
+    kapt(Hilt.hiltCompiler)
+
     debugImplementation(Compose.tooling)
+}
+
+kapt {
+    correctErrorTypes = true
 }

@@ -46,10 +46,21 @@ object ExoPlayer {
         "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
 
+object Hilt {
+    private const val hiltVersion = "2.38.1"
+    const val hiltClasspath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+    const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
+    const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
+    const val hiltPlugin = "dagger.hilt.android.plugin"
+    private const val hiltNavigationComposeVersion = "1.0.0-alpha03"
+    const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
+
+}
+
 object Lifecycle {
-    private const val lifecycleVersion = "2.3.1"
+    private const val lifecycleVersion = "1.0.0-alpha07"
     const val lifecycleViewModelCompose =
-        "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
+        "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }
 
 object Palette {
