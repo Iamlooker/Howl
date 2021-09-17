@@ -54,6 +54,8 @@ class PlayerService : Service() {
         player = exoPlayer
     }
 
+    fun getPlayer(): SimpleExoPlayer? = player
+
     fun playSong(songUri: String) {
         clearQueue()
         setMediaItem(songUri)

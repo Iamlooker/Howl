@@ -81,4 +81,9 @@ class HowlViewModel : ViewModel() {
     fun playPrevious() {
         if (player.hasPreviousWindow()) player.seekToPrevious()
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        player.release()
+    }
 }

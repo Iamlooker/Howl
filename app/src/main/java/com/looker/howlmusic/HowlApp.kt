@@ -92,15 +92,18 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val playerService = PlayerService()
 
-    SideEffect {
+    DisposableEffect(player) {
         val intent = Intent(context, playerService::class.java)
 
         playerService.setPlayer(player)
         context.startForegroundService(intent)
-        context.stopService(intent)
+
+        onDispose {
+            context.stopService(intent)
+        }
     }
 
-    LaunchedEffect(player) { launch { viewModel.player = player } }
+    LaunchedEffect(player) { launch { viewModel.player = playerService.getPlayer()!! } }
 
     val items = listOf(
         HomeScreens.SONGS,
