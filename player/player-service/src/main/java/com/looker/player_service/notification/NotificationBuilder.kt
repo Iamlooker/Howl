@@ -45,10 +45,9 @@ class NotificationBuilder(
             com.looker.components.R.drawable.error_image
         )
         CoroutineScope(Dispatchers.IO).launch {
-            pic = currentSong?.albumArt?.bitmap(context) ?: BitmapFactory.decodeResource(
-                context.resources,
-                com.looker.components.R.drawable.error_image
-            )
+            if (currentSong != null) {
+                pic = currentSong.albumArt.bitmap(context)
+            }
         }
         pic
     }
