@@ -27,7 +27,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.components.HandleIcon
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
@@ -45,6 +44,7 @@ import com.looker.player_service.service.PlayerService
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 import kotlinx.coroutines.launch
+
 
 @Composable
 fun App() {
@@ -87,23 +87,20 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
 
-    val player = remember { SimpleExoPlayer.Builder(context).build() }
-
 
     val playerService = PlayerService()
 
-    DisposableEffect(player) {
+    DisposableEffect(playerService) {
         val intent = Intent(context, playerService::class.java)
 
-        playerService.setPlayer(player)
+        viewModel.buildPlayer(context)
+        playerService.setPlayer(viewModel.player)
         context.startForegroundService(intent)
 
         onDispose {
             context.stopService(intent)
         }
     }
-
-    LaunchedEffect(player) { launch { viewModel.player = playerService.getPlayer()!! } }
 
     val items = listOf(
         HomeScreens.SONGS,

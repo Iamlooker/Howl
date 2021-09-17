@@ -1,5 +1,6 @@
 package com.looker.howlmusic
 
+import android.content.Context
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -11,7 +12,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.extractor.flac.FlacExtractor
+import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor
+import com.google.android.exoplayer2.extractor.mp4.Mp4Extractor
+import com.google.android.exoplayer2.extractor.ogg.OggExtractor
+import com.google.android.exoplayer2.extractor.ts.Ac3Extractor
+import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
+import com.google.android.exoplayer2.extractor.wav.WavExtractor
+import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.domain_music.Song
 import com.looker.player_service.service.PlayerService
 
@@ -38,8 +50,34 @@ class HowlViewModel : ViewModel() {
             return _playIcon
         }
 
-    @ExperimentalMaterialApi
-    fun playerVisible(state: BackdropScaffoldState): Boolean = state.isRevealed
+    fun buildPlayer(context: Context) {
+        val audioOnlyRenderersFactory =
+            RenderersFactory { handler, _, audioListener, _, _ ->
+                arrayOf(
+                    MediaCodecAudioRenderer(
+                        context, MediaCodecSelector.DEFAULT, handler, audioListener
+                    )
+                )
+            }
+
+        val audioOnlyExtractorFactory = ExtractorsFactory {
+            arrayOf(
+                Mp3Extractor(),
+                WavExtractor(),
+                AdtsExtractor(),
+                OggExtractor(),
+                Ac3Extractor(),
+                Mp4Extractor(),
+                FlacExtractor()
+            )
+        }
+
+        player = SimpleExoPlayer.Builder(
+            context,
+            audioOnlyRenderersFactory,
+            audioOnlyExtractorFactory
+        ).build()
+    }
 
     fun onPlayPause() {
         if (player.isPlaying) player.pause()
@@ -64,6 +102,10 @@ class HowlViewModel : ViewModel() {
         playerService.playSong(song.songUri)
     }
 
+    fun updateSeekbar(progress: Float) {
+        _progress.value = progress
+    }
+
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo
         seekSongTo(seekTo)
@@ -81,6 +123,9 @@ class HowlViewModel : ViewModel() {
     fun playPrevious() {
         if (player.hasPreviousWindow()) player.seekToPrevious()
     }
+
+    @ExperimentalMaterialApi
+    fun playerVisible(state: BackdropScaffoldState): Boolean = state.isRevealed
 
     override fun onCleared() {
         super.onCleared()
