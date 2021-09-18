@@ -3,7 +3,6 @@
     package="com.looker.howlmusic">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".HowlApp"
@@ -24,10 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service
-            android:name="com.looker.player_service.service.PlayerService"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 
 </manifest>

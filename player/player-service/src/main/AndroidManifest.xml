@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.looker.player_service" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.looker.player_service">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application>
+        <service
+            android:name=".service.PlayerService"
+            android:enabled="true"
+            android:exported="false" />
+    </application>
+
+</manifest>
