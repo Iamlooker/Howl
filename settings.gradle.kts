@@ -19,7 +19,7 @@ include(":music:domain-music")
 include(":music:data-music")
 include(":music:ui-songs")
 include(":music:ui-albums")
-
+include(":music:ui-genre")
 
 include(":player")
 include(":player:ui-player")
