@@ -6,28 +6,31 @@ import android.content.Intent
 import android.media.session.MediaSession
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
-import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.looker.constants.Constants.NOTIFICATION_ID
 import com.looker.domain_music.emptySong
 import com.looker.player_service.notification.NotificationBuilder
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PlayerService : Service() {
 
     private val serviceContext = this
-    private var player: SimpleExoPlayer? = null
+    @Inject
+    lateinit var player: SimpleExoPlayer
     val currentSong = emptySong
 
-    private lateinit var mediaSession: MediaSession
+    @Inject
+    lateinit var mediaSession: MediaSession
     private lateinit var mediaSessionConnector: MediaSessionConnector
     private lateinit var notification: NotificationBuilder
-    private lateinit var notificationManager: NotificationManager
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
     override fun onCreate() {
         super.onCreate()
-
-        mediaSession = MediaSession(serviceContext, "howlmusic")
 
         mediaSessionConnector =
             MediaSessionConnector(
@@ -35,9 +38,6 @@ class PlayerService : Service() {
             )
 
         mediaSessionConnector.setPlayer(player)
-
-        notificationManager =
-            getSystemService(NotificationManager::class.java) as NotificationManager
 
         notification =
             NotificationBuilder.from(
@@ -50,39 +50,12 @@ class PlayerService : Service() {
         startForeground(NOTIFICATION_ID, notification.build())
     }
 
-    fun setPlayer(exoPlayer: SimpleExoPlayer?) {
-        player = exoPlayer
-    }
-
-    fun playSong(songUri: String) {
-        clearQueue()
-        setMediaItem(songUri)
-        prepare()
-        play()
-    }
-
-    fun clearQueue() {
-        player?.clearMediaItems()
-    }
-
-    fun setMediaItem(songUri: String) {
-        player?.setMediaItem(MediaItem.fromUri(songUri), true)
-    }
-
-    fun prepare() {
-        player?.prepare()
-    }
-
-    fun play() {
-        player?.play()
-    }
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_NOT_STICKY
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onDestroy() {
         super.onDestroy()
-        player?.release()
+        player.release()
         mediaSession.release()
     }
 }

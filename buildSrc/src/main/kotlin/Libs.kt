@@ -71,3 +71,7 @@ object Palette {
 object Version {
     const val kotlinVersion = "1.5.21"
 }
+
+object Shrink {
+    const val shrink = true
+}

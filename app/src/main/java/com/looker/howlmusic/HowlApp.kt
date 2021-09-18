@@ -91,19 +91,12 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
 
-
-    val playerService = PlayerService()
-
-    DisposableEffect(playerService) {
+    DisposableEffect("") {
+        val playerService = PlayerService()
         val intent = Intent(context, playerService::class.java)
-
-        viewModel.buildPlayer(context)
-        playerService.setPlayer(viewModel.player)
         context.startForegroundService(intent)
 
-        onDispose {
-            context.stopService(intent)
-        }
+        onDispose { context.stopService(intent) }
     }
 
     val items = listOf(
@@ -159,7 +152,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 FrontLayer(
                     navController = navController,
                     handleIcon = handleIcon,
-                    onSongClick = { song -> viewModel.onSongClicked(playerService, song) },
+                    onSongClick = { song -> viewModel.onSongClicked(song) },
                     openPlayer = { scope.launch { backdropState.reveal() } }
                 )
             },
