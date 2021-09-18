@@ -32,7 +32,7 @@ fun Backdrop(
 
     val backgroundColor = rememberDominantColorState()
 
-    val expandedPeekHeight = LocalContext.current.calculateItemSize(true, 3)
+    val expandedPeekHeight by LocalContext.current.calculateItemSize(true, 3)
 
     LaunchedEffect(albumArt) {
         launch {

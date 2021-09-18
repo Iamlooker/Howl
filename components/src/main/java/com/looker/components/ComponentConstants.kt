@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object ComponentConstants {
 
-    fun Context.calculateItemSize(height: Boolean, count: Int, padding: Dp = 0.dp): Dp {
+    fun Context.calculateItemSize(height: Boolean, count: Int, padding: Dp = 0.dp): State<Dp> {
         val screenDensity = this.resources.displayMetrics.density
         val screenHeight = this.resources.displayMetrics.heightPixels
         val screenWidth = this.resources.displayMetrics.widthPixels
@@ -20,7 +22,7 @@ object ComponentConstants {
         }
         val itemSize = itemSizeInPx.dp / screenDensity
 
-        return itemSize - padding
+        return mutableStateOf(itemSize - padding)
     }
 
     val DefaultBottomNavigationHeight = 56.dp // Default BottomNavigation height

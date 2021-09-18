@@ -3,7 +3,7 @@ package com.looker.ui_songs.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -22,7 +22,7 @@ fun SongsCard(modifier: Modifier = Modifier, song: Song, onClick: () -> Unit) {
 
     val context = LocalContext.current
 
-    val cardHeight = remember { context.calculateItemSize(true, 14) }
+    val cardHeight by context.calculateItemSize(true, 14)
 
     SongsCard(modifier.padding(8.dp), song, cardHeight, onClick)
 }
