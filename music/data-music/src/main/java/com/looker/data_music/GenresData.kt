@@ -8,7 +8,6 @@ import com.looker.data_music.GenresConstants.genresProjections
 import com.looker.data_music.GenresConstants.sortOrderGenre
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Genre
-import com.looker.domain_music.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -36,9 +35,9 @@ class GenresData(private val context: Context) {
         return list
     }
 
-    private suspend fun getSongsPerGenre(genreId: Long): List<Song> {
+    private suspend fun getSongsPerGenre(genreId: Long): Int {
         val list = SongsRepository().getAllSongs(context)
-        return list.filter { it.genreId == genreId }
+        return list.filter { it.genreId == genreId }.count()
     }
 
     private val genreCursor = context.contentResolver.query(
@@ -56,11 +55,11 @@ class GenresData(private val context: Context) {
             do {
                 val genreId = genreCursor.getLong(0)
                 val genreName = genreCursor.getString(1)
-                val songList = getSongsPerGenre(genreId)
+                val songsCount = getSongsPerGenre(genreId)
                 if (genreId != 0) {
                     emit(
                         Genre(
-                            genreId, genreName, songList.size
+                            genreId, genreName, songsCount
                         )
                     )
                 }
