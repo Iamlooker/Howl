@@ -4,15 +4,14 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
-import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_ID
 import com.looker.player_service.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import androidx.media.app.NotificationCompat as MediaAppNotificationCompat
 
 @AndroidEntryPoint
 class PlayerService : Service() {
@@ -28,19 +27,13 @@ class PlayerService : Service() {
         mediaSession = MediaSessionCompat(this, "howlmusic")
 
         val notification =
-            NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-                .setStyle(
-                    androidx.media.app.NotificationCompat.MediaStyle()
+            NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID).apply {
+                setStyle(
+                    MediaAppNotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.sessionToken)
-                        .setShowCancelButton(true)
-                        .setCancelButtonIntent(
-                            MediaButtonReceiver.buildMediaButtonPendingIntent(
-                                this,
-                                PlaybackStateCompat.ACTION_STOP
-                            )
-                        )
                 )
-                .setSmallIcon(R.drawable.ic_play)
+                setSmallIcon(R.drawable.ic_play)
+            }
 
         startForeground(NOTIFICATION_ID, notification.build())
     }
