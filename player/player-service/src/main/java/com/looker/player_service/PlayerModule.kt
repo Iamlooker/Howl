@@ -13,7 +13,6 @@ import com.google.android.exoplayer2.extractor.ts.Ac3Extractor
 import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
 import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
-import com.looker.player_service.service.PlayerService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,10 +23,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 object PlayerModule {
-
-    @Singleton
-    @Provides
-    fun providePlayerService(): PlayerService = PlayerService()
 
     @Singleton
     @Provides
@@ -62,7 +57,5 @@ object PlayerModule {
         audioRenderer: RenderersFactory,
         extractorsFactory: ExtractorsFactory
     ): SimpleExoPlayer =
-        SimpleExoPlayer.Builder(
-            context, audioRenderer, extractorsFactory
-        ).build()
+        SimpleExoPlayer.Builder(context, audioRenderer, extractorsFactory).build()
 }
