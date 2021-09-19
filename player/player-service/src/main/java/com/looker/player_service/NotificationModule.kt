@@ -1,6 +1,5 @@
 package com.looker.player_service
 
-import android.app.NotificationManager
 import android.content.Context
 import android.media.session.MediaSession
 import dagger.Module
@@ -18,9 +17,4 @@ object NotificationModule {
     @Provides
     fun provideMediaSession(@ApplicationContext context: Context): MediaSession =
         MediaSession(context, "howlmusic")
-
-    @ServiceScoped
-    @Provides
-    fun provideNotificationManger(@ApplicationContext context: Context): NotificationManager =
-        context.getSystemService(NotificationManager::class.java) as NotificationManager
 }

@@ -11,9 +11,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.domain_music.Song
+import com.looker.player_service.playback.Controls.clearList
+import com.looker.player_service.playback.Controls.playNextSong
+import com.looker.player_service.playback.Controls.playPauseSong
+import com.looker.player_service.playback.Controls.playPreviousSong
+import com.looker.player_service.playback.Controls.playSong
+import com.looker.player_service.playback.Controls.prepareSong
+import com.looker.player_service.playback.Controls.seekToFloat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -35,17 +41,17 @@ class HowlViewModel
     val progress: LiveData<Float> = _progress
     val handleIcon: LiveData<ImageVector> = _handleIcon
     val currentSong: LiveData<Song> = _currentSong
-    val playIcon: LiveData<ImageVector>
-        get() {
-            _playIcon.value = if (_playing.value == true) Icons.Rounded.Pause
-            else Icons.Rounded.PlayArrow
-            return _playIcon
-        }
+    val playIcon: LiveData<ImageVector> = _playIcon
+
+    fun updatePlayIcon() {
+        _playIcon.value =
+            if (_playing.value == true) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+    }
 
     fun onPlayPause() {
-        if (player.isPlaying) player.pause()
-        else player.play()
+        player.playPauseSong()
         _playing.value = player.isPlaying
+        updatePlayIcon()
     }
 
     fun onToggle(playerVisible: Boolean) {
@@ -61,29 +67,26 @@ class HowlViewModel
 
     fun onSongClicked(song: Song) {
         _playing.value = true
+        _currentSong.value = song
         player.apply {
-            addMediaItem(MediaItem.fromUri(song.songUri))
-            prepare()
-            play()
+            clearList()
+            prepareSong(song.songUri)
+            playSong()
         }
+        updatePlayIcon()
     }
 
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo
-        seekSongTo(seekTo)
-    }
-
-    fun seekSongTo(progress: Float) {
-        val long: Long? = (_currentSong.value?.duration?.times(progress))?.toLong()
-        player.seekTo(long ?: 0)
+        player.seekToFloat(seekTo)
     }
 
     fun playNext() {
-        if (player.hasNextWindow()) player.seekToNext()
+        player.playNextSong()
     }
 
     fun playPrevious() {
-        if (player.hasPreviousWindow()) player.seekToPrevious()
+        player.playPreviousSong()
     }
 
     @ExperimentalMaterialApi

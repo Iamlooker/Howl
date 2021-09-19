@@ -20,5 +20,5 @@ val emptySong: Song =
         artistName = "Placeholder Artist",
         albumName = "Placeholder Album",
         albumArt = "",
-        duration = 0
+        duration = 100000
     )

@@ -54,7 +54,7 @@ fun Backdrop(
         appBar = header,
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
-        backLayerBackgroundColor = MaterialTheme.colors.surface,
+        backLayerBackgroundColor = MaterialTheme.colors.background,
         peekHeight = if (playing) expandedPeekHeight else 50.dp,
         frontLayerShape = MaterialTheme.shapes.large
     )
