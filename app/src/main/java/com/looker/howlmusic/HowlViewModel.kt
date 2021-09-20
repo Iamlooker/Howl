@@ -1,5 +1,6 @@
 package com.looker.howlmusic
 
+import android.content.Context
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -11,23 +12,24 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer
+import com.google.android.exoplayer2.extractor.ExtractorsFactory
+import com.google.android.exoplayer2.extractor.flac.FlacExtractor
+import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor
+import com.google.android.exoplayer2.extractor.mp4.Mp4Extractor
+import com.google.android.exoplayer2.extractor.ogg.OggExtractor
+import com.google.android.exoplayer2.extractor.ts.Ac3Extractor
+import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
+import com.google.android.exoplayer2.extractor.wav.WavExtractor
+import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.domain_music.Song
-import com.looker.player_service.playback.Controls.clearList
-import com.looker.player_service.playback.Controls.playNextSong
-import com.looker.player_service.playback.Controls.playPauseSong
-import com.looker.player_service.playback.Controls.playPreviousSong
-import com.looker.player_service.playback.Controls.playSong
-import com.looker.player_service.playback.Controls.prepareSong
-import com.looker.player_service.playback.Controls.seekToFloat
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class HowlViewModel
-@Inject constructor(
-    private val player: SimpleExoPlayer
-) : ViewModel() {
+class HowlViewModel : ViewModel() {
+
+    lateinit var exoPlayer: SimpleExoPlayer
 
     private val _playing = MutableLiveData<Boolean>()
     private val _shuffle = MutableLiveData<Boolean>()
@@ -45,6 +47,35 @@ class HowlViewModel
     val playIcon: LiveData<ImageVector> = _playIcon
     val enableGesture: LiveData<Boolean> = _enableGesture
 
+    fun buildExoPlayer(context: Context) {
+        val audioOnlyRenderersFactory =
+            RenderersFactory { handler, _, audioListener, _, _ ->
+                arrayOf(
+                    MediaCodecAudioRenderer(
+                        context, MediaCodecSelector.DEFAULT, handler, audioListener
+                    )
+                )
+            }
+
+        val audioOnlyExtractorFactory = ExtractorsFactory {
+            arrayOf(
+                Mp3Extractor(),
+                WavExtractor(),
+                AdtsExtractor(),
+                OggExtractor(),
+                Ac3Extractor(),
+                Mp4Extractor(),
+                FlacExtractor()
+            )
+        }
+
+        exoPlayer = SimpleExoPlayer.Builder(
+            context,
+            audioOnlyRenderersFactory,
+            audioOnlyExtractorFactory
+        ).build()
+    }
+
     fun gestureState(allowGesture: Boolean) {
         _enableGesture.value = allowGesture
     }
@@ -55,15 +86,14 @@ class HowlViewModel
     }
 
     fun onPlayPause() {
-        player.playPauseSong()
-        _playing.value = player.isPlaying
+        if (_playing.value == true) exoPlayer.pause() else exoPlayer.play()
+        _playing.value = exoPlayer.isPlaying
         updatePlayIcon()
     }
 
     fun onToggle(playerVisible: Boolean) {
-        if (playerVisible) {
-            player.shuffleModeEnabled = _shuffle.value ?: false
-        } else onPlayPause()
+        if (playerVisible) exoPlayer.shuffleModeEnabled = _shuffle.value ?: false
+        else onPlayPause()
     }
 
     fun setHandleIcon(playerVisible: Boolean) {
@@ -74,25 +104,26 @@ class HowlViewModel
     fun onSongClicked(song: Song) {
         _playing.value = true
         _currentSong.value = song
-        player.apply {
-            clearList()
-            prepareSong(song.songUri)
-            playSong()
+        exoPlayer.apply {
+            clearMediaItems()
+            setMediaItem(MediaItem.fromUri(song.songUri))
+            prepare()
+            play()
         }
         updatePlayIcon()
     }
 
     fun onSeek(seekTo: Float) {
         _progress.value = seekTo
-        player.seekToFloat(seekTo)
+        exoPlayer.seekTo((exoPlayer.contentDuration * seekTo).toLong())
     }
 
     fun playNext() {
-        player.playNextSong()
+        exoPlayer.seekToNext()
     }
 
     fun playPrevious() {
-        player.playPreviousSong()
+        exoPlayer.seekToPrevious()
     }
 
     @ExperimentalMaterialApi
@@ -100,6 +131,6 @@ class HowlViewModel
 
     override fun onCleared() {
         super.onCleared()
-        player.release()
+        exoPlayer.release()
     }
 }

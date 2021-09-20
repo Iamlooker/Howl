@@ -91,13 +91,13 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
 
-    DisposableEffect("") {
+    SideEffect {
         val playerService = PlayerService()
         val intent = Intent(context, playerService::class.java)
         context.startForegroundService(intent)
-
-        onDispose { context.stopService(intent) }
     }
+
+    LaunchedEffect(context) { launch { viewModel.buildExoPlayer(context) } }
 
     val items = listOf(
         HomeScreens.SONGS,
