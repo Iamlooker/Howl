@@ -24,6 +24,7 @@ fun Backdrop(
     state: BackdropScaffoldState,
     playerVisible: Boolean,
     playing: Boolean,
+    enableGesture: Boolean = true,
     albumArt: Any? = null,
     header: @Composable () -> Unit,
     backLayerContent: @Composable () -> Unit,
@@ -56,6 +57,7 @@ fun Backdrop(
         frontLayerContent = frontLayerContent,
         backLayerBackgroundColor = MaterialTheme.colors.background,
         peekHeight = if (playing) expandedPeekHeight else 50.dp,
-        frontLayerShape = MaterialTheme.shapes.large
+        frontLayerShape = MaterialTheme.shapes.large,
+        gesturesEnabled = enableGesture
     )
 }

@@ -32,7 +32,8 @@ sealed class HomeScreens(
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
-    onSongClick: (Song) -> Unit
+    onSongClick: (Song) -> Unit,
+    onAlbumsSheetState: (Boolean) -> Unit
 ) {
     val startDestination = remember { HOME }
     NavHost(
@@ -44,7 +45,7 @@ fun HomeNavGraph(
                 startDestination = HomeScreens.SONGS.route
             ) {
                 composable(HomeScreens.SONGS.route) { Songs(onSongClick = onSongClick) }
-                composable(HomeScreens.ALBUMS.route) { Albums() }
+                composable(HomeScreens.ALBUMS.route) { Albums(onStateChange = onAlbumsSheetState) }
             }
         }
     )

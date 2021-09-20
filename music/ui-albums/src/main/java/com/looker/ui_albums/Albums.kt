@@ -29,8 +29,8 @@ import com.looker.ui_albums.components.AlbumsCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun Albums() {
-    Albums(modifier = Modifier.fillMaxSize())
+fun Albums(onStateChange: (Boolean) -> Unit) {
+    Albums(modifier = Modifier.fillMaxSize(), onStateChange = onStateChange)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -42,7 +42,8 @@ private fun Albums(
             AlbumsRepository(),
             SongsRepository()
         )
-    )
+    ),
+    onStateChange: (Boolean) -> Unit
 ) {
     HowlSurface(modifier) {
 
@@ -71,7 +72,12 @@ private fun Albums(
                         viewModel.getSongsPerAlbum()
                     }
                 }
-                viewModel.getIcon(state)
+                LaunchedEffect(state.currentValue) {
+                    launch {
+                        viewModel.getIcon(state)
+                    }
+                }
+                onStateChange(!state.isVisible)
 
                 AlbumsBottomSheetContent(
                     currentAlbum = currentAlbum,

@@ -35,6 +35,7 @@ class HowlViewModel
     private val _playIcon = MutableLiveData<ImageVector>()
     private val _handleIcon = MutableLiveData<ImageVector>()
     private val _currentSong = MutableLiveData<Song>()
+    private val _enableGesture = MutableLiveData<Boolean>()
 
     val playing: LiveData<Boolean> = _playing
     val shuffle: LiveData<Boolean> = _shuffle
@@ -42,6 +43,11 @@ class HowlViewModel
     val handleIcon: LiveData<ImageVector> = _handleIcon
     val currentSong: LiveData<Song> = _currentSong
     val playIcon: LiveData<ImageVector> = _playIcon
+    val enableGesture: LiveData<Boolean> = _enableGesture
+
+    fun gestureState(allowGesture: Boolean) {
+        _enableGesture.value = allowGesture
+    }
 
     fun updatePlayIcon() {
         _playIcon.value =

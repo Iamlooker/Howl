@@ -126,16 +126,19 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val shuffle by viewModel.shuffle.observeAsState(false)
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
+        val enableGesture by viewModel.enableGesture.observeAsState(false)
 
         val playerVisible = viewModel.playerVisible(backdropState)
 
         LaunchedEffect(playerVisible) { launch { viewModel.setHandleIcon(playerVisible) } }
+        LaunchedEffect(currentSong) { launch { viewModel.gestureState(currentSong != emptySong) } }
 
         Backdrop(
             modifier = Modifier.padding(bottomNavigationPadding),
             state = backdropState,
             playerVisible = playerVisible,
             playing = playing,
+            enableGesture = enableGesture,
             albumArt = currentSong.albumArt,
             header = {
                 PlayerHeader(
@@ -153,7 +156,10 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     navController = navController,
                     handleIcon = handleIcon,
                     onSongClick = { song -> viewModel.onSongClicked(song) },
-                    openPlayer = { scope.launch { backdropState.reveal() } }
+                    openPlayer = { scope.launch { backdropState.reveal() } },
+                    onAlbumSheetState = {
+                        viewModel.gestureState(it)
+                    }
                 )
             },
             backLayerContent = {
@@ -177,13 +183,15 @@ fun FrontLayer(
     navController: NavHostController,
     handleIcon: ImageVector,
     openPlayer: () -> Unit,
-    onSongClick: (Song) -> Unit
+    onSongClick: (Song) -> Unit,
+    onAlbumSheetState: (Boolean) -> Unit
 ) {
     Column(modifier.background(MaterialTheme.colors.background)) {
         HandleIcon(handleIcon) { openPlayer() }
         HomeNavGraph(
             navController = navController,
-            onSongClick = onSongClick
+            onSongClick = onSongClick,
+            onAlbumsSheetState = onAlbumSheetState
         )
     }
 }

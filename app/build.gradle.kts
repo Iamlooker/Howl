@@ -93,4 +93,5 @@ dependencies {
 
 kapt {
     correctErrorTypes = true
+    generateStubs = false
 }
