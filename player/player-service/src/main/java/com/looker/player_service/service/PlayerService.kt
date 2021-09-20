@@ -17,9 +17,9 @@ import androidx.media.app.NotificationCompat as MediaAppNotificationCompat
 @AndroidEntryPoint
 class PlayerService : Service() {
 
-    lateinit var mediaSession: MediaSessionCompat
-    lateinit var notificationManager: NotificationManager
-    lateinit var notification: NotificationCompat.Builder
+    private lateinit var mediaSession: MediaSessionCompat
+    private lateinit var notificationManager: NotificationManager
+    private lateinit var notification: NotificationCompat.Builder
 
     override fun onCreate() {
         super.onCreate()

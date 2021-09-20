@@ -64,6 +64,7 @@ fun App() {
     }
 }
 
+@OptIn(ExperimentalComposeApi::class)
 @Composable
 fun AppTheme(wallpaper: Bitmap? = null) {
     val dominantColor = rememberDominantColorState()
@@ -127,6 +128,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
         val enableGesture by viewModel.enableGesture.observeAsState(false)
+        val seconds by viewModel.clock.observeAsState(0)
 
         val playerVisible = viewModel.playerVisible(backdropState)
 
@@ -141,6 +143,14 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             enableGesture = enableGesture,
             albumArt = currentSong.albumArt,
             header = {
+
+                LaunchedEffect(seconds) {
+                    launch {
+                        viewModel.updateProgress()
+                        viewModel.updateTime()
+                    }
+                }
+
                 PlayerHeader(
                     icon = if (playerVisible) shuffleIcon else playIcon,
                     albumArt = currentSong.albumArt,
@@ -156,9 +166,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     handleIcon = handleIcon,
                     onSongClick = { song -> viewModel.onSongClicked(song) },
                     openPlayer = { scope.launch { backdropState.reveal() } },
-                    onAlbumSheetState = {
-                        viewModel.gestureState(it)
-                    }
+                    onAlbumSheetState = { viewModel.gestureState(it) }
                 )
             },
             backLayerContent = {

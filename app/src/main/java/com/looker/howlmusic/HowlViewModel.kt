@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -26,10 +27,12 @@ import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
 import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.domain_music.Song
+import kotlinx.coroutines.launch
+import java.time.Clock
 
 class HowlViewModel : ViewModel() {
 
-    lateinit var exoPlayer: SimpleExoPlayer
+    private lateinit var exoPlayer: SimpleExoPlayer
 
     private val _playing = MutableLiveData<Boolean>()
     private val _shuffle = MutableLiveData<Boolean>()
@@ -38,6 +41,7 @@ class HowlViewModel : ViewModel() {
     private val _handleIcon = MutableLiveData<ImageVector>()
     private val _currentSong = MutableLiveData<Song>()
     private val _enableGesture = MutableLiveData<Boolean>()
+    private val _clock = MutableLiveData<Long>()
 
     val playing: LiveData<Boolean> = _playing
     val shuffle: LiveData<Boolean> = _shuffle
@@ -46,6 +50,7 @@ class HowlViewModel : ViewModel() {
     val currentSong: LiveData<Song> = _currentSong
     val playIcon: LiveData<ImageVector> = _playIcon
     val enableGesture: LiveData<Boolean> = _enableGesture
+    val clock: LiveData<Long> = _clock
 
     fun buildExoPlayer(context: Context) {
         val audioOnlyRenderersFactory =
@@ -80,7 +85,11 @@ class HowlViewModel : ViewModel() {
         _enableGesture.value = allowGesture
     }
 
-    fun updatePlayIcon() {
+    fun updateTime() {
+        viewModelScope.launch { _clock.value = Clock.systemDefaultZone().millis() }
+    }
+
+    private fun updatePlayIcon() {
         _playIcon.value =
             if (_playing.value == true) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
     }
@@ -89,6 +98,10 @@ class HowlViewModel : ViewModel() {
         if (_playing.value == true) exoPlayer.pause() else exoPlayer.play()
         _playing.value = exoPlayer.isPlaying
         updatePlayIcon()
+    }
+
+    fun updateProgress() {
+        _progress.value = exoPlayer.contentPosition.toFloat() / exoPlayer.contentDuration
     }
 
     fun onToggle(playerVisible: Boolean) {
