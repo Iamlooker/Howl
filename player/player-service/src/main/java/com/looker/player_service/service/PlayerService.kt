@@ -1,5 +1,7 @@
 package com.looker.player_service.service
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -10,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.looker.constants.Constants
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_ID
 import com.looker.domain_music.emptySong
@@ -25,11 +28,22 @@ class PlayerService : Service() {
     lateinit var player: SimpleExoPlayer
 
     lateinit var mediaSession: MediaSessionCompat
+    lateinit var notificationManager: NotificationManager
     lateinit var notification: NotificationCompat.Builder
     var currentSong by mutableStateOf(emptySong)
 
     override fun onCreate() {
         super.onCreate()
+
+        notificationManager =
+            getSystemService(NotificationManager::class.java) as NotificationManager
+
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID, Constants.NOTIFICATION_CHANNEL_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+
+        notificationManager.createNotificationChannel(channel)
 
         mediaSession = MediaSessionCompat(this, "howlmusic")
         mediaSession.setMetadata(
