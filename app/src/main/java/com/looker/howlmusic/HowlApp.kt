@@ -5,7 +5,6 @@ import android.app.WallpaperManager
 import android.content.Intent
 import android.graphics.Bitmap
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -131,7 +130,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val playerVisible = viewModel.playerVisible(backdropState)
 
         LaunchedEffect(playerVisible) { launch { viewModel.setHandleIcon(playerVisible) } }
-        LaunchedEffect(currentSong) { launch { viewModel.gestureState(currentSong != emptySong) } }
+        LaunchedEffect(currentSong) { launch { viewModel.gestureState(true) } }
 
         Backdrop(
             modifier = Modifier.padding(bottomNavigationPadding),
@@ -147,7 +146,6 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     songName = currentSong.songName,
                     artistName = currentSong.artistName,
                     toggled = if (playerVisible) shuffle else playing,
-                    openPlayer = { scope.launch { backdropState.reveal() } },
                     toggleAction = { viewModel.onToggle(playerVisible) }
                 )
             },
@@ -204,15 +202,12 @@ fun PlayerHeader(
     artistName: String?,
     icon: ImageVector,
     toggled: Boolean,
-    openPlayer: () -> Unit,
     toggleAction: () -> Unit
 ) {
     Column(modifier) {
         Spacer(Modifier.statusBarsHeight())
         MiniPlayer(
-            modifier = Modifier
-                .clickable(onClick = openPlayer)
-                .padding(bottom = 20.dp),
+            modifier = Modifier.padding(bottom = 20.dp),
             songName = songName ?: "Unknown",
             artistName = artistName ?: "Unknown",
             albumArt = albumArt,

@@ -70,5 +70,5 @@ object Version {
 }
 
 object Shrink {
-    const val shrink = false
+    const val shrink = true
 }
