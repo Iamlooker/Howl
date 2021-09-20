@@ -29,6 +29,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.looker.components.ComponentConstants.DefaultBottomNavigationHeight
 import com.looker.components.ComponentConstants.tweenAnimation
+import com.looker.components.compositeOverBackground
 
 @Composable
 fun BottomAppBar(
@@ -49,8 +50,6 @@ fun BottomAppBar(
                 icon = screen.icon,
                 label = screen.title,
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                selectedContentColor = MaterialTheme.colors.primary,
-                unselectedContentColor = MaterialTheme.colors.primaryVariant,
                 onSelected = {
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
@@ -77,7 +76,7 @@ fun RowScope.BottomNavigationItems(
 ) {
 
     val backgroundColor by animateColorAsState(
-        targetValue = if (selected) unselectedContentColor.copy(0.4f)
+        targetValue = if (selected) unselectedContentColor.compositeOverBackground()
         else Color.Transparent,
         animationSpec = tweenAnimation()
     )
