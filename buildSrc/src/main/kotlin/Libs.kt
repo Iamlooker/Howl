@@ -52,9 +52,6 @@ object Hilt {
     const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
     const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
     const val hiltPlugin = "dagger.hilt.android.plugin"
-    private const val hiltNavigationComposeVersion = "1.0.0-alpha03"
-    const val hiltNavigation = "androidx.hilt:hilt-navigation-compose:$hiltNavigationComposeVersion"
-
 }
 
 object Lifecycle {

@@ -85,7 +85,6 @@ dependencies {
     implementation(ExoPlayer.exoplayerCore)
 
     implementation(Hilt.hiltAndroid)
-    implementation(Hilt.hiltNavigation)
     kapt(Hilt.hiltCompiler)
 
     debugImplementation(Compose.tooling)
