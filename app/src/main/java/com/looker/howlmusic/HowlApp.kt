@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -211,7 +212,8 @@ fun PlayerHeader(
             songName = songName ?: "Unknown",
             artistName = artistName ?: "Unknown",
             albumArt = albumArt,
-            icon = icon,
+            onImageIcon = icon,
+            repeatIcon = Icons.Rounded.RepeatOne,
             toggled = toggled,
             toggleAction = toggleAction
         )

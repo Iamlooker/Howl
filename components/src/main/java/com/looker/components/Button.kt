@@ -49,12 +49,12 @@ fun ToggleButton(
     onToggle: () -> Unit,
     contentDescription: String?
 ) {
-    val shuffleColor by animateColorAsState(
+    val toggleColor by animateColorAsState(
         targetValue = if (toggled) activeColor.compositeOverBackground()
         else MaterialTheme.colors.surface, animationSpec = ComponentConstants.tweenAnimation()
     )
 
-    val toggleButtonColors = ButtonDefaults.buttonColors(backgroundColor = shuffleColor)
+    val toggleButtonColors = ButtonDefaults.buttonColors(backgroundColor = toggleColor)
 
     ShapedIconButton(
         modifier = modifier.padding(20.dp),

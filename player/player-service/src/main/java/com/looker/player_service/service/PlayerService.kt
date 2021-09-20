@@ -49,7 +49,7 @@ class PlayerService : Service() {
         startForeground(NOTIFICATION_ID, notification.build())
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_NOT_STICKY
     override fun onBind(intent: Intent): IBinder? = null
 
     override fun onDestroy() {
