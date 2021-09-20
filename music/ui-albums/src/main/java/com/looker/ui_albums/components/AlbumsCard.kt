@@ -1,23 +1,14 @@
 package com.looker.ui_albums.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.calculateItemSize
-import com.looker.components.HowlImage
-import com.looker.components.MaterialCard
-import com.looker.components.WrappedText
+import com.looker.components.ItemCard
 import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Album
 import kotlinx.coroutines.launch
@@ -29,7 +20,7 @@ fun AlbumsCard(modifier: Modifier = Modifier, album: Album, onClick: () -> Unit)
 
     val cardWidth by context.calculateItemSize(false, 2, 16.dp)
 
-    AlbumsCard(modifier.padding(8.dp), album, cardWidth, onClick)
+    AlbumsCard(modifier, album, cardWidth, onClick)
 }
 
 @Composable
@@ -47,64 +38,14 @@ private fun AlbumsCard(
         }
     }
 
-    MaterialCard(
+    ItemCard(
         modifier = modifier,
-        backgroundColor = backgroundColor.color.copy(0.4f),
+        imageUrl = album.albumArt,
+        title = album.albumName,
+        subText = album.artistName,
+        cardColor = backgroundColor.color.copy(0.4f),
         rippleColor = backgroundColor.color,
+        imageSize = cardWidth,
         onClick = onClick
-    ) {
-        AlbumsItem(
-            album = album,
-            cardWidth = cardWidth,
-            imageBackgroundColor = backgroundColor.color.copy(0.4f)
-        )
-    }
-}
-
-@Composable
-fun AlbumsItem(
-    modifier: Modifier = Modifier,
-    album: Album,
-    cardWidth: Dp,
-    imageBackgroundColor: Color = MaterialTheme.colors.surface,
-    imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        HowlImage(
-            modifier = Modifier.size(cardWidth),
-            data = album.albumArt,
-            imageFillerColor = imageBackgroundColor,
-            shape = imageShape,
-        )
-        AlbumsItemText(
-            modifier = Modifier.padding(horizontal = 8.dp),
-            albumName = album.albumName,
-            artistName = album.artistName
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-    }
-}
-
-@Composable
-fun AlbumsItemText(
-    modifier: Modifier = Modifier,
-    albumName: String,
-    artistName: String
-) {
-    WrappedText(
-        modifier = modifier,
-        text = albumName,
-        fontWeight = FontWeight.SemiBold,
-        textAlign = TextAlign.Center
-    )
-    WrappedText(
-        modifier = modifier,
-        text = artistName,
-        style = MaterialTheme.typography.body2,
-        textAlign = TextAlign.Center
     )
 }

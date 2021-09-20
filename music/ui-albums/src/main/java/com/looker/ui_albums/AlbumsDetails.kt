@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HandleIcon
+import com.looker.components.ItemCard
 import com.looker.components.backgroundGradient
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
-import com.looker.ui_albums.components.AlbumsItem
 import com.looker.ui_songs.SongsList
 
 @ExperimentalMaterialApi
@@ -60,10 +60,12 @@ fun AlbumHeader(
     album: Album
 ) {
     Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
-        AlbumsItem(
+        ItemCard(
             modifier = modifier.fillMaxWidth(),
-            album = it,
-            cardWidth = 250.dp
+            imageUrl = it.albumArt,
+            title = it.albumName,
+            subText = it.artistName,
+            imageSize = 250.dp
         )
     }
 }
