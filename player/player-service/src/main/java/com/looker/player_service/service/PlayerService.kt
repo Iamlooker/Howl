@@ -11,10 +11,8 @@ import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_NAME
 import com.looker.constants.Constants.NOTIFICATION_ID
 import com.looker.player_service.R
-import dagger.hilt.android.AndroidEntryPoint
 import androidx.media.app.NotificationCompat as MediaAppNotificationCompat
 
-@AndroidEntryPoint
 class PlayerService : Service() {
 
     private lateinit var mediaSession: MediaSessionCompat
