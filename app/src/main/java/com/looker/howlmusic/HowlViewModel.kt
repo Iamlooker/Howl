@@ -2,12 +2,10 @@ package com.looker.howlmusic
 
 import android.content.Context
 import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.ArrowDropUp
-import androidx.compose.material.icons.rounded.Pause
-import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,6 +25,7 @@ import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
 import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.domain_music.Song
+import com.looker.howlmusic.ui.components.BackdropStateValue
 import kotlinx.coroutines.launch
 import java.time.Clock
 
@@ -81,6 +80,15 @@ class HowlViewModel : ViewModel() {
         ).build()
     }
 
+    @ExperimentalMaterialApi
+    fun currentState(state: BackdropScaffoldState): BackdropStateValue =
+        when {
+            state.currentValue == BackdropValue.Concealed && state.targetValue == BackdropValue.Concealed -> BackdropStateValue.CONCEALED
+            state.currentValue == BackdropValue.Revealed && state.targetValue == BackdropValue.Revealed -> BackdropStateValue.VISIBLE
+            else -> BackdropStateValue.ANIMATING
+        }
+
+
     fun gestureState(allowGesture: Boolean) {
         _enableGesture.value = allowGesture
     }
@@ -109,9 +117,13 @@ class HowlViewModel : ViewModel() {
         else onPlayPause()
     }
 
-    fun setHandleIcon(playerVisible: Boolean) {
-        _handleIcon.value = if (playerVisible) Icons.Rounded.ArrowDropUp
-        else Icons.Rounded.ArrowDropDown
+    @ExperimentalMaterialApi
+    fun setHandleIcon(value: BackdropStateValue) {
+        _handleIcon.value = when (value) {
+            BackdropStateValue.CONCEALED -> Icons.Rounded.KeyboardArrowDown
+            BackdropStateValue.ANIMATING -> Icons.Rounded.Maximize
+            BackdropStateValue.VISIBLE -> Icons.Rounded.KeyboardArrowUp
+        }
     }
 
     fun onSongClicked(song: Song) {

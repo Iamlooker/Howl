@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.material.icons.rounded.Shuffle
@@ -125,20 +125,22 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
         val progress by viewModel.progress.observeAsState(0f)
         val shuffle by viewModel.shuffle.observeAsState(false)
-        val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropDown)
+        val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.KeyboardArrowDown)
         val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
         val enableGesture by viewModel.enableGesture.observeAsState(false)
         val seconds by viewModel.clock.observeAsState(0)
 
         val playerVisible = viewModel.playerVisible(backdropState)
 
-        LaunchedEffect(playerVisible) { launch { viewModel.setHandleIcon(playerVisible) } }
+        val backdropValue = viewModel.currentState(backdropState)
+
+        LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
         LaunchedEffect(currentSong) { launch { viewModel.gestureState(true) } }
 
         Backdrop(
             modifier = Modifier.padding(bottomNavigationPadding),
             state = backdropState,
-            playerVisible = playerVisible,
+            backdropValue = viewModel.currentState(backdropState),
             playing = playing,
             enableGesture = enableGesture,
             albumArt = currentSong.albumArt,

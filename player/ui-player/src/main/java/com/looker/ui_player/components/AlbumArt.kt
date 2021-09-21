@@ -34,10 +34,16 @@ fun AlbumArtAndUtils(
 
     Box {
         HowlImage(
-            modifier = modifier.fillMaxWidth(),
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable(
+                    onClick = { overlayVisible = !overlayVisible },
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ),
             data = albumArt,
             shape = CircleShape
-        ) { overlayVisible = !overlayVisible }
+        )
         AnimatedVisibility(
             visible = overlayVisible,
             enter = fadeIn(),

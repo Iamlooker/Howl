@@ -54,7 +54,7 @@ fun MaterialCard(
 @Composable
 fun ItemCard(
     modifier: Modifier = Modifier,
-    imageUrl: String,
+    imageUrl: String = "",
     title: String,
     subText: String,
     imageSize: Dp,
@@ -79,8 +79,7 @@ fun ItemCard(
                     modifier = Modifier.size(imageSize),
                     data = imageUrl,
                     imageFillerColor = cardColor,
-                    shape = imageShape,
-                    onClick = onClick
+                    shape = imageShape
                 )
                 ItemCardText(
                     title = title,

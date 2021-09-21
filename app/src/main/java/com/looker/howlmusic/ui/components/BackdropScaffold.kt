@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 fun Backdrop(
     modifier: Modifier = Modifier,
     state: BackdropScaffoldState,
-    playerVisible: Boolean,
+    backdropValue: BackdropStateValue,
     playing: Boolean,
     enableGesture: Boolean = true,
     albumArt: Any? = null,
@@ -42,7 +42,11 @@ fun Backdrop(
     }
 
     val animateFloat by animateFloatAsState(
-        targetValue = if (playerVisible) 0.5f else 1f,
+        targetValue = when (backdropValue) {
+            is BackdropStateValue.VISIBLE -> 0.5f
+            is BackdropStateValue.ANIMATING -> 0.7f
+            is BackdropStateValue.CONCEALED -> 1f
+        },
         animationSpec = tweenAnimation()
     )
 
@@ -60,4 +64,11 @@ fun Backdrop(
         frontLayerShape = MaterialTheme.shapes.large,
         gesturesEnabled = enableGesture
     )
+}
+
+@ExperimentalMaterialApi
+sealed class BackdropStateValue {
+    object VISIBLE : BackdropStateValue()
+    object CONCEALED : BackdropStateValue()
+    object ANIMATING : BackdropStateValue()
 }

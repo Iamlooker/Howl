@@ -44,7 +44,7 @@ fun HandleIcon(icon: ImageVector, onClick: () -> Unit = {}) {
         Icon(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp)
+                .height(30.dp)
                 .clickable(onClick = onClick)
                 .alpha(0.6f),
             imageVector = currentIcon,

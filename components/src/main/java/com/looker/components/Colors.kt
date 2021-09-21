@@ -8,11 +8,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.graphics.drawable.toBitmap
-import coil.Coil
-import coil.request.ImageRequest
-import coil.request.SuccessResult
-import coil.size.Scale
 
 fun Int.toColor() = Color(this)
 
@@ -85,17 +80,7 @@ private suspend fun calculateColorFromImageUrl(
     context: Context,
     imageUrl: String,
 ): Color? {
-    val r = ImageRequest.Builder(context)
-        .data(imageUrl)
-        .size(128)
-        .scale(Scale.FILL)
-        .allowHardware(false)
-        .build()
-
-    val bitmap = when (val result = Coil.execute(r)) {
-        is SuccessResult -> result.drawable.toBitmap()
-        else -> null
-    }
+    val bitmap = imageUrl.bitmap(context)
 
     val vibrant = bitmap.getVibrantColor()
     val dominant = bitmap.getDominantColor()

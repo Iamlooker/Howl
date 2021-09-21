@@ -68,6 +68,7 @@ dependencies {
     implementation(project(Modules.domainMusic))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.uiAlbums))
+    implementation(project(Modules.uiGenre))
     implementation(project(Modules.uiPlayer))
     implementation(project(Modules.playerService))
     implementation(project(Modules.components))

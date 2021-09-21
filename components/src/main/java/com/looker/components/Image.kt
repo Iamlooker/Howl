@@ -6,12 +6,9 @@ import android.graphics.BitmapFactory
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,11 +34,10 @@ suspend fun String.bitmap(context: Context): Bitmap {
         .allowHardware(false)
         .build()
 
-    val bitmap = when (val result = Coil.execute(r)) {
+    return when (val result = Coil.execute(r)) {
         is SuccessResult -> result.drawable.toBitmap()
         else -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
     }
-    return bitmap
 }
 
 @OptIn(ExperimentalCoilApi::class)
@@ -50,9 +46,7 @@ fun HowlImage(
     modifier: Modifier = Modifier,
     data: Any?,
     imageFillerColor: Color = MaterialTheme.colors.surface,
-    shape: CornerBasedShape = MaterialTheme.shapes.medium,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    onClick: () -> Unit = {}
+    shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
     Crossfade(
         targetState = data,
@@ -61,12 +55,7 @@ fun HowlImage(
         Image(
             modifier = modifier
                 .clip(shape)
-                .background(imageFillerColor)
-                .clickable(
-                    onClick = onClick,
-                    indication = null,
-                    interactionSource = interactionSource
-                ),
+                .background(imageFillerColor),
             contentScale = ContentScale.FillWidth,
             painter = rememberImagePainter(
                 data = it,
