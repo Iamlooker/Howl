@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
@@ -100,12 +99,100 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     LaunchedEffect(context) { launch { viewModel.buildExoPlayer(context) } }
 
+    val scope = rememberCoroutineScope()
+
+    val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
+
+    val currentSong by viewModel.currentSong.observeAsState(emptySong)
+
+    val playing by viewModel.playing.observeAsState(false)
+    val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
+    val progress by viewModel.progress.observeAsState(0f)
+    val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
+    val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.KeyboardArrowDown)
+    val enableGesture by viewModel.enableGesture.observeAsState(false)
+    val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
+    val seconds by viewModel.clock.observeAsState(0)
+
+    LaunchedEffect(backdropState.progress) { launch { viewModel.setBackdropValue(backdropState) } }
+
+    LaunchedEffect(backdropValue) {
+        launch {
+            viewModel.setToggleIcon(backdropValue)
+            viewModel.setHandleIcon(backdropValue)
+        }
+    }
+    LaunchedEffect(currentSong) {
+        launch {
+            viewModel.gestureState(true)
+        }
+    }
+
+    Backdrop(
+        modifier = Modifier,
+        state = backdropState,
+        backdropValue = backdropValue,
+        playing = playing,
+        enableGesture = enableGesture,
+        albumArt = currentSong.albumArt,
+        header = {
+
+            LaunchedEffect(seconds) {
+                launch {
+                    viewModel.updateProgress()
+                    viewModel.updateTime()
+                }
+            }
+
+            PlayerHeader(
+                icon = toggleIcon,
+                albumArt = currentSong.albumArt,
+                songName = currentSong.songName,
+                artistName = currentSong.artistName,
+                toggled = playing,
+                toggleAction = { viewModel.onToggle(backdropValue) }
+            )
+        },
+        frontLayerContent = {
+            FrontLayer(
+                handleIcon = handleIcon,
+                onSongClick = { song -> viewModel.onSongClicked(song) },
+                openPlayer = { scope.launch { backdropState.reveal() } },
+                onAlbumSheetState = {
+                    if (backdropValue == SheetsState.HIDDEN) {
+                        viewModel.gestureState(it)
+                    } else viewModel.gestureState(true)
+                }
+            )
+        },
+        backLayerContent = {
+            Controls(
+                playIcon = playIcon,
+                progress = progress,
+                onPlayPause = { viewModel.onPlayPause() },
+                skipNextClick = { viewModel.playNext() },
+                skipPrevClick = { viewModel.playPrevious() },
+                onSeek = { seekTo -> viewModel.onSeek(seekTo) },
+                openQueue = { scope.launch { backdropState.conceal() } }
+            )
+        }
+    )
+}
+
+@Composable
+fun FrontLayer(
+    modifier: Modifier = Modifier,
+    handleIcon: ImageVector,
+    openPlayer: () -> Unit,
+    onSongClick: (Song) -> Unit,
+    onAlbumSheetState: (Boolean) -> Unit
+) {
+
+    val navController = rememberNavController()
     val items = listOf(
         HomeScreens.SONGS,
         HomeScreens.ALBUMS
     )
-
-    val navController = rememberNavController()
 
     Scaffold(
         bottomBar = {
@@ -115,104 +202,18 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         }
     ) { bottomNavigationPadding ->
-        val scope = rememberCoroutineScope()
-
-        val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
-
-        val currentSong by viewModel.currentSong.observeAsState(emptySong)
-
-        val playing by viewModel.playing.observeAsState(false)
-        val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
-        val progress by viewModel.progress.observeAsState(0f)
-        val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
-        val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.KeyboardArrowDown)
-        val enableGesture by viewModel.enableGesture.observeAsState(false)
-        val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
-        val seconds by viewModel.clock.observeAsState(0)
-
-        LaunchedEffect(backdropState.progress) { launch { viewModel.setBackdropValue(backdropState) } }
-
-        LaunchedEffect(backdropValue) {
-            launch {
-                viewModel.setToggleIcon(backdropValue)
-                viewModel.setHandleIcon(backdropValue)
-            }
+        Column(
+            modifier
+                .padding(bottomNavigationPadding)
+                .background(MaterialTheme.colors.background)
+        ) {
+            HandleIcon(handleIcon) { openPlayer() }
+            HomeNavGraph(
+                navController = navController,
+                onSongClick = onSongClick,
+                onAlbumsSheetState = onAlbumSheetState
+            )
         }
-        LaunchedEffect(currentSong) {
-            launch {
-                viewModel.gestureState(true)
-            }
-        }
-
-        Backdrop(
-            modifier = Modifier.padding(bottomNavigationPadding),
-            state = backdropState,
-            backdropValue = backdropValue,
-            playing = playing,
-            enableGesture = enableGesture,
-            albumArt = currentSong.albumArt,
-            header = {
-
-                LaunchedEffect(seconds) {
-                    launch {
-                        viewModel.updateProgress()
-                        viewModel.updateTime()
-                    }
-                }
-
-                PlayerHeader(
-                    icon = toggleIcon,
-                    albumArt = currentSong.albumArt,
-                    songName = currentSong.songName,
-                    artistName = currentSong.artistName,
-                    toggled = playing,
-                    toggleAction = { viewModel.onToggle(backdropValue) }
-                )
-            },
-            frontLayerContent = {
-                FrontLayer(
-                    navController = navController,
-                    handleIcon = handleIcon,
-                    onSongClick = { song -> viewModel.onSongClicked(song) },
-                    openPlayer = { scope.launch { backdropState.reveal() } },
-                    onAlbumSheetState = {
-                        if (backdropValue == SheetsState.HIDDEN) {
-                            viewModel.gestureState(it)
-                        } else viewModel.gestureState(true)
-                    }
-                )
-            },
-            backLayerContent = {
-                Controls(
-                    playIcon = playIcon,
-                    progress = progress,
-                    onPlayPause = { viewModel.onPlayPause() },
-                    skipNextClick = { viewModel.playNext() },
-                    skipPrevClick = { viewModel.playPrevious() },
-                    onSeek = { seekTo -> viewModel.onSeek(seekTo) },
-                    openQueue = { scope.launch { backdropState.conceal() } }
-                )
-            }
-        )
-    }
-}
-
-@Composable
-fun FrontLayer(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    handleIcon: ImageVector,
-    openPlayer: () -> Unit,
-    onSongClick: (Song) -> Unit,
-    onAlbumSheetState: (Boolean) -> Unit
-) {
-    Column(modifier.background(MaterialTheme.colors.background)) {
-        HandleIcon(handleIcon) { openPlayer() }
-        HomeNavGraph(
-            navController = navController,
-            onSongClick = onSongClick,
-            onAlbumsSheetState = onAlbumSheetState
-        )
     }
 }
 
