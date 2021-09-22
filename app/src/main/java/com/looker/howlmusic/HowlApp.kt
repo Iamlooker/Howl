@@ -110,7 +110,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val progress by viewModel.progress.observeAsState(0f)
     val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
     val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.KeyboardArrowDown)
-    val enableGesture by viewModel.enableGesture.observeAsState(false)
+    val enableGesture by viewModel.enableGesture.observeAsState(true)
     val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
     val seconds by viewModel.clock.observeAsState(0)
 
@@ -120,11 +120,6 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         launch {
             viewModel.setToggleIcon(backdropValue)
             viewModel.setHandleIcon(backdropValue)
-        }
-    }
-    LaunchedEffect(currentSong) {
-        launch {
-            viewModel.gestureState(true)
         }
     }
 
