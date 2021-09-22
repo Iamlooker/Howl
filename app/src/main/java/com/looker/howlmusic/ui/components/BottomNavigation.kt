@@ -76,7 +76,8 @@ fun RowScope.BottomNavigationItems(
 ) {
 
     val backgroundColor by animateColorAsState(
-        targetValue = unselectedContentColor.compositeOverBackground(),
+        targetValue = if (selected) unselectedContentColor.compositeOverBackground()
+        else Color.Transparent,
         animationSpec = tweenAnimation()
     )
 
