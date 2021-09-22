@@ -7,8 +7,6 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,7 +53,7 @@ private fun Albums(
         val currentAlbum by viewModel.currentAlbum.observeAsState(Album(0))
         val albumsList by viewModel.albumsList.observeAsState(listOf())
         val songsList by viewModel.songsList.observeAsState(listOf())
-        val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.ArrowDropUp)
+        val handleIcon by viewModel.handleIcon.observeAsState(0f)
 
         LaunchedEffect(context) {
             launch { viewModel.getAllSongs(context) }

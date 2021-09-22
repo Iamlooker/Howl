@@ -1,19 +1,21 @@
 package com.looker.components
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
-import com.looker.components.ComponentConstants.tweenAnimation
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -35,20 +37,51 @@ fun BottomSheets(
     )
 }
 
+/**
+ * [angle] = 0f is ArrowUp
+ *
+ * [angle] = 1f is Bar
+ *
+ * [angle] = 2f is ArrowDown
+ */
 @Composable
-fun HandleIcon(icon: ImageVector, onClick: () -> Unit = {}) {
-    Crossfade(
-        targetState = icon,
-        animationSpec = tweenAnimation(DefaultCrossfadeDuration)
-    ) { currentIcon ->
-        Icon(
+fun HandleIcon(angle: Float, onClick: () -> Unit = {}) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        CanvasHandleIcon(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-                .clickable(onClick = onClick)
-                .alpha(0.6f),
-            imageVector = currentIcon,
-            contentDescription = "Swipe Action"
+                .size(30.dp)
+                .padding(6.dp),
+            angle = angle
+        )
+    }
+}
+
+@Composable
+fun CanvasHandleIcon(
+    modifier: Modifier = Modifier,
+    angle: Float,
+    strokeWidth: Float = 5f,
+    color: Color = MaterialTheme.colors.primary
+) {
+    val animateIcon by animateFloatAsState(angle)
+
+    Canvas(modifier = modifier) {
+        drawLine(
+            color = color,
+            strokeWidth = strokeWidth,
+            start = Offset(0f, center.y),
+            end = Offset(center.x, animateIcon * center.y)
+        )
+        drawLine(
+            color = color,
+            strokeWidth = strokeWidth,
+            start = Offset(center.x, animateIcon * center.y),
+            end = Offset(size.width, center.y)
         )
     }
 }

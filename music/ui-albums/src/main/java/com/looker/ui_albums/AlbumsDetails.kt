@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
@@ -21,12 +19,11 @@ import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.ui_songs.SongsList
 
-@ExperimentalMaterialApi
 @Composable
 fun AlbumsBottomSheetContent(
     modifier: Modifier = Modifier,
     currentAlbum: Album,
-    handleIcon: ImageVector,
+    handleIcon: Float,
     songsList: List<Song>,
     dominantColor: Color = MaterialTheme.colors.surface
 ) {
@@ -43,12 +40,12 @@ fun AlbumsBottomSheetContent(
 fun AlbumBottomSheetItem(
     modifier: Modifier = Modifier,
     album: Album,
-    handleIcon: ImageVector,
+    handleIcon: Float,
     albumDominantColor: Color,
     songsList: List<Song>
 ) {
     Column(modifier = modifier.backgroundGradient(albumDominantColor)) {
-        HandleIcon(icon = handleIcon)
+        HandleIcon(angle = handleIcon)
         AlbumHeader(album = album)
         AlbumSongsList(songsList = songsList)
     }

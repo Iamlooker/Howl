@@ -6,7 +6,9 @@ import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -38,7 +40,7 @@ class HowlViewModel : ViewModel() {
     private val _progress = MutableLiveData<Float>()
     private val _toggleIcon = MutableLiveData<ImageVector>()
     private val _playIcon = MutableLiveData<ImageVector>()
-    private val _handleIcon = MutableLiveData<ImageVector>()
+    private val _handleIcon = MutableLiveData<Float>()
     private val _currentSong = MutableLiveData<Song>()
     private val _enableGesture = MutableLiveData<Boolean>()
     private val _backdropValue = MutableLiveData<SheetsState>()
@@ -48,7 +50,7 @@ class HowlViewModel : ViewModel() {
     val progress: LiveData<Float> = _progress
     val toggleIcon: LiveData<ImageVector> = _toggleIcon
     val playIcon: LiveData<ImageVector> = _playIcon
-    val handleIcon: LiveData<ImageVector> = _handleIcon
+    val handleIcon: LiveData<Float> = _handleIcon
     val currentSong: LiveData<Song> = _currentSong
     val enableGesture: LiveData<Boolean> = _enableGesture
     val backdropValue: LiveData<SheetsState> = _backdropValue
@@ -121,17 +123,15 @@ class HowlViewModel : ViewModel() {
         when (currentState) {
             SheetsState.HIDDEN -> onPlayPause()
             SheetsState.ToHIDDEN -> onPlayPause()
-            SheetsState.ToVISIBLE -> {
-            }
-            SheetsState.VISIBLE -> {
+            else -> {
             }
         }
     }
 
-    fun setToggleIcon(currentState: SheetsState) {
+    fun setToggleIcon(currentState: SheetsState, playIcon: ImageVector) {
         _toggleIcon.value = when (currentState) {
-            SheetsState.HIDDEN -> _playIcon.value ?: Icons.Rounded.PlayArrow
-            SheetsState.ToHIDDEN -> _playIcon.value ?: Icons.Rounded.PlayArrow
+            SheetsState.HIDDEN -> playIcon
+            SheetsState.ToHIDDEN -> playIcon
             SheetsState.ToVISIBLE -> Icons.Rounded.Shuffle
             SheetsState.VISIBLE -> Icons.Rounded.Shuffle
         }
@@ -139,10 +139,10 @@ class HowlViewModel : ViewModel() {
 
     fun setHandleIcon(currentState: SheetsState) {
         _handleIcon.value = when (currentState) {
-            SheetsState.HIDDEN -> Icons.Rounded.KeyboardArrowDown
-            SheetsState.ToHIDDEN -> Icons.Rounded.KeyboardArrowDown
-            SheetsState.VISIBLE -> Icons.Rounded.KeyboardArrowUp
-            SheetsState.ToVISIBLE -> Icons.Rounded.KeyboardArrowUp
+            SheetsState.HIDDEN -> 2f
+            SheetsState.ToHIDDEN -> 1f
+            SheetsState.VISIBLE -> 0f
+            SheetsState.ToVISIBLE -> 1f
         }
     }
 
@@ -155,7 +155,6 @@ class HowlViewModel : ViewModel() {
             prepare()
             play()
         }
-        updatePlayIcon()
     }
 
     fun onSeek(seekTo: Float) {

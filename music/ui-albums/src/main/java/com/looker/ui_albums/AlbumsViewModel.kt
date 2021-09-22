@@ -4,10 +4,6 @@ import android.content.Context
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.ArrowDropUp
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,13 +22,13 @@ class AlbumsViewModel(
     private val _albumsList = MutableLiveData<List<Album>>()
     private val _songsList = MutableLiveData<List<Song>>()
     private val _currentAlbum = MutableLiveData<Album>()
-    private val _handleIcon = MutableLiveData<ImageVector>()
+    private val _handleIcon = MutableLiveData<Float>()
     private var allSongsList = listOf<Song>()
 
     val albumsList: LiveData<List<Album>> = _albumsList
     val songsList: LiveData<List<Song>> = _songsList
     val currentAlbum: LiveData<Album> = _currentAlbum
-    val handleIcon: LiveData<ImageVector> = _handleIcon
+    val handleIcon: LiveData<Float> = _handleIcon
 
     @ExperimentalMaterialApi
     suspend fun onAlbumClick(state: ModalBottomSheetState, album: Album) {
@@ -49,9 +45,9 @@ class AlbumsViewModel(
     @ExperimentalMaterialApi
     fun getIcon(state: ModalBottomSheetState) {
         _handleIcon.value = when (state.targetValue) {
-            ModalBottomSheetValue.Expanded -> Icons.Rounded.ArrowDropDown
-            ModalBottomSheetValue.HalfExpanded -> Icons.Rounded.ArrowDropUp
-            ModalBottomSheetValue.Hidden -> Icons.Rounded.ArrowDropUp
+            ModalBottomSheetValue.Expanded -> 2f
+            ModalBottomSheetValue.HalfExpanded -> 0f
+            ModalBottomSheetValue.Hidden -> 0f
         }
     }
 

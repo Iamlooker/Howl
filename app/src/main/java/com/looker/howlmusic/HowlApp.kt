@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
@@ -109,7 +108,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
     val progress by viewModel.progress.observeAsState(0f)
     val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
-    val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.KeyboardArrowDown)
+    val handleIcon by viewModel.handleIcon.observeAsState(2f)
     val enableGesture by viewModel.enableGesture.observeAsState(true)
     val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
     val seconds by viewModel.clock.observeAsState(0)
@@ -118,7 +117,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     LaunchedEffect(backdropValue) {
         launch {
-            viewModel.setToggleIcon(backdropValue)
+            viewModel.setToggleIcon(backdropValue, playIcon)
             viewModel.setHandleIcon(backdropValue)
         }
     }
@@ -177,7 +176,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 @Composable
 fun FrontLayer(
     modifier: Modifier = Modifier,
-    handleIcon: ImageVector,
+    handleIcon: Float,
     openPlayer: () -> Unit,
     onSongClick: (Song) -> Unit,
     onAlbumSheetState: (Boolean) -> Unit
