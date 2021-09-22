@@ -178,7 +178,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     onAlbumSheetState = {
                         if (backdropValue == SheetsState.HIDDEN) {
                             viewModel.gestureState(it)
-                        } else viewModel.gestureState(!it)
+                        } else viewModel.gestureState(true)
                     }
                 )
             },
