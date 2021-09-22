@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -25,8 +24,8 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
+import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.HandleIcon
-import com.looker.components.HowlSurface
 import com.looker.components.SheetsState
 import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Song
@@ -73,13 +72,7 @@ fun AppTheme(wallpaper: Bitmap? = null) {
 
     WallpaperTheme(dominantColor) {
         ProvideWindowInsets {
-            HowlSurface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-            ) {
-                AppContent()
-            }
+            AppContent()
         }
     }
 }
@@ -191,6 +184,7 @@ fun FrontLayer(
     Scaffold(
         bottomBar = {
             BottomAppBar(
+                modifier = Modifier.navigationBarsPadding(),
                 navController = navController,
                 items = items
             )
@@ -221,19 +215,18 @@ fun PlayerHeader(
     toggled: Boolean,
     toggleAction: () -> Unit
 ) {
-    Column(modifier) {
-        Spacer(Modifier.statusBarsHeight())
-        MiniPlayer(
-            modifier = Modifier.padding(bottom = 20.dp),
-            songName = songName ?: "Unknown",
-            artistName = artistName ?: "Unknown",
-            albumArt = albumArt,
-            onImageIcon = icon,
-            repeatIcon = Icons.Rounded.RepeatOne,
-            toggled = toggled,
-            toggleAction = toggleAction
-        )
-    }
+    MiniPlayer(
+        modifier = modifier
+            .statusBarsPadding()
+            .padding(bottom = 20.dp),
+        songName = songName ?: "Unknown",
+        artistName = artistName ?: "Unknown",
+        albumArt = albumArt,
+        onImageIcon = icon,
+        repeatIcon = Icons.Rounded.RepeatOne,
+        toggled = toggled,
+        toggleAction = toggleAction
+    )
 }
 
 @Composable
