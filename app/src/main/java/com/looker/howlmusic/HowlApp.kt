@@ -138,7 +138,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 viewModel.setHandleIcon(backdropValue)
             }
         }
-        LaunchedEffect(currentSong) { launch { viewModel.gestureState(true) } }
+        LaunchedEffect(currentSong) {
+            launch {
+                viewModel.gestureState(true)
+            }
+        }
 
         Backdrop(
             modifier = Modifier.padding(bottomNavigationPadding),
@@ -171,7 +175,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                     handleIcon = handleIcon,
                     onSongClick = { song -> viewModel.onSongClicked(song) },
                     openPlayer = { scope.launch { backdropState.reveal() } },
-                    onAlbumSheetState = { viewModel.gestureState(it) }
+                    onAlbumSheetState = {
+                        if (backdropValue == SheetsState.HIDDEN) {
+                            viewModel.gestureState(it)
+                        } else viewModel.gestureState(!it)
+                    }
                 )
             },
             backLayerContent = {
