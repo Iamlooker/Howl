@@ -52,3 +52,10 @@ fun HandleIcon(icon: ImageVector, onClick: () -> Unit = {}) {
         )
     }
 }
+
+sealed class SheetsState {
+    object VISIBLE : SheetsState()
+    object ToVISIBLE : SheetsState()
+    object ToHIDDEN : SheetsState()
+    object HIDDEN : SheetsState()
+}

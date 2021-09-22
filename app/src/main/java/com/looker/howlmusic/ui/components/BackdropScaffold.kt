@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ComponentConstants.tweenAnimation
+import com.looker.components.SheetsState
 import com.looker.components.backgroundGradient
 import com.looker.components.rememberDominantColorState
 import kotlinx.coroutines.launch
@@ -44,9 +45,9 @@ fun Backdrop(
     val animateFloat by animateFloatAsState(
         targetValue = when (backdropValue) {
             is SheetsState.VISIBLE -> 0.5f
-            is SheetsState.ToVISIBLE -> 0.7f
-            is SheetsState.ToHIDDEN -> 1f
-            is SheetsState.HIDDEN -> 1f
+            is SheetsState.ToVISIBLE -> 0.4f
+            is SheetsState.ToHIDDEN -> 0.4f
+            is SheetsState.HIDDEN -> 0.3f
         },
         animationSpec = tweenAnimation()
     )
@@ -65,11 +66,4 @@ fun Backdrop(
         frontLayerShape = MaterialTheme.shapes.large,
         gesturesEnabled = enableGesture
     )
-}
-
-sealed class SheetsState {
-    object VISIBLE : SheetsState()
-    object ToVISIBLE : SheetsState()
-    object ToHIDDEN : SheetsState()
-    object HIDDEN : SheetsState()
 }
