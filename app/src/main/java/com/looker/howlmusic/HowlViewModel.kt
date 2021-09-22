@@ -2,7 +2,8 @@ package com.looker.howlmusic
 
 import android.content.Context
 import androidx.compose.material.BackdropScaffoldState
-import androidx.compose.material.BackdropValue
+import androidx.compose.material.BackdropValue.Concealed
+import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
@@ -25,7 +26,7 @@ import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
 import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.domain_music.Song
-import com.looker.howlmusic.ui.components.BackdropStateValue
+import com.looker.howlmusic.ui.components.SheetsState
 import kotlinx.coroutines.launch
 import java.time.Clock
 
@@ -34,21 +35,23 @@ class HowlViewModel : ViewModel() {
     private lateinit var exoPlayer: SimpleExoPlayer
 
     private val _playing = MutableLiveData<Boolean>()
-    private val _shuffle = MutableLiveData<Boolean>()
     private val _progress = MutableLiveData<Float>()
+    private val _toggleIcon = MutableLiveData<ImageVector>()
     private val _playIcon = MutableLiveData<ImageVector>()
     private val _handleIcon = MutableLiveData<ImageVector>()
     private val _currentSong = MutableLiveData<Song>()
     private val _enableGesture = MutableLiveData<Boolean>()
+    private val _backdropValue = MutableLiveData<SheetsState>()
     private val _clock = MutableLiveData<Long>()
 
     val playing: LiveData<Boolean> = _playing
-    val shuffle: LiveData<Boolean> = _shuffle
     val progress: LiveData<Float> = _progress
+    val toggleIcon: LiveData<ImageVector> = _toggleIcon
+    val playIcon: LiveData<ImageVector> = _playIcon
     val handleIcon: LiveData<ImageVector> = _handleIcon
     val currentSong: LiveData<Song> = _currentSong
-    val playIcon: LiveData<ImageVector> = _playIcon
     val enableGesture: LiveData<Boolean> = _enableGesture
+    val backdropValue: LiveData<SheetsState> = _backdropValue
     val clock: LiveData<Long> = _clock
 
     fun buildExoPlayer(context: Context) {
@@ -81,13 +84,15 @@ class HowlViewModel : ViewModel() {
     }
 
     @ExperimentalMaterialApi
-    fun currentState(state: BackdropScaffoldState): BackdropStateValue =
-        when {
-            state.currentValue == BackdropValue.Concealed && state.targetValue == BackdropValue.Concealed -> BackdropStateValue.CONCEALED
-            state.currentValue == BackdropValue.Revealed && state.targetValue == BackdropValue.Revealed -> BackdropStateValue.VISIBLE
-            else -> BackdropStateValue.ANIMATING
+    fun setBackdropValue(state: BackdropScaffoldState) {
+        _backdropValue.value = when {
+            state.currentValue == Concealed && state.targetValue == Concealed -> SheetsState.HIDDEN
+            state.currentValue == Revealed && state.targetValue == Concealed -> SheetsState.ToHIDDEN
+            state.currentValue == Revealed && state.targetValue == Revealed -> SheetsState.VISIBLE
+            state.currentValue == Concealed && state.targetValue == Revealed -> SheetsState.ToVISIBLE
+            else -> SheetsState.HIDDEN
         }
-
+    }
 
     fun gestureState(allowGesture: Boolean) {
         _enableGesture.value = allowGesture
@@ -112,17 +117,32 @@ class HowlViewModel : ViewModel() {
         _progress.value = exoPlayer.contentPosition.toFloat() / exoPlayer.contentDuration
     }
 
-    fun onToggle(playerVisible: Boolean) {
-        if (playerVisible) exoPlayer.shuffleModeEnabled = _shuffle.value ?: false
-        else onPlayPause()
+    fun onToggle(currentState: SheetsState) {
+        when (currentState) {
+            SheetsState.HIDDEN -> onPlayPause()
+            SheetsState.ToHIDDEN -> onPlayPause()
+            SheetsState.ToVISIBLE -> {
+            }
+            SheetsState.VISIBLE -> {
+            }
+        }
     }
 
-    @ExperimentalMaterialApi
-    fun setHandleIcon(value: BackdropStateValue) {
-        _handleIcon.value = when (value) {
-            BackdropStateValue.CONCEALED -> Icons.Rounded.KeyboardArrowDown
-            BackdropStateValue.ANIMATING -> Icons.Rounded.Maximize
-            BackdropStateValue.VISIBLE -> Icons.Rounded.KeyboardArrowUp
+    fun setToggleIcon(currentState: SheetsState) {
+        _toggleIcon.value = when (currentState) {
+            SheetsState.HIDDEN -> _playIcon.value ?: Icons.Rounded.PlayArrow
+            SheetsState.ToHIDDEN -> _playIcon.value ?: Icons.Rounded.PlayArrow
+            SheetsState.ToVISIBLE -> Icons.Rounded.Shuffle
+            SheetsState.VISIBLE -> Icons.Rounded.Shuffle
+        }
+    }
+
+    fun setHandleIcon(currentState: SheetsState) {
+        _handleIcon.value = when (currentState) {
+            SheetsState.HIDDEN -> Icons.Rounded.KeyboardArrowDown
+            SheetsState.ToHIDDEN -> Icons.Rounded.KeyboardArrowDown
+            SheetsState.VISIBLE -> Icons.Rounded.KeyboardArrowUp
+            SheetsState.ToVISIBLE -> Icons.Rounded.KeyboardArrowUp
         }
     }
 
@@ -150,9 +170,6 @@ class HowlViewModel : ViewModel() {
     fun playPrevious() {
         exoPlayer.seekToPrevious()
     }
-
-    @ExperimentalMaterialApi
-    fun playerVisible(state: BackdropScaffoldState): Boolean = state.isRevealed
 
     override fun onCleared() {
         super.onCleared()

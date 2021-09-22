@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RepeatOne
-import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -33,10 +32,7 @@ import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptySong
-import com.looker.howlmusic.ui.components.Backdrop
-import com.looker.howlmusic.ui.components.BottomAppBar
-import com.looker.howlmusic.ui.components.HomeNavGraph
-import com.looker.howlmusic.ui.components.HomeScreens
+import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.howlmusic.utils.checkReadPermission
@@ -124,23 +120,26 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         val playing by viewModel.playing.observeAsState(false)
         val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
         val progress by viewModel.progress.observeAsState(0f)
-        val shuffle by viewModel.shuffle.observeAsState(false)
+        val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
         val handleIcon by viewModel.handleIcon.observeAsState(Icons.Rounded.KeyboardArrowDown)
-        val shuffleIcon by remember { mutableStateOf(Icons.Rounded.Shuffle) }
         val enableGesture by viewModel.enableGesture.observeAsState(false)
+        val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
         val seconds by viewModel.clock.observeAsState(0)
 
-        val playerVisible = viewModel.playerVisible(backdropState)
+        LaunchedEffect(backdropState.progress) { launch { viewModel.setBackdropValue(backdropState) } }
 
-        val backdropValue = viewModel.currentState(backdropState)
-
-        LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
+        LaunchedEffect(backdropValue) {
+            launch {
+                viewModel.setToggleIcon(backdropValue)
+                viewModel.setHandleIcon(backdropValue)
+            }
+        }
         LaunchedEffect(currentSong) { launch { viewModel.gestureState(true) } }
 
         Backdrop(
             modifier = Modifier.padding(bottomNavigationPadding),
             state = backdropState,
-            backdropValue = viewModel.currentState(backdropState),
+            backdropValue = backdropValue,
             playing = playing,
             enableGesture = enableGesture,
             albumArt = currentSong.albumArt,
@@ -154,12 +153,12 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 }
 
                 PlayerHeader(
-                    icon = if (playerVisible) shuffleIcon else playIcon,
+                    icon = toggleIcon,
                     albumArt = currentSong.albumArt,
                     songName = currentSong.songName,
                     artistName = currentSong.artistName,
-                    toggled = if (playerVisible) shuffle else playing,
-                    toggleAction = { viewModel.onToggle(playerVisible) }
+                    toggled = playing,
+                    toggleAction = { viewModel.onToggle(backdropValue) }
                 )
             },
             frontLayerContent = {
