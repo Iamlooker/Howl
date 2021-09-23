@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.Coil
+import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
@@ -44,7 +45,8 @@ suspend fun String.bitmap(context: Context): Bitmap {
 @Composable
 fun HowlImage(
     modifier: Modifier = Modifier,
-    data: Any?,
+    data: String?,
+    imageLoader: ImageLoader,
     imageFillerColor: Color = MaterialTheme.colors.surface,
     shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
@@ -59,10 +61,7 @@ fun HowlImage(
             contentScale = ContentScale.FillWidth,
             painter = rememberImagePainter(
                 data = it,
-                builder = {
-                    placeholder(R.drawable.white_background)
-                    error(R.drawable.error_image)
-                }
+                imageLoader = imageLoader
             ),
             contentDescription = null
         )

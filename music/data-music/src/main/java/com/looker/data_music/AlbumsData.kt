@@ -52,10 +52,9 @@ class AlbumsData(context: Context) {
                 val albumId = albumCursor.getLong(0)
                 val albumName = albumCursor.getString(1)
                 val artistName = albumCursor.getString(2)
+                val albumArt = "content://media/external/audio/albumart/$albumId"
                 emit(
-                    Album(
-                        albumId, albumName, artistName
-                    )
+                    Album(albumId, albumName, artistName, albumArt)
                 )
             } while (albumCursor.moveToNext())
         }

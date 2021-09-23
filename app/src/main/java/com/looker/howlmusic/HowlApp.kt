@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import coil.ImageLoader
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsHeight
@@ -43,19 +44,19 @@ import kotlinx.coroutines.launch
 class HowlApp : Application()
 
 @Composable
-fun App() {
+fun App(imageLoader: ImageLoader) {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 
     HowlMusicTheme {
-        if (canReadStorage) ProvideWindowInsets { AppContent() }
+        if (canReadStorage) ProvideWindowInsets { AppContent(imageLoader) }
         else OnBoardingPage { canReadStorage = it }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AppContent(viewModel: HowlViewModel = viewModel()) {
+fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
 
@@ -76,7 +77,10 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 
     val currentSong by viewModel.currentSong.observeAsState(emptySong)
 
-    LaunchedEffect(backdropState.progress) { launch { viewModel.setBackdropValue(backdropState) } }
+    LaunchedEffect(
+        backdropState.targetValue,
+        backdropState.currentValue
+    ) { launch { viewModel.setBackdropValue(backdropState) } }
 
     Backdrop(
         modifier = Modifier,
@@ -88,20 +92,13 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         header = {
 
             val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
-            val seconds by viewModel.clock.observeAsState(0)
 
             LaunchedEffect(backdropValue) { launch { viewModel.setToggleIcon(backdropValue) } }
-
-            LaunchedEffect(seconds) {
-                launch {
-                    viewModel.updateProgress()
-                    viewModel.updateTime()
-                }
-            }
 
             PlayerHeader(
                 icon = toggleIcon,
                 albumArt = currentSong.albumArt,
+                imageLoader = imageLoader,
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
                 toggled = false,
@@ -115,6 +112,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
 
             FrontLayer(
+                imageLoader = imageLoader,
                 handleIcon = handleIcon,
                 onSongClick = { song -> viewModel.onSongClicked(song) },
                 openPlayer = { scope.launch { backdropState.reveal() } },
@@ -146,6 +144,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
 @Composable
 fun FrontLayer(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     handleIcon: Float,
     openPlayer: () -> Unit,
     onSongClick: (Song) -> Unit,
@@ -175,6 +174,7 @@ fun FrontLayer(
             HandleIcon(handleIcon) { openPlayer() }
             HomeNavGraph(
                 navController = navController,
+                imageLoader = imageLoader,
                 onSongClick = onSongClick,
                 onAlbumsSheetState = onAlbumSheetState
             )
@@ -185,7 +185,8 @@ fun FrontLayer(
 @Composable
 fun PlayerHeader(
     modifier: Modifier = Modifier,
-    albumArt: Any,
+    albumArt: String?,
+    imageLoader: ImageLoader,
     songName: String?,
     artistName: String?,
     icon: ImageVector,
@@ -199,6 +200,7 @@ fun PlayerHeader(
         songName = songName ?: "Unknown",
         artistName = artistName ?: "Unknown",
         albumArt = albumArt,
+        imageLoader = imageLoader,
         onImageIcon = icon,
         repeatIcon = Icons.Rounded.RepeatOne,
         toggled = toggled,

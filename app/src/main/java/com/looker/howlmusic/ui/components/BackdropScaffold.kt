@@ -26,7 +26,7 @@ fun Backdrop(
     backdropValue: SheetsState,
     playing: Boolean,
     enableGesture: Boolean = true,
-    albumArt: Any? = null,
+    albumArt: String? = null,
     header: @Composable () -> Unit,
     backLayerContent: @Composable () -> Unit,
     frontLayerContent: @Composable () -> Unit

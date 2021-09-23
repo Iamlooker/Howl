@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import coil.ImageLoader
 import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.MainScreens.HOME
 import com.looker.ui_albums.Albums
@@ -32,6 +33,7 @@ sealed class HomeScreens(
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
+    imageLoader: ImageLoader,
     onSongClick: (Song) -> Unit,
     onAlbumsSheetState: (Boolean) -> Unit
 ) {
@@ -44,8 +46,18 @@ fun HomeNavGraph(
                 route = HOME,
                 startDestination = HomeScreens.SONGS.route
             ) {
-                composable(HomeScreens.SONGS.route) { Songs(onSongClick = onSongClick) }
-                composable(HomeScreens.ALBUMS.route) { Albums(onStateChange = onAlbumsSheetState) }
+                composable(HomeScreens.SONGS.route) {
+                    Songs(
+                        imageLoader = imageLoader,
+                        onSongClick = onSongClick
+                    )
+                }
+                composable(HomeScreens.ALBUMS.route) {
+                    Albums(
+                        imageLoader = imageLoader,
+                        onStateChange = onAlbumsSheetState
+                    )
+                }
             }
         }
     )

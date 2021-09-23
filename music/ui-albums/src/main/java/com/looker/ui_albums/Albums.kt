@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.ImageLoader
 import com.looker.components.BottomSheets
 import com.looker.components.HowlSurface
 import com.looker.components.rememberDominantColorState
@@ -27,14 +28,19 @@ import com.looker.ui_albums.components.AlbumsCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun Albums(onStateChange: (Boolean) -> Unit) {
-    Albums(modifier = Modifier.fillMaxSize(), onStateChange = onStateChange)
+fun Albums(imageLoader: ImageLoader, onStateChange: (Boolean) -> Unit) {
+    Albums(
+        modifier = Modifier.fillMaxSize(),
+        imageLoader = imageLoader,
+        onStateChange = onStateChange
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Albums(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     viewModel: AlbumsViewModel = viewModel(
         factory = AlbumsViewModelFactory(
             AlbumsRepository(),
@@ -50,7 +56,7 @@ private fun Albums(
         val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        val currentAlbum by viewModel.currentAlbum.observeAsState(Album(0))
+        val currentAlbum by viewModel.currentAlbum.observeAsState(Album(0, null, null, ""))
         val albumsList by viewModel.albumsList.observeAsState(listOf())
         val songsList by viewModel.songsList.observeAsState(listOf())
         val handleIcon by viewModel.handleIcon.observeAsState(0f)
@@ -79,6 +85,7 @@ private fun Albums(
 
                 AlbumsBottomSheetContent(
                     currentAlbum = currentAlbum,
+                    imageLoader = imageLoader,
                     songsList = songsList,
                     handleIcon = handleIcon,
                     dominantColor = dominantColor.color.copy(0.4f)
@@ -91,9 +98,8 @@ private fun Albums(
 
                 AlbumsList(
                     albumsList = albumsList,
-                    onAlbumClick = { album ->
-                        scope.launch { viewModel.onAlbumClick(state, album) }
-                    }
+                    imageLoader = imageLoader,
+                    onAlbumClick = { scope.launch { viewModel.onAlbumClick(state, it) } }
                 )
             }
         )
@@ -104,13 +110,10 @@ private fun Albums(
 @Composable
 fun AlbumsList(
     albumsList: List<Album>,
+    imageLoader: ImageLoader,
     onAlbumClick: (Album) -> Unit
 ) {
     LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
-        items(albumsList) { album ->
-            AlbumsCard(album = album) {
-                onAlbumClick(album)
-            }
-        }
+        items(albumsList) { AlbumsCard(album = it, imageLoader = imageLoader) { onAlbumClick(it) } }
     }
 }

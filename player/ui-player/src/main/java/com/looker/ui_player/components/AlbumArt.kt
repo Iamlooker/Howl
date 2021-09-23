@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import coil.ImageLoader
 import com.looker.components.HowlImage
 import com.looker.components.ToggleButton
 
@@ -23,7 +24,8 @@ import com.looker.components.ToggleButton
 @Composable
 fun AlbumArtAndUtils(
     modifier: Modifier = Modifier,
-    albumArt: Any,
+    albumArt: String?,
+    imageLoader: ImageLoader,
     icon: ImageVector,
     toggled: Boolean,
     onToggle: () -> Unit,
@@ -42,6 +44,7 @@ fun AlbumArtAndUtils(
                     interactionSource = remember { MutableInteractionSource() }
                 ),
             data = albumArt,
+            imageLoader = imageLoader,
             shape = CircleShape
         )
         AnimatedVisibility(

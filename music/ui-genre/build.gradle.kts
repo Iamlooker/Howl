@@ -7,6 +7,7 @@ dependencies {
     implementation(project(Modules.domainMusic))
     implementation(project(Modules.dataMusic))
 
+    implementation(Coil.coil)
     implementation(Compose.runtimeLiveData)
     implementation(Lifecycle.lifecycleViewModelCompose)
 }

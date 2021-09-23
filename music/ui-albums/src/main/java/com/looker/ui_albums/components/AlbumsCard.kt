@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ItemCard
 import com.looker.components.rememberDominantColorState
@@ -14,18 +15,24 @@ import com.looker.domain_music.Album
 import kotlinx.coroutines.launch
 
 @Composable
-fun AlbumsCard(modifier: Modifier = Modifier, album: Album, onClick: () -> Unit) {
+fun AlbumsCard(
+    modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
+    album: Album,
+    onClick: () -> Unit
+) {
 
     val context = LocalContext.current
 
     val cardWidth by context.calculateItemSize(false, 2, 16.dp)
 
-    AlbumsCard(modifier, album, cardWidth, onClick)
+    AlbumsCard(modifier, imageLoader, album, cardWidth, onClick)
 }
 
 @Composable
 private fun AlbumsCard(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     album: Album,
     cardWidth: Dp,
     onClick: () -> Unit
@@ -41,6 +48,7 @@ private fun AlbumsCard(
     ItemCard(
         modifier = modifier,
         imageUrl = album.albumArt,
+        imageLoader = imageLoader,
         title = album.albumName,
         subText = album.artistName,
         cardColor = backgroundColor.color.copy(0.4f),

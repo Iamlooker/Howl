@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.ImageLoader
 import com.looker.components.HowlSurface
 import com.looker.data_music.data.GenresRepository
 import com.looker.domain_music.Genre
@@ -21,8 +22,8 @@ import com.looker.ui_genre.components.GenresCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun Genres() {
-    Genres(modifier = Modifier.fillMaxSize())
+fun Genres(imageLoader: ImageLoader) {
+    Genres(modifier = Modifier.fillMaxSize(), imageLoader = imageLoader)
 }
 
 @Composable
@@ -32,7 +33,8 @@ private fun Genres(
         factory = GenresViewModelFactory(
             GenresRepository()
         )
-    )
+    ),
+    imageLoader: ImageLoader
 ) {
     HowlSurface(modifier) {
 
@@ -46,6 +48,7 @@ private fun Genres(
 
         GenresList(
             genresList = genresList,
+            imageLoader = imageLoader,
             onGenreClick = {
                 scope.launch { }
             }
@@ -57,11 +60,12 @@ private fun Genres(
 @Composable
 fun GenresList(
     genresList: List<Genre>,
+    imageLoader: ImageLoader,
     onGenreClick: (Genre) -> Unit
 ) {
     LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
         items(genresList) { genre ->
-            GenresCard(genre = genre) {
+            GenresCard(genre = genre, imageLoader = imageLoader) {
                 onGenreClick(genre)
             }
         }

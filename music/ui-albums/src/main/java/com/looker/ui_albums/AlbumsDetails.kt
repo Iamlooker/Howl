@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HandleIcon
@@ -23,6 +24,7 @@ import com.looker.ui_songs.SongsList
 fun AlbumsBottomSheetContent(
     modifier: Modifier = Modifier,
     currentAlbum: Album,
+    imageLoader: ImageLoader,
     handleIcon: Float,
     songsList: List<Song>,
     dominantColor: Color = MaterialTheme.colors.surface
@@ -30,6 +32,7 @@ fun AlbumsBottomSheetContent(
     AlbumBottomSheetItem(
         modifier = modifier,
         album = currentAlbum,
+        imageLoader = imageLoader,
         handleIcon = handleIcon,
         albumDominantColor = dominantColor,
         songsList = songsList
@@ -40,26 +43,29 @@ fun AlbumsBottomSheetContent(
 fun AlbumBottomSheetItem(
     modifier: Modifier = Modifier,
     album: Album,
+    imageLoader: ImageLoader,
     handleIcon: Float,
     albumDominantColor: Color,
     songsList: List<Song>
 ) {
     Column(modifier = modifier.backgroundGradient(albumDominantColor)) {
         HandleIcon(angle = handleIcon)
-        AlbumHeader(album = album)
-        AlbumSongsList(songsList = songsList)
+        AlbumHeader(album = album, imageLoader = imageLoader)
+        AlbumSongsList(songsList = songsList, imageLoader = imageLoader)
     }
 }
 
 @Composable
 fun AlbumHeader(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     album: Album
 ) {
     Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
         ItemCard(
             modifier = modifier.fillMaxWidth(),
             imageUrl = it.albumArt,
+            imageLoader = imageLoader,
             title = it.albumName,
             subText = it.artistName,
             imageSize = 250.dp
@@ -70,11 +76,13 @@ fun AlbumHeader(
 @Composable
 fun AlbumSongsList(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     songsList: List<Song>
 ) {
     Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
         SongsList(
             modifier = modifier.fillMaxWidth(),
+            imageLoader = imageLoader,
             songsList = it
         )
     }

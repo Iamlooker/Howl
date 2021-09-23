@@ -13,7 +13,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -29,8 +28,6 @@ import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.components.SheetsState
 import com.looker.domain_music.Song
-import kotlinx.coroutines.launch
-import java.time.Clock
 
 class HowlViewModel : ViewModel() {
 
@@ -44,7 +41,6 @@ class HowlViewModel : ViewModel() {
     private val _currentSong = MutableLiveData<Song>()
     private val _enableGesture = MutableLiveData<Boolean>()
     private val _backdropValue = MutableLiveData<SheetsState>()
-    private val _clock = MutableLiveData<Long>()
 
     val playing: LiveData<Boolean> = _playing
     val progress: LiveData<Float> = _progress
@@ -54,7 +50,6 @@ class HowlViewModel : ViewModel() {
     val currentSong: LiveData<Song> = _currentSong
     val enableGesture: LiveData<Boolean> = _enableGesture
     val backdropValue: LiveData<SheetsState> = _backdropValue
-    val clock: LiveData<Long> = _clock
 
     fun buildExoPlayer(context: Context) {
         val audioOnlyRenderersFactory =
@@ -100,10 +95,6 @@ class HowlViewModel : ViewModel() {
         _enableGesture.value = allowGesture
     }
 
-    fun updateTime() {
-        viewModelScope.launch { _clock.value = Clock.systemDefaultZone().millis() }
-    }
-
     private fun updatePlayIcon(isPlaying: Boolean) {
         _playIcon.value =
             if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
@@ -113,10 +104,6 @@ class HowlViewModel : ViewModel() {
         if (_playing.value == true) exoPlayer.pause() else exoPlayer.play()
         _playing.value = exoPlayer.isPlaying
         updatePlayIcon(exoPlayer.isPlaying)
-    }
-
-    fun updateProgress() {
-        _progress.value = exoPlayer.contentPosition.toFloat() / exoPlayer.contentDuration
     }
 
     fun onToggle(currentState: SheetsState) {

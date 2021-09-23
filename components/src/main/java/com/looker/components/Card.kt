@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import com.looker.components.ComponentConstants.tweenAnimation
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -54,9 +55,10 @@ fun MaterialCard(
 @Composable
 fun ItemCard(
     modifier: Modifier = Modifier,
-    imageUrl: String = "",
-    title: String,
-    subText: String,
+    imageUrl: String?,
+    imageLoader: ImageLoader,
+    title: String?,
+    subText: String?,
     imageSize: Dp,
     imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
     cardColor: Color = Color.Transparent,
@@ -79,6 +81,7 @@ fun ItemCard(
                     modifier = Modifier
                         .height(imageSize),
                     data = imageUrl,
+                    imageLoader = imageLoader,
                     imageFillerColor = cardColor,
                     shape = imageShape
                 )
@@ -99,6 +102,7 @@ fun ItemCard(
                 HowlImage(
                     modifier = Modifier.size(imageSize),
                     data = imageUrl,
+                    imageLoader = imageLoader,
                     shape = imageShape
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -117,9 +121,9 @@ fun ItemCard(
 @Composable
 fun ItemCardText(
     modifier: Modifier = Modifier,
-    title: String,
+    title: String?,
     titleTextStyle: TextStyle = MaterialTheme.typography.body1,
-    subText: String,
+    subText: String?,
     subTextTextStyle: TextStyle = MaterialTheme.typography.caption,
     textAlignment: Alignment.Horizontal
 ) {

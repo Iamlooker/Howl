@@ -11,6 +11,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.ImageLoader
 import com.looker.components.HowlSurface
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Song
@@ -18,13 +19,14 @@ import com.looker.ui_songs.components.SongsCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun Songs(onSongClick: (Song) -> Unit) {
-    Songs(modifier = Modifier.fillMaxSize(), onSongClick = onSongClick)
+fun Songs(imageLoader: ImageLoader, onSongClick: (Song) -> Unit) {
+    Songs(modifier = Modifier.fillMaxSize(), imageLoader = imageLoader, onSongClick = onSongClick)
 }
 
 @Composable
 private fun Songs(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     viewModel: SongsViewModel = viewModel(factory = SongsViewModelFactory(SongsRepository())),
     onSongClick: (Song) -> Unit
 ) {
@@ -39,13 +41,14 @@ private fun Songs(
     }
 
     HowlSurface(modifier = modifier) {
-        SongsList(songsList = songsList, onSongClick = onSongClick)
+        SongsList(imageLoader = imageLoader, songsList = songsList, onSongClick = onSongClick)
     }
 }
 
 @Composable
 fun SongsList(
     modifier: Modifier = Modifier,
+    imageLoader: ImageLoader,
     songsList: List<Song>,
     onSongClick: (Song) -> Unit = {}
 ) {
@@ -53,6 +56,7 @@ fun SongsList(
         items(songsList) { song ->
             SongsCard(
                 modifier = Modifier.fillMaxWidth(),
+                imageLoader = imageLoader,
                 song = song,
                 onClick = { onSongClick(song) })
         }
