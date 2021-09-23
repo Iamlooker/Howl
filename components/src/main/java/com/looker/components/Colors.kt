@@ -1,7 +1,6 @@
 package com.looker.components
 
 import android.content.Context
-import android.graphics.Bitmap
 import androidx.collection.LruCache
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
@@ -41,18 +40,8 @@ class DominantColorState(
         else -> null
     }
 
-    private val cacheBitmap = when {
-        cacheSize > 0 -> LruCache<Bitmap, DominantColors>(cacheSize)
-        else -> null
-    }
-
     suspend fun updateColorsFromImageUrl(url: String) {
         val result = calculateDominantColorFromUrl(url)
-        color = result?.color ?: defaultColor
-    }
-
-    suspend fun updateColorsFromBitmap(bitmap: Bitmap?) {
-        val result = bitmap?.let { calculateDominantColorFromBitmap(it) }
         color = result?.color ?: defaultColor
     }
 
@@ -60,13 +49,6 @@ class DominantColorState(
         return cache?.get(url) ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
             DominantColors(color = dominantColor).also { result -> cache?.put(url, result) }
         }
-    }
-
-    private suspend fun calculateDominantColorFromBitmap(bitmap: Bitmap): DominantColors {
-        return cacheBitmap?.get(bitmap) ?: DominantColors(
-            color = bitmap.getDominantColor() ?: defaultColor
-        )
-            .also { result -> cacheBitmap?.put(bitmap, result) }
     }
 }
 

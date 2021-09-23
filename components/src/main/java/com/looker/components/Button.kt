@@ -45,7 +45,7 @@ fun ToggleButton(
     toggled: Boolean,
     icon: ImageVector,
     shape: CornerBasedShape = CircleShape,
-    activeColor: Color = MaterialTheme.colors.secondary,
+    activeColor: Color = MaterialTheme.colors.secondaryVariant,
     onToggle: () -> Unit,
     contentDescription: String?
 ) {

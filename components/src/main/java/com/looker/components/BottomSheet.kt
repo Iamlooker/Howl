@@ -69,17 +69,18 @@ fun CanvasHandleIcon(
     color: Color = MaterialTheme.colors.primary
 ) {
     val animateIcon by animateFloatAsState(angle)
+    val animateStroke by animateFloatAsState(if (angle == 1f) strokeWidth + 5f else strokeWidth)
 
     Canvas(modifier = modifier) {
         drawLine(
             color = color,
-            strokeWidth = strokeWidth,
+            strokeWidth = animateStroke,
             start = Offset(0f, center.y),
             end = Offset(center.x, animateIcon * center.y)
         )
         drawLine(
             color = color,
-            strokeWidth = strokeWidth,
+            strokeWidth = animateStroke,
             start = Offset(center.x, animateIcon * center.y),
             end = Offset(size.width, center.y)
         )

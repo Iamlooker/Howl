@@ -76,7 +76,8 @@ fun ItemCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 HowlImage(
-                    modifier = Modifier.size(imageSize),
+                    modifier = Modifier
+                        .height(imageSize),
                     data = imageUrl,
                     imageFillerColor = cardColor,
                     shape = imageShape
@@ -98,7 +99,7 @@ fun ItemCard(
                 HowlImage(
                     modifier = Modifier.size(imageSize),
                     data = imageUrl,
-                    shape = MaterialTheme.shapes.medium
+                    shape = imageShape
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 ItemCardText(

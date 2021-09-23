@@ -104,15 +104,15 @@ class HowlViewModel : ViewModel() {
         viewModelScope.launch { _clock.value = Clock.systemDefaultZone().millis() }
     }
 
-    private fun updatePlayIcon() {
+    private fun updatePlayIcon(isPlaying: Boolean) {
         _playIcon.value =
-            if (_playing.value == true) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+            if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
     }
 
     fun onPlayPause() {
         if (_playing.value == true) exoPlayer.pause() else exoPlayer.play()
         _playing.value = exoPlayer.isPlaying
-        updatePlayIcon()
+        updatePlayIcon(exoPlayer.isPlaying)
     }
 
     fun updateProgress() {
@@ -128,10 +128,10 @@ class HowlViewModel : ViewModel() {
         }
     }
 
-    fun setToggleIcon(currentState: SheetsState, playIcon: ImageVector) {
+    fun setToggleIcon(currentState: SheetsState) {
         _toggleIcon.value = when (currentState) {
-            SheetsState.HIDDEN -> playIcon
-            SheetsState.ToHIDDEN -> playIcon
+            SheetsState.HIDDEN -> playIcon.value ?: Icons.Rounded.PlayArrow
+            SheetsState.ToHIDDEN -> playIcon.value ?: Icons.Rounded.PlayArrow
             SheetsState.ToVISIBLE -> Icons.Rounded.Shuffle
             SheetsState.VISIBLE -> Icons.Rounded.Shuffle
         }
@@ -148,6 +148,7 @@ class HowlViewModel : ViewModel() {
 
     fun onSongClicked(song: Song) {
         _playing.value = true
+        updatePlayIcon(true)
         _currentSong.value = song
         exoPlayer.apply {
             clearMediaItems()

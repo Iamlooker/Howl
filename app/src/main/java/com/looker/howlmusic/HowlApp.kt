@@ -1,9 +1,7 @@
 package com.looker.howlmusic
 
 import android.app.Application
-import android.app.WallpaperManager
 import android.content.Intent
-import android.graphics.Bitmap
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -27,7 +24,6 @@ import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.HandleIcon
 import com.looker.components.SheetsState
-import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptySong
 import com.looker.howlmusic.ui.components.Backdrop
@@ -35,7 +31,6 @@ import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
-import com.looker.howlmusic.ui.theme.WallpaperTheme
 import com.looker.howlmusic.utils.checkReadPermission
 import com.looker.onboarding.OnBoardingPage
 import com.looker.player_service.service.PlayerService
@@ -51,29 +46,10 @@ class HowlApp : Application()
 fun App() {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
-    val wallpaperManager = WallpaperManager.getInstance(context)
 
     HowlMusicTheme {
-        if (canReadStorage) {
-            val wallpaperBitmap = wallpaperManager.drawable.toBitmap()
-            AppTheme(wallpaperBitmap)
-        } else OnBoardingPage { canReadStorage = it }
-    }
-}
-
-@OptIn(ExperimentalComposeApi::class)
-@Composable
-fun AppTheme(wallpaper: Bitmap? = null) {
-    val dominantColor = rememberDominantColorState()
-
-    LaunchedEffect(wallpaper) {
-        launch { dominantColor.updateColorsFromBitmap(wallpaper) }
-    }
-
-    WallpaperTheme(dominantColor) {
-        ProvideWindowInsets {
-            AppContent()
-        }
+        if (canReadStorage) ProvideWindowInsets { AppContent() }
+        else OnBoardingPage { canReadStorage = it }
     }
 }
 
@@ -92,28 +68,15 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
     LaunchedEffect(context) { launch { viewModel.buildExoPlayer(context) } }
 
     val scope = rememberCoroutineScope()
-
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
+    val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
+
+    val playing by viewModel.playing.observeAsState(false)
+    val enableGesture by viewModel.enableGesture.observeAsState(true)
 
     val currentSong by viewModel.currentSong.observeAsState(emptySong)
 
-    val playing by viewModel.playing.observeAsState(false)
-    val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
-    val progress by viewModel.progress.observeAsState(0f)
-    val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
-    val handleIcon by viewModel.handleIcon.observeAsState(2f)
-    val enableGesture by viewModel.enableGesture.observeAsState(true)
-    val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
-    val seconds by viewModel.clock.observeAsState(0)
-
     LaunchedEffect(backdropState.progress) { launch { viewModel.setBackdropValue(backdropState) } }
-
-    LaunchedEffect(backdropValue) {
-        launch {
-            viewModel.setToggleIcon(backdropValue, playIcon)
-            viewModel.setHandleIcon(backdropValue)
-        }
-    }
 
     Backdrop(
         modifier = Modifier,
@@ -123,6 +86,11 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
         enableGesture = enableGesture,
         albumArt = currentSong.albumArt,
         header = {
+
+            val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
+            val seconds by viewModel.clock.observeAsState(0)
+
+            LaunchedEffect(backdropValue) { launch { viewModel.setToggleIcon(backdropValue) } }
 
             LaunchedEffect(seconds) {
                 launch {
@@ -136,11 +104,18 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 albumArt = currentSong.albumArt,
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
-                toggled = playing,
-                toggleAction = { viewModel.onToggle(backdropValue) }
+                toggled = false,
+                toggleAction = {
+                    viewModel.onToggle(backdropValue)
+                }
             )
         },
         frontLayerContent = {
+
+            val handleIcon by viewModel.handleIcon.observeAsState(2f)
+
+            LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
+
             FrontLayer(
                 handleIcon = handleIcon,
                 onSongClick = { song -> viewModel.onSongClicked(song) },
@@ -153,6 +128,10 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
             )
         },
         backLayerContent = {
+
+            val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
+            val progress by viewModel.progress.observeAsState(0f)
+
             Controls(
                 playIcon = playIcon,
                 progress = progress,

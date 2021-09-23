@@ -27,12 +27,12 @@ fun PlaybackControls(
     openQueue: () -> Unit
 ) {
     val playButtonColors = ButtonDefaults.buttonColors(
-        backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(),
-        contentColor = MaterialTheme.colors.primary
+        backgroundColor = MaterialTheme.colors.primaryVariant
     )
 
-    val skipButtonColors =
-        ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface)
+    val skipButtonColors = ButtonDefaults.buttonColors(
+        backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground()
+    )
 
     Column(modifier) {
         SeekBar(

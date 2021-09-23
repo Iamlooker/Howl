@@ -1,6 +1,5 @@
 package com.looker.howlmusic.ui.components
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
@@ -8,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,7 +40,7 @@ fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     BottomNavigation(
-        modifier = modifier.clip(MaterialTheme.shapes.small),
+        modifier = modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
         backgroundColor = MaterialTheme.colors.surface,
         elevation = 0.dp
     ) {
@@ -105,14 +104,12 @@ fun RowScope.BottomNavigationItems(
             .height(DefaultBottomNavigationHeight),
         contentAlignment = Alignment.Center
     ) {
-        Crossfade(targetState = if (this.maxHeight < 45.dp) 0f else 1f) {
-            BaselineBottomNavigationItem(
-                modifier = Modifier.alpha(it),
-                icon = icon,
-                label = selectedLabel,
-                itemColor = itemColor
-            )
-        }
+        BaselineBottomNavigationItem(
+            modifier = Modifier,
+            icon = icon,
+            label = selectedLabel,
+            itemColor = itemColor
+        )
     }
 }
 
