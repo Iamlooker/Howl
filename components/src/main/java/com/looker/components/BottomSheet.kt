@@ -2,6 +2,7 @@ package com.looker.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -49,6 +52,7 @@ fun HandleIcon(angle: Float, onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .background(MaterialTheme.colors.background)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -69,21 +73,29 @@ fun CanvasHandleIcon(
     color: Color = MaterialTheme.colors.primary
 ) {
     val animateIcon by animateFloatAsState(angle)
-    val animateStroke by animateFloatAsState(if (angle == 1f) strokeWidth + 5f else strokeWidth)
 
     Canvas(modifier = modifier) {
-        drawLine(
-            color = color,
-            strokeWidth = animateStroke,
-            start = Offset(0f, center.y),
-            end = Offset(center.x, animateIcon * center.y)
-        )
-        drawLine(
-            color = color,
-            strokeWidth = animateStroke,
-            start = Offset(center.x, animateIcon * center.y),
-            end = Offset(size.width, center.y)
-        )
+        if (angle == 1f) {
+            drawRoundRect(
+                color = color,
+                topLeft = Offset(0f, center.y),
+                size = Size(size.width, strokeWidth),
+                cornerRadius = CornerRadius(10f, 10f)
+            )
+        } else {
+            drawLine(
+                color = color,
+                strokeWidth = strokeWidth,
+                start = Offset(0f, center.y),
+                end = Offset(center.x, animateIcon * center.y)
+            )
+            drawLine(
+                color = color,
+                strokeWidth = strokeWidth,
+                start = Offset(center.x, animateIcon * center.y),
+                end = Offset(size.width, center.y)
+            )
+        }
     }
 }
 

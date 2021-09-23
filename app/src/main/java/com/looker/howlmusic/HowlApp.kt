@@ -105,9 +105,7 @@ fun AppContent(viewModel: HowlViewModel = viewModel()) {
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
                 toggled = false,
-                toggleAction = {
-                    viewModel.onToggle(backdropValue)
-                }
+                toggleAction = { viewModel.onToggle(backdropValue) }
             )
         },
         frontLayerContent = {
@@ -171,8 +169,8 @@ fun FrontLayer(
     ) { bottomNavigationPadding ->
         Column(
             modifier
+                .background(MaterialTheme.colors.surface)
                 .padding(bottomNavigationPadding)
-                .background(MaterialTheme.colors.background)
         ) {
             HandleIcon(handleIcon) { openPlayer() }
             HomeNavGraph(
