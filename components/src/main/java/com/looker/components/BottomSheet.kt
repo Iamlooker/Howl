@@ -48,11 +48,15 @@ fun BottomSheets(
  * [angle] = 2f is ArrowDown
  */
 @Composable
-fun HandleIcon(angle: Float, onClick: () -> Unit = {}) {
+fun HandleIcon(
+    angle: Float,
+    backgroundColor: Color = MaterialTheme.colors.background,
+    onClick: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
+            .background(backgroundColor)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -70,7 +74,7 @@ fun CanvasHandleIcon(
     modifier: Modifier = Modifier,
     angle: Float,
     strokeWidth: Float = 5f,
-    color: Color = MaterialTheme.colors.primary
+    color: Color = Color.White
 ) {
     val animateIcon by animateFloatAsState(angle)
 
@@ -79,7 +83,7 @@ fun CanvasHandleIcon(
             drawRoundRect(
                 color = color,
                 topLeft = Offset(0f, center.y),
-                size = Size(size.width, strokeWidth),
+                size = Size(size.width, strokeWidth * 2),
                 cornerRadius = CornerRadius(10f, 10f)
             )
         } else {

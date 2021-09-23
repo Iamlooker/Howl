@@ -78,8 +78,7 @@ fun ItemCard(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 HowlImage(
-                    modifier = Modifier
-                        .height(imageSize),
+                    modifier = Modifier.height(imageSize),
                     data = imageUrl,
                     imageLoader = imageLoader,
                     imageFillerColor = cardColor,

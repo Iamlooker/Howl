@@ -49,7 +49,7 @@ fun AlbumBottomSheetItem(
     songsList: List<Song>
 ) {
     Column(modifier = modifier.backgroundGradient(albumDominantColor)) {
-        HandleIcon(angle = handleIcon)
+        HandleIcon(angle = handleIcon, backgroundColor = Color.Transparent)
         AlbumHeader(album = album, imageLoader = imageLoader)
         AlbumSongsList(songsList = songsList, imageLoader = imageLoader)
     }
