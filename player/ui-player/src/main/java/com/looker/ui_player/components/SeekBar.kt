@@ -12,9 +12,7 @@ fun SeekBar(
     progress: Float,
     onValueChanged: (Float) -> Unit
 ) {
-    val sliderColors = SliderDefaults.colors(
-        inactiveTrackColor = MaterialTheme.colors.surface
-    )
+    val sliderColors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colors.surface)
 
     Slider(
         modifier = modifier,

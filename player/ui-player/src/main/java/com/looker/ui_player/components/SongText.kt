@@ -23,12 +23,12 @@ fun SongText(
     ) {
         WrappedText(
             text = songName,
-            style = MaterialTheme.typography.h5,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.h4,
         )
         WrappedText(
             text = artistName,
-            style = MaterialTheme.typography.subtitle1
+            style = MaterialTheme.typography.subtitle1,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }

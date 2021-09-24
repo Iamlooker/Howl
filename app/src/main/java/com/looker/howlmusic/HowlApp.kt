@@ -109,7 +109,7 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
                 imageLoader = imageLoader,
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
-                toggled = false,
+                toggled = playing,
                 toggleAction = { viewModel.onToggle(backdropValue) }
             )
         },
@@ -133,11 +133,10 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
         },
         backLayerContent = {
 
-            val playIcon by viewModel.playIcon.observeAsState(Icons.Rounded.PlayArrow)
             val progress by viewModel.progress.observeAsState(0f)
 
             Controls(
-                playIcon = playIcon,
+                isPlaying = playing,
                 progress = progress,
                 onPlayPause = { viewModel.onPlayPause() },
                 skipNextClick = { viewModel.playNext() },
@@ -219,8 +218,8 @@ fun PlayerHeader(
 @Composable
 fun Controls(
     modifier: Modifier = Modifier,
-    playIcon: ImageVector,
     progress: Float,
+    isPlaying: Boolean,
     onPlayPause: () -> Unit,
     skipNextClick: () -> Unit,
     onSeek: (Float) -> Unit,
@@ -229,7 +228,7 @@ fun Controls(
 ) {
     Column(modifier) {
         PlaybackControls(
-            playIcon = playIcon,
+            isPlaying = isPlaying,
             progressValue = progress,
             onPlayPause = { onPlayPause() },
             skipNextClick = skipNextClick,

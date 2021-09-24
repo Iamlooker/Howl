@@ -6,19 +6,22 @@ import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
+import kotlinx.coroutines.launch
 
 @Composable
 fun PlaybackControls(
     modifier: Modifier = Modifier,
-    playIcon: ImageVector,
+    isPlaying: Boolean,
     onPlayPause: () -> Unit,
     skipNextClick: () -> Unit,
     skipPrevClick: () -> Unit,
@@ -26,13 +29,24 @@ fun PlaybackControls(
     onSeek: (Float) -> Unit,
     openQueue: () -> Unit
 ) {
+
+    var playIcon by remember {
+        mutableStateOf(Icons.Rounded.PlayArrow)
+    }
+
     val playButtonColors = ButtonDefaults.buttonColors(
-        backgroundColor = MaterialTheme.colors.primaryVariant
+        backgroundColor = MaterialTheme.colors.primary
     )
 
     val skipButtonColors = ButtonDefaults.buttonColors(
         backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground()
     )
+
+    LaunchedEffect(isPlaying) {
+        launch {
+            playIcon = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+        }
+    }
 
     Column(modifier) {
         SeekBar(

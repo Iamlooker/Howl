@@ -6,8 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import coil.ImageLoader
+import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HowlImage
 import com.looker.components.ToggleButton
 
@@ -30,27 +30,25 @@ fun AlbumArtAndUtils(
     toggled: Boolean,
     onToggle: () -> Unit,
     contentDescription: String?,
-    overlayItems: @Composable () -> Unit = {}
+    overlayItems: @Composable RowScope.() -> Unit
 ) {
     var overlayVisible by remember { mutableStateOf(false) }
 
     Box {
-        HowlImage(
+        AlbumArt(
             modifier = modifier
-                .fillMaxWidth()
                 .clickable(
                     onClick = { overlayVisible = !overlayVisible },
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 ),
-            data = albumArt,
-            imageLoader = imageLoader,
-            shape = CircleShape
+            albumArt = albumArt,
+            imageLoader = imageLoader
         )
         AnimatedVisibility(
             visible = overlayVisible,
-            enter = fadeIn(),
-            exit = fadeOut()
+            enter = fadeIn(animationSpec = tweenAnimation()),
+            exit = fadeOut(animationSpec = tweenAnimation())
         ) {
             AlbumArtOverlay(
                 modifier = modifier.fillMaxWidth(),
@@ -73,7 +71,7 @@ fun AlbumArtOverlay(
     modifier: Modifier = Modifier,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onClick: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable RowScope.() -> Unit
 ) {
     Surface(
         modifier = modifier
@@ -84,6 +82,26 @@ fun AlbumArtOverlay(
                 interactionSource = interactionSource
             ),
         color = MaterialTheme.colors.onBackground.copy(0.4f),
-        content = content
+        content = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                content = content
+            )
+        }
+    )
+}
+
+@Composable
+fun AlbumArt(
+    modifier: Modifier = Modifier,
+    albumArt: String?,
+    imageLoader: ImageLoader
+) {
+    HowlImage(
+        modifier = modifier.fillMaxWidth(),
+        data = albumArt,
+        imageLoader = imageLoader,
+        shape = CircleShape
     )
 }

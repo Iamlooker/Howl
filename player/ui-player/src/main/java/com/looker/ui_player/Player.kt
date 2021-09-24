@@ -45,10 +45,6 @@ fun MiniPlayer(
             onToggle = toggleAction,
             contentDescription = "Play"
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
                 ToggleButton(
                     icon = repeatIcon,
                     toggled = toggled,
@@ -60,7 +56,6 @@ fun MiniPlayer(
                     buttonColors = buttonColors(backgroundColor = MaterialTheme.colors.surface),
                     contentDescription = "More"
                 ) {}
-            }
         }
         SongText(songName = songName, artistName = artistName)
     }
