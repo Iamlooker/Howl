@@ -20,7 +20,7 @@ android {
             minifyEnabled true
         }
         debug {
-            minifyEnabled false
+            minifyEnabled Shrink.shrink
             debuggable true
         }
         all {

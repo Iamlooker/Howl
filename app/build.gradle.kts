@@ -36,7 +36,7 @@ android {
             isShrinkResources = true
         }
         getByName("debug") {
-            isMinifyEnabled = false
+            isMinifyEnabled = Shrink.shrink
             isDebuggable = true
             applicationIdSuffix = ".debug"
         }

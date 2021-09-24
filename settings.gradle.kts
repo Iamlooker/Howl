@@ -5,7 +5,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "HowlMusic"
+rootProject.name = "Howl"
 
 include(":on-boarding")
 
