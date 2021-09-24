@@ -37,6 +37,10 @@ jobs:
 
       - name: Build APK
         run: bash ./gradlew assembleDebug --stacktrace
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
 
       - name: Rename APK
         run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/HowlMusic-debug.apk
