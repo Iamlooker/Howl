@@ -28,6 +28,13 @@ jobs:
         with:
           java-version: 11
 
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: 'keystore/debug.jks'
+          encodedString: ${{ secrets.KEYSTORE }}
+
       - name: Build APK
         run: bash ./gradlew assembleDebug --stacktrace
 

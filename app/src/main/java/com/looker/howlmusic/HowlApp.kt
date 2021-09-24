@@ -26,7 +26,6 @@ import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.HandleIcon
 import com.looker.components.SheetsState
 import com.looker.domain_music.Song
-import com.looker.domain_music.emptySong
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -75,11 +74,20 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
     val playing by viewModel.playing.observeAsState(false)
     val enableGesture by viewModel.enableGesture.observeAsState(true)
 
-    val currentSong by viewModel.currentSong.observeAsState(emptySong)
+    val currentSong by viewModel.currentSong.observeAsState(
+        Song(
+            songUri = "",
+            albumId = 0,
+            genreId = 0,
+            songName = null,
+            artistName = null,
+            albumName = null,
+            albumArt = ""
+        )
+    )
 
     LaunchedEffect(
-        backdropState.targetValue,
-        backdropState.currentValue
+        backdropState.currentValue.name
     ) { launch { viewModel.setBackdropValue(backdropState) } }
 
     Backdrop(

@@ -14,9 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -79,27 +77,18 @@ fun CanvasHandleIcon(
     val animateIcon by animateFloatAsState(angle)
 
     Canvas(modifier = modifier) {
-        if (angle == 1f) {
-            drawRoundRect(
-                color = color,
-                topLeft = Offset(0f, center.y),
-                size = Size(size.width, strokeWidth * 2),
-                cornerRadius = CornerRadius(10f, 10f)
-            )
-        } else {
-            drawLine(
-                color = color,
-                strokeWidth = strokeWidth,
-                start = Offset(0f, center.y),
-                end = Offset(center.x, animateIcon * center.y)
-            )
-            drawLine(
-                color = color,
-                strokeWidth = strokeWidth,
-                start = Offset(center.x, animateIcon * center.y),
-                end = Offset(size.width, center.y)
-            )
-        }
+        drawLine(
+            color = color,
+            strokeWidth = strokeWidth,
+            start = Offset(0f, center.y),
+            end = Offset(center.x, animateIcon * center.y)
+        )
+        drawLine(
+            color = color,
+            strokeWidth = strokeWidth,
+            start = Offset(center.x, animateIcon * center.y),
+            end = Offset(size.width, center.y)
+        )
     }
 }
 

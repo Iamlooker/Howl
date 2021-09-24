@@ -3,6 +3,7 @@ package com.looker.ui_albums.components
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
@@ -24,7 +25,7 @@ fun AlbumsCard(
 
     val context = LocalContext.current
 
-    val cardWidth by context.calculateItemSize(false, 2, 16.dp)
+    val cardWidth by remember { context.calculateItemSize(false, 2, 16.dp) }
 
     AlbumsCard(modifier, imageLoader, album, cardWidth, onClick)
 }
@@ -52,7 +53,6 @@ private fun AlbumsCard(
         title = album.albumName,
         subText = album.artistName,
         cardColor = backgroundColor.color.copy(0.4f),
-        rippleColor = backgroundColor.color,
         imageSize = cardWidth,
         onClick = onClick
     )

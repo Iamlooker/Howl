@@ -1,16 +1,13 @@
 package com.looker.components
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,10 +25,8 @@ fun MaterialCard(
     elevation: Dp = 0.dp,
     contentColor: Color = MaterialTheme.colors.onBackground,
     backgroundColor: Color = MaterialTheme.colors.background,
-    rippleColor: Color = MaterialTheme.colors.primary,
     shape: Shape = MaterialTheme.shapes.medium,
     onClick: () -> Unit = {},
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit
 ) {
     val animateColor by animateColorAsState(
@@ -45,8 +40,6 @@ fun MaterialCard(
         shape = shape,
         backgroundColor = animateColor,
         contentColor = contentColor,
-        indication = rememberRipple(color = rippleColor),
-        interactionSource = interactionSource,
         content = content,
         onClick = onClick,
     )
@@ -62,13 +55,11 @@ fun ItemCard(
     imageSize: Dp,
     imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
     cardColor: Color = Color.Transparent,
-    rippleColor: Color = Color.Unspecified,
     onClick: () -> Unit = {}
 ) {
     MaterialCard(
         modifier = modifier.padding(8.dp),
         backgroundColor = cardColor,
-        rippleColor = rippleColor,
         onClick = onClick
     ) {
         if (imageSize > 100.dp) {

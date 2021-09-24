@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
+import com.looker.components.ComponentConstants.DefaultCrossFadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HandleIcon
 import com.looker.components.ItemCard
@@ -61,7 +61,7 @@ fun AlbumHeader(
     imageLoader: ImageLoader,
     album: Album
 ) {
-    Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
+    Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossFadeDuration)) {
         ItemCard(
             modifier = modifier.fillMaxWidth(),
             imageUrl = it.albumArt,
@@ -79,7 +79,7 @@ fun AlbumSongsList(
     imageLoader: ImageLoader,
     songsList: List<Song>
 ) {
-    Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossfadeDuration)) {
+    Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossFadeDuration)) {
         SongsList(
             modifier = modifier.fillMaxWidth(),
             imageLoader = imageLoader,

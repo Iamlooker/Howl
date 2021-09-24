@@ -26,7 +26,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.looker.components.ComponentConstants.DefaultBottomNavigationHeight
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.compositeOverBackground
 
@@ -101,7 +100,7 @@ fun RowScope.BottomNavigationItems(
                 indication = null,
                 interactionSource = interactionSource
             )
-            .height(DefaultBottomNavigationHeight),
+            .fillMaxHeight(),
         contentAlignment = Alignment.Center
     ) {
         BaselineBottomNavigationItem(

@@ -8,10 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
+import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.HowlSurface
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Song
@@ -52,13 +54,20 @@ fun SongsList(
     songsList: List<Song>,
     onSongClick: (Song) -> Unit = {}
 ) {
+
+    val context = LocalContext.current
+
+    val cardHeight by remember { context.calculateItemSize(true, 14) }
+
     LazyColumn(modifier = modifier) {
         items(songsList) { song ->
             SongsCard(
                 modifier = Modifier.fillMaxWidth(),
                 imageLoader = imageLoader,
                 song = song,
-                onClick = { onSongClick(song) })
+                cardHeight = cardHeight,
+                onClick = { onSongClick(song) }
+            )
         }
     }
 }

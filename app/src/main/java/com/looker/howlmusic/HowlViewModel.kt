@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -28,6 +29,7 @@ import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.components.SheetsState
 import com.looker.domain_music.Song
+import kotlinx.coroutines.launch
 
 class HowlViewModel : ViewModel() {
 
@@ -83,9 +85,9 @@ class HowlViewModel : ViewModel() {
     @ExperimentalMaterialApi
     fun setBackdropValue(state: BackdropScaffoldState) {
         _backdropValue.value = when {
-            state.currentValue == Concealed && state.targetValue == Concealed -> SheetsState.HIDDEN
+            state.isConcealed -> SheetsState.HIDDEN
             state.currentValue == Revealed && state.targetValue == Concealed -> SheetsState.ToHIDDEN
-            state.currentValue == Revealed && state.targetValue == Revealed -> SheetsState.VISIBLE
+            state.isRevealed -> SheetsState.VISIBLE
             state.currentValue == Concealed && state.targetValue == Revealed -> SheetsState.ToVISIBLE
             else -> SheetsState.HIDDEN
         }
@@ -125,11 +127,13 @@ class HowlViewModel : ViewModel() {
     }
 
     fun setHandleIcon(currentState: SheetsState) {
-        _handleIcon.value = when (currentState) {
-            SheetsState.HIDDEN -> 2f
-            SheetsState.ToHIDDEN -> 1f
-            SheetsState.VISIBLE -> 0f
-            SheetsState.ToVISIBLE -> 1f
+        viewModelScope.launch {
+            _handleIcon.value = when (currentState) {
+                SheetsState.HIDDEN -> 2f
+                SheetsState.ToHIDDEN -> 1f
+                SheetsState.VISIBLE -> 0f
+                SheetsState.ToVISIBLE -> 1f
+            }
         }
     }
 

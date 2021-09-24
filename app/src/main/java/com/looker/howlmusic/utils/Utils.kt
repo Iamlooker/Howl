@@ -29,5 +29,7 @@ object Utils {
     ): ImageLoader = ImageLoader.Builder(context)
         .placeholder(R.drawable.white_background)
         .error(R.drawable.error_image)
+        .availableMemoryPercentage(0.25)
+        .crossfade(true)
         .build()
 }

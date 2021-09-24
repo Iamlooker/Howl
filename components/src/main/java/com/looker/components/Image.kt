@@ -22,7 +22,7 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Scale
-import com.looker.components.ComponentConstants.DefaultCrossfadeDuration
+import com.looker.components.ComponentConstants.DefaultCrossFadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -52,7 +52,7 @@ fun HowlImage(
 ) {
     Crossfade(
         targetState = data,
-        animationSpec = tweenAnimation(DefaultCrossfadeDuration)
+        animationSpec = tweenAnimation(DefaultCrossFadeDuration)
     ) {
         Image(
             modifier = modifier
