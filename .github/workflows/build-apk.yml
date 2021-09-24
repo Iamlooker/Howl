@@ -28,22 +28,8 @@ jobs:
         with:
           java-version: 11
 
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: 'keystore/debug.jks'
-          encodedString: ${{ secrets.KEYSTORE }}
-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - name: Build APK
-        run: ./gradlew assembleDebug --stacktrace
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        run: bash ./gradlew assembleDebug --stacktrace
 
       - name: Rename APK
         run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/HowlMusic-debug.apk

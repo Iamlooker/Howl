@@ -9,4 +9,3 @@
 local.properties
 /.idea/
 /buildSrc/build/
-/keystore/debug.jks

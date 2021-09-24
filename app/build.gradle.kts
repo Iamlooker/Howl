@@ -23,19 +23,10 @@ android {
     signingConfigs {
 
         getByName("debug") {
-
-            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-            val allFileFromDir = File(tmpFilePath).listFiles()
-
-            if (allFileFromDir != null) {
-                val keystoreFile = allFileFromDir.first()
-                keystoreFile.renameTo(File("keystore/debug.jks"))
-            }
-
-            storeFile = file("keystore/debug.jks")
-            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias = System.getenv("SIGNING_STORE_ALIAS")
-            keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+            storeFile = rootProject.file("keystore/debug.jks")
+            storePassword = "123456"
+            keyAlias = "debug"
+            keyPassword = "123456"
         }
     }
 
