@@ -35,8 +35,11 @@ jobs:
           fileName: 'keystore/debug.jks'
           encodedString: ${{ secrets.KEYSTORE }}
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build APK
-        run: bash ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
