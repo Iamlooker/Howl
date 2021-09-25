@@ -96,6 +96,7 @@ dependencies {
     implementation(Compose.runtimeLiveData)
 
     implementation(ExoPlayer.exoplayerCore)
+    implementation(ExoPlayer.exoplayerMediaSession)
 
     implementation(Hilt.hiltAndroid)
     kapt(Hilt.hiltCompiler)

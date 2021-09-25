@@ -1,7 +1,6 @@
 package com.looker.howlmusic
 
 import android.app.Application
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +32,6 @@ import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.utils.checkReadPermission
 import com.looker.onboarding.OnBoardingPage
-import com.looker.player_service.service.PlayerService
 import com.looker.ui_player.MiniPlayer
 import com.looker.ui_player.components.PlaybackControls
 import dagger.hilt.android.HiltAndroidApp
@@ -58,12 +56,6 @@ fun App(imageLoader: ImageLoader) {
 fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel()) {
 
     val context = LocalContext.current
-
-    SideEffect {
-        val playerService = PlayerService()
-        val intent = Intent(context, playerService::class.java)
-        context.startForegroundService(intent)
-    }
 
     LaunchedEffect(context) { launch { viewModel.buildExoPlayer(context) } }
 
