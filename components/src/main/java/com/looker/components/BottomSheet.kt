@@ -6,7 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,11 +39,11 @@ fun BottomSheets(
 }
 
 /**
- * [angle] = 0f is ArrowUp
+ * [angle] = 2f is ArrowUp
  *
  * [angle] = 1f is Bar
  *
- * [angle] = 2f is ArrowDown
+ * [angle] = 0f is ArrowDown
  */
 @Composable
 fun HandleIcon(
@@ -69,7 +72,7 @@ fun CanvasHandleIcon(
     modifier: Modifier = Modifier,
     angle: Float,
     strokeWidth: Float = 5f,
-    color: Color = MaterialTheme.colors.primarySurface
+    color: Color = MaterialTheme.colors.onBackground
 ) {
     val animateIcon by animateFloatAsState(angle)
 
@@ -77,14 +80,14 @@ fun CanvasHandleIcon(
         drawLine(
             color = color,
             strokeWidth = strokeWidth,
-            start = Offset(0f, center.y),
-            end = Offset(center.x, animateIcon * center.y)
+            start = Offset(0f, animateIcon * center.y),
+            end = Offset(center.x, center.y)
         )
         drawLine(
             color = color,
             strokeWidth = strokeWidth,
-            start = Offset(center.x, animateIcon * center.y),
-            end = Offset(size.width, center.y)
+            start = Offset(center.x, center.y),
+            end = Offset(size.width, animateIcon * center.y)
         )
     }
 }

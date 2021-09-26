@@ -45,9 +45,9 @@ class AlbumsViewModel(
     @ExperimentalMaterialApi
     fun getIcon(state: ModalBottomSheetState) {
         _handleIcon.value = when (state.targetValue) {
-            ModalBottomSheetValue.Expanded -> 2f
-            ModalBottomSheetValue.HalfExpanded -> 0f
-            ModalBottomSheetValue.Hidden -> 0f
+            ModalBottomSheetValue.Expanded -> 0f
+            ModalBottomSheetValue.HalfExpanded -> 2f
+            ModalBottomSheetValue.Hidden -> 2f
         }
     }
 

@@ -129,9 +129,9 @@ class HowlViewModel : ViewModel() {
     fun setHandleIcon(currentState: SheetsState) {
         viewModelScope.launch {
             _handleIcon.value = when (currentState) {
-                SheetsState.HIDDEN -> 2f
+                SheetsState.HIDDEN -> 0f
                 SheetsState.ToHIDDEN -> 1f
-                SheetsState.VISIBLE -> 0f
+                SheetsState.VISIBLE -> 2f
                 SheetsState.ToVISIBLE -> 1f
             }
         }

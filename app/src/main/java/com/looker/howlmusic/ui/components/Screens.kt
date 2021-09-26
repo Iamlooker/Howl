@@ -1,24 +1,39 @@
 package com.looker.howlmusic.ui.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import coil.ImageLoader
 import com.looker.domain_music.Song
+import com.looker.howlmusic.R
 import com.looker.howlmusic.ui.components.MainScreens.HOME
+import com.looker.howlmusic.ui.components.MainScreens.SPLASH_SCREEN
 import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object MainScreens {
     const val HOME = "home"
-    // TODO: 9/2/2021 Add Settings
+    const val SPLASH_SCREEN = "splash_screen"
 }
 
 sealed class HomeScreens(
@@ -37,28 +52,63 @@ fun HomeNavGraph(
     onSongClick: (Song) -> Unit,
     onAlbumsSheetState: (Boolean) -> Unit
 ) {
-    val startDestination = remember { HOME }
+    val startDestination = remember { SPLASH_SCREEN }
     NavHost(
         navController = navController,
         startDestination = startDestination,
         builder = {
-            navigation(
-                route = HOME,
-                startDestination = HomeScreens.SONGS.route
-            ) {
-                composable(HomeScreens.SONGS.route) {
-                    Songs(
-                        imageLoader = imageLoader,
-                        onSongClick = onSongClick
-                    )
-                }
-                composable(HomeScreens.ALBUMS.route) {
-                    Albums(
-                        imageLoader = imageLoader,
-                        onStateChange = onAlbumsSheetState
-                    )
-                }
-            }
+            splashScreen { navController.navigate(HOME) }
+            homeGraph(imageLoader, onAlbumsSheetState, onSongClick)
         }
     )
+}
+
+internal fun NavGraphBuilder.homeGraph(
+    imageLoader: ImageLoader,
+    onAlbumsSheetState: (Boolean) -> Unit,
+    onSongClick: (Song) -> Unit
+) {
+    navigation(
+        route = HOME,
+        startDestination = HomeScreens.SONGS.route
+    ) {
+        composable(HomeScreens.SONGS.route) {
+            Songs(
+                imageLoader = imageLoader,
+                onSongClick = onSongClick
+            )
+        }
+        composable(HomeScreens.ALBUMS.route) {
+            Albums(
+                imageLoader = imageLoader,
+                onStateChange = onAlbumsSheetState
+            )
+        }
+    }
+}
+
+internal fun NavGraphBuilder.splashScreen(
+    onSplashDone: () -> Unit
+) {
+    composable(SPLASH_SCREEN) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.surface),
+            contentAlignment = Center
+        ) {
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                painter = painterResource(id = R.mipmap.ic_launcher_foreground),
+                contentDescription = "Splash Screen"
+            )
+        }
+
+        LaunchedEffect(true) {
+            launch {
+                delay(250)
+                onSplashDone()
+            }
+        }
+    }
 }
