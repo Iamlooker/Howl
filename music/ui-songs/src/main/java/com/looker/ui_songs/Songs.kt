@@ -8,12 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
-import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.HowlSurface
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Song
@@ -36,11 +36,7 @@ private fun Songs(
 
     val songsList by viewModel.songsList.observeAsState(initial = listOf())
 
-    LaunchedEffect(songsList) {
-        launch {
-            viewModel.getSongsList(context)
-        }
-    }
+    LaunchedEffect(songsList) { launch { viewModel.getSongsList(context) } }
 
     HowlSurface(modifier = modifier) {
         SongsList(imageLoader = imageLoader, songsList = songsList, onSongClick = onSongClick)
@@ -54,20 +50,11 @@ fun SongsList(
     songsList: List<Song>,
     onSongClick: (Song) -> Unit = {}
 ) {
-
-    val context = LocalContext.current
-
-    val cardHeight by remember { context.calculateItemSize(true, 14) }
+    val height = with(LocalConfiguration.current) { screenHeightDp.dp / 14 }
 
     LazyColumn(modifier = modifier) {
         items(songsList) { song ->
-            SongsCard(
-                modifier = Modifier.fillMaxWidth(),
-                imageLoader = imageLoader,
-                song = song,
-                cardHeight = cardHeight,
-                onClick = { onSongClick(song) }
-            )
+            SongsCard(Modifier.fillMaxWidth(), imageLoader, song, height) { onSongClick(song) }
         }
     }
 }

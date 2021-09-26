@@ -6,6 +6,8 @@ dependencies {
     implementation(project(Modules.constants))
     implementation(project(Modules.components))
     implementation(project(Modules.domainMusic))
-    implementation(ExoPlayer.exoplayerCore)
+
+    implementation(Coil.coil)
+    implementation(ExoPlayer.exoplayer)
     implementation(ExoPlayer.exoplayerMediaSession)
 }

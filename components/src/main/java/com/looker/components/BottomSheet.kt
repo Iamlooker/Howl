@@ -6,10 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -72,7 +69,7 @@ fun CanvasHandleIcon(
     modifier: Modifier = Modifier,
     angle: Float,
     strokeWidth: Float = 5f,
-    color: Color = Color.White
+    color: Color = MaterialTheme.colors.primarySurface
 ) {
     val animateIcon by animateFloatAsState(angle)
 

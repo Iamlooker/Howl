@@ -75,13 +75,11 @@ fun AlbumHeader(
 
 @Composable
 fun AlbumSongsList(
-    modifier: Modifier = Modifier,
     imageLoader: ImageLoader,
     songsList: List<Song>
 ) {
     Crossfade(targetState = songsList, animationSpec = tweenAnimation(DefaultCrossFadeDuration)) {
         SongsList(
-            modifier = modifier.fillMaxWidth(),
             imageLoader = imageLoader,
             songsList = it
         )

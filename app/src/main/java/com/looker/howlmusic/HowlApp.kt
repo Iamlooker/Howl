@@ -117,9 +117,8 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
                 onSongClick = { song -> viewModel.onSongClicked(song) },
                 openPlayer = { scope.launch { backdropState.reveal() } },
                 onAlbumSheetState = {
-                    if (backdropValue == SheetsState.HIDDEN) {
-                        viewModel.gestureState(it)
-                    } else viewModel.gestureState(true)
+                    if (backdropValue == SheetsState.HIDDEN) viewModel.gestureState(it)
+                    else viewModel.gestureState(true)
                 }
             )
         },

@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -113,7 +114,16 @@ fun AlbumsList(
     imageLoader: ImageLoader,
     onAlbumClick: (Album) -> Unit
 ) {
+
+    val width = with(LocalConfiguration.current) { screenWidthDp.dp / 2 - 16.dp }
+
     LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
-        items(albumsList) { AlbumsCard(album = it, imageLoader = imageLoader) { onAlbumClick(it) } }
+        items(albumsList) {
+            AlbumsCard(
+                imageLoader = imageLoader,
+                album = it,
+                cardWidth = width
+            ) { onAlbumClick(it) }
+        }
     }
 }
