@@ -58,7 +58,7 @@ fun OnBoardingPage(
 
     LaunchedEffect(buttonText) {
         launch {
-            delay(500)
+            delay(250)
             if (checkReadPermission(context)) navigate(checkReadPermission(context))
         }
     }

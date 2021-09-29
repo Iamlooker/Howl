@@ -45,17 +45,17 @@ fun MiniPlayer(
             onToggle = toggleAction,
             contentDescription = "Play"
         ) {
-                ToggleButton(
-                    icon = repeatIcon,
-                    toggled = toggled,
-                    onToggle = {},
-                    contentDescription = "Repeat"
-                )
-                ShapedIconButton(
-                    icon = Icons.Rounded.MoreHoriz,
-                    buttonColors = buttonColors(backgroundColor = MaterialTheme.colors.surface),
-                    contentDescription = "More"
-                ) {}
+            ToggleButton(
+                icon = repeatIcon,
+                toggled = toggled,
+                onToggle = {},
+                contentDescription = "Repeat"
+            )
+            ShapedIconButton(
+                icon = Icons.Rounded.MoreHoriz,
+                buttonColors = buttonColors(backgroundColor = MaterialTheme.colors.surface),
+                contentDescription = "More"
+            ) {}
         }
         SongText(songName = songName, artistName = artistName)
     }
