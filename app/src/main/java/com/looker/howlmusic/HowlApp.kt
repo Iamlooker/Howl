@@ -64,9 +64,9 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
 
     val currentSong by viewModel.currentSong.observeAsState()
 
-    LaunchedEffect(
-        backdropState.currentValue.name
-    ) { launch { viewModel.setBackdropValue(backdropState) } }
+    LaunchedEffect(backdropState.currentValue.name) {
+        launch { viewModel.setBackdropValue(backdropState) }
+    }
 
     Backdrop(
         modifier = Modifier,
@@ -78,13 +78,8 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
         header = {
 
             val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
-
             LaunchedEffect(backdropValue, playing) {
-                launch {
-                    viewModel.setToggleIcon(
-                        backdropValue
-                    )
-                }
+                launch { viewModel.setToggleIcon(backdropValue) }
             }
 
             PlayerHeader(

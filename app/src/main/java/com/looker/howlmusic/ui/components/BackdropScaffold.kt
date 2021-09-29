@@ -1,13 +1,12 @@
 package com.looker.howlmusic.ui.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -31,16 +30,25 @@ fun Backdrop(
     backLayerContent: @Composable () -> Unit,
     frontLayerContent: @Composable () -> Unit
 ) {
+    val materialBackground = MaterialTheme.colors.background
+    val materialSurface = MaterialTheme.colors.surface
 
     val backgroundColor = rememberDominantColorState()
-
-    val expandedPeekHeight by LocalContext.current.calculateItemSize(true, 3)
-
+    var backLayerColorState by remember { mutableStateOf(materialSurface) }
     LaunchedEffect(albumArt) {
         launch {
             backgroundColor.updateColorsFromImageUrl(albumArt.toString())
+            backLayerColorState = if (albumArt == null) materialSurface
+            else materialBackground
         }
     }
+
+    val backLayerColor by animateColorAsState(
+        targetValue = backLayerColorState,
+        animationSpec = tweenAnimation()
+    )
+
+    val expandedPeekHeight by LocalContext.current.calculateItemSize(true, 3)
 
     val animateFloat by animateFloatAsState(
         targetValue = when (backdropValue) {
@@ -61,7 +69,7 @@ fun Backdrop(
         appBar = header,
         backLayerContent = backLayerContent,
         frontLayerContent = frontLayerContent,
-        backLayerBackgroundColor = MaterialTheme.colors.background,
+        backLayerBackgroundColor = backLayerColor,
         peekHeight = if (playing) expandedPeekHeight else 50.dp,
         frontLayerShape = MaterialTheme.shapes.large,
         gesturesEnabled = enableGesture
