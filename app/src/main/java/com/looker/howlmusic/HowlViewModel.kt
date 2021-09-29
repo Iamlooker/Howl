@@ -1,6 +1,5 @@
 package com.looker.howlmusic
 
-import android.content.Context
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
@@ -15,25 +14,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.audio.MediaCodecAudioRenderer
-import com.google.android.exoplayer2.extractor.ExtractorsFactory
-import com.google.android.exoplayer2.extractor.flac.FlacExtractor
-import com.google.android.exoplayer2.extractor.mp3.Mp3Extractor
-import com.google.android.exoplayer2.extractor.mp4.Mp4Extractor
-import com.google.android.exoplayer2.extractor.ogg.OggExtractor
-import com.google.android.exoplayer2.extractor.ts.Ac3Extractor
-import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
-import com.google.android.exoplayer2.extractor.wav.WavExtractor
-import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import com.looker.components.SheetsState
 import com.looker.domain_music.Song
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HowlViewModel : ViewModel() {
-
-    private lateinit var exoPlayer: SimpleExoPlayer
+@HiltViewModel
+class HowlViewModel
+@Inject constructor(private val exoPlayer: SimpleExoPlayer) : ViewModel() {
 
     private val _playing = MutableLiveData<Boolean>()
     private val _progress = MutableLiveData<Float>()
@@ -52,35 +42,6 @@ class HowlViewModel : ViewModel() {
     val currentSong: LiveData<Song> = _currentSong
     val enableGesture: LiveData<Boolean> = _enableGesture
     val backdropValue: LiveData<SheetsState> = _backdropValue
-
-    fun buildExoPlayer(context: Context) {
-        val audioOnlyRenderersFactory =
-            RenderersFactory { handler, _, audioListener, _, _ ->
-                arrayOf(
-                    MediaCodecAudioRenderer(
-                        context, MediaCodecSelector.DEFAULT, handler, audioListener
-                    )
-                )
-            }
-
-        val audioOnlyExtractorFactory = ExtractorsFactory {
-            arrayOf(
-                Mp3Extractor(),
-                WavExtractor(),
-                AdtsExtractor(),
-                OggExtractor(),
-                Ac3Extractor(),
-                Mp4Extractor(),
-                FlacExtractor()
-            )
-        }
-
-        exoPlayer = SimpleExoPlayer.Builder(
-            context,
-            audioOnlyRenderersFactory,
-            audioOnlyExtractorFactory
-        ).build()
-    }
 
     @ExperimentalMaterialApi
     fun setBackdropValue(state: BackdropScaffoldState) {
@@ -160,10 +121,5 @@ class HowlViewModel : ViewModel() {
 
     fun playPrevious() {
         exoPlayer.seekToPrevious()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        exoPlayer.release()
     }
 }

@@ -55,10 +55,6 @@ fun App(imageLoader: ImageLoader) {
 @Composable
 fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel()) {
 
-    val context = LocalContext.current
-
-    LaunchedEffect(context) { launch { viewModel.buildExoPlayer(context) } }
-
     val scope = rememberCoroutineScope()
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
     val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
@@ -66,17 +62,7 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
     val playing by viewModel.playing.observeAsState(false)
     val enableGesture by viewModel.enableGesture.observeAsState(true)
 
-    val currentSong by viewModel.currentSong.observeAsState(
-        Song(
-            songUri = "",
-            albumId = 0,
-            genreId = 0,
-            songName = null,
-            artistName = null,
-            albumName = null,
-            albumArt = ""
-        )
-    )
+    val currentSong by viewModel.currentSong.observeAsState()
 
     LaunchedEffect(
         backdropState.currentValue.name
@@ -88,19 +74,25 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
         backdropValue = backdropValue,
         playing = playing,
         enableGesture = enableGesture,
-        albumArt = currentSong.albumArt,
+        albumArt = currentSong?.albumArt,
         header = {
 
             val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
 
-            LaunchedEffect(backdropValue) { launch { viewModel.setToggleIcon(backdropValue) } }
+            LaunchedEffect(backdropValue, playing) {
+                launch {
+                    viewModel.setToggleIcon(
+                        backdropValue
+                    )
+                }
+            }
 
             PlayerHeader(
                 icon = toggleIcon,
-                albumArt = currentSong.albumArt,
+                albumArt = currentSong?.albumArt,
                 imageLoader = imageLoader,
-                songName = currentSong.songName,
-                artistName = currentSong.artistName,
+                songName = currentSong?.songName,
+                artistName = currentSong?.artistName,
                 toggled = playing,
                 toggleAction = { viewModel.onToggle(backdropValue) }
             )

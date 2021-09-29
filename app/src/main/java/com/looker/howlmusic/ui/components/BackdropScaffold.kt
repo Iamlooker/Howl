@@ -37,7 +37,9 @@ fun Backdrop(
     val expandedPeekHeight by LocalContext.current.calculateItemSize(true, 3)
 
     LaunchedEffect(albumArt) {
-        launch { backgroundColor.updateColorsFromImageUrl(albumArt.toString()) }
+        launch {
+            backgroundColor.updateColorsFromImageUrl(albumArt.toString())
+        }
     }
 
     val animateFloat by animateFloatAsState(
