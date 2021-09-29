@@ -71,7 +71,6 @@ fun HandleIcon(
 fun CanvasHandleIcon(
     modifier: Modifier = Modifier,
     angle: Float,
-    strokeWidth: Float = 5f,
     color: Color = MaterialTheme.colors.onBackground
 ) {
     val animateIcon by animateFloatAsState(angle)
@@ -79,13 +78,13 @@ fun CanvasHandleIcon(
     Canvas(modifier = modifier) {
         drawLine(
             color = color,
-            strokeWidth = strokeWidth,
+            strokeWidth = 5f,
             start = Offset(0f, animateIcon * center.y),
             end = Offset(center.x, center.y)
         )
         drawLine(
             color = color,
-            strokeWidth = strokeWidth,
+            strokeWidth = 5f,
             start = Offset(center.x, center.y),
             end = Offset(size.width, animateIcon * center.y)
         )

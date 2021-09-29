@@ -12,13 +12,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.components.SheetsState
 import com.looker.domain_music.Song
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -88,13 +86,11 @@ class HowlViewModel
     }
 
     fun setHandleIcon(currentState: SheetsState) {
-        viewModelScope.launch {
-            _handleIcon.value = when (currentState) {
-                SheetsState.HIDDEN -> 0f
-                SheetsState.ToHIDDEN -> 1f
-                SheetsState.VISIBLE -> 2f
-                SheetsState.ToVISIBLE -> 1f
-            }
+        _handleIcon.value = when (currentState) {
+            SheetsState.HIDDEN -> 0f
+            SheetsState.ToHIDDEN -> 1f
+            SheetsState.VISIBLE -> 2f
+            SheetsState.ToVISIBLE -> 1f
         }
     }
 
