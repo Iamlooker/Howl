@@ -3,7 +3,6 @@ package com.looker.ui_albums
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,16 +13,16 @@ import coil.ImageLoader
 import com.looker.components.ComponentConstants.DefaultCrossFadeDuration
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HandleIcon
-import com.looker.components.ItemCard
 import com.looker.components.backgroundGradient
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
+import com.looker.ui_albums.components.AlbumsDetailsItem
 import com.looker.ui_songs.SongsList
 
 @Composable
 fun AlbumsBottomSheetContent(
     modifier: Modifier = Modifier,
-    currentAlbum: Album,
+    currentAlbum: Album?,
     imageLoader: ImageLoader,
     handleIcon: Float,
     songsList: List<Song>,
@@ -42,7 +41,7 @@ fun AlbumsBottomSheetContent(
 @Composable
 fun AlbumBottomSheetItem(
     modifier: Modifier = Modifier,
-    album: Album,
+    album: Album?,
     imageLoader: ImageLoader,
     handleIcon: Float,
     albumDominantColor: Color,
@@ -57,20 +56,15 @@ fun AlbumBottomSheetItem(
 
 @Composable
 fun AlbumHeader(
-    modifier: Modifier = Modifier,
-    imageLoader: ImageLoader,
-    album: Album
+    album: Album?,
+    imageLoader: ImageLoader
 ) {
-    Crossfade(targetState = album, animationSpec = tweenAnimation(DefaultCrossFadeDuration)) {
-        ItemCard(
-            modifier = modifier.fillMaxWidth(),
-            imageUrl = it.albumArt,
-            imageLoader = imageLoader,
-            title = it.albumName,
-            subText = it.artistName,
-            imageSize = 250.dp
-        )
-    }
+    AlbumsDetailsItem(
+        albumArt = album?.albumArt,
+        albumName = album?.albumName,
+        artistName = album?.artistName,
+        imageLoader = imageLoader
+    )
 }
 
 @Composable

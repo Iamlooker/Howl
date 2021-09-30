@@ -23,7 +23,7 @@ object Coil {
 object Compose {
     private const val activityComposeVersion = "1.3.1"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
-    const val composeVersion = "1.0.2"
+    const val composeVersion = "1.0.3"
 
     const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
     const val material = "androidx.compose.material:material:$composeVersion"
@@ -67,7 +67,7 @@ object Palette {
 }
 
 object Version {
-    const val kotlinVersion = "1.5.21"
+    const val kotlinVersion = "1.5.30"
 }
 
 object Shrink {

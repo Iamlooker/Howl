@@ -20,11 +20,7 @@ fun AlbumsCard(
 ) {
     val backgroundColor = rememberDominantColorState()
 
-    LaunchedEffect(album) {
-        launch {
-            backgroundColor.updateColorsFromImageUrl(album.albumArt)
-        }
-    }
+    LaunchedEffect(album) { launch { backgroundColor.updateColorsFromImageUrl(album.albumArt) } }
 
     ItemCard(
         modifier = modifier,

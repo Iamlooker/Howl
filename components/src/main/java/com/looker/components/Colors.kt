@@ -40,14 +40,17 @@ class DominantColorState(
         else -> null
     }
 
-    suspend fun updateColorsFromImageUrl(url: String) {
+    suspend fun updateColorsFromImageUrl(url: String?) {
         val result = calculateDominantColorFromUrl(url)
         color = result?.color ?: defaultColor
     }
 
-    private suspend fun calculateDominantColorFromUrl(url: String): DominantColors? {
-        return cache?.get(url) ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
-            DominantColors(color = dominantColor).also { result -> cache?.put(url, result) }
+    private suspend fun calculateDominantColorFromUrl(url: String?): DominantColors? {
+        return url?.let {
+            cache?.get(it)
+                ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
+                    DominantColors(color = dominantColor).also { result -> cache?.put(url, result) }
+                }
         }
     }
 }

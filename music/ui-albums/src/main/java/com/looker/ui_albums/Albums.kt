@@ -57,7 +57,7 @@ private fun Albums(
         val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
         val scope = rememberCoroutineScope()
 
-        val currentAlbum by viewModel.currentAlbum.observeAsState(Album(0, null, null, ""))
+        val currentAlbum by viewModel.currentAlbum.observeAsState()
         val albumsList by viewModel.albumsList.observeAsState(listOf())
         val songsList by viewModel.songsList.observeAsState(listOf())
         val handleIcon by viewModel.handleIcon.observeAsState(0f)
@@ -73,7 +73,7 @@ private fun Albums(
 
                 LaunchedEffect(currentAlbum) {
                     launch {
-                        dominantColor.updateColorsFromImageUrl(currentAlbum.albumArt)
+                        dominantColor.updateColorsFromImageUrl(currentAlbum?.albumArt)
                         viewModel.getSongsPerAlbum()
                     }
                 }
