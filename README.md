@@ -11,6 +11,10 @@
 
 - More will be added as it grows ....
 
+## Screenshots 
+
+<img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/nowplaying_dark.jpg?raw=true" width="32%"> <img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/songs_dark.jpg?raw=true" width="32%"> <img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/albums_dark.jpg?raw=true" width="32%">
+
 
 ##Download
 
