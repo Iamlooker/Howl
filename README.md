@@ -13,16 +13,16 @@
 
 ## Screenshots 
 
-<img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/nowplaying_dark.jpg?raw=true" width="32%"> <img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/songs_dark.jpg?raw=true" width="32%"> <img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/albums_dark.jpg?raw=true" width="32%">
+<img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/nowplaying_dark.jpg?raw=true" width="32%"> <img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/songs_dark.jpg?raw=true" width="32%"> <img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/albums_dark.jpg?raw=true" width="32%">
 
 
-##Download
+## Download
 
-###Download test apks from [ [Telegram channel](https://telegram.me/IamlookerBuilds)
+### Download test apks from [ [Telegram channel](https://telegram.me/IamlookerBuilds)
 
 
-##Contribute 
+## Contribute 
 
-###Pull Requests are always welcomed! 
+### Pull Requests are always welcomed! 
 
 ## 🌟 Star  the repo if you enjoyed Howl :)
