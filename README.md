@@ -3,17 +3,13 @@
 ### A sleek and minimal offline music player made wit. 
 
 
-##Features 
+## Features 
 
 - Sleek and responsive UI , following material design
 
 - Minimal layout with amazing transitions 
 
 - More will be added as it grows ....
-
-## Screenshots 
-
-<img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/nowplaying_dark.jpg?raw=true" width="32%"> <img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/songs_dark.jpg?raw=true" width="32%"> <img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/albums_dark.jpg?raw=true" width="32%">
 
 
 ## Download
