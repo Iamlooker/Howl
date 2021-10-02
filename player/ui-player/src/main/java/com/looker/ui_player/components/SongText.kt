@@ -13,8 +13,8 @@ import com.looker.components.WrappedText
 @Composable
 fun SongText(
     modifier: Modifier = Modifier,
-    songName: String,
-    artistName: String
+    songName: String?,
+    artistName: String?
 ) {
     Column(
         modifier = modifier,

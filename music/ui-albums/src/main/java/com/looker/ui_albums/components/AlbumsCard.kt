@@ -19,7 +19,6 @@ fun AlbumsCard(
     onClick: () -> Unit
 ) {
     val backgroundColor = rememberDominantColorState()
-
     LaunchedEffect(album) { launch { backgroundColor.updateColorsFromImageUrl(album.albumArt) } }
 
     ItemCard(

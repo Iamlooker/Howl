@@ -72,7 +72,7 @@ fun ItemCard(
                     modifier = Modifier.height(imageSize),
                     data = imageUrl,
                     imageLoader = imageLoader,
-                    imageFillerColor = cardColor,
+                    backgroundColor = cardColor,
                     shape = imageShape
                 )
                 ItemCardText(

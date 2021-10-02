@@ -19,6 +19,7 @@ import coil.Coil
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
+import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Scale
@@ -37,7 +38,7 @@ suspend fun String.bitmap(context: Context): Bitmap {
 
     return when (val result = Coil.execute(r)) {
         is SuccessResult -> result.drawable.toBitmap()
-        else -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
+        is ErrorResult -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
     }
 }
 
@@ -47,7 +48,7 @@ fun HowlImage(
     modifier: Modifier = Modifier,
     data: String?,
     imageLoader: ImageLoader,
-    imageFillerColor: Color = MaterialTheme.colors.surface,
+    backgroundColor: Color = MaterialTheme.colors.surface,
     shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
     Crossfade(
@@ -57,7 +58,7 @@ fun HowlImage(
         Image(
             modifier = modifier
                 .clip(shape)
-                .background(imageFillerColor),
+                .background(backgroundColor),
             contentScale = ContentScale.FillWidth,
             painter = rememberImagePainter(
                 data = it,

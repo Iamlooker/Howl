@@ -1,6 +1,6 @@
 package com.looker.howlmusic
 
-import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.BackdropValue
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.ExperimentalMaterialApi
@@ -8,6 +8,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,10 +26,11 @@ import javax.inject.Inject
 class HowlViewModel
 @Inject constructor(private val exoPlayer: SimpleExoPlayer) : ViewModel() {
 
+    private var playIcon by mutableStateOf(Icons.Rounded.PlayArrow)
+
     private val _playing = MutableLiveData<Boolean>()
     private val _progress = MutableLiveData<Float>()
     private val _toggleIcon = MutableLiveData<ImageVector>()
-    private val _playIcon = MutableLiveData<ImageVector>()
     private val _handleIcon = MutableLiveData<Float>()
     private val _currentSong = MutableLiveData<Song>()
     private val _enableGesture = MutableLiveData<Boolean>()
@@ -35,20 +39,16 @@ class HowlViewModel
     val playing: LiveData<Boolean> = _playing
     val progress: LiveData<Float> = _progress
     val toggleIcon: LiveData<ImageVector> = _toggleIcon
-    val playIcon: LiveData<ImageVector> = _playIcon
     val handleIcon: LiveData<Float> = _handleIcon
     val currentSong: LiveData<Song> = _currentSong
     val enableGesture: LiveData<Boolean> = _enableGesture
     val backdropValue: LiveData<SheetsState> = _backdropValue
 
     @ExperimentalMaterialApi
-    fun setBackdropValue(state: BackdropScaffoldState) {
-        _backdropValue.value = when {
-            state.isConcealed -> SheetsState.HIDDEN
-            state.currentValue == Revealed && state.targetValue == Concealed -> SheetsState.ToHIDDEN
-            state.isRevealed -> SheetsState.VISIBLE
-            state.currentValue == Concealed && state.targetValue == Revealed -> SheetsState.ToVISIBLE
-            else -> SheetsState.HIDDEN
+    fun setBackdropValue(currentValue: BackdropValue) {
+        _backdropValue.value = when (currentValue) {
+            Concealed -> SheetsState.HIDDEN
+            Revealed -> SheetsState.VISIBLE
         }
     }
 
@@ -57,8 +57,7 @@ class HowlViewModel
     }
 
     private fun updatePlayIcon(isPlaying: Boolean) {
-        _playIcon.value =
-            if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+        playIcon = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
     }
 
     fun onPlayPause() {
@@ -78,19 +77,19 @@ class HowlViewModel
 
     fun setToggleIcon(currentState: SheetsState) {
         _toggleIcon.value = when (currentState) {
-            SheetsState.HIDDEN -> playIcon.value ?: Icons.Rounded.PlayArrow
-            SheetsState.ToHIDDEN -> playIcon.value ?: Icons.Rounded.PlayArrow
+            SheetsState.ToHIDDEN -> playIcon
             SheetsState.ToVISIBLE -> Icons.Rounded.Shuffle
+            SheetsState.HIDDEN -> playIcon
             SheetsState.VISIBLE -> Icons.Rounded.Shuffle
         }
     }
 
     fun setHandleIcon(currentState: SheetsState) {
         _handleIcon.value = when (currentState) {
-            SheetsState.HIDDEN -> 0f
             SheetsState.ToHIDDEN -> 1f
-            SheetsState.VISIBLE -> 2f
             SheetsState.ToVISIBLE -> 1f
+            SheetsState.HIDDEN -> 0f
+            SheetsState.VISIBLE -> 2f
         }
     }
 

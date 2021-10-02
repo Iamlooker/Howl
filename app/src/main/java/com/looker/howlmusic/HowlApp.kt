@@ -65,7 +65,7 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
     val currentSong by viewModel.currentSong.observeAsState()
 
     LaunchedEffect(backdropState.currentValue.name) {
-        launch { viewModel.setBackdropValue(backdropState) }
+        launch { viewModel.setBackdropValue(backdropState.currentValue) }
     }
 
     Backdrop(
@@ -182,8 +182,8 @@ fun PlayerHeader(
         modifier = modifier
             .statusBarsPadding()
             .padding(bottom = 20.dp),
-        songName = songName ?: "Unknown",
-        artistName = artistName ?: "Unknown",
+        songName = songName,
+        artistName = artistName,
         albumArt = albumArt,
         imageLoader = imageLoader,
         onImageIcon = icon,
