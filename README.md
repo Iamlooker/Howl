@@ -14,8 +14,9 @@
 
 ## Screenshots
 
-
-<img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/nowplaying_dark.jpg"> <img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/songs_dark.jpg"> <img src="https://github.com/sangampanda/Howl/blob/main/Screenshots/albums_dark.jpg">
+![now playing](https://telegra.ph/nowplaying-dark-10-03)
+![songs](https://telegra.ph/songs-dark-10-03)
+![albums](https://telegra.ph/albums-dark-10-03)
 
   
 ## Download
