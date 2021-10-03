@@ -12,9 +12,15 @@
 - More will be added as it grows ....
 
 
+## Screenshots
+
+
+<img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/nowplaying_dark.jpg> <img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/songs_dark.jpg> <img src="https://github.com/Iamlooker/Howl/blob/main/Screenshots/albums_dark.jpg>
+
+  
 ## Download
 
-### Download test apks from [ [Telegram channel](https://telegram.me/IamlookerBuilds)
+### Download test apks from [Telegram channel](https://telegram.me/IamlookerBuilds)
 
 
 ## Contribute 
