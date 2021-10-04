@@ -2,13 +2,11 @@ package com.looker.ui_genre.components
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
-import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ItemCard
 import com.looker.domain_music.Genre
 
@@ -19,10 +17,7 @@ fun GenresCard(
     imageLoader: ImageLoader,
     onClick: () -> Unit
 ) {
-
-    val context = LocalContext.current
-
-    val cardWidth by context.calculateItemSize(false, 2, 16.dp)
+    val cardWidth = with(LocalConfiguration.current) { screenWidthDp.dp / 2 - 16.dp }
 
     GenresCard(modifier, genre, imageLoader, cardWidth, onClick)
 }

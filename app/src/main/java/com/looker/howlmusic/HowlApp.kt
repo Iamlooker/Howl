@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -57,16 +55,15 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
 
     val scope = rememberCoroutineScope()
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
-    val backdropValue by viewModel.backdropValue.observeAsState(SheetsState.HIDDEN)
 
-    val playing by viewModel.playing.observeAsState(false)
-    val enableGesture by viewModel.enableGesture.observeAsState(true)
+    val playing by viewModel.playing.collectAsState()
+    val currentSong by viewModel.currentSong.collectAsState()
+    val backdropValue by viewModel.backdropValue.collectAsState()
+    val enableGesture by viewModel.enableGesture.collectAsState()
 
-    val currentSong by viewModel.currentSong.observeAsState()
-
-    LaunchedEffect(backdropState.currentValue.name) {
-        launch { viewModel.setBackdropValue(backdropState.currentValue) }
-    }
+    LaunchedEffect(
+        backdropState.currentValue.name
+    ) { launch { viewModel.setBackdropValue(backdropState.currentValue) } }
 
     Backdrop(
         modifier = Modifier,
@@ -74,27 +71,28 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
         backdropValue = backdropValue,
         playing = playing,
         enableGesture = enableGesture,
-        albumArt = currentSong?.albumArt,
+        albumArt = currentSong.albumArt,
         header = {
 
-            val toggleIcon by viewModel.toggleIcon.observeAsState(Icons.Rounded.PlayArrow)
+            val toggleIcon by viewModel.toggleIcon.collectAsState()
+
             LaunchedEffect(backdropValue, playing) {
                 launch { viewModel.setToggleIcon(backdropValue) }
             }
 
             PlayerHeader(
                 icon = toggleIcon,
-                albumArt = currentSong?.albumArt,
+                albumArt = currentSong.albumArt,
                 imageLoader = imageLoader,
-                songName = currentSong?.songName,
-                artistName = currentSong?.artistName,
+                songName = currentSong.songName,
+                artistName = currentSong.artistName,
                 toggled = playing,
                 toggleAction = { viewModel.onToggle(backdropValue) }
             )
         },
         frontLayerContent = {
 
-            val handleIcon by viewModel.handleIcon.observeAsState(2f)
+            val handleIcon by viewModel.handleIcon.collectAsState()
 
             LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
 
@@ -111,8 +109,7 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
         },
         backLayerContent = {
 
-            val progress by viewModel.progress.observeAsState(0f)
-
+            val progress by viewModel.progress.collectAsState()
             Controls(
                 isPlaying = playing,
                 progress = progress,
@@ -132,16 +129,15 @@ fun FrontLayer(
     imageLoader: ImageLoader,
     handleIcon: Float,
     openPlayer: () -> Unit,
-    onSongClick: (Song) -> Unit,
+    onSongClick: (List<Song>) -> Unit,
     onAlbumSheetState: (Boolean) -> Unit
 ) {
-
     val navController = rememberNavController()
+
     val items = listOf(
         HomeScreens.SONGS,
         HomeScreens.ALBUMS
     )
-
     Scaffold(
         bottomBar = {
             BottomAppBar(

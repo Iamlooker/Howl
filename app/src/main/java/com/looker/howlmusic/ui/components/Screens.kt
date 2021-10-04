@@ -33,7 +33,7 @@ sealed class HomeScreens(
 fun HomeNavGraph(
     navController: NavHostController,
     imageLoader: ImageLoader,
-    onSongClick: (Song) -> Unit,
+    onSongClick: (List<Song>) -> Unit,
     onAlbumsSheetState: (Boolean) -> Unit
 ) {
     NavHost(
@@ -48,7 +48,7 @@ fun HomeNavGraph(
 internal fun NavGraphBuilder.homeGraph(
     imageLoader: ImageLoader,
     onAlbumsSheetState: (Boolean) -> Unit,
-    onSongClick: (Song) -> Unit
+    onSongClick: (List<Song>) -> Unit
 ) {
     navigation(
         route = HOME,

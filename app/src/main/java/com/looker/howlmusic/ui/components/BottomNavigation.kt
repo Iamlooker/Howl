@@ -88,7 +88,7 @@ fun RowScope.BottomNavigationItems(
     val selectedLabel = if (selected) label
     else ""
 
-    BoxWithConstraints(
+    Box(
         modifier = modifier
             .weight(1f)
             .clip(MaterialTheme.shapes.small)

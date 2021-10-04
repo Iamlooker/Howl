@@ -4,14 +4,15 @@ import android.content.Context
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class AlbumsViewModel(
@@ -19,26 +20,27 @@ class AlbumsViewModel(
     private val songsRepository: SongsRepository
 ) : ViewModel() {
 
-    private val _albumsList = MutableLiveData<List<Album>>()
-    private val _songsList = MutableLiveData<List<Song>>()
-    private val _currentAlbum = MutableLiveData<Album>()
-    private val _handleIcon = MutableLiveData<Float>()
-    private var allSongsList = listOf<Song>()
+    private var allSongs = emptyList<Song>()
 
-    val albumsList: LiveData<List<Album>> = _albumsList
-    val songsList: LiveData<List<Song>> = _songsList
-    val currentAlbum: LiveData<Album> = _currentAlbum
-    val handleIcon: LiveData<Float> = _handleIcon
+    private val _albumsList = MutableStateFlow<List<Album>>(emptyList())
+    val albumsList: StateFlow<List<Album>> = _albumsList
 
-    @ExperimentalMaterialApi
-    suspend fun onAlbumClick(state: ModalBottomSheetState, album: Album) {
+    private val _songsList = MutableStateFlow(emptyList<Song>())
+    val songsList: StateFlow<List<Song>> = _songsList
+
+    private val _currentAlbum = MutableStateFlow(Album(0, null, null, ""))
+    val currentAlbum: StateFlow<Album> = _currentAlbum
+
+    private val _handleIcon = MutableStateFlow(2f)
+    val handleIcon: StateFlow<Float> = _handleIcon
+
+    fun onAlbumClick(album: Album) {
         _currentAlbum.value = album
-        state.show()
     }
 
     fun getAllSongs(context: Context) {
         viewModelScope.launch {
-            allSongsList = songsRepository.getAllSongs(context)
+            songsRepository.getAllSongs(context).collect { allSongs = it }
         }
     }
 
@@ -52,12 +54,14 @@ class AlbumsViewModel(
     }
 
     fun getAlbumsList(context: Context) {
-        viewModelScope.launch { _albumsList.value = albumsRepository.getAllAlbums(context) }
+        viewModelScope.launch {
+            albumsRepository.getAllAlbums(context).collect { _albumsList.value = it }
+        }
     }
 
-    fun getSongsPerAlbum() {
+    fun updateSongsList(albumId: Long?) {
         viewModelScope.launch {
-            _songsList.value = allSongsList.filter { it.albumId == _currentAlbum.value?.albumId }
+            _songsList.value = allSongs.filter { it.albumId == albumId }
         }
     }
 }

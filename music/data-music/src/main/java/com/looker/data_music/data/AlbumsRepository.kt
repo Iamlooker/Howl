@@ -4,5 +4,5 @@ import android.content.Context
 import com.looker.data_music.AlbumsData
 
 class AlbumsRepository {
-    suspend fun getAllAlbums(context: Context) = AlbumsData(context).getAlbumsList()
+    suspend fun getAllAlbums(context: Context) = AlbumsData(context).createAlbumsList()
 }

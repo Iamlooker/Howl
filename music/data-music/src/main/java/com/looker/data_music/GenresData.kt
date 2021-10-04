@@ -2,7 +2,6 @@ package com.looker.data_music
 
 import android.content.Context
 import android.provider.MediaStore
-import com.looker.data_music.data.SongsRepository
 import com.looker.data_music.utils.MusicCursor
 import com.looker.domain_music.Genre
 import kotlinx.coroutines.flow.Flow
@@ -29,11 +28,6 @@ class GenresData(private val context: Context) {
         return list
     }
 
-    private suspend fun getSongsPerGenre(genreId: Long): Int {
-        val list = SongsRepository().getAllSongs(context)
-        return list.filter { it.genreId == genreId }.count()
-    }
-
 
     private fun getGenreFlow(): Flow<Genre> = flow {
 
@@ -44,7 +38,7 @@ class GenresData(private val context: Context) {
                 do {
                     val genreId = it.getLong(0)
                     val genreName = it.getString(1)
-                    val songsCount = getSongsPerGenre(genreId)
+                    val songsCount = 0
                     emit(Genre(genreId, genreName, songsCount))
                 } while (it.moveToNext())
             }

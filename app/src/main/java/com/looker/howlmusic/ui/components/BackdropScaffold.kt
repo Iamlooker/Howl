@@ -8,9 +8,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.calculateItemSize
 import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.SheetsState
 import com.looker.components.backgroundGradient
@@ -48,13 +47,13 @@ fun Backdrop(
         animationSpec = tweenAnimation()
     )
 
-    val expandedPeekHeight by LocalContext.current.calculateItemSize(true, 3)
+    val expandedPeekHeight = with(LocalConfiguration.current) { screenHeightDp.dp / 3 }
 
     val animateFloat by animateFloatAsState(
         targetValue = when (backdropValue) {
             is SheetsState.VISIBLE -> 0.5f
-            is SheetsState.ToVISIBLE -> 0.4f
-            is SheetsState.ToHIDDEN -> 0.4f
+            is SheetsState.TO_VISIBLE -> 0.4f
+            is SheetsState.TO_HIDDEN -> 0.4f
             is SheetsState.HIDDEN -> 0.3f
         },
         animationSpec = tweenAnimation()
