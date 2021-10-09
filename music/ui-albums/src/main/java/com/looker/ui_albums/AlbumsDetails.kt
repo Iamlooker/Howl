@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.looker.components.HandleIcon
-import com.looker.components.backgroundGradient
+import com.looker.components.ext.backgroundGradient
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.ui_albums.components.AlbumsDetailsItem

@@ -2,6 +2,7 @@ package com.looker.howlmusic
 
 import android.app.Application
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -21,8 +22,12 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
-import com.looker.components.*
+import com.looker.components.HandleIcon
+import com.looker.components.SheetsState
+import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
+import com.looker.components.rememberDominantColorState
+import com.looker.components.tweenAnimation
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.Backdrop
@@ -84,6 +89,10 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
             val toggleIcon by viewModel.toggleIcon.collectAsState()
             val backgroundColor = rememberDominantColorState()
+            val corner by animateIntAsState(
+                targetValue = if (playing) 50 else 15,
+                animationSpec = tweenAnimation()
+            )
 
             LaunchedEffect(currentSong) {
                 launch {
@@ -109,6 +118,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
                 toggled = playing,
+                imageCorner = corner,
                 toggleAction = { viewModel.onToggle(backdropValue) }
             )
         },
@@ -196,6 +206,7 @@ fun PlayerHeader(
     artistName: String?,
     icon: ImageVector,
     toggled: Boolean,
+    imageCorner: Int,
     toggleAction: () -> Unit
 ) {
     MiniPlayer(
@@ -208,7 +219,8 @@ fun PlayerHeader(
         onImageIcon = icon,
         repeatIcon = Icons.Rounded.RepeatOne,
         toggled = toggled,
-        toggleAction = toggleAction
+        toggleAction = toggleAction,
+        imageCorner = imageCorner
     )
 }
 

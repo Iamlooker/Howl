@@ -1,6 +1,8 @@
-package com.looker.components
+package com.looker.components.ext
 
 import androidx.annotation.FloatRange
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,6 +13,15 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import kotlin.math.pow
+
+inline fun Modifier.rippleClick(
+    crossinline onClick: () -> Unit
+): Modifier = composed {
+    clickable(
+        interactionSource = remember { MutableInteractionSource() },
+        indication = null
+    ) { onClick() }
+}
 
 fun Modifier.backgroundGradient(
     color: Color,

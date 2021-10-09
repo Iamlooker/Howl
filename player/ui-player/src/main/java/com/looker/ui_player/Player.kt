@@ -24,6 +24,7 @@ fun MiniPlayer(
     onImageIcon: ImageVector,
     repeatIcon: ImageVector,
     toggled: Boolean,
+    imageCorner: Int = 50,
     toggleAction: () -> Unit
 ) {
     Column(
@@ -40,6 +41,7 @@ fun MiniPlayer(
             icon = onImageIcon,
             toggled = toggled,
             onToggle = toggleAction,
+            albumArtCorner = imageCorner,
             contentDescription = "Play"
         ) {
             ToggleButton(
