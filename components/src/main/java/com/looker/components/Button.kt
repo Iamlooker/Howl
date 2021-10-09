@@ -47,7 +47,7 @@ fun ToggleButton(
     icon: ImageVector,
     shape: CornerBasedShape = CircleShape,
     activeColor: Color = MaterialTheme.colors.secondaryVariant,
-    onToggle: () -> Unit,
+    onToggle: (Boolean) -> Unit,
     contentDescription: String?
 ) {
     val toggleColor by animateColorAsState(
@@ -63,7 +63,7 @@ fun ToggleButton(
         icon = icon,
         shape = shape,
         buttonColors = toggleButtonColors,
-        onClick = onToggle,
+        onClick = { onToggle(!toggled) },
         contentDescription = contentDescription
     )
 }

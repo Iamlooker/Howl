@@ -1,7 +1,9 @@
 package com.looker.ui_player.components
 
 import androidx.annotation.FloatRange
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -10,29 +12,26 @@ import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
+import com.looker.components.tweenAnimation
+import kotlinx.coroutines.launch
 
 @Composable
 fun PlaybackControls(
     modifier: Modifier = Modifier,
     isPlaying: Boolean,
-    onPlayPause: () -> Unit,
-    skipNextClick: () -> Unit,
-    skipPrevClick: () -> Unit,
     @FloatRange(from = 0.0, to = 1.0) progressValue: Float,
+    openQueue: () -> Unit,
     onSeek: (Float) -> Unit,
-    openQueue: () -> Unit
+    onPlayPause: (Boolean) -> Unit,
+    skipNextClick: () -> Unit,
+    skipPrevClick: () -> Unit
 ) {
 
-    val playIcon = remember(isPlaying) {
-        if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-    }
 
     val playButtonColors = ButtonDefaults.buttonColors(
         MaterialTheme.colors.primary.compositeOverBackground(0.6f)
@@ -51,7 +50,7 @@ fun PlaybackControls(
         PlayAndSkipButton(
             playButtonColors = playButtonColors,
             skipButtonColors = skipButtonColors,
-            playIcon = playIcon,
+            isPlaying = isPlaying,
             playClick = onPlayPause,
             skipNextClick = skipNextClick
         )
@@ -66,12 +65,27 @@ fun PlaybackControls(
 @Composable
 fun PlayAndSkipButton(
     modifier: Modifier = Modifier,
-    playIcon: ImageVector,
+    isPlaying: Boolean,
     playButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
     skipButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    playClick: () -> Unit,
+    playClick: (Boolean) -> Unit,
     skipNextClick: () -> Unit
 ) {
+
+    val cornerRadius = remember { mutableStateOf(25) }
+
+    val playIcon = remember(isPlaying) { mutableStateOf(Icons.Rounded.PlayArrow) }
+    val iconShape by animateIntAsState(
+        targetValue = cornerRadius.value,
+        animationSpec = tweenAnimation()
+    )
+
+    LaunchedEffect(isPlaying) {
+        launch {
+            playIcon.value = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+            cornerRadius.value = if (isPlaying) 50 else 15
+        }
+    }
 
     Row(
         modifier = modifier
@@ -83,8 +97,9 @@ fun PlayAndSkipButton(
             modifier = Modifier
                 .height(60.dp)
                 .weight(3f),
-            onClick = playClick,
-            icon = playIcon,
+            onClick = { playClick(isPlaying) },
+            icon = playIcon.value,
+            shape = RoundedCornerShape(iconShape),
             buttonColors = playButtonColors,
             contentDescription = "Play Pause Song"
         )

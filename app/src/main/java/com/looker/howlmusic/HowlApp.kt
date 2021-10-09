@@ -23,10 +23,10 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.HandleIcon
-import com.looker.components.SheetsState
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.rememberDominantColorState
+import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.tweenAnimation
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
@@ -87,12 +87,10 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
         enableGesture = enableGesture,
         header = {
 
+            val cornerRadiusState = remember { mutableStateOf(15) }
+
             val toggleIcon by viewModel.toggleIcon.collectAsState()
             val backgroundColor = rememberDominantColorState()
-            val corner by animateIntAsState(
-                targetValue = if (playing) 50 else 15,
-                animationSpec = tweenAnimation()
-            )
 
             LaunchedEffect(currentSong) {
                 launch {
@@ -101,13 +99,19 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             }
 
             LaunchedEffect(backdropValue, playing) {
-                launch { viewModel.setToggleIcon(backdropValue) }
+                launch {
+                    viewModel.setToggleIcon(backdropValue)
+                    cornerRadiusState.value = if (playing) 50 else 15
+                }
             }
+            
+            val corner by animateIntAsState(
+                targetValue = cornerRadiusState.value,
+                animationSpec = tweenAnimation()
+            )
 
             val animatedBackgroundScrim by animateColorAsState(
-                targetValue = backgroundColor.color.copy(
-                    0.3f
-                ),
+                targetValue = backgroundColor.color.copy(0.3f),
                 animationSpec = tweenAnimation(LocalDurations.current.crossFade)
             )
 
@@ -119,7 +123,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 artistName = currentSong.artistName,
                 toggled = playing,
                 imageCorner = corner,
-                toggleAction = { viewModel.onToggle(backdropValue) }
+                toggleAction = { viewModel.onToggle(backdropValue, it) }
             )
         },
         frontLayerContent = {
@@ -137,7 +141,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 onSongClick = { songIndex -> viewModel.onSongClicked(songIndex) },
                 openPlayer = { scope.launch { state.reveal() } },
                 onAlbumSheetState = {
-                    if (backdropValue == SheetsState.HIDDEN) viewModel.gestureState(it)
+                    if (backdropValue == HIDDEN) viewModel.gestureState(it)
                     else viewModel.gestureState(true)
                 }
             )
@@ -148,7 +152,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             Controls(
                 isPlaying = playing,
                 progress = progress,
-                onPlayPause = { viewModel.onPlayPause() },
+                onPlayPause = { viewModel.onPlayPause(it) },
                 skipNextClick = { viewModel.playNext() },
                 skipPrevClick = { viewModel.playPrevious() },
                 onSeek = { seekTo -> viewModel.onSeek(seekTo) },
@@ -207,7 +211,7 @@ fun PlayerHeader(
     icon: ImageVector,
     toggled: Boolean,
     imageCorner: Int,
-    toggleAction: () -> Unit
+    toggleAction: (Boolean) -> Unit
 ) {
     MiniPlayer(
         modifier = modifier
@@ -229,7 +233,7 @@ fun Controls(
     modifier: Modifier = Modifier,
     progress: Float,
     isPlaying: Boolean,
-    onPlayPause: () -> Unit,
+    onPlayPause: (Boolean) -> Unit,
     skipNextClick: () -> Unit,
     onSeek: (Float) -> Unit,
     openQueue: () -> Unit,
@@ -239,7 +243,7 @@ fun Controls(
         PlaybackControls(
             isPlaying = isPlaying,
             progressValue = progress,
-            onPlayPause = { onPlayPause() },
+            onPlayPause = { onPlayPause(it) },
             skipNextClick = skipNextClick,
             skipPrevClick = skipPrevClick,
             onSeek = { seekTo -> onSeek(seekTo) },

@@ -27,7 +27,7 @@ fun AlbumArtAndUtils(
     toggled: Boolean,
     contentDescription: String?,
     albumArtCorner: Int,
-    onToggle: () -> Unit,
+    onToggle: (Boolean) -> Unit,
     overlayItems: @Composable RowScope.() -> Unit
 ) {
     var overlayVisible by remember { mutableStateOf(false) }

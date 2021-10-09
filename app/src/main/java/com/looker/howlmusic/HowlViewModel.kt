@@ -16,21 +16,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
-import com.looker.components.SheetsState
-import com.looker.components.SheetsState.HIDDEN
-import com.looker.components.SheetsState.VISIBLE
+import com.looker.components.state.SheetsState
+import com.looker.components.state.SheetsState.HIDDEN
+import com.looker.components.state.SheetsState.VISIBLE
 import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptySong
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -97,32 +95,33 @@ class HowlViewModel
         _enableGesture.value = allowGesture
     }
 
-    fun onPlayPause() {
+    fun onPlayPause(isPlaying: Boolean) {
         viewModelScope.launch {
-            playPause(_playing.value)
+            _playing.value = isPlaying
+            playPause(playing.value)
             _playing.value = exoPlayer.isPlaying
             _playIcon.value = if (_playing.value) Icons.Rounded.Pause
             else Icons.Rounded.PlayArrow
         }
     }
 
-    fun onToggle(currentState: SheetsState) = when (currentState) {
-        HIDDEN -> onPlayPause()
-        VISIBLE -> {
+    fun onToggle(currentState: SheetsState, toggledState: Boolean) = when (currentState) {
+        is HIDDEN -> onPlayPause(toggledState)
+        is VISIBLE -> {
         }
     }
 
     fun setToggleIcon(currentState: SheetsState) {
         _toggleIcon.value = when (currentState) {
-            HIDDEN -> playIcon.value
-            VISIBLE -> Icons.Rounded.Shuffle
+            is HIDDEN -> playIcon.value
+            is VISIBLE -> Icons.Rounded.Shuffle
         }
     }
 
     fun setHandleIcon(currentState: SheetsState) {
         _handleIcon.value = when (currentState) {
-            HIDDEN -> 1f
-            VISIBLE -> 0f
+            is HIDDEN -> 1f
+            is VISIBLE -> 0f
         }
     }
 
@@ -146,13 +145,9 @@ class HowlViewModel
         this.setMediaItems(mediaItems, true)
     }
 
-    private suspend fun playPause(playing: Boolean) {
-        withContext(Dispatchers.Main) {
-            launch {
-                if (playing) exoPlayer.pause()
-                else exoPlayer.playWhenReady = true
-            }
-        }
+    private fun playPause(playing: Boolean) {
+        if (playing) exoPlayer.pause()
+        else exoPlayer.playWhenReady = true
     }
 
     fun onSeek(seekTo: Float) {

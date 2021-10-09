@@ -93,8 +93,3 @@ fun CanvasHandleIcon(
         )
     }
 }
-
-sealed class SheetsState {
-    object VISIBLE : SheetsState()
-    object HIDDEN : SheetsState()
-}
