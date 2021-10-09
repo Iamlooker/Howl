@@ -12,7 +12,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.ImageLoader
 import com.looker.data_music.data.GenresRepository
 import com.looker.domain_music.Genre
 import com.looker.ui_genre.components.GenresCard
@@ -24,8 +23,7 @@ fun Genres(
         factory = GenresViewModelFactory(
             GenresRepository()
         )
-    ),
-    imageLoader: ImageLoader
+    )
 ) {
     val context = LocalContext.current
 
@@ -37,7 +35,6 @@ fun Genres(
 
     GenresList(
         genresList = genresList,
-        imageLoader = imageLoader,
         onGenreClick = {
             scope.launch { }
         }
@@ -48,12 +45,11 @@ fun Genres(
 @Composable
 fun GenresList(
     genresList: List<Genre>,
-    imageLoader: ImageLoader,
     onGenreClick: (Genre) -> Unit
 ) {
     LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
         items(genresList) { genre ->
-            GenresCard(genre = genre, imageLoader = imageLoader) {
+            GenresCard(genre = genre) {
                 onGenreClick(genre)
             }
         }

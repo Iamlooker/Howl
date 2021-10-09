@@ -1,7 +1,7 @@
 package com.looker.howlmusic
 
 import android.app.Application
-import androidx.compose.foundation.background
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -16,12 +16,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
+import coil.ImageLoaderFactory
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
-import com.looker.components.HandleIcon
-import com.looker.components.SheetsState
+import com.looker.components.*
+import com.looker.components.localComposers.LocalDurations
+import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
@@ -36,54 +38,74 @@ import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
 
 @HiltAndroidApp
-class HowlApp : Application()
+class HowlApp : Application(), ImageLoaderFactory {
+    override fun newImageLoader(): ImageLoader {
+        return ImageLoader.Builder(this)
+            .crossfade(400)
+            .build()
+    }
+}
 
 @Composable
-fun App(imageLoader: ImageLoader) {
+fun App() {
     val context = LocalContext.current
     var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 
     HowlMusicTheme {
-        if (canReadStorage) ProvideWindowInsets { AppContent(imageLoader) }
-        else OnBoardingPage { canReadStorage = it }
+        ProvideWindowInsets {
+            if (canReadStorage) Home()
+            else OnBoardingPage { canReadStorage = it }
+        }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel()) {
+fun Home(viewModel: HowlViewModel = viewModel()) {
 
     val scope = rememberCoroutineScope()
-    val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
+    val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
     val playing by viewModel.playing.collectAsState()
     val currentSong by viewModel.currentSong.collectAsState()
     val backdropValue by viewModel.backdropValue.collectAsState()
     val enableGesture by viewModel.enableGesture.collectAsState()
 
-    LaunchedEffect(
-        backdropState.currentValue.name
-    ) { launch { viewModel.setBackdropValue(backdropState.currentValue) } }
+    LaunchedEffect(state.currentValue.name) {
+        launch { viewModel.setBackdropValue(state.currentValue) }
+    }
 
     Backdrop(
         modifier = Modifier,
-        state = backdropState,
-        backdropValue = backdropValue,
+        state = state,
         playing = playing,
         enableGesture = enableGesture,
-        albumArt = currentSong.albumArt,
         header = {
 
             val toggleIcon by viewModel.toggleIcon.collectAsState()
+            val backgroundColor = rememberDominantColorState()
+
+            LaunchedEffect(currentSong) {
+                launch {
+                    backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
+                }
+            }
 
             LaunchedEffect(backdropValue, playing) {
                 launch { viewModel.setToggleIcon(backdropValue) }
             }
 
+            val animatedBackgroundScrim by animateColorAsState(
+                targetValue = backgroundColor.color.copy(
+                    0.3f
+                ),
+                animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+            )
+
             PlayerHeader(
+                modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
                 icon = toggleIcon,
                 albumArt = currentSong.albumArt,
-                imageLoader = imageLoader,
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
                 toggled = playing,
@@ -93,14 +115,17 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
         frontLayerContent = {
 
             val handleIcon by viewModel.handleIcon.collectAsState()
+            val songsList by viewModel.songsList.collectAsState()
+            val albumsList by viewModel.albumsList.collectAsState()
 
             LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
 
             FrontLayer(
-                imageLoader = imageLoader,
+                songsList = songsList,
+                albumsList = albumsList,
                 handleIcon = handleIcon,
-                onSongClick = { song -> viewModel.onSongClicked(song) },
-                openPlayer = { scope.launch { backdropState.reveal() } },
+                onSongClick = { songIndex -> viewModel.onSongClicked(songIndex) },
+                openPlayer = { scope.launch { state.reveal() } },
                 onAlbumSheetState = {
                     if (backdropValue == SheetsState.HIDDEN) viewModel.gestureState(it)
                     else viewModel.gestureState(true)
@@ -117,7 +142,7 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
                 skipNextClick = { viewModel.playNext() },
                 skipPrevClick = { viewModel.playPrevious() },
                 onSeek = { seekTo -> viewModel.onSeek(seekTo) },
-                openQueue = { scope.launch { backdropState.conceal() } }
+                openQueue = { scope.launch { state.conceal() } }
             )
         }
     )
@@ -126,10 +151,11 @@ fun AppContent(imageLoader: ImageLoader, viewModel: HowlViewModel = viewModel())
 @Composable
 fun FrontLayer(
     modifier: Modifier = Modifier,
-    imageLoader: ImageLoader,
+    songsList: List<Song>,
+    albumsList: List<Album>,
     handleIcon: Float,
     openPlayer: () -> Unit,
-    onSongClick: (List<Song>) -> Unit,
+    onSongClick: (Int) -> Unit,
     onAlbumSheetState: (Boolean) -> Unit
 ) {
     val navController = rememberNavController()
@@ -140,22 +166,21 @@ fun FrontLayer(
     )
     Scaffold(
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.navigationBarsPadding(),
-                navController = navController,
-                items = items
-            )
+            Surface {
+                BottomAppBar(
+                    modifier = Modifier.navigationBarsHeight(56.dp),
+                    navController = navController,
+                    items = items
+                )
+            }
         }
     ) { bottomNavigationPadding ->
-        Column(
-            modifier
-                .background(MaterialTheme.colors.surface)
-                .padding(bottomNavigationPadding)
-        ) {
+        Column(modifier.padding(bottomNavigationPadding)) {
             HandleIcon(handleIcon) { openPlayer() }
             HomeNavGraph(
                 navController = navController,
-                imageLoader = imageLoader,
+                songsList = songsList,
+                albumsList = albumsList,
                 onSongClick = onSongClick,
                 onAlbumsSheetState = onAlbumSheetState
             )
@@ -167,7 +192,6 @@ fun FrontLayer(
 fun PlayerHeader(
     modifier: Modifier = Modifier,
     albumArt: String?,
-    imageLoader: ImageLoader,
     songName: String?,
     artistName: String?,
     icon: ImageVector,
@@ -181,7 +205,6 @@ fun PlayerHeader(
         songName = songName,
         artistName = artistName,
         albumArt = albumArt,
-        imageLoader = imageLoader,
         onImageIcon = icon,
         repeatIcon = Icons.Rounded.RepeatOne,
         toggled = toggled,

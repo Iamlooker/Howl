@@ -36,8 +36,8 @@ android {
             isShrinkResources = true
         }
         getByName("debug") {
-            isMinifyEnabled = Shrink.shrink
-            isDebuggable = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             applicationIdSuffix = ".debug"
         }
         all {
@@ -77,17 +77,19 @@ dependencies {
     implementation(project(Modules.constants))
     implementation(project(Modules.onBoarding))
     implementation(project(Modules.domainMusic))
+    implementation(project(Modules.dataMusic))
     implementation(project(Modules.uiSongs))
     implementation(project(Modules.uiAlbums))
     implementation(project(Modules.uiPlayer))
     implementation(project(Modules.playerService))
     implementation(project(Modules.components))
 
+    implementation(Accompanist.insets)
+
     implementation(Core.core)
 
     implementation(Coil.coil)
 
-    implementation(Accompanist.insets)
     implementation(Compose.activity)
     implementation(Compose.icons)
     implementation(Compose.material)

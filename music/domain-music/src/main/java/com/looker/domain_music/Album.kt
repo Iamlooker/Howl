@@ -6,3 +6,5 @@ data class Album(
     val artistName: String?,
     val albumArt: String
 )
+
+val emptyAlbum = Album(0, null, null, "")

@@ -1,4 +1,4 @@
-package com.looker.player_service.service
+package com.looker.howlmusic.utils
 
 import android.content.Context
 import com.google.android.exoplayer2.RenderersFactory
@@ -16,15 +16,15 @@ import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.scopes.ViewModelScoped
 
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 @Module
 object PlayerModule {
 
-    @Singleton
+    @ViewModelScoped
     @Provides
     fun provideRenderersFactory(
         @ApplicationContext context: Context
@@ -36,7 +36,7 @@ object PlayerModule {
         )
     }
 
-    @Singleton
+    @ViewModelScoped
     @Provides
     fun provideExtractorsFactory(): ExtractorsFactory = ExtractorsFactory {
         arrayOf(
@@ -50,7 +50,7 @@ object PlayerModule {
         )
     }
 
-    @Singleton
+    @ViewModelScoped
     @Provides
     fun providePlayer(
         @ApplicationContext context: Context,

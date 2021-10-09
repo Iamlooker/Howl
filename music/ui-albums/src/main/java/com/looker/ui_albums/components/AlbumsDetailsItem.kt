@@ -1,13 +1,11 @@
 package com.looker.ui_albums.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import com.looker.components.HowlImage
 import com.looker.components.ItemCardText
 
@@ -16,15 +14,14 @@ fun AlbumsDetailsItem(
     modifier: Modifier = Modifier,
     albumArt: String?,
     albumName: String?,
-    artistName: String?,
-    imageLoader: ImageLoader
+    artistName: String?
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        DetailsArt(imageLoader = imageLoader, albumArt = albumArt)
+        DetailsArt(albumArt = albumArt)
         DetailsText(albumName = albumName, artistName = artistName)
         Spacer(modifier = Modifier.height(20.dp))
     }
@@ -33,7 +30,6 @@ fun AlbumsDetailsItem(
 @Composable
 fun DetailsArt(
     modifier: Modifier = Modifier,
-    imageLoader: ImageLoader,
     albumArt: String?
 ) {
     HowlImage(
@@ -42,7 +38,6 @@ fun DetailsArt(
             .fillMaxHeight(0.4f)
             .padding(20.dp),
         data = albumArt,
-        imageLoader = imageLoader,
         shape = MaterialTheme.shapes.large
     )
 }
@@ -57,6 +52,6 @@ fun DetailsText(
         subText = artistName,
         titleTextStyle = MaterialTheme.typography.h5,
         subTextTextStyle = MaterialTheme.typography.body1,
-        textAlignment = Alignment.CenterHorizontally
+        itemTextAlignment = Alignment.CenterHorizontally
     )
 }

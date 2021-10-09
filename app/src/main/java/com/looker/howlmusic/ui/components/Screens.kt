@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import coil.ImageLoader
+import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.MainScreens.HOME
 import com.looker.ui_albums.Albums
@@ -32,23 +32,25 @@ sealed class HomeScreens(
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
-    imageLoader: ImageLoader,
-    onSongClick: (List<Song>) -> Unit,
+    songsList: List<Song>,
+    albumsList: List<Album>,
+    onSongClick: (Int) -> Unit,
     onAlbumsSheetState: (Boolean) -> Unit
 ) {
     NavHost(
         navController = navController,
         startDestination = HOME,
         builder = {
-            homeGraph(imageLoader, onAlbumsSheetState, onSongClick)
+            homeGraph(songsList, albumsList, onAlbumsSheetState, onSongClick)
         }
     )
 }
 
 internal fun NavGraphBuilder.homeGraph(
-    imageLoader: ImageLoader,
+    songsList: List<Song>,
+    albumsList: List<Album>,
     onAlbumsSheetState: (Boolean) -> Unit,
-    onSongClick: (List<Song>) -> Unit
+    onSongClick: (Int) -> Unit
 ) {
     navigation(
         route = HOME,
@@ -56,13 +58,13 @@ internal fun NavGraphBuilder.homeGraph(
     ) {
         composable(HomeScreens.SONGS.route) {
             Songs(
-                imageLoader = imageLoader,
+                songsList = songsList,
                 onSongClick = onSongClick
             )
         }
         composable(HomeScreens.ALBUMS.route) {
             Albums(
-                imageLoader = imageLoader,
+                albumsList = albumsList,
                 onStateChange = onAlbumsSheetState
             )
         }

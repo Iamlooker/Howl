@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
 import com.looker.components.ShapedIconButton
 import com.looker.components.ToggleButton
 import com.looker.ui_player.components.AlbumArtAndUtils
@@ -20,7 +19,6 @@ import com.looker.ui_player.components.SongText
 fun MiniPlayer(
     modifier: Modifier = Modifier,
     albumArt: String?,
-    imageLoader: ImageLoader,
     songName: String?,
     artistName: String?,
     onImageIcon: ImageVector,
@@ -35,11 +33,10 @@ fun MiniPlayer(
     ) {
         AlbumArtAndUtils(
             modifier = Modifier
-                .fillMaxHeight(0.3f)
+                .fillMaxHeight(0.27f)
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
             albumArt = albumArt,
-            imageLoader = imageLoader,
             icon = onImageIcon,
             toggled = toggled,
             onToggle = toggleAction,

@@ -10,3 +10,13 @@ data class Song(
     val albumArt: String,
     val duration: Long = 0
 )
+
+val emptySong = Song(
+    songUri = "",
+    albumId = 0,
+    genreId = 0,
+    songName = null,
+    artistName = null,
+    albumName = null,
+    albumArt = ""
+)

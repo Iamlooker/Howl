@@ -26,8 +26,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.looker.components.ComponentConstants.tweenAnimation
+import com.google.accompanist.insets.navigationBarsPadding
 import com.looker.components.compositeOverBackground
+import com.looker.components.localComposers.LocalDurations
+import com.looker.components.localComposers.LocalElevations
+import com.looker.components.tweenAnimation
 
 @Composable
 fun BottomAppBar(
@@ -41,7 +44,7 @@ fun BottomAppBar(
     BottomNavigation(
         modifier = modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
         backgroundColor = MaterialTheme.colors.surface,
-        elevation = 0.dp
+        elevation = LocalElevations.current.default
     ) {
         items.forEach { screen ->
             BottomNavigationItems(
@@ -68,21 +71,23 @@ fun RowScope.BottomNavigationItems(
     label: String,
     selected: Boolean,
     selectedContentColor: Color = MaterialTheme.colors.primary,
-    unselectedContentColor: Color = MaterialTheme.colors.primaryVariant,
+    selectedBackgroundColor: Color = MaterialTheme.colors.primaryVariant,
+    unselectedContentColor: Color = MaterialTheme.colors.onSurface,
+    unselectedBackgroundColor: Color = MaterialTheme.colors.surface,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onSelected: () -> Unit
 ) {
 
     val backgroundColor by animateColorAsState(
-        targetValue = if (selected) unselectedContentColor.compositeOverBackground()
-        else Color.Transparent,
-        animationSpec = tweenAnimation()
+        targetValue = if (selected) selectedBackgroundColor.compositeOverBackground()
+        else unselectedBackgroundColor,
+        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
     )
 
     val itemColor by animateColorAsState(
         targetValue = if (selected) selectedContentColor
-        else MaterialTheme.colors.onSurface.compositeOverBackground(0.5f),
-        animationSpec = tweenAnimation()
+        else unselectedContentColor.compositeOverBackground(0.5f),
+        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
     )
 
     val selectedLabel = if (selected) label
@@ -90,6 +95,7 @@ fun RowScope.BottomNavigationItems(
 
     Box(
         modifier = modifier
+            .navigationBarsPadding()
             .weight(1f)
             .clip(MaterialTheme.shapes.small)
             .background(backgroundColor)
@@ -125,8 +131,10 @@ fun BaselineBottomNavigationItem(
     ) {
         Icon(imageVector = icon, tint = itemColor, contentDescription = null)
         Text(
-            modifier = Modifier.animateContentSize(animationSpec = tweenAnimation()),
-            text = label,
+            modifier = Modifier.animateContentSize(
+                animationSpec = tweenAnimation()
+            ),
+            text = label.uppercase(),
             color = itemColor
         )
     }

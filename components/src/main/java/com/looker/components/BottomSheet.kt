@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.looker.components.localComposers.LocalDurations
+import com.looker.components.localComposers.LocalElevations
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -28,7 +30,7 @@ fun BottomSheets(
 ) {
     ModalBottomSheetLayout(
         modifier = modifier,
-        sheetElevation = 0.dp,
+        sheetElevation = LocalElevations.current.default,
         sheetState = state,
         sheetContent = sheetContent,
         content = content,
@@ -39,11 +41,9 @@ fun BottomSheets(
 }
 
 /**
- * [angle] = 2f is ArrowUp
+ * [angle] = 0f is ArrowUp
  *
- * [angle] = 1f is Bar
- *
- * [angle] = 0f is ArrowDown
+ * [angle] = 1f is ArrowDown
  */
 @Composable
 fun HandleIcon(
@@ -73,27 +73,28 @@ fun CanvasHandleIcon(
     angle: Float,
     color: Color = MaterialTheme.colors.onBackground
 ) {
-    val animateIcon by animateFloatAsState(angle)
+    val animateIcon by animateFloatAsState(
+        targetValue = angle * 2,
+        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+    )
 
     Canvas(modifier = modifier) {
         drawLine(
             color = color,
             strokeWidth = 5f,
-            start = Offset(0f, animateIcon * center.y),
-            end = Offset(center.x, center.y)
+            start = Offset(0f, center.y),
+            end = Offset(center.x, animateIcon * center.y)
         )
         drawLine(
             color = color,
             strokeWidth = 5f,
-            start = Offset(center.x, center.y),
-            end = Offset(size.width, animateIcon * center.y)
+            start = Offset(center.x, animateIcon * center.y),
+            end = Offset(size.width, center.y)
         )
     }
 }
 
 sealed class SheetsState {
     object VISIBLE : SheetsState()
-    object TO_VISIBLE : SheetsState()
-    object TO_HIDDEN : SheetsState()
     object HIDDEN : SheetsState()
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.looker.components.ComponentConstants.tweenAnimation
+import com.looker.components.localComposers.LocalDurations
 
 @Composable
 fun ShapedIconButton(
@@ -52,7 +52,8 @@ fun ToggleButton(
 ) {
     val toggleColor by animateColorAsState(
         targetValue = if (toggled) activeColor.compositeOverBackground()
-        else MaterialTheme.colors.surface, animationSpec = tweenAnimation()
+        else MaterialTheme.colors.surface,
+        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
     )
 
     val toggleButtonColors = ButtonDefaults.buttonColors(backgroundColor = toggleColor)

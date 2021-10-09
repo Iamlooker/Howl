@@ -1,6 +1,7 @@
 package com.looker.ui_albums
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -8,38 +9,39 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.ImageLoader
 import com.looker.components.BottomSheets
 import com.looker.components.rememberDominantColorState
-import com.looker.data_music.data.AlbumsRepository
-import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Album
 import com.looker.ui_albums.components.AlbumsCard
 import kotlinx.coroutines.launch
 
+@Composable
+fun Albums(albumsList: List<Album>, onStateChange: (Boolean) -> Unit) {
+    Albums(
+        modifier = Modifier.fillMaxSize(),
+        albumsList = albumsList,
+        onStateChange = onStateChange
+    )
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Albums(
-    imageLoader: ImageLoader,
-    viewModel: AlbumsViewModel = viewModel(
-        factory = AlbumsViewModelFactory(
-            AlbumsRepository(),
-            SongsRepository()
-        )
-    ),
+private fun Albums(
+    modifier: Modifier = Modifier,
+    albumsList: List<Album>,
+    viewModel: AlbumsViewModel = viewModel(),
     onStateChange: (Boolean) -> Unit
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
+    val scope = rememberCoroutineScope()
     val state = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
-    LaunchedEffect(context) { launch { viewModel.getAllSongs(context) } }
     BottomSheets(
+        modifier = modifier,
         state = state,
         sheetContent = {
 
@@ -47,10 +49,7 @@ fun Albums(
             val currentAlbum by viewModel.currentAlbum.collectAsState()
             val songsList by viewModel.songsList.collectAsState()
             LaunchedEffect(currentAlbum) {
-                launch {
-                    dominantColor.updateColorsFromImageUrl(currentAlbum.albumArt)
-                    viewModel.updateSongsList(currentAlbum.albumId)
-                }
+                launch { dominantColor.updateColorsFromImageUrl(currentAlbum.albumArt) }
             }
 
             val handleIcon by viewModel.handleIcon.collectAsState()
@@ -63,19 +62,14 @@ fun Albums(
 
             AlbumsBottomSheetContent(
                 currentAlbum = currentAlbum,
-                imageLoader = imageLoader,
                 songsList = songsList,
                 handleIcon = handleIcon,
                 dominantColor = dominantColor.color.copy(0.4f)
             )
         },
         content = {
-            val albumsList by viewModel.albumsList.collectAsState()
-            LaunchedEffect(albumsList) { launch { viewModel.getAlbumsList(context) } }
-
             AlbumsList(
                 albumsList = albumsList,
-                imageLoader = imageLoader,
                 onAlbumClick = {
                     scope.launch {
                         viewModel.onAlbumClick(it)
@@ -91,7 +85,6 @@ fun Albums(
 @Composable
 fun AlbumsList(
     albumsList: List<Album>,
-    imageLoader: ImageLoader,
     onAlbumClick: (Album) -> Unit
 ) {
 
@@ -99,11 +92,9 @@ fun AlbumsList(
 
     LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
         items(albumsList) {
-            AlbumsCard(
-                imageLoader = imageLoader,
-                album = it,
-                cardWidth = width
-            ) { onAlbumClick(it) }
+            AlbumsCard(album = it, cardWidth = width) {
+                onAlbumClick(it)
+            }
         }
     }
 }

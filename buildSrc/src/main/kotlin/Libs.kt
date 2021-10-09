@@ -1,5 +1,5 @@
 object Accompanist {
-    private const val accompanistVersion = "0.18.0"
+    private const val accompanistVersion = "0.19.0"
     const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
@@ -16,7 +16,7 @@ object Core {
 }
 
 object Coil {
-    private const val coilVersion = "1.3.2"
+    private const val coilVersion = "1.4.0"
     const val coil = "io.coil-kt:coil-compose:$coilVersion"
 }
 
@@ -68,8 +68,4 @@ object Palette {
 
 object Version {
     const val kotlinVersion = "1.5.30"
-}
-
-object Shrink {
-    const val shrink = true
 }

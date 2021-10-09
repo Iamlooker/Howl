@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 fun WrappedText(
     modifier: Modifier = Modifier,
     text: String?,
+    maxLines: Int = 1,
     textColor: Color = Color.Unspecified,
     style: TextStyle = MaterialTheme.typography.body1,
     fontWeight: FontWeight? = null,
@@ -22,7 +23,7 @@ fun WrappedText(
     Text(
         modifier = modifier,
         text = text ?: "No Title",
-        maxLines = 1,
+        maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         style = style,
         fontWeight = fontWeight,

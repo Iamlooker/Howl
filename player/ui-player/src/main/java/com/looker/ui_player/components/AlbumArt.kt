@@ -15,17 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import coil.ImageLoader
-import com.looker.components.ComponentConstants.tweenAnimation
 import com.looker.components.HowlImage
 import com.looker.components.ToggleButton
+import com.looker.components.tweenAnimation
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AlbumArtAndUtils(
     modifier: Modifier = Modifier,
     albumArt: String?,
-    imageLoader: ImageLoader,
     icon: ImageVector,
     toggled: Boolean,
     onToggle: () -> Unit,
@@ -43,7 +41,6 @@ fun AlbumArtAndUtils(
                     interactionSource = remember { MutableInteractionSource() }
                 ),
             albumArt = albumArt,
-            imageLoader = imageLoader
         )
         AnimatedVisibility(
             visible = overlayVisible,
@@ -96,12 +93,10 @@ fun AlbumArtOverlay(
 fun AlbumArt(
     modifier: Modifier = Modifier,
     albumArt: String?,
-    imageLoader: ImageLoader
 ) {
     HowlImage(
         modifier = modifier.fillMaxWidth(),
         data = albumArt,
-        imageLoader = imageLoader,
         shape = CircleShape
     )
 }

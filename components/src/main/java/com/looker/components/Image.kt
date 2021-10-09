@@ -3,9 +3,11 @@ package com.looker.components
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,15 +18,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.Coil
-import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Scale
-import com.looker.components.ComponentConstants.DefaultCrossFadeDuration
-import com.looker.components.ComponentConstants.tweenAnimation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -47,25 +47,31 @@ suspend fun String.bitmap(context: Context): Bitmap {
 fun HowlImage(
     modifier: Modifier = Modifier,
     data: String?,
-    imageLoader: ImageLoader,
+    contentScale: ContentScale = ContentScale.Crop,
     backgroundColor: Color = MaterialTheme.colors.surface,
     shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
-    Crossfade(
-        targetState = data,
-        animationSpec = tweenAnimation(DefaultCrossFadeDuration)
-    ) {
-        Image(
-            modifier = modifier
-                .clip(shape)
-                .background(backgroundColor),
-            contentScale = ContentScale.FillWidth,
-            painter = rememberImagePainter(
-                data = it,
-                imageLoader = imageLoader
-            ),
-            contentDescription = null
+    Box(modifier) {
+        val painter = rememberImagePainter(
+            data = data
         )
+
+        Image(
+            painter = painter,
+            contentDescription = "This is Album Art",
+            contentScale = contentScale,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape)
+        )
+
+        if (painter.state is ImagePainter.State.Loading) {
+            Spacer(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(backgroundColor)
+            )
+        }
     }
 }
 

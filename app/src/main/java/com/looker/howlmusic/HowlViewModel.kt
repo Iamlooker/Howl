@@ -17,56 +17,79 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.components.SheetsState
+import com.looker.components.SheetsState.HIDDEN
+import com.looker.components.SheetsState.VISIBLE
+import com.looker.data_music.data.AlbumsRepository
+import com.looker.data_music.data.SongsRepository
+import com.looker.domain_music.Album
 import com.looker.domain_music.Song
+import com.looker.domain_music.emptySong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class HowlViewModel
-@Inject constructor(private val exoPlayer: SimpleExoPlayer) : ViewModel() {
+@Inject constructor(
+    private val exoPlayer: SimpleExoPlayer,
+    private val songsRepository: SongsRepository,
+    private val albumsRepository: AlbumsRepository
+) : ViewModel() {
 
     private var currentPlaylist by mutableStateOf(emptyList<Song>())
 
-    private val _currentIndex = MutableStateFlow(0)
-    private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
-    private val _playing = MutableStateFlow(false)
-    private val _enableGesture = MutableStateFlow(true)
-    private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
-    private val _handleIcon = MutableStateFlow(2f)
-    private val _progress = MutableStateFlow(0f)
-    private val _backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
-    private val _currentSong = MutableStateFlow(
-        Song(
-            songUri = "",
-            albumId = 0,
-            genreId = 0,
-            songName = null,
-            artistName = null,
-            albumName = null,
-            albumArt = ""
-        )
-    )
+    private val _songsList = MutableStateFlow(emptyList<Song>())
+    val songsList: StateFlow<List<Song>> = _songsList
 
-    private val currentIndex: StateFlow<Int> = _currentIndex
-    private val playIcon: StateFlow<ImageVector> = _playIcon
+    private val _albumsList = MutableStateFlow(emptyList<Album>())
+    val albumsList: StateFlow<List<Album>> = _albumsList
+
+    private val _songsListSize = MutableStateFlow(0)
+    private val songsListSize: StateFlow<Int> = _songsListSize
+
+    init {
+        viewModelScope.launch {
+            songsRepository.getAllSongs()
+                .collect { list ->
+                    _songsList.value = list
+                    _songsListSize.value = list.size
+                }
+            albumsRepository.getAllAlbums()
+                .collect {
+                    _albumsList.value = it
+                }
+        }
+    }
+
+    private val _progress = MutableStateFlow(0f)
+    private val _handleIcon = MutableStateFlow(0.5f)
+    private val _playing = MutableStateFlow(false)
+    private val _currentIndex = MutableStateFlow(0)
+    private val _enableGesture = MutableStateFlow(true)
+    private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
+    private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
+    private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
+    private val _currentSong = MutableStateFlow(emptySong)
+
     val playing: StateFlow<Boolean> = _playing
-    val enableGesture: StateFlow<Boolean> = _enableGesture
-    val toggleIcon: StateFlow<ImageVector> = _toggleIcon
-    val handleIcon: StateFlow<Float> = _handleIcon
     val progress: StateFlow<Float> = _progress
-    val backdropValue: StateFlow<SheetsState> = _backdropValue
+    val handleIcon: StateFlow<Float> = _handleIcon
     val currentSong: StateFlow<Song> = _currentSong
+    val toggleIcon: StateFlow<ImageVector> = _toggleIcon
+    val enableGesture: StateFlow<Boolean> = _enableGesture
+    private val playIcon: StateFlow<ImageVector> = _playIcon
+    val backdropValue: StateFlow<SheetsState> = _backdropValue
 
     @ExperimentalMaterialApi
     fun setBackdropValue(currentValue: BackdropValue) {
         _backdropValue.value = when (currentValue) {
-            Concealed -> SheetsState.HIDDEN
-            Revealed -> SheetsState.VISIBLE
+            Concealed -> HIDDEN
+            Revealed -> VISIBLE
         }
     }
 
@@ -84,35 +107,31 @@ class HowlViewModel
     }
 
     fun onToggle(currentState: SheetsState) = when (currentState) {
-        SheetsState.HIDDEN -> onPlayPause()
-        SheetsState.TO_HIDDEN -> onPlayPause()
-        else -> {
+        HIDDEN -> onPlayPause()
+        VISIBLE -> {
         }
     }
 
     fun setToggleIcon(currentState: SheetsState) {
         _toggleIcon.value = when (currentState) {
-            SheetsState.TO_HIDDEN -> playIcon.value
-            SheetsState.TO_VISIBLE -> Icons.Rounded.Shuffle
-            SheetsState.HIDDEN -> playIcon.value
-            SheetsState.VISIBLE -> Icons.Rounded.Shuffle
+            HIDDEN -> playIcon.value
+            VISIBLE -> Icons.Rounded.Shuffle
         }
     }
 
     fun setHandleIcon(currentState: SheetsState) {
         _handleIcon.value = when (currentState) {
-            SheetsState.TO_HIDDEN -> 1f
-            SheetsState.TO_VISIBLE -> 1f
-            SheetsState.HIDDEN -> 0f
-            SheetsState.VISIBLE -> 2f
+            HIDDEN -> 1f
+            VISIBLE -> 0f
         }
     }
 
-    fun onSongClicked(songs: List<Song>) {
+    fun onSongClicked(index: Int) {
         _playing.value = true
         _playIcon.value = Icons.Rounded.Pause
-        _currentSong.value = songs[currentIndex.value]
-        currentPlaylist = songs
+        currentPlaylist = songsList.value.subList(index, songsListSize.value - 1)
+        setCurrentIndex(index)
+        setCurrentSong(songsList.value[index])
         exoPlayer.apply {
             clearMediaItems()
             setMediaItems(currentPlaylist)
@@ -122,11 +141,8 @@ class HowlViewModel
     }
 
     private fun SimpleExoPlayer.setMediaItems(songs: List<Song>) {
-
         val mediaItems = arrayListOf<MediaItem>()
-        songs.forEach {
-            mediaItems.add(MediaItem.fromUri(it.songUri))
-        }
+        songs.forEach { mediaItems.add(MediaItem.fromUri(it.songUri)) }
         this.setMediaItems(mediaItems, true)
     }
 
@@ -147,16 +163,22 @@ class HowlViewModel
     fun playNext() {
         if (exoPlayer.hasNextWindow()) {
             exoPlayer.seekToNext()
-            _currentIndex.value += 1
-            _currentSong.value = currentPlaylist[currentIndex.value]
+            setCurrentIndex(_currentIndex.value.inc())
         }
     }
 
     fun playPrevious() {
         if (exoPlayer.hasPreviousWindow()) {
             exoPlayer.seekToPrevious()
-            _currentIndex.value -= 1
-            _currentSong.value = currentPlaylist[currentIndex.value]
+            setCurrentIndex(_currentIndex.value.dec())
         }
+    }
+
+    private fun setCurrentSong(song: Song) {
+        _currentSong.value = song
+    }
+
+    private fun setCurrentIndex(index: Int) {
+        _currentIndex.value = index
     }
 }

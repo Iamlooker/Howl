@@ -3,9 +3,9 @@ package com.looker.howlmusic.utils
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import coil.ImageLoader
 import com.looker.constants.Constants.READ_PERMISSION
-import com.looker.howlmusic.R
+import com.looker.data_music.data.AlbumsRepository
+import com.looker.data_music.data.SongsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,12 +24,13 @@ object Utils {
 
     @Singleton
     @Provides
-    fun provideImageLoader(
+    fun provideSongsRepository(
         @ApplicationContext context: Context
-    ): ImageLoader = ImageLoader.Builder(context)
-        .placeholder(R.drawable.white_background)
-        .error(R.drawable.error_image)
-        .availableMemoryPercentage(0.25)
-        .crossfade(true)
-        .build()
+    ): SongsRepository = SongsRepository(context)
+
+    @Singleton
+    @Provides
+    fun provideAlbumsRepository(
+        @ApplicationContext context: Context
+    ): AlbumsRepository = AlbumsRepository(context)
 }
