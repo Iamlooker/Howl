@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.looker.components.state.PlayState
+import com.looker.components.state.PlayState.PAUSED
+import com.looker.components.state.PlayState.PLAYING
 import com.looker.components.state.SheetsState
 import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.state.SheetsState.VISIBLE
@@ -66,22 +69,23 @@ class HowlViewModel
 
     private val _progress = MutableStateFlow(0f)
     private val _handleIcon = MutableStateFlow(0.5f)
-    private val _playing = MutableStateFlow(false)
     private val _currentIndex = MutableStateFlow(0)
     private val _enableGesture = MutableStateFlow(true)
     private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
     private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
     private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
     private val _currentSong = MutableStateFlow(emptySong)
+    private val _playState = MutableStateFlow<PlayState>(PAUSED)
 
-    val playing: StateFlow<Boolean> = _playing
     val progress: StateFlow<Float> = _progress
     val handleIcon: StateFlow<Float> = _handleIcon
+    private val currentIndex: StateFlow<Int> = _currentIndex
     val currentSong: StateFlow<Song> = _currentSong
     val toggleIcon: StateFlow<ImageVector> = _toggleIcon
     val enableGesture: StateFlow<Boolean> = _enableGesture
     private val playIcon: StateFlow<ImageVector> = _playIcon
     val backdropValue: StateFlow<SheetsState> = _backdropValue
+    val playState: StateFlow<PlayState> = _playState
 
     @ExperimentalMaterialApi
     fun setBackdropValue(currentValue: BackdropValue) {
@@ -95,19 +99,36 @@ class HowlViewModel
         _enableGesture.value = allowGesture
     }
 
-    fun onPlayPause(isPlaying: Boolean) {
-        viewModelScope.launch {
-            _playing.value = isPlaying
-            playPause(playing.value)
-            _playing.value = exoPlayer.isPlaying
-            _playIcon.value = if (_playing.value) Icons.Rounded.Pause
-            else Icons.Rounded.PlayArrow
+    private fun setPlayState(isPlaying: Boolean) {
+        _playState.value = if (isPlaying) PLAYING else PAUSED
+    }
+
+    private fun setPlayState(isPlaying: PlayState) {
+        _playState.value = isPlaying
+    }
+
+    private fun updatePlayIcon(isPlaying: PlayState) {
+        _playIcon.value = when (isPlaying) {
+            is PAUSED -> Icons.Rounded.PlayArrow
+            is PLAYING -> Icons.Rounded.Pause
         }
     }
 
-    fun onToggle(currentState: SheetsState, toggledState: Boolean) = when (currentState) {
-        is HIDDEN -> onPlayPause(toggledState)
+    fun onPlayPause(isPlaying: PlayState) {
+        viewModelScope.launch {
+            setPlayState(isPlaying)
+            playPause(playState.value)
+            setPlayState(exoPlayer.isPlaying)
+            updatePlayIcon(playState.value)
+        }
+    }
+
+    fun onToggle(currentState: SheetsState, playState: PlayState) = when (currentState) {
+        is HIDDEN -> {
+            onPlayPause(playState)
+        }
         is VISIBLE -> {
+            onPlayPause(playState)
         }
     }
 
@@ -126,8 +147,8 @@ class HowlViewModel
     }
 
     fun onSongClicked(index: Int) {
-        _playing.value = true
-        _playIcon.value = Icons.Rounded.Pause
+        setPlayState(true)
+        updatePlayIcon(playState.value)
         currentPlaylist = songsList.value.subList(index, songsListSize.value - 1)
         setCurrentIndex(index)
         setCurrentSong(songsList.value[index])
@@ -145,9 +166,11 @@ class HowlViewModel
         this.setMediaItems(mediaItems, true)
     }
 
-    private fun playPause(playing: Boolean) {
-        if (playing) exoPlayer.pause()
-        else exoPlayer.playWhenReady = true
+    private fun playPause(playing: PlayState) {
+        when (playing) {
+            is PLAYING -> exoPlayer.pause()
+            is PAUSED -> exoPlayer.playWhenReady = true
+        }
     }
 
     fun onSeek(seekTo: Float) {
@@ -159,6 +182,7 @@ class HowlViewModel
         if (exoPlayer.hasNextWindow()) {
             exoPlayer.seekToNext()
             setCurrentIndex(_currentIndex.value.inc())
+            setCurrentSong(songsList.value[currentIndex.value])
         }
     }
 
@@ -166,6 +190,7 @@ class HowlViewModel
         if (exoPlayer.hasPreviousWindow()) {
             exoPlayer.seekToPrevious()
             setCurrentIndex(_currentIndex.value.dec())
+            setCurrentSong(songsList.value[currentIndex.value])
         }
     }
 

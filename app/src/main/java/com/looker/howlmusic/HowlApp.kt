@@ -26,6 +26,7 @@ import com.looker.components.HandleIcon
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.rememberDominantColorState
+import com.looker.components.state.PlayState
 import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.tweenAnimation
 import com.looker.domain_music.Album
@@ -71,10 +72,11 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
     val scope = rememberCoroutineScope()
     val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
-    val playing by viewModel.playing.collectAsState()
     val currentSong by viewModel.currentSong.collectAsState()
     val backdropValue by viewModel.backdropValue.collectAsState()
     val enableGesture by viewModel.enableGesture.collectAsState()
+
+    val playState by viewModel.playState.collectAsState()
 
     LaunchedEffect(state.currentValue.name) {
         launch { viewModel.setBackdropValue(state.currentValue) }
@@ -83,7 +85,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
     Backdrop(
         modifier = Modifier,
         state = state,
-        playing = playing,
+        playState = playState,
         enableGesture = enableGesture,
         header = {
 
@@ -98,13 +100,16 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 }
             }
 
-            LaunchedEffect(backdropValue, playing) {
+            LaunchedEffect(backdropValue, playState) {
                 launch {
                     viewModel.setToggleIcon(backdropValue)
-                    cornerRadiusState.value = if (playing) 50 else 15
+                    cornerRadiusState.value = when (playState) {
+                        PlayState.PLAYING -> 50
+                        PlayState.PAUSED -> 15
+                    }
                 }
             }
-            
+
             val corner by animateIntAsState(
                 targetValue = cornerRadiusState.value,
                 animationSpec = tweenAnimation()
@@ -121,9 +126,9 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 albumArt = currentSong.albumArt,
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
-                toggled = playing,
+                toggled = false,
                 imageCorner = corner,
-                toggleAction = { viewModel.onToggle(backdropValue, it) }
+                toggleAction = { viewModel.onToggle(backdropValue, playState) }
             )
         },
         frontLayerContent = {
@@ -147,10 +152,10 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             )
         },
         backLayerContent = {
-
             val progress by viewModel.progress.collectAsState()
+
             Controls(
-                isPlaying = playing,
+                isPlaying = playState,
                 progress = progress,
                 onPlayPause = { viewModel.onPlayPause(it) },
                 skipNextClick = { viewModel.playNext() },
@@ -232,8 +237,8 @@ fun PlayerHeader(
 fun Controls(
     modifier: Modifier = Modifier,
     progress: Float,
-    isPlaying: Boolean,
-    onPlayPause: (Boolean) -> Unit,
+    isPlaying: PlayState,
+    onPlayPause: (PlayState) -> Unit,
     skipNextClick: () -> Unit,
     onSeek: (Float) -> Unit,
     openQueue: () -> Unit,

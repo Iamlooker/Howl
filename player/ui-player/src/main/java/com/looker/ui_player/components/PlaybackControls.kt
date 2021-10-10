@@ -17,17 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
+import com.looker.components.state.PlayState
+import com.looker.components.state.PlayState.PAUSED
+import com.looker.components.state.PlayState.PLAYING
 import com.looker.components.tweenAnimation
 import kotlinx.coroutines.launch
 
 @Composable
 fun PlaybackControls(
     modifier: Modifier = Modifier,
-    isPlaying: Boolean,
+    isPlaying: PlayState,
     @FloatRange(from = 0.0, to = 1.0) progressValue: Float,
     openQueue: () -> Unit,
     onSeek: (Float) -> Unit,
-    onPlayPause: (Boolean) -> Unit,
+    onPlayPause: (PlayState) -> Unit,
     skipNextClick: () -> Unit,
     skipPrevClick: () -> Unit
 ) {
@@ -65,10 +68,10 @@ fun PlaybackControls(
 @Composable
 fun PlayAndSkipButton(
     modifier: Modifier = Modifier,
-    isPlaying: Boolean,
+    isPlaying: PlayState,
     playButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
     skipButtonColors: ButtonColors = ButtonDefaults.buttonColors(),
-    playClick: (Boolean) -> Unit,
+    playClick: (PlayState) -> Unit,
     skipNextClick: () -> Unit
 ) {
 
@@ -82,8 +85,14 @@ fun PlayAndSkipButton(
 
     LaunchedEffect(isPlaying) {
         launch {
-            playIcon.value = if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-            cornerRadius.value = if (isPlaying) 50 else 15
+            playIcon.value = when (isPlaying) {
+                PLAYING -> Icons.Rounded.Pause
+                PAUSED -> Icons.Rounded.PlayArrow
+            }
+            cornerRadius.value = when (isPlaying) {
+                PLAYING -> 50
+                PAUSED -> 15
+            }
         }
     }
 

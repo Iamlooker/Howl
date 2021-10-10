@@ -31,7 +31,10 @@ fun ShapedIconButton(
         colors = buttonColors,
         elevation = buttonElevation
     ) {
-        Crossfade(targetState = icon) {
+        Crossfade(
+            targetState = icon,
+            animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+        ) {
             Icon(
                 imageVector = it,
                 contentDescription = contentDescription
