@@ -201,4 +201,9 @@ class HowlViewModel
     private fun setCurrentIndex(index: Int) {
         _currentIndex.value = index
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        exoPlayer.release()
+    }
 }
