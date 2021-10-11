@@ -5,14 +5,16 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application>
-        <service
-            android:name=".service.PlayerService"
-            android:enabled="true"
-            android:exported="true">
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
-        </service>
+        </receiver>
+
+        <provider
+            android:name=".service.library.AlbumArtContentProvider"
+            android:authorities="com.looker.howlmusic"
+            android:exported="true" />
     </application>
 
 </manifest>

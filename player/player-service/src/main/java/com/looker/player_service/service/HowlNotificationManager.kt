@@ -4,21 +4,19 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
-import androidx.core.graphics.drawable.toBitmap
-import coil.imageLoader
+import coil.ImageLoader
 import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_ID
 import com.looker.player_service.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class HowlNotificationManager(
     private val context: Context,
@@ -38,10 +36,11 @@ class HowlNotificationManager(
 
         notificationManager =
             PlayerNotificationManager.Builder(context, NOTIFICATION_ID, NOTIFICATION_CHANNEL_ID)
-                .apply {
-                    setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
-                    setNotificationListener(notificationListener)
-                }.build().apply {
+                .setChannelNameResourceId(R.string.notification_channel_name)
+                .setChannelDescriptionResourceId(R.string.notification_channel_description)
+                .setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
+                .setNotificationListener(notificationListener)
+                .build().apply {
                     setMediaSessionToken(sessionToken)
                     setSmallIcon(R.drawable.exo_notification_small_icon)
                 }
@@ -78,7 +77,9 @@ class HowlNotificationManager(
             return if (currentIconUri != iconUri || currentBitmap == null) {
                 currentIconUri = iconUri
                 serviceScope.launch {
-                    currentBitmap = iconUri?.let { resolveUriAsBitmap(it) }
+                    currentBitmap = iconUri?.let {
+                        resolveUriAsBitmap(it)
+                    }
                     currentBitmap?.let { callback.onBitmap(it) }
                 }
                 null
@@ -88,10 +89,19 @@ class HowlNotificationManager(
         }
 
         private suspend fun resolveUriAsBitmap(uri: Uri): Bitmap? {
-            val request = ImageRequest.Builder(context)
-                .data(uri)
-                .build()
-            return context.imageLoader.execute(request).drawable?.toBitmap()
+            return withContext(Dispatchers.IO) {
+                val loader = ImageLoader(context)
+                val req = ImageRequest.Builder(context)
+                    .data(uri)
+                    .size(NOTIFICATION_LARGE_ICON_SIZE)
+                    .build()
+                val result = (loader.execute(req) as SuccessResult).drawable
+                (result as BitmapDrawable).bitmap
+            }
         }
     }
 }
+
+const val NOTIFICATION_LARGE_ICON_SIZE = 144
+
+private const val MODE_READ_ONLY = "r"
