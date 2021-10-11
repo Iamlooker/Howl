@@ -1,5 +1,5 @@
 object Android {
-    const val appId = "com.looker.howlmusic"
+    const val appId = "com.looker.howl"
     const val compileSdk = 31
     const val minSdk = 28
     const val targetSdk = 30
