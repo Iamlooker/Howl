@@ -64,6 +64,7 @@ internal fun NavGraphBuilder.homeGraph(
         }
         composable(HomeScreens.ALBUMS.route) {
             Albums(
+                songsList = songsList,
                 albumsList = albumsList,
                 onStateChange = onAlbumsSheetState
             )

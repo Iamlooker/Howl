@@ -96,7 +96,9 @@ fun LargeCard(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             HowlImage(
-                modifier = Modifier.height(imageSize),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(imageSize),
                 data = imageUrl,
                 shape = imageShape
             )

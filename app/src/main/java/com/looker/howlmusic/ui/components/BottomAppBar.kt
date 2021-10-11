@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -42,12 +41,13 @@ fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     BottomNavigation(
-        modifier = modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
+        modifier = modifier,
         backgroundColor = MaterialTheme.colors.surface,
         elevation = LocalElevations.current.default
     ) {
         items.forEach { screen ->
             BottomNavigationItems(
+                modifier = Modifier.navigationBarsPadding(),
                 icon = screen.icon,
                 label = screen.title,
                 selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
@@ -73,7 +73,7 @@ fun RowScope.BottomNavigationItems(
     selectedContentColor: Color = MaterialTheme.colors.primary,
     selectedBackgroundColor: Color = MaterialTheme.colors.primaryVariant,
     unselectedContentColor: Color = MaterialTheme.colors.onSurface,
-    unselectedBackgroundColor: Color = MaterialTheme.colors.surface,
+    unselectedBackgroundColor: Color = Color.Transparent,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onSelected: () -> Unit
 ) {
@@ -95,10 +95,8 @@ fun RowScope.BottomNavigationItems(
 
     Box(
         modifier = modifier
-            .navigationBarsPadding()
             .weight(1f)
             .clip(MaterialTheme.shapes.small)
-            .background(backgroundColor)
             .selectable(
                 selected = selected,
                 onClick = onSelected,
@@ -106,6 +104,7 @@ fun RowScope.BottomNavigationItems(
                 indication = null,
                 interactionSource = interactionSource
             )
+            .background(backgroundColor)
             .fillMaxHeight(),
         contentAlignment = Alignment.Center
     ) {

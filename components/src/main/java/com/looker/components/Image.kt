@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -52,16 +51,14 @@ fun HowlImage(
     shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
     Box(modifier) {
-        val painter = rememberImagePainter(
-            data = data
-        )
+        val painter = rememberImagePainter(data = data)
 
         Image(
             painter = painter,
             contentDescription = "This is Album Art",
             contentScale = contentScale,
             modifier = Modifier
-                .fillMaxSize()
+                .matchParentSize()
                 .clip(shape)
         )
 

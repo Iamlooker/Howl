@@ -25,7 +25,7 @@ fun MiniPlayer(
     repeatIcon: ImageVector,
     toggled: Boolean,
     imageCorner: Int = 50,
-    toggleAction: (Boolean) -> Unit
+    toggleAction: () -> Unit
 ) {
     Column(
         modifier = modifier,

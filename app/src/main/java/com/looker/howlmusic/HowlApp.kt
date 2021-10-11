@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -34,7 +35,8 @@ import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
-import com.looker.howlmusic.ui.components.HomeScreens
+import com.looker.howlmusic.ui.components.HomeScreens.ALBUMS
+import com.looker.howlmusic.ui.components.HomeScreens.SONGS
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.utils.checkReadPermission
 import com.looker.onboarding.OnBoardingPage
@@ -92,6 +94,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             val cornerRadiusState = remember { mutableStateOf(15) }
 
             val toggleIcon by viewModel.toggleIcon.collectAsState()
+            val toggle by viewModel.toggle.collectAsState()
             val backgroundColor = rememberDominantColorState()
 
             LaunchedEffect(currentSong) {
@@ -103,6 +106,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             LaunchedEffect(backdropValue, playState) {
                 launch {
                     viewModel.setToggleIcon(backdropValue)
+                    viewModel.updateToggle()
                     cornerRadiusState.value = when (playState) {
                         PlayState.PLAYING -> 50
                         PlayState.PAUSED -> 15
@@ -126,7 +130,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 albumArt = currentSong.albumArt,
                 songName = currentSong.songName,
                 artistName = currentSong.artistName,
-                toggled = false,
+                toggled = toggle,
                 imageCorner = corner,
                 toggleAction = { viewModel.onToggle(backdropValue, playState) }
             )
@@ -152,6 +156,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             )
         },
         backLayerContent = {
+
             val progress by viewModel.progress.collectAsState()
 
             Controls(
@@ -169,7 +174,6 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
 @Composable
 fun FrontLayer(
-    modifier: Modifier = Modifier,
     songsList: List<Song>,
     albumsList: List<Album>,
     handleIcon: Float,
@@ -177,15 +181,13 @@ fun FrontLayer(
     onSongClick: (Int) -> Unit,
     onAlbumSheetState: (Boolean) -> Unit
 ) {
-    val navController = rememberNavController()
 
-    val items = listOf(
-        HomeScreens.SONGS,
-        HomeScreens.ALBUMS
-    )
+    val navController = rememberNavController()
+    val items = listOf(SONGS, ALBUMS)
+
     Scaffold(
         bottomBar = {
-            Surface {
+            Surface(Modifier.clip(MaterialTheme.shapes.small)) {
                 BottomAppBar(
                     modifier = Modifier.navigationBarsHeight(56.dp),
                     navController = navController,
@@ -194,7 +196,7 @@ fun FrontLayer(
             }
         }
     ) { bottomNavigationPadding ->
-        Column(modifier.padding(bottomNavigationPadding)) {
+        Column(Modifier.padding(bottomNavigationPadding)) {
             HandleIcon(handleIcon) { openPlayer() }
             HomeNavGraph(
                 navController = navController,
@@ -216,7 +218,7 @@ fun PlayerHeader(
     icon: ImageVector,
     toggled: Boolean,
     imageCorner: Int,
-    toggleAction: (Boolean) -> Unit
+    toggleAction: () -> Unit
 ) {
     MiniPlayer(
         modifier = modifier

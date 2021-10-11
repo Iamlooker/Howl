@@ -16,13 +16,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.looker.components.BottomSheets
 import com.looker.components.rememberDominantColorState
 import com.looker.domain_music.Album
+import com.looker.domain_music.Song
 import com.looker.ui_albums.components.AlbumsCard
 import kotlinx.coroutines.launch
 
 @Composable
-fun Albums(albumsList: List<Album>, onStateChange: (Boolean) -> Unit) {
+fun Albums(songsList: List<Song>, albumsList: List<Album>, onStateChange: (Boolean) -> Unit) {
     Albums(
         modifier = Modifier.fillMaxSize(),
+        songsList = songsList,
         albumsList = albumsList,
         onStateChange = onStateChange
     )
@@ -32,6 +34,7 @@ fun Albums(albumsList: List<Album>, onStateChange: (Boolean) -> Unit) {
 @Composable
 private fun Albums(
     modifier: Modifier = Modifier,
+    songsList: List<Song>,
     albumsList: List<Album>,
     viewModel: AlbumsViewModel = viewModel(),
     onStateChange: (Boolean) -> Unit
@@ -47,7 +50,6 @@ private fun Albums(
 
             val dominantColor = rememberDominantColorState()
             val currentAlbum by viewModel.currentAlbum.collectAsState()
-            val songsList by viewModel.songsList.collectAsState()
             LaunchedEffect(currentAlbum) {
                 launch { dominantColor.updateColorsFromImageUrl(currentAlbum.albumArt) }
             }
@@ -62,7 +64,7 @@ private fun Albums(
 
             AlbumsBottomSheetContent(
                 currentAlbum = currentAlbum,
-                songsList = songsList,
+                songsList = songsList.filter { it.albumId == currentAlbum.albumId },
                 handleIcon = handleIcon,
                 dominantColor = dominantColor.color.copy(0.4f)
             )
@@ -88,13 +90,14 @@ fun AlbumsList(
     onAlbumClick: (Album) -> Unit
 ) {
 
-    val width = with(LocalConfiguration.current) { screenWidthDp.dp / 2 - 16.dp }
+    val width = with(LocalConfiguration.current) {
+        val ratio = screenWidthDp / 150
+        screenWidthDp.dp / ratio - 16.dp
+    }
 
-    LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
+    LazyVerticalGrid(cells = GridCells.Adaptive(150.dp)) {
         items(albumsList) {
-            AlbumsCard(album = it, cardWidth = width) {
-                onAlbumClick(it)
-            }
+            AlbumsCard(album = it, cardWidth = width) { onAlbumClick(it) }
         }
     }
 }

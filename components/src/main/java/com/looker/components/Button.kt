@@ -2,7 +2,7 @@ package com.looker.components
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.*
@@ -21,6 +21,7 @@ fun ShapedIconButton(
     shape: CornerBasedShape = CircleShape,
     buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
     buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 6.dp),
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     contentDescription: String?,
     onClick: () -> Unit,
 ) {
@@ -29,7 +30,8 @@ fun ShapedIconButton(
         onClick = onClick,
         shape = shape,
         colors = buttonColors,
-        elevation = buttonElevation
+        elevation = buttonElevation,
+        contentPadding = contentPadding
     ) {
         Crossfade(
             targetState = icon,
@@ -50,7 +52,8 @@ fun ToggleButton(
     icon: ImageVector,
     shape: CornerBasedShape = CircleShape,
     activeColor: Color = MaterialTheme.colors.secondaryVariant,
-    onToggle: (Boolean) -> Unit,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
+    onToggle: () -> Unit,
     contentDescription: String?
 ) {
     val toggleColor by animateColorAsState(
@@ -62,11 +65,12 @@ fun ToggleButton(
     val toggleButtonColors = ButtonDefaults.buttonColors(backgroundColor = toggleColor)
 
     ShapedIconButton(
-        modifier = modifier.padding(20.dp),
+        modifier = modifier,
         icon = icon,
         shape = shape,
         buttonColors = toggleButtonColors,
-        onClick = { onToggle(!toggled) },
+        contentPadding = contentPadding,
+        onClick = onToggle,
         contentDescription = contentDescription
     )
 }
