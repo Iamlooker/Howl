@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.looker.howlmusic.ui.components.BottomNavigationItems
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 60)
 @Composable
 fun BottomNavigationItemPreview() {
     Row {
