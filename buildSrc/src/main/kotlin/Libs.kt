@@ -4,7 +4,7 @@ object Accompanist {
 }
 
 object Classpath {
-    private const val gradleVersion = "7.0.2"
+    private const val gradleVersion = "7.0.3"
     const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
     const val gradleKotlin =
         "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
@@ -45,6 +45,12 @@ object ExoPlayer {
     const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
     const val exoplayerMediaSession =
         "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
+}
+
+object Glide {
+    private const val glideVersion = "4.11.0"
+    const val glideCompiler = "com.github.bumptech.glide:compiler:$glideVersion"
+    const val glide = "com.github.bumptech.glide:glide:$glideVersion"
 }
 
 object Hilt {
