@@ -51,6 +51,7 @@ fun SmallCard(
 ) {
     MaterialCard(
         modifier = modifier.padding(8.dp),
+        shape = imageShape,
         onClick = onClick
     ) {
         Row(
