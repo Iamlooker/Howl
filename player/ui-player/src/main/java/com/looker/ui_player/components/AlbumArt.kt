@@ -1,8 +1,6 @@
 package com.looker.ui_player.components
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,12 +10,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.HowlImage
 import com.looker.components.ToggleButton
 import com.looker.components.ext.rippleClick
+import com.looker.components.localComposers.LocalDurations
+import com.looker.components.tweenAnimation
 
 @Composable
 fun AlbumArtAndUtils(
@@ -67,10 +67,7 @@ fun AlbumArt(
 ) {
     val overlay by animateFloatAsState(
         targetValue = if (overlayVisible) 1f else 0f,
-        animationSpec = spring(
-            stiffness = Spring.StiffnessLow,
-            dampingRatio = Spring.DampingRatioLowBouncy
-        )
+        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
     )
 
     Box(modifier = modifier.clip(shape)) {
@@ -84,7 +81,10 @@ fun AlbumArt(
         AlbumArtOverlay(
             modifier = Modifier
                 .matchParentSize()
-                .scale(overlay),
+                .graphicsLayer {
+                    scaleX = overlay
+                    scaleY = overlay
+                },
             shape = shape,
             onClick = onClick,
             content = overlayItems
