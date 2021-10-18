@@ -3,11 +3,13 @@ package com.looker.howlmusic
 import android.app.Application
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.HandleIcon
+import com.looker.components.ShapedIconButton
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.rememberDominantColorState
@@ -40,8 +43,8 @@ import com.looker.howlmusic.ui.components.HomeScreens.SONGS
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.howlmusic.utils.checkReadPermission
 import com.looker.onboarding.OnBoardingPage
-import com.looker.ui_player.MiniPlayer
-import com.looker.ui_player.components.PlaybackControls
+import com.looker.ui_player.PlayerControls
+import com.looker.ui_player.PlayerHeader
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.launch
 
@@ -148,7 +151,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 albumsList = albumsList,
                 handleIcon = handleIcon,
                 onSongClick = { songIndex -> viewModel.onSongClicked(songIndex) },
-                openPlayer = { scope.launch { state.reveal() } },
+                openPlayer = { scope.launch { state.animateTo(BackdropValue.Revealed, tween()) } },
                 onAlbumSheetState = {
                     if (backdropValue == HIDDEN) viewModel.gestureState(it)
                     else viewModel.gestureState(true)
@@ -194,6 +197,14 @@ fun FrontLayer(
                     items = items
                 )
             }
+        },
+        floatingActionButton = {
+            ShapedIconButton(
+                icon = Icons.Rounded.KeyboardArrowDown,
+                backgroundColor = MaterialTheme.colors.surface,
+                contentDescription = "Expand Player",
+                onClick = openPlayer
+            )
         }
     ) { bottomNavigationPadding ->
         Column(Modifier.padding(bottomNavigationPadding)) {
@@ -220,7 +231,7 @@ fun PlayerHeader(
     imageCorner: Int,
     toggleAction: () -> Unit
 ) {
-    MiniPlayer(
+    PlayerHeader(
         modifier = modifier
             .statusBarsPadding()
             .padding(bottom = 20.dp),
@@ -247,7 +258,7 @@ fun Controls(
     skipPrevClick: () -> Unit
 ) {
     Column(modifier) {
-        PlaybackControls(
+        PlayerControls(
             isPlaying = isPlaying,
             progressValue = progress,
             onPlayPause = { onPlayPause(it) },

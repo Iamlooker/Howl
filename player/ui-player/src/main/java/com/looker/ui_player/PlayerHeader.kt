@@ -1,7 +1,6 @@
 package com.looker.ui_player
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.MoreHoriz
@@ -16,7 +15,7 @@ import com.looker.ui_player.components.AlbumArtAndUtils
 import com.looker.ui_player.components.SongText
 
 @Composable
-fun MiniPlayer(
+fun PlayerHeader(
     modifier: Modifier = Modifier,
     albumArt: String?,
     songName: String?,
@@ -52,7 +51,7 @@ fun MiniPlayer(
             )
             ShapedIconButton(
                 icon = Icons.Rounded.MoreHoriz,
-                buttonColors = buttonColors(backgroundColor = MaterialTheme.colors.surface),
+                backgroundColor = MaterialTheme.colors.surface,
                 contentDescription = "More"
             ) {}
         }

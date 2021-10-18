@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,17 +20,22 @@ fun ShapedIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     shape: CornerBasedShape = CircleShape,
-    buttonColors: ButtonColors = ButtonDefaults.buttonColors(),
+    backgroundColor: Color = MaterialTheme.colors.primary,
+    contentColor: Color = contentColorFor(backgroundColor = backgroundColor),
     buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 6.dp),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     contentDescription: String?,
     onClick: () -> Unit,
 ) {
+
     Button(
         modifier = modifier,
         onClick = onClick,
         shape = shape,
-        colors = buttonColors,
+        colors = buttonColors(
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
+        ),
         elevation = buttonElevation,
         contentPadding = contentPadding
     ) {
@@ -57,18 +63,16 @@ fun ToggleButton(
     contentDescription: String?
 ) {
     val toggleColor by animateColorAsState(
-        targetValue = if (toggled) activeColor.compositeOverBackground()
+        targetValue = if (toggled) activeColor.compositeOverBackground(0.6f)
         else MaterialTheme.colors.surface,
         animationSpec = tweenAnimation(LocalDurations.current.crossFade)
     )
-
-    val toggleButtonColors = ButtonDefaults.buttonColors(backgroundColor = toggleColor)
 
     ShapedIconButton(
         modifier = modifier,
         icon = icon,
         shape = shape,
-        buttonColors = toggleButtonColors,
+        backgroundColor = toggleColor,
         contentPadding = contentPadding,
         onClick = onToggle,
         contentDescription = contentDescription

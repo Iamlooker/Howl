@@ -2,7 +2,7 @@ package com.looker.ui_songs
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -25,12 +25,9 @@ fun SongsList(
     onSongClick: (Int) -> Unit = {}
 ) {
     val height = with(LocalConfiguration.current) { screenHeightDp.dp / 14 }
-
     LazyColumn(modifier = modifier) {
-        items(songsList) { song ->
-            SongsCard(Modifier.fillMaxWidth(), song, height) {
-                onSongClick(songsList.indexOf(song))
-            }
+        itemsIndexed(songsList) { index, song ->
+            SongsCard(Modifier.fillMaxWidth(), song, height) { onSongClick(index) }
         }
     }
 }
