@@ -102,12 +102,12 @@ fun RowScope.BottomNavigationItems(
                 indication = null,
                 interactionSource = interactionSource
             )
-            .background(backgroundColor)
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
+            .fillMaxHeight()
     ) {
         BaselineBottomNavigationItem(
-            modifier = Modifier,
+            modifier = Modifier
+                .matchParentSize()
+                .background(backgroundColor),
             icon = icon,
             label = selectedLabel,
             itemColor = itemColor
@@ -124,10 +124,11 @@ fun BaselineBottomNavigationItem(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(imageVector = icon, tint = itemColor, contentDescription = null)
+        Spacer(modifier = Modifier.width(4.dp))
         WrappedText(
             modifier = Modifier.animateContentSize(tweenAnimation()),
             text = label?.uppercase(),
