@@ -58,7 +58,7 @@ open class MusicService : MediaBrowserServiceCompat() {
     private val remoteJsonSource: Uri =
         Uri.parse("https://storage.googleapis.com/howl/catalog.json")
 
-    private val uAmpAudioAttributes = AudioAttributes.Builder()
+    private val howlAudioAttributes = AudioAttributes.Builder()
         .setContentType(C.CONTENT_TYPE_MUSIC)
         .setUsage(C.USAGE_MEDIA)
         .build()
@@ -67,7 +67,7 @@ open class MusicService : MediaBrowserServiceCompat() {
 
     private val exoPlayer: ExoPlayer by lazy {
         SimpleExoPlayer.Builder(this).build().apply {
-            setAudioAttributes(uAmpAudioAttributes, true)
+            setAudioAttributes(howlAudioAttributes, true)
             setHandleAudioBecomingNoisy(true)
             addListener(playerListener)
         }
@@ -385,7 +385,7 @@ open class MusicService : MediaBrowserServiceCompat() {
     }
 }
 
-const val NETWORK_FAILURE = "com.example.android.howl.media.session.NETWORK_FAILURE"
+const val NETWORK_FAILURE = "com.looker.howl.media.session.NETWORK_FAILURE"
 
 private const val CONTENT_STYLE_BROWSABLE_HINT = "android.media.browse.CONTENT_STYLE_BROWSABLE_HINT"
 private const val CONTENT_STYLE_PLAYABLE_HINT = "android.media.browse.CONTENT_STYLE_PLAYABLE_HINT"
