@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -123,13 +124,15 @@ fun BaselineBottomNavigationItem(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(imageVector = icon, tint = itemColor, contentDescription = null)
         WrappedText(
             modifier = Modifier.animateContentSize(tweenAnimation()),
             text = label?.uppercase(),
-            textColor = itemColor
+            textColor = itemColor,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
