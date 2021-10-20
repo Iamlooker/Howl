@@ -1,6 +1,5 @@
 package com.looker.howlmusic.ui.components
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -37,12 +36,11 @@ fun BottomAppBar(
     navController: NavController,
     items: List<HomeScreens>
 ) {
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     BottomNavigation(
         modifier = modifier,
-        backgroundColor = MaterialTheme.colors.surface,
+        backgroundColor = Color.Transparent,
         elevation = LocalElevations.current.default
     ) {
         items.forEach { screen ->
@@ -63,7 +61,6 @@ fun BottomAppBar(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RowScope.BottomNavigationItems(
     modifier: Modifier = Modifier,
@@ -73,7 +70,7 @@ fun RowScope.BottomNavigationItems(
     selectedContentColor: Color = MaterialTheme.colors.primary,
     selectedBackgroundColor: Color = MaterialTheme.colors.primaryVariant,
     unselectedContentColor: Color = MaterialTheme.colors.onSurface,
-    unselectedBackgroundColor: Color = Color.Transparent,
+    unselectedBackgroundColor: Color = MaterialTheme.colors.surface,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onSelected: () -> Unit
 ) {
