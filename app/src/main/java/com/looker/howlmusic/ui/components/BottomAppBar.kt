@@ -9,7 +9,6 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,6 +24,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.insets.navigationBarsPadding
+import com.looker.components.WrappedText
 import com.looker.components.compositeOverBackground
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations
@@ -88,7 +88,7 @@ fun RowScope.BottomNavigationItems(
     )
 
     val selectedLabel = if (selected) label
-    else ""
+    else null
 
     Box(
         modifier = modifier
@@ -118,7 +118,7 @@ fun RowScope.BottomNavigationItems(
 fun BaselineBottomNavigationItem(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    label: String,
+    label: String?,
     itemColor: Color
 ) {
     Row(
@@ -126,12 +126,10 @@ fun BaselineBottomNavigationItem(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Icon(imageVector = icon, tint = itemColor, contentDescription = null)
-        Text(
-            modifier = Modifier.animateContentSize(
-                animationSpec = tweenAnimation()
-            ),
-            text = label.uppercase(),
-            color = itemColor
+        WrappedText(
+            modifier = Modifier.animateContentSize(tweenAnimation()),
+            text = label?.uppercase(),
+            textColor = itemColor
         )
     }
 }

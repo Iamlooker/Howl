@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
@@ -200,6 +201,7 @@ fun FrontLayer(
         },
         floatingActionButton = {
             ShapedIconButton(
+                modifier = Modifier.clip(CircleShape),
                 icon = Icons.Rounded.KeyboardArrowDown,
                 backgroundColor = MaterialTheme.colors.surface,
                 contentDescription = "Expand Player",

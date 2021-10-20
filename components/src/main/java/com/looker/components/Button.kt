@@ -10,6 +10,7 @@ import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -19,7 +20,6 @@ import com.looker.components.localComposers.LocalDurations
 fun ShapedIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    shape: CornerBasedShape = CircleShape,
     backgroundColor: Color = MaterialTheme.colors.primary,
     contentColor: Color = contentColorFor(backgroundColor = backgroundColor),
     buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 6.dp),
@@ -31,7 +31,6 @@ fun ShapedIconButton(
     Button(
         modifier = modifier,
         onClick = onClick,
-        shape = shape,
         colors = buttonColors(
             backgroundColor = backgroundColor,
             contentColor = contentColor
@@ -69,9 +68,8 @@ fun ToggleButton(
     )
 
     ShapedIconButton(
-        modifier = modifier,
+        modifier = modifier.clip(shape),
         icon = icon,
-        shape = shape,
         backgroundColor = toggleColor,
         contentPadding = contentPadding,
         onClick = onToggle,

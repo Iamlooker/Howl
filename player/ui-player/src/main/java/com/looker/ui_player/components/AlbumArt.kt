@@ -2,14 +2,12 @@ package com.looker.ui_player.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
@@ -34,9 +32,11 @@ fun AlbumArtAndUtils(
 
     Box {
         AlbumArt(
-            modifier = modifier,
+            modifier = modifier.graphicsLayer {
+                shape = RoundedCornerShape(albumArtCorner)
+                clip = true
+            },
             albumArt = albumArt,
-            shape = RoundedCornerShape(albumArtCorner),
             overlayVisible = overlayVisible,
             onClick = { overlayVisible = !overlayVisible },
             overlayItems = overlayItems
@@ -60,7 +60,6 @@ fun AlbumArtAndUtils(
 fun AlbumArt(
     modifier: Modifier = Modifier,
     albumArt: String?,
-    shape: CornerBasedShape,
     overlayVisible: Boolean,
     onClick: () -> Unit,
     overlayItems: @Composable (RowScope.() -> Unit)
@@ -70,13 +69,12 @@ fun AlbumArt(
         animationSpec = tweenAnimation(LocalDurations.current.crossFade)
     )
 
-    Box(modifier = modifier.clip(shape)) {
+    Box(modifier) {
         HowlImage(
             modifier = Modifier
                 .matchParentSize()
                 .rippleClick(onClick = onClick),
-            data = albumArt,
-            shape = shape
+            data = albumArt
         )
         AlbumArtOverlay(
             modifier = Modifier
@@ -85,7 +83,6 @@ fun AlbumArt(
                     scaleX = overlay
                     scaleY = overlay
                 },
-            shape = shape,
             onClick = onClick,
             content = overlayItems
         )
@@ -96,12 +93,10 @@ fun AlbumArt(
 fun AlbumArtOverlay(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    shape: CornerBasedShape,
     content: @Composable RowScope.() -> Unit
 ) {
     Surface(
         modifier = modifier
-            .clip(shape)
             .rippleClick(onClick = onClick),
         color = MaterialTheme.colors.onBackground.copy(0.4f),
         content = {

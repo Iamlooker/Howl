@@ -22,7 +22,7 @@ fun WrappedText(
 ) {
     Text(
         modifier = modifier,
-        text = text ?: "No Title",
+        text = text ?: "",
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         style = style,
