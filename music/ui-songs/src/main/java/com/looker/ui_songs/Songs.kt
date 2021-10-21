@@ -3,6 +3,8 @@ package com.looker.ui_songs
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -15,7 +17,12 @@ fun Songs(
     songsList: List<Song>,
     onSongClick: (Int) -> Unit
 ) {
-    SongsList(songsList = songsList, onSongClick = onSongClick)
+    Surface(color = MaterialTheme.colors.background) {
+        SongsList(
+            songsList = songsList,
+            onSongClick = onSongClick
+        )
+    }
 }
 
 @Composable

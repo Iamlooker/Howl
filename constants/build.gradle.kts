@@ -1,2 +1,2 @@
-apply ("$rootDir/library.gradle.kts")
-apply (plugin = "kotlin")
+apply("$rootDir/library.gradle.kts")
+apply(plugin = "kotlin")

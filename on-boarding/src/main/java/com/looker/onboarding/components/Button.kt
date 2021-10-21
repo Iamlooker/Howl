@@ -2,8 +2,11 @@ package com.looker.onboarding.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -25,7 +28,10 @@ fun AnimatedButton(
 ) {
 
     OutlinedButton(
-        onClick = onClick
+        onClick = onClick,
+        colors = buttonColors(backgroundColor = buttonColor.copy(0.4f)),
+        shape = CircleShape,
+        contentPadding = PaddingValues(vertical = 20.dp, horizontal = 30.dp)
     ) {
         Row(
             modifier = Modifier.wrapContentSize(),

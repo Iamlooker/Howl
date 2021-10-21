@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -36,6 +38,7 @@ import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.tweenAnimation
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
+import com.looker.domain_music.emptySong
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -95,49 +98,59 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
         enableGesture = enableGesture,
         header = {
 
-            val cornerRadiusState = remember { mutableStateOf(15) }
+            if (currentSong == emptySong) {
+                Image(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .padding(20.dp),
+                    painter = painterResource(id = R.drawable.no_song_playing),
+                    contentDescription = "No Song is playing"
+                )
+            } else {
+                val cornerRadiusState = remember { mutableStateOf(15) }
 
-            val toggleIcon by viewModel.toggleIcon.collectAsState()
-            val toggle by viewModel.toggle.collectAsState()
-            val backgroundColor = rememberDominantColorState()
+                val toggleIcon by viewModel.toggleIcon.collectAsState()
+                val toggle by viewModel.toggle.collectAsState()
+                val backgroundColor = rememberDominantColorState()
 
-            LaunchedEffect(currentSong) {
-                launch {
-                    backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
-                }
-            }
-
-            LaunchedEffect(backdropValue, playState) {
-                launch {
-                    viewModel.setToggleIcon(backdropValue)
-                    viewModel.updateToggle()
-                    cornerRadiusState.value = when (playState) {
-                        PlayState.PLAYING -> 50
-                        PlayState.PAUSED -> 15
+                LaunchedEffect(currentSong) {
+                    launch {
+                        backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
                     }
                 }
+
+                LaunchedEffect(backdropValue, playState) {
+                    launch {
+                        viewModel.setToggleIcon(backdropValue)
+                        viewModel.updateToggle()
+                        cornerRadiusState.value = when (playState) {
+                            PlayState.PLAYING -> 50
+                            PlayState.PAUSED -> 15
+                        }
+                    }
+                }
+
+                val corner by animateIntAsState(
+                    targetValue = cornerRadiusState.value,
+                    animationSpec = tweenAnimation()
+                )
+
+                val animatedBackgroundScrim by animateColorAsState(
+                    targetValue = backgroundColor.color.copy(0.3f),
+                    animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+                )
+
+                PlayerHeader(
+                    modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
+                    icon = toggleIcon,
+                    albumArt = currentSong.albumArt,
+                    songName = currentSong.songName,
+                    artistName = currentSong.artistName,
+                    toggled = toggle,
+                    imageCorner = corner,
+                    toggleAction = { viewModel.onToggle(backdropValue, playState) }
+                )
             }
-
-            val corner by animateIntAsState(
-                targetValue = cornerRadiusState.value,
-                animationSpec = tweenAnimation()
-            )
-
-            val animatedBackgroundScrim by animateColorAsState(
-                targetValue = backgroundColor.color.copy(0.3f),
-                animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-            )
-
-            PlayerHeader(
-                modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
-                icon = toggleIcon,
-                albumArt = currentSong.albumArt,
-                songName = currentSong.songName,
-                artistName = currentSong.artistName,
-                toggled = toggle,
-                imageCorner = corner,
-                toggleAction = { viewModel.onToggle(backdropValue, playState) }
-            )
         },
         frontLayerContent = {
 
@@ -191,13 +204,11 @@ fun FrontLayer(
 
     Scaffold(
         bottomBar = {
-            Surface(Modifier.clip(MaterialTheme.shapes.small)) {
-                BottomAppBar(
-                    modifier = Modifier.navigationBarsHeight(56.dp),
-                    navController = navController,
-                    items = items
-                )
-            }
+            BottomAppBar(
+                modifier = Modifier.navigationBarsHeight(56.dp),
+                navController = navController,
+                items = items
+            )
         },
         floatingActionButton = {
             ShapedIconButton(

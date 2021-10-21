@@ -56,10 +56,7 @@ class DominantColorState(
 }
 
 @Immutable
-data class DominantColors(
-    val color: Color = Color.Unspecified,
-    val onColor: Color = Color.Unspecified
-)
+data class DominantColors(val color: Color = Color.Unspecified)
 
 private suspend fun calculateColorFromImageUrl(
     context: Context,

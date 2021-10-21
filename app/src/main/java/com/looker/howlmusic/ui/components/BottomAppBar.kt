@@ -40,7 +40,9 @@ fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     BottomNavigation(
-        modifier = modifier,
+        modifier = modifier
+            .clip(MaterialTheme.shapes.small)
+            .background(MaterialTheme.colors.surface),
         backgroundColor = Color.Transparent,
         elevation = LocalElevations.current.default
     ) {
