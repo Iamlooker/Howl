@@ -1,6 +1,11 @@
 package com.looker.domain_music
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "songs")
 data class Song(
+    @PrimaryKey
     val songUri: String,
     val albumId: Long,
     val genreId: Long,
@@ -8,7 +13,8 @@ data class Song(
     val artistName: String?,
     val albumName: String?,
     val albumArt: String,
-    val duration: Long = 0
+    val browsable: Boolean = true,
+    val duration: Long = 0,
 )
 
 val emptySong = Song(

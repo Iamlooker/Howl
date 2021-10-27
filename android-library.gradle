@@ -1,5 +1,6 @@
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
 
 android {
     compileSdk = Android.compileSdk
@@ -60,6 +61,10 @@ dependencies {
     implementation Compose.icons
     implementation Compose.material
     implementation Compose.ui
+
+    implementation Room.roomKtx
+    implementation Room.roomRuntime
+    kapt Room.roomCompiler
 
     debugImplementation Compose.tooling
 }

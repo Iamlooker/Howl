@@ -11,7 +11,7 @@ object Classpath {
 }
 
 object Core {
-    private const val coreVersion = "1.6.0"
+    private const val coreVersion = "1.7.0"
     const val core = "androidx.core:core-ktx:$coreVersion"
 }
 
@@ -21,16 +21,16 @@ object Coil {
 }
 
 object Compose {
-    private const val activityComposeVersion = "1.3.1"
+    private const val activityComposeVersion = "1.4.0"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
-    const val composeVersion = "1.0.4"
+    const val composeVersion = "1.1.0-beta01"
 
     const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
     const val material = "androidx.compose.material:material:$composeVersion"
     const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
     const val ui = "androidx.compose.ui:ui:$composeVersion"
     const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:$composeVersion"
-    private const val navigationVersion = "2.4.0-alpha10"
+    private const val navigationVersion = "2.4.0-beta01"
     const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
@@ -69,6 +69,14 @@ object Lifecycle {
 object Palette {
     private const val paletteVersion = "1.0.0"
     const val palette = "androidx.palette:palette-ktx:$paletteVersion"
+}
+
+object Room {
+    private const val roomVersion = "2.3.0"
+    const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
+    const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
+    const val roomKtx = "androidx.room:room-ktx:$roomVersion"
+
 }
 
 object Version {

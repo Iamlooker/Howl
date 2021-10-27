@@ -1,5 +1,6 @@
 package com.looker.howlmusic.utils
 
+import android.content.ComponentName
 import android.content.Context
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -13,6 +14,8 @@ import com.google.android.exoplayer2.extractor.ts.Ac3Extractor
 import com.google.android.exoplayer2.extractor.ts.AdtsExtractor
 import com.google.android.exoplayer2.extractor.wav.WavExtractor
 import com.google.android.exoplayer2.mediacodec.MediaCodecSelector
+import com.looker.player_service.service.MusicService
+import com.looker.player_service.service.common.MusicServiceConnection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,7 +58,16 @@ object PlayerModule {
     fun providePlayer(
         @ApplicationContext context: Context,
         renderersFactory: RenderersFactory,
-        extractorsFactory: ExtractorsFactory
+        extractorsFactory: ExtractorsFactory,
     ): SimpleExoPlayer =
         SimpleExoPlayer.Builder(context, renderersFactory, extractorsFactory).build()
+
+    @ViewModelScoped
+    @Provides
+    fun provideService(
+        @ApplicationContext context: Context,
+    ): MusicServiceConnection = MusicServiceConnection.getInstance(
+        context,
+        ComponentName(context, MusicService::class.java)
+    )
 }
