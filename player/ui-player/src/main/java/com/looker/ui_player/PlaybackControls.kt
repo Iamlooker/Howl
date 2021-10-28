@@ -24,6 +24,7 @@ import com.looker.components.state.PlayState.PLAYING
 import com.looker.components.tweenAnimation
 import com.looker.ui_player.components.QueueHeader
 import com.looker.ui_player.components.SeekBar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
@@ -35,7 +36,7 @@ fun PlayerControls(
     onSeek: (Float) -> Unit,
     onPlayPause: (PlayState) -> Unit,
     skipNextClick: () -> Unit,
-    skipPrevClick: () -> Unit
+    skipPrevClick: () -> Unit,
 ) {
     Column(
         modifier = modifier.padding(20.dp),
@@ -62,7 +63,7 @@ fun PlayAndSkipButton(
     modifier: Modifier = Modifier,
     isPlaying: PlayState,
     playClick: (PlayState) -> Unit,
-    skipNextClick: () -> Unit
+    skipNextClick: () -> Unit,
 ) {
     val cornerRadius = remember { mutableStateOf(15) }
     var playIcon by remember(isPlaying) { mutableStateOf(Icons.Rounded.PlayArrow) }
@@ -72,7 +73,7 @@ fun PlayAndSkipButton(
     )
 
     LaunchedEffect(isPlaying) {
-        launch {
+        launch(Dispatchers.IO) {
             playIcon = when (isPlaying) {
                 PLAYING -> Icons.Rounded.Pause
                 PAUSED -> Icons.Rounded.PlayArrow
@@ -121,7 +122,7 @@ fun PlayAndSkipButton(
 fun PreviousAndQueue(
     modifier: Modifier = Modifier,
     skipPrevClick: () -> Unit,
-    openQueue: () -> Unit
+    openQueue: () -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),

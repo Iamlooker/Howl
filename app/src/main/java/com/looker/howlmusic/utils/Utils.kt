@@ -11,6 +11,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 fun checkReadPermission(context: Context) =
@@ -25,12 +27,16 @@ object Utils {
     @Singleton
     @Provides
     fun provideSongsRepository(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): SongsRepository = SongsRepository(context)
 
     @Singleton
     @Provides
     fun provideAlbumsRepository(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): AlbumsRepository = AlbumsRepository(context)
+
+    @Singleton
+    @Provides
+    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

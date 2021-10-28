@@ -16,6 +16,8 @@ import com.looker.components.ToggleButton
 import com.looker.components.ext.rippleClick
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.tweenAnimation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun AlbumArtAndUtils(
@@ -26,8 +28,9 @@ fun AlbumArtAndUtils(
     contentDescription: String?,
     albumArtCorner: Int,
     onToggle: () -> Unit,
-    overlayItems: @Composable RowScope.() -> Unit
+    overlayItems: @Composable RowScope.() -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     var overlayVisible by remember { mutableStateOf(false) }
 
     Box {
@@ -38,7 +41,7 @@ fun AlbumArtAndUtils(
             },
             albumArt = albumArt,
             overlayVisible = overlayVisible,
-            onClick = { overlayVisible = !overlayVisible },
+            onClick = { scope.launch(Dispatchers.IO) { overlayVisible = !overlayVisible } },
             overlayItems = overlayItems
         )
 
@@ -62,7 +65,7 @@ fun AlbumArt(
     albumArt: String?,
     overlayVisible: Boolean,
     onClick: () -> Unit,
-    overlayItems: @Composable (RowScope.() -> Unit)
+    overlayItems: @Composable (RowScope.() -> Unit),
 ) {
     val overlay by animateFloatAsState(
         targetValue = if (overlayVisible) 1f else 0f,
@@ -93,7 +96,7 @@ fun AlbumArt(
 fun AlbumArtOverlay(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     Surface(
         modifier = modifier

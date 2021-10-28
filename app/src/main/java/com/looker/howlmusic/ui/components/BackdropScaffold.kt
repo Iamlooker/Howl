@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.looker.components.state.PlayState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
@@ -26,10 +27,10 @@ fun Backdrop(
     frontLayerContent: @Composable () -> Unit
 ) {
     val expandedPeekHeight = with(LocalConfiguration.current) { screenHeightDp.dp / 3 }
-    val peekHeight = remember { mutableStateOf(50.dp) }
+    val peekHeight = remember(playState) { mutableStateOf(50.dp) }
 
     LaunchedEffect(playState) {
-        launch {
+        launch(Dispatchers.IO) {
             peekHeight.value = when (playState) {
                 is PlayState.PLAYING -> expandedPeekHeight
                 is PlayState.PAUSED -> 50.dp

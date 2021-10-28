@@ -3,8 +3,6 @@ package com.looker.howlmusic
 import android.app.Application
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -18,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -28,17 +25,13 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
 import com.google.accompanist.insets.statusBarsPadding
-import com.looker.components.HandleIcon
-import com.looker.components.ShapedIconButton
+import com.looker.components.*
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
-import com.looker.components.rememberDominantColorState
 import com.looker.components.state.PlayState
 import com.looker.components.state.SheetsState.HIDDEN
-import com.looker.components.tweenAnimation
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
-import com.looker.domain_music.emptySong
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -50,6 +43,7 @@ import com.looker.onboarding.OnBoardingPage
 import com.looker.ui_player.PlayerControls
 import com.looker.ui_player.PlayerHeader
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @HiltAndroidApp
@@ -97,60 +91,51 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
         playState = playState,
         enableGesture = enableGesture,
         header = {
+            val cornerRadiusState = remember { mutableStateOf(15) }
 
-            if (currentSong == emptySong) {
-                Image(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(20.dp),
-                    painter = painterResource(id = R.drawable.no_song_playing),
-                    contentDescription = "No Song is playing"
-                )
-            } else {
-                val cornerRadiusState = remember { mutableStateOf(15) }
+            val toggleIcon by viewModel.toggleIcon.collectAsState()
+            val toggle by viewModel.toggle.collectAsState()
+            val backgroundColor = rememberDominantColorState()
 
-                val toggleIcon by viewModel.toggleIcon.collectAsState()
-                val toggle by viewModel.toggle.collectAsState()
-                val backgroundColor = rememberDominantColorState()
-
-                LaunchedEffect(currentSong) {
-                    launch {
-                        backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
-                    }
+            LaunchedEffect(currentSong) {
+                launch {
+                    backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
                 }
-
-                LaunchedEffect(backdropValue, playState) {
-                    launch {
-                        viewModel.setToggleIcon(backdropValue)
-                        viewModel.updateToggle()
-                        cornerRadiusState.value = when (playState) {
-                            PlayState.PLAYING -> 50
-                            PlayState.PAUSED -> 15
-                        }
-                    }
-                }
-
-                val corner by animateIntAsState(
-                    targetValue = cornerRadiusState.value,
-                    animationSpec = tweenAnimation()
-                )
-
-                val animatedBackgroundScrim by animateColorAsState(
-                    targetValue = backgroundColor.color.copy(0.3f),
-                    animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-                )
-
-                PlayerHeader(
-                    modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
-                    icon = toggleIcon,
-                    albumArt = currentSong.albumArt,
-                    songName = currentSong.songName,
-                    artistName = currentSong.artistName,
-                    toggled = toggle,
-                    imageCorner = corner,
-                    toggleAction = { viewModel.onToggle(backdropValue, playState) }
-                )
             }
+
+            LaunchedEffect(backdropValue, playState) {
+                launch {
+                    viewModel.setToggleIcon(backdropValue)
+                    viewModel.updateToggle()
+                }
+                launch {
+                    cornerRadiusState.value = when (playState) {
+                        PlayState.PLAYING -> 50
+                        PlayState.PAUSED -> 15
+                    }
+                }
+            }
+
+            val corner by animateIntAsState(
+                targetValue = cornerRadiusState.value,
+                animationSpec = tweenAnimation()
+            )
+
+            val animatedBackgroundScrim by animateColorAsState(
+                targetValue = backgroundColor.color.copy(0.3f),
+                animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+            )
+
+            PlayerHeader(
+                modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
+                icon = toggleIcon,
+                albumArt = currentSong.albumArt,
+                songName = currentSong.songName,
+                artistName = currentSong.artistName,
+                toggled = toggle,
+                imageCorner = corner,
+                toggleAction = { viewModel.onToggle(backdropValue, playState) }
+            )
         },
         frontLayerContent = {
 
@@ -165,7 +150,12 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                 albumsList = albumsList,
                 handleIcon = handleIcon,
                 onSongClick = { songIndex -> viewModel.onSongClicked(songIndex) },
-                openPlayer = { scope.launch { state.animateTo(BackdropValue.Revealed, tween()) } },
+                openPlayer = {
+                    scope.launch(Dispatchers.IO) {
+                        state.animateTo(BackdropValue.Revealed,
+                            myTween(400))
+                    }
+                },
                 onAlbumSheetState = {
                     if (backdropValue == HIDDEN) viewModel.gestureState(it)
                     else viewModel.gestureState(true)
@@ -196,7 +186,7 @@ fun FrontLayer(
     handleIcon: Float,
     openPlayer: () -> Unit,
     onSongClick: (Int) -> Unit,
-    onAlbumSheetState: (Boolean) -> Unit
+    onAlbumSheetState: (Boolean) -> Unit,
 ) {
 
     val navController = rememberNavController()
@@ -242,7 +232,7 @@ fun PlayerHeader(
     icon: ImageVector,
     toggled: Boolean,
     imageCorner: Int,
-    toggleAction: () -> Unit
+    toggleAction: () -> Unit,
 ) {
     PlayerHeader(
         modifier = modifier
@@ -268,7 +258,7 @@ fun Controls(
     skipNextClick: () -> Unit,
     onSeek: (Float) -> Unit,
     openQueue: () -> Unit,
-    skipPrevClick: () -> Unit
+    skipPrevClick: () -> Unit,
 ) {
     Column(modifier) {
         PlayerControls(
