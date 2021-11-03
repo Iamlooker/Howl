@@ -4,7 +4,7 @@ data class Album(
     val albumId: Long,
     val albumName: String?,
     val artistName: String?,
-    val albumArt: String
+    val albumArt: String?,
 )
 
-val emptyAlbum = Album(0, null, null, "")
+val emptyAlbum = Album(0, null, null, null)

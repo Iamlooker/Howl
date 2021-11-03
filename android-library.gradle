@@ -59,6 +59,7 @@ dependencies {
 
     implementation Compose.activity
     implementation Compose.icons
+    implementation Compose.foundation
     implementation Compose.material
     implementation Compose.ui
 

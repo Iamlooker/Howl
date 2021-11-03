@@ -13,14 +13,14 @@ fun Int.toColor() = Color(this)
 @Composable
 fun Color.compositeOverBackground(
     alpha: Float = 0.3f,
-    backgroundColor: Color = MaterialTheme.colors.background
+    backgroundColor: Color = MaterialTheme.colors.background,
 ): Color =
     this.copy(alpha).compositeOver(backgroundColor)
 
 @Composable
 fun rememberDominantColorState(
     context: Context = LocalContext.current,
-    defaultColor: Color = MaterialTheme.colors.surface,
+    defaultColor: Color = MaterialTheme.colors.primaryVariant,
     cacheSize: Int = 12,
 ): DominantColorState = remember {
     DominantColorState(context, defaultColor, cacheSize)
@@ -46,12 +46,13 @@ class DominantColorState(
     }
 
     private suspend fun calculateDominantColorFromUrl(url: String?): DominantColors? {
-        return url?.let {
-            cache?.get(it)
+        return if (url != null) {
+            cache?.get(url)
                 ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
                     DominantColors(color = dominantColor).also { result -> cache?.put(url, result) }
                 }
-        }
+        } else null
+
     }
 }
 

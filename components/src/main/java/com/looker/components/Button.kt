@@ -21,13 +21,12 @@ fun ShapedIconButton(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     backgroundColor: Color = MaterialTheme.colors.primary,
-    contentColor: Color = contentColorFor(backgroundColor = backgroundColor),
-    buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 6.dp),
+    contentColor: Color = contentColorFor(backgroundColor),
+    buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     contentDescription: String?,
     onClick: () -> Unit,
 ) {
-
     Button(
         modifier = modifier,
         onClick = onClick,

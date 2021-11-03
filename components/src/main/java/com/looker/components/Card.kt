@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -25,8 +24,8 @@ fun MaterialCard(
     contentColor: Color = MaterialTheme.colors.onBackground,
     backgroundColor: Color = MaterialTheme.colors.background,
     shape: Shape = MaterialTheme.shapes.medium,
-    onClick: () -> Unit = {},
-    content: @Composable () -> Unit
+    onClick: () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Card(
         modifier = modifier.semantics(mergeDescendants = true) {},
@@ -47,31 +46,21 @@ fun SmallCard(
     subText: String?,
     imageSize: Dp,
     imageShape: CornerBasedShape = MaterialTheme.shapes.small,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     MaterialCard(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier,
         shape = imageShape,
         onClick = onClick
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            HowlImage(
-                modifier = Modifier.size(imageSize),
-                data = imageUrl,
-                shape = imageShape
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            ItemCardText(
-                title = title,
-                subText = subText,
-                titleTextStyle = MaterialTheme.typography.body1,
-                subTextTextStyle = MaterialTheme.typography.caption,
-                itemTextAlignment = Alignment.Start
-            )
-        }
+        SmallCardItem(
+            modifier = Modifier.padding(8.dp),
+            imageUrl = imageUrl,
+            imageShape = imageShape,
+            imageSize = imageSize,
+            title = title,
+            secondaryText = subText
+        )
     }
 }
 
@@ -84,64 +73,80 @@ fun LargeCard(
     imageSize: Dp,
     imageShape: CornerBasedShape = MaterialTheme.shapes.medium,
     cardColor: Color = MaterialTheme.colors.surface,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     MaterialCard(
         modifier = modifier.padding(8.dp),
         backgroundColor = cardColor,
         onClick = onClick
     ) {
-        Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            HowlImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(imageSize),
-                data = imageUrl,
-                shape = imageShape
-            )
-            ItemCardText(
-                title = title,
-                subText = subText,
-                titleTextStyle = MaterialTheme.typography.h6,
-                subTextTextStyle = MaterialTheme.typography.body2,
-                itemTextAlignment = Alignment.CenterHorizontally,
-                textAlign = TextAlign.Center
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+        LargeCardItem(
+            imageUrl = imageUrl,
+            title = title,
+            secondaryText = subText,
+            imageSize = imageSize,
+            imageShape = imageShape
+        )
     }
 }
 
 @Composable
-fun ItemCardText(
+private fun SmallCardItem(
     modifier: Modifier = Modifier,
+    imageUrl: String?,
+    imageSize: Dp,
+    imageShape: CornerBasedShape,
     title: String?,
-    subText: String?,
-    titleTextStyle: TextStyle = MaterialTheme.typography.body1,
-    subTextTextStyle: TextStyle = MaterialTheme.typography.caption,
-    itemTextAlignment: Alignment.Horizontal,
-    textAlign: TextAlign = TextAlign.Start
+    secondaryText: String?,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        HowlImage(
+            modifier = Modifier.size(imageSize),
+            data = imageUrl,
+            shape = imageShape
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        TitleSubText(
+            title = title ?: "",
+            subText = secondaryText ?: "",
+            itemTextAlignment = Alignment.Start
+        )
+    }
+}
+
+@Composable
+private fun LargeCardItem(
+    modifier: Modifier = Modifier,
+    imageUrl: String?,
+    title: String?,
+    secondaryText: String?,
+    imageSize: Dp,
+    imageShape: CornerBasedShape,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = itemTextAlignment
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        WrappedText(
-            text = title,
-            style = titleTextStyle,
-            textAlign = textAlign,
-            maxLines = 3,
+        HowlImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(imageSize),
+            data = imageUrl,
+            shape = imageShape
         )
-        WrappedText(
-            text = subText,
-            style = subTextTextStyle,
-            textAlign = textAlign,
-            maxLines = 2
+        TitleSubText(
+            title = title ?: "",
+            subText = secondaryText ?: "",
+            titleTextStyle = MaterialTheme.typography.h6,
+            subTextTextStyle = MaterialTheme.typography.body2,
+            itemTextAlignment = Alignment.CenterHorizontally,
+            textAlign = TextAlign.Center
         )
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }

@@ -41,9 +41,9 @@ fun BottomSheets(
 }
 
 /**
- * [angle] = 0f is ArrowUp
+ * [angle] = 0f is Arrow Up
  *
- * [angle] = 1f is ArrowDown
+ * [angle] = 1f is Arrow Down
  */
 @Composable
 fun HandleIcon(

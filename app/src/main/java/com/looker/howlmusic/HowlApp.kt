@@ -4,16 +4,16 @@ import android.app.Application
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -29,7 +29,7 @@ import com.looker.components.*
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.state.PlayState
-import com.looker.components.state.SheetsState.HIDDEN
+import com.looker.components.state.SheetsState
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.Backdrop
@@ -38,8 +38,9 @@ import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens.ALBUMS
 import com.looker.howlmusic.ui.components.HomeScreens.SONGS
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
-import com.looker.howlmusic.utils.checkReadPermission
 import com.looker.onboarding.OnBoardingPage
+import com.looker.onboarding.utils.checkReadPermission
+import com.looker.ui_albums.AlbumsBottomSheetContent
 import com.looker.ui_player.PlayerControls
 import com.looker.ui_player.PlayerHeader
 import dagger.hilt.android.HiltAndroidApp
@@ -48,11 +49,7 @@ import kotlinx.coroutines.launch
 
 @HiltAndroidApp
 class HowlApp : Application(), ImageLoaderFactory {
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader.Builder(this)
-            .crossfade(400)
-            .build()
-    }
+    override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this).build()
 }
 
 @Composable
@@ -138,27 +135,47 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
             )
         },
         frontLayerContent = {
+            val bottomSheetState =
+                rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
             val handleIcon by viewModel.handleIcon.collectAsState()
             val songsList by viewModel.songsList.collectAsState()
             val albumsList by viewModel.albumsList.collectAsState()
+            val currentAlbum by viewModel.currentAlbum.collectAsState()
+            val albumDominant = rememberDominantColorState()
 
             LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
+            LaunchedEffect(currentAlbum) {
+                launch { albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt) }
+            }
+
+            LaunchedEffect(bottomSheetState.isVisible, currentAlbum) {
+                launch {
+                    if (backdropValue == SheetsState.HIDDEN) {
+                        viewModel.gestureState(!bottomSheetState.isVisible)
+                    } else viewModel.gestureState(true)
+                }
+            }
 
             FrontLayer(
+                bottomSheetState = bottomSheetState,
                 songsList = songsList,
                 albumsList = albumsList,
                 handleIcon = handleIcon,
-                onSongClick = { songIndex -> viewModel.onSongClicked(songIndex) },
+                currentAlbum = currentAlbum,
+                albumsDominantColor = albumDominant.color,
+                onSongClick = { viewModel.onSongClicked(it) },
                 openPlayer = {
                     scope.launch(Dispatchers.IO) {
-                        state.animateTo(BackdropValue.Revealed,
-                            myTween(400))
+                        state.animateTo(BackdropValue.Revealed, myTween(400))
                     }
                 },
-                onAlbumSheetState = {
-                    if (backdropValue == HIDDEN) viewModel.gestureState(it)
-                    else viewModel.gestureState(true)
+                onAlbumClick = {
+                    scope.launch {
+                        bottomSheetState.animateTo(ModalBottomSheetValue.HalfExpanded,
+                            myTween(400))
+                    }
+                    viewModel.onAlbumClick(it)
                 }
             )
         },
@@ -179,46 +196,59 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FrontLayer(
+    bottomSheetState: ModalBottomSheetState,
     songsList: List<Song>,
     albumsList: List<Album>,
     handleIcon: Float,
+    currentAlbum: Album,
+    albumsDominantColor: Color,
     openPlayer: () -> Unit,
     onSongClick: (Int) -> Unit,
-    onAlbumSheetState: (Boolean) -> Unit,
+    onAlbumClick: (Int) -> Unit,
 ) {
-
     val navController = rememberNavController()
     val items = listOf(SONGS, ALBUMS)
-
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier.navigationBarsHeight(56.dp),
-                navController = navController,
-                items = items
-            )
-        },
-        floatingActionButton = {
-            ShapedIconButton(
-                modifier = Modifier.clip(CircleShape),
-                icon = Icons.Rounded.KeyboardArrowDown,
-                backgroundColor = MaterialTheme.colors.surface,
-                contentDescription = "Expand Player",
-                onClick = openPlayer
+    BottomSheets(
+        state = bottomSheetState,
+        sheetContent = {
+            AlbumsBottomSheetContent(
+                currentAlbum = currentAlbum,
+                songsList = songsList.filter { it.albumId == currentAlbum.albumId },
+                dominantColor = albumsDominantColor.copy(0.4f)
             )
         }
-    ) { bottomNavigationPadding ->
-        Column(Modifier.padding(bottomNavigationPadding)) {
-            HandleIcon(handleIcon) { openPlayer() }
-            HomeNavGraph(
-                navController = navController,
-                songsList = songsList,
-                albumsList = albumsList,
-                onSongClick = onSongClick,
-                onAlbumsSheetState = onAlbumSheetState
-            )
+    ) {
+        Scaffold(
+            bottomBar = {
+                BottomAppBar(
+                    modifier = Modifier.navigationBarsHeight(56.dp),
+                    navController = navController,
+                    items = items
+                )
+            },
+            floatingActionButton = {
+                ShapedIconButton(
+                    icon = Icons.Rounded.KeyboardArrowDown,
+                    backgroundColor = MaterialTheme.colors.secondaryVariant,
+                    contentPadding = PaddingValues(vertical = 16.dp),
+                    contentDescription = "Expand Player",
+                    onClick = openPlayer
+                )
+            }
+        ) { bottomNavigationPadding ->
+            Column(Modifier.padding(bottomNavigationPadding)) {
+                HandleIcon(handleIcon) { openPlayer() }
+                HomeNavGraph(
+                    navController = navController,
+                    songsList = songsList,
+                    albumsList = albumsList,
+                    onSongClick = onSongClick,
+                    onAlbumClick = onAlbumClick
+                )
+            }
         }
     }
 }

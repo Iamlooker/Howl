@@ -4,7 +4,8 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
 
-val Orange100 = Color(0xFFFDF3F0)
+val Orange50 = Color(0xFFFDF3F0)
+val Orange100 = Color(0xFFFFBEAA)
 val Orange200 = Color(0xFFFFAB91)
 val Orange300 = Color(0xFFFF9B7C)
 val Orange900 = Color(0xFF221C1C)
@@ -18,12 +19,12 @@ val HowlColorsLight = lightColors(
     secondary = Green200,
     secondaryVariant = Green100,
     onSecondary = Color.Black,
-    surface = Orange100
+    surface = Orange50
 )
 
 val HowlColorsDark = darkColors(
     primary = Orange200,
-    primaryVariant = Orange200,
+    primaryVariant = Orange100,
     onPrimary = Color.Black,
     secondary = Green200,
     secondaryVariant = Green100,

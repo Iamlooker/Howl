@@ -93,9 +93,9 @@ dependencies {
     implementation(Compose.activity)
     implementation(Compose.icons)
     implementation(Compose.material)
+    implementation(Compose.foundation)
     implementation(Compose.navigation)
     implementation(Compose.ui)
-    implementation(Compose.runtimeLiveData)
 
     implementation(ExoPlayer.exoplayerCore)
     implementation(ExoPlayer.exoplayerMediaSession)

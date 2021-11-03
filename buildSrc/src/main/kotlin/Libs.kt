@@ -21,10 +21,11 @@ object Coil {
 }
 
 object Compose {
+    const val composeVersion = "1.1.0-beta01"
     private const val activityComposeVersion = "1.4.0"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
-    const val composeVersion = "1.1.0-beta01"
 
+    const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
     const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
     const val material = "androidx.compose.material:material:$composeVersion"
     const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
@@ -72,7 +73,7 @@ object Palette {
 }
 
 object Room {
-    private const val roomVersion = "2.3.0"
+    private const val roomVersion = "2.4.0-beta01"
     const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
     const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
     const val roomKtx = "androidx.room:room-ktx:$roomVersion"

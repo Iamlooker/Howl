@@ -12,7 +12,7 @@ data class Song(
     val songName: String?,
     val artistName: String?,
     val albumName: String?,
-    val albumArt: String,
+    val albumArt: String?,
     val browsable: Boolean = true,
     val duration: Long = 0,
 )
@@ -24,5 +24,5 @@ val emptySong = Song(
     songName = null,
     artistName = null,
     albumName = null,
-    albumArt = ""
+    albumArt = null
 )

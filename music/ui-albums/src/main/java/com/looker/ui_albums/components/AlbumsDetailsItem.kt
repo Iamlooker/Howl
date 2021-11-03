@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.looker.components.HowlImage
-import com.looker.components.ItemCardText
+import com.looker.components.TitleSubText
 
 @Composable
 fun AlbumsDetailsItem(
@@ -47,9 +47,9 @@ fun DetailsText(
     albumName: String?,
     artistName: String?
 ) {
-    ItemCardText(
-        title = albumName,
-        subText = artistName,
+    TitleSubText(
+        title = albumName ?: "",
+        subText = artistName ?: "",
         titleTextStyle = MaterialTheme.typography.h5,
         subTextTextStyle = MaterialTheme.typography.body1,
         itemTextAlignment = Alignment.CenterHorizontally

@@ -23,6 +23,7 @@ import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.SongsRepository
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
+import com.looker.domain_music.emptyAlbum
 import com.looker.domain_music.emptySong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -74,6 +75,7 @@ class HowlViewModel
     private val _currentSong = MutableStateFlow(emptySong)
     private val _playState = MutableStateFlow<PlayState>(PAUSED)
     private val _toggle = MutableStateFlow(false)
+    private val _currentAlbum = MutableStateFlow(emptyAlbum)
 
     val progress: StateFlow<Float> = _progress
     val handleIcon: StateFlow<Float> = _handleIcon
@@ -85,6 +87,7 @@ class HowlViewModel
     val backdropValue: StateFlow<SheetsState> = _backdropValue
     val playState: StateFlow<PlayState> = _playState
     val toggle: StateFlow<Boolean> = _toggle
+    val currentAlbum: StateFlow<Album> = _currentAlbum
 
     @ExperimentalMaterialApi
     fun setBackdropValue(currentValue: BackdropValue) {
@@ -112,19 +115,19 @@ class HowlViewModel
         _enableGesture.value = allowGesture
     }
 
-    private fun setPlayState(isPlaying: Boolean) {
-        _playState.value = if (isPlaying) PLAYING else PAUSED
+    private suspend fun setPlayState(isPlaying: Boolean) {
+        _playState.emit(if (isPlaying) PLAYING else PAUSED)
     }
 
-    private fun setPlayState(isPlaying: PlayState) {
-        _playState.value = isPlaying
+    private suspend fun setPlayState(isPlaying: PlayState) {
+        _playState.emit(isPlaying)
     }
 
-    private fun updatePlayIcon() {
-        _playIcon.value = when (playState.value) {
+    private suspend fun updatePlayIcon() {
+        _playIcon.emit(when (playState.value) {
             is PAUSED -> Icons.Rounded.PlayArrow
             is PLAYING -> Icons.Rounded.Pause
-        }
+        })
     }
 
     fun onPlayPause(isPlaying: PlayState) {
@@ -146,19 +149,19 @@ class HowlViewModel
 
     fun setToggleIcon(currentState: SheetsState) {
         viewModelScope.launch(ioDispatcher) {
-            _toggleIcon.value = when (currentState) {
+            _toggleIcon.emit(when (currentState) {
                 is HIDDEN -> playIcon.value
                 is VISIBLE -> Icons.Rounded.Shuffle
-            }
+            })
         }
     }
 
     fun setHandleIcon(currentState: SheetsState) {
         viewModelScope.launch(ioDispatcher) {
-            _handleIcon.value = when (currentState) {
+            _handleIcon.emit(when (currentState) {
                 is HIDDEN -> 1f
                 is VISIBLE -> 0f
-            }
+            })
         }
     }
 
@@ -179,6 +182,12 @@ class HowlViewModel
         }
     }
 
+    fun onAlbumClick(index: Int) {
+        viewModelScope.launch(ioDispatcher) {
+            launch { _currentAlbum.emit(albumsList.value[index]) }
+        }
+    }
+
     private suspend fun SimpleExoPlayer.setMediaItems(index: Int, songs: List<Song>) {
         withContext(ioDispatcher) {
             val mediaItems = arrayListOf<MediaItem>()
@@ -195,7 +204,7 @@ class HowlViewModel
     }
 
     fun onSeek(seekTo: Float) {
-        viewModelScope.launch(ioDispatcher) { _progress.value = seekTo }
+        viewModelScope.launch(ioDispatcher) { _progress.emit(seekTo) }
         viewModelScope.launch(Dispatchers.Main) { exoPlayer.seekTo((exoPlayer.contentDuration * seekTo).toLong()) }
     }
 
@@ -215,12 +224,12 @@ class HowlViewModel
         }
     }
 
-    private fun setCurrentSong(song: Song) {
-        _currentSong.value = song
+    private suspend fun setCurrentSong(song: Song) {
+        _currentSong.emit(song)
     }
 
-    private fun setCurrentIndex(index: Int) {
-        _currentIndex.value = index
+    private suspend fun setCurrentIndex(index: Int) {
+        _currentIndex.emit(index)
     }
 
     override fun onCleared() {

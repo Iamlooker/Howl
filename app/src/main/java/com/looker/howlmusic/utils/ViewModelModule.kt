@@ -1,9 +1,6 @@
 package com.looker.howlmusic.utils
 
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
-import com.looker.constants.Constants.READ_PERMISSION
 import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.SongsRepository
 import dagger.Module
@@ -15,14 +12,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
-fun checkReadPermission(context: Context) =
-    ContextCompat.checkSelfPermission(
-        context, READ_PERMISSION
-    ) == PackageManager.PERMISSION_GRANTED
-
 @InstallIn(SingletonComponent::class)
 @Module
-object Utils {
+object ViewModelModule {
 
     @Singleton
     @Provides

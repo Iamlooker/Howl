@@ -35,13 +35,18 @@ fun HomeNavGraph(
     songsList: List<Song>,
     albumsList: List<Album>,
     onSongClick: (Int) -> Unit,
-    onAlbumsSheetState: (Boolean) -> Unit
+    onAlbumClick: (Int) -> Unit,
 ) {
     NavHost(
         navController = navController,
         startDestination = HOME,
         builder = {
-            homeGraph(songsList, albumsList, onAlbumsSheetState, onSongClick)
+            homeGraph(
+                songsList = songsList,
+                albumsList = albumsList,
+                onSongClick = onSongClick,
+                onAlbumClick = onAlbumClick
+            )
         }
     )
 }
@@ -49,8 +54,8 @@ fun HomeNavGraph(
 internal fun NavGraphBuilder.homeGraph(
     songsList: List<Song>,
     albumsList: List<Album>,
-    onAlbumsSheetState: (Boolean) -> Unit,
-    onSongClick: (Int) -> Unit
+    onSongClick: (Int) -> Unit,
+    onAlbumClick: (Int) -> Unit,
 ) {
     navigation(
         route = HOME,
@@ -64,9 +69,8 @@ internal fun NavGraphBuilder.homeGraph(
         }
         composable(HomeScreens.ALBUMS.route) {
             Albums(
-                songsList = songsList,
                 albumsList = albumsList,
-                onStateChange = onAlbumsSheetState
+                onAlbumClick = onAlbumClick
             )
         }
     }

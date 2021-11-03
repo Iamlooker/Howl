@@ -9,6 +9,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,7 +26,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.insets.navigationBarsPadding
-import com.looker.components.WrappedText
 import com.looker.components.compositeOverBackground
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations
@@ -131,10 +131,10 @@ fun BaselineBottomNavigationItem(
     ) {
         Icon(imageVector = icon, tint = itemColor, contentDescription = null)
         Spacer(modifier = Modifier.width(4.dp))
-        WrappedText(
+        Text(
             modifier = Modifier.animateContentSize(tweenAnimation()),
-            text = label?.uppercase(),
-            textColor = itemColor,
+            text = label ?: "",
+            color = itemColor,
             fontWeight = FontWeight.SemiBold
         )
     }
