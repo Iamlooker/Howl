@@ -44,75 +44,67 @@ class HowlViewModel
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            songsRepository.getAllSongs().collect { list -> _songsList.emit(list) }
+        }
+        viewModelScope.launch(Dispatchers.Default) {
+            albumsRepository.getAllAlbums().collect { _albumsList.emit(it.distinct()) }
+        }
+    }
+
     private val _songsList = MutableStateFlow(emptyList<Song>())
     val songsList: StateFlow<List<Song>> = _songsList
 
     private val _albumsList = MutableStateFlow(emptyList<Album>())
     val albumsList: StateFlow<List<Album>> = _albumsList
 
-    init {
-        viewModelScope.launch(Dispatchers.Default) {
-            songsRepository.getAllSongs()
-                .collect { list ->
-                    _songsList.value = list
-                }
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            albumsRepository.getAllAlbums()
-                .collect {
-                    _albumsList.value = it
-                }
-        }
-    }
-
-    private val _progress = MutableStateFlow(0f)
-    private val _handleIcon = MutableStateFlow(0.5f)
-    private val _currentIndex = MutableStateFlow(0)
-    private val _enableGesture = MutableStateFlow(true)
-    private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
-    private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
     private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
-    private val _currentSong = MutableStateFlow(emptySong)
-    private val _playState = MutableStateFlow<PlayState>(PAUSED)
-    private val _toggle = MutableStateFlow(false)
     private val _currentAlbum = MutableStateFlow(emptyAlbum)
+    private val _currentIndex = MutableStateFlow(0)
+    private val _currentSong = MutableStateFlow(emptySong)
+    private val _enableGesture = MutableStateFlow(true)
+    private val _handleIcon = MutableStateFlow(0.5f)
+    private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
+    private val _playState = MutableStateFlow<PlayState>(PAUSED)
+    private val _progress = MutableStateFlow(0f)
+    private val _toggle = MutableStateFlow(false)
+    private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 
-    val progress: StateFlow<Float> = _progress
-    val handleIcon: StateFlow<Float> = _handleIcon
-    private val currentIndex: StateFlow<Int> = _currentIndex
-    val currentSong: StateFlow<Song> = _currentSong
-    val toggleIcon: StateFlow<ImageVector> = _toggleIcon
-    val enableGesture: StateFlow<Boolean> = _enableGesture
-    private val playIcon: StateFlow<ImageVector> = _playIcon
     val backdropValue: StateFlow<SheetsState> = _backdropValue
+    val currentAlbum: StateFlow<Album> = _currentAlbum
+    val currentSong: StateFlow<Song> = _currentSong
+    val enableGesture: StateFlow<Boolean> = _enableGesture
+    val handleIcon: StateFlow<Float> = _handleIcon
+    val progress: StateFlow<Float> = _progress
     val playState: StateFlow<PlayState> = _playState
     val toggle: StateFlow<Boolean> = _toggle
-    val currentAlbum: StateFlow<Album> = _currentAlbum
+    val toggleIcon: StateFlow<ImageVector> = _toggleIcon
 
     @ExperimentalMaterialApi
     fun setBackdropValue(currentValue: BackdropValue) {
         viewModelScope.launch(ioDispatcher) {
-            _backdropValue.value = when (currentValue) {
+            _backdropValue.emit(when (currentValue) {
                 Concealed -> HIDDEN
                 Revealed -> VISIBLE
-            }
+            })
         }
     }
 
     fun updateToggle() {
         viewModelScope.launch(ioDispatcher) {
-            _toggle.value = when (backdropValue.value) {
+            _toggle.emit(when (backdropValue.value) {
                 HIDDEN -> when (playState.value) {
                     PAUSED -> false
                     PLAYING -> true
                 }
                 VISIBLE -> false
-            }
+            })
         }
     }
 
     fun gestureState(allowGesture: Boolean) {
-        _enableGesture.value = allowGesture
+        viewModelScope.launch { _enableGesture.emit(allowGesture) }
     }
 
     private suspend fun setPlayState(isPlaying: Boolean) {
@@ -140,19 +132,18 @@ class HowlViewModel
     }
 
     fun onToggle(currentState: SheetsState, playState: PlayState) = when (currentState) {
-        is HIDDEN -> {
-            onPlayPause(playState)
-        }
-        is VISIBLE -> {
-        }
+        is HIDDEN -> onPlayPause(playState)
+        is VISIBLE -> Unit
     }
 
     fun setToggleIcon(currentState: SheetsState) {
         viewModelScope.launch(ioDispatcher) {
-            _toggleIcon.emit(when (currentState) {
-                is HIDDEN -> playIcon.value
-                is VISIBLE -> Icons.Rounded.Shuffle
-            })
+            _playIcon.collect {
+                _toggleIcon.emit(when (currentState) {
+                    is HIDDEN -> it
+                    is VISIBLE -> Icons.Rounded.Shuffle
+                })
+            }
         }
     }
 
@@ -167,31 +158,31 @@ class HowlViewModel
 
     fun onSongClicked(index: Int) {
         viewModelScope.launch(ioDispatcher) {
-            launch { setPlayState(true) }.join()
-            launch { updatePlayIcon() }
+            setPlayState(true)
+            updatePlayIcon()
         }
         viewModelScope.launch(ioDispatcher) { setCurrentIndex(index) }
-        viewModelScope.launch(ioDispatcher) { setCurrentSong(songsList.value[index]) }
+        viewModelScope.launch(Dispatchers.Main) { setCurrentSong(songsList.value[index]) }
         viewModelScope.launch(Dispatchers.Main) {
             exoPlayer.apply {
                 clearMediaItems()
-                setMediaItems(index, songsList.value)
+                setMediaItems(index)
                 prepare()
-                play()
+                playWhenReady
             }
         }
     }
 
     fun onAlbumClick(index: Int) {
         viewModelScope.launch(ioDispatcher) {
-            launch { _currentAlbum.emit(albumsList.value[index]) }
+            albumsList.collect { albums -> _currentAlbum.emit(albums[index]) }
         }
     }
 
-    private suspend fun SimpleExoPlayer.setMediaItems(index: Int, songs: List<Song>) {
+    private suspend fun SimpleExoPlayer.setMediaItems(index: Int) {
         withContext(ioDispatcher) {
             val mediaItems = arrayListOf<MediaItem>()
-            launch { songs.forEach { mediaItems.add(MediaItem.fromUri(it.songUri)) } }
+            launch { songsList.value.forEach { mediaItems.add(MediaItem.fromUri(it.songUri)) } }
             launch(Dispatchers.Main) { this@setMediaItems.setMediaItems(mediaItems, index, 0) }
         }
     }
@@ -212,7 +203,13 @@ class HowlViewModel
         if (exoPlayer.hasNextWindow()) {
             exoPlayer.seekToNext()
             viewModelScope.launch { setCurrentIndex(_currentIndex.value.inc()) }
-            viewModelScope.launch { setCurrentSong(songsList.value[currentIndex.value]) }
+            viewModelScope.launch {
+                songsList.collect { songs ->
+                    _currentIndex.collect { index ->
+                        setCurrentSong(songs[index])
+                    }
+                }
+            }
         }
     }
 
@@ -220,17 +217,19 @@ class HowlViewModel
         if (exoPlayer.hasPreviousWindow()) {
             exoPlayer.seekToPrevious()
             viewModelScope.launch { setCurrentIndex(_currentIndex.value.dec()) }
-            viewModelScope.launch { setCurrentSong(songsList.value[currentIndex.value]) }
+            viewModelScope.launch {
+                songsList.collect { songs ->
+                    _currentIndex.collect { index ->
+                        setCurrentSong(songs[index])
+                    }
+                }
+            }
         }
     }
 
-    private suspend fun setCurrentSong(song: Song) {
-        _currentSong.emit(song)
-    }
+    private suspend fun setCurrentSong(song: Song) = _currentSong.emit(song)
 
-    private suspend fun setCurrentIndex(index: Int) {
-        _currentIndex.emit(index)
-    }
+    private suspend fun setCurrentIndex(index: Int) = _currentIndex.emit(index)
 
     override fun onCleared() {
         super.onCleared()

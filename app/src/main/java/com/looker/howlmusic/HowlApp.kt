@@ -232,7 +232,7 @@ fun FrontLayer(
             floatingActionButton = {
                 ShapedIconButton(
                     icon = Icons.Rounded.KeyboardArrowDown,
-                    backgroundColor = MaterialTheme.colors.secondaryVariant,
+                    backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(),
                     contentPadding = PaddingValues(vertical = 16.dp),
                     contentDescription = "Expand Player",
                     onClick = openPlayer
