@@ -168,7 +168,7 @@ class HowlViewModel
                 clearMediaItems()
                 setMediaItems(index)
                 prepare()
-                playWhenReady
+                play()
             }
         }
     }
