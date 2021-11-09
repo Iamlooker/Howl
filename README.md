@@ -1,9 +1,14 @@
+<div align="center">
+
+![logo](https://raw.githubusercontent.com/MrWooltrest/Howl/alpha/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp)
+
 # Howl Music Player
 
 ### A sleek and minimal offline music player made wit. 
 
+<div align="left">
 
-## Features 
+## :package: Features 
 
 - Sleek and responsive UI , following material design
 
@@ -12,29 +17,22 @@
 - More will be added as it grows ....
 
 
-## Screenshots
+## :camera: Screenshots
 
-##### Now Playing
+<img src="https://telegra.ph/file/4b6687a469633d132aeb1.jpg" width="32%" alt="Now Playing" />
 
-![now playing](https://telegra.ph/file/4b6687a469633d132aeb1.jpg)
+<img src="https://telegra.ph/file/5dae580a9b31aba923d4e.jpg" width="32%" alt="Songs (Dark)" />
 
-##### Songs_Dark
-
-![Songs_dark](https://telegra.ph/file/5dae580a9b31aba923d4e.jpg)
-
-##### NowPlaying_Dark
-
-![nowplaying_dark](https://telegra.ph/file/1b0d282b79e5ac51034b5.jpg)
-
+<img src="https://telegra.ph/file/1b0d282b79e5ac51034b5.jpg" width="32%" alt="Now Playing (Dark)" />
 
 
   
-## Download
+## :iphone: Download
 
 ### Download test apks from [Telegram channel](https://telegram.me/IamlookerBuilds)
 
 
-## Contribute 
+## :wave: Contribute 
 
 ### Pull Requests are always welcomed! 
 
