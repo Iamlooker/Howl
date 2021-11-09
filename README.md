@@ -19,11 +19,11 @@
 
 ## :camera: Screenshots
 
-<img src="https://telegra.ph/file/4b6687a469633d132aeb1.jpg" width="31%" alt="Now Playing" />
+<img src="https://telegra.ph/file/4b6687a469633d132aeb1.jpg" width="32%" alt="Now Playing" />
 
-<img src="https://telegra.ph/file/5dae580a9b31aba923d4e.jpg" width="31%" alt="Songs (Dark)" />
+<img src="https://telegra.ph/file/5dae580a9b31aba923d4e.jpg" width="32%" alt="Songs (Dark)" />
 
-<img src="https://telegra.ph/file/1b0d282b79e5ac51034b5.jpg" width="31%" alt="Now Playing (Dark)" />
+<img src="https://telegra.ph/file/1b0d282b79e5ac51034b5.jpg" width="32%" alt="Now Playing (Dark)" />
 
 
   
