@@ -1,9 +1,14 @@
+<div align="center">
+
+![logo](https://raw.githubusercontent.com/MrWooltrest/Howl/alpha/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.webp)
+
 # Howl Music Player
 
 ### A sleek and minimal offline music player made wit. 
 
+<div align="left">
 
-## Features 
+## :package: Features 
 
 - Sleek and responsive UI , following material design
 
@@ -12,7 +17,7 @@
 - More will be added as it grows ....
 
 
-## Screenshots
+## :camera: Screenshots
 
 ##### Now Playing
 
@@ -29,12 +34,12 @@
 
 
   
-## Download
+## :iphone: Download
 
 ### Download test apks from [Telegram channel](https://telegram.me/IamlookerBuilds)
 
 
-## Contribute 
+## :wave: Contribute 
 
 ### Pull Requests are always welcomed! 
 
