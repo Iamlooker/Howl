@@ -19,12 +19,11 @@
 
 ## :camera: Screenshots
 
-<img src="https://telegra.ph/file/4b6687a469633d132aeb1.jpg" width="32%" alt="Now Playing" />
+<img src="screenshots/now_playing" width="32%" alt="Now Playing" />
 
-<img src="https://telegra.ph/file/5dae580a9b31aba923d4e.jpg" width="32%" alt="Songs (Dark)" />
+<img src="screenshots/song_playing" width="32%" alt="Songs" />
 
-<img src="https://telegra.ph/file/1b0d282b79e5ac51034b5.jpg" width="32%" alt="Now Playing (Dark)" />
-
+<img src="screenshots/albums_page" width="32%" alt="Albums" />
 
   
 ## :iphone: Download
@@ -32,8 +31,6 @@
 ### Download test apks from [Telegram channel](https://telegram.me/IamlookerBuilds)
 
 
-## :wave: Contribute 
+## :wave: Contribute
 
-### Pull Requests are always welcomed! 
-
-## 🌟 Star  the repo if you enjoyed Howl :)
+### Pull Requests are always welcomed!
