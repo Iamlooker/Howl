@@ -19,11 +19,11 @@
 
 ## :camera: Screenshots
 
-<img src="screenshots/now_playing" width="32%" alt="Now Playing" />
+<img src="screenshots/now_playing.png" width="32%" alt="Now Playing" />
 
-<img src="screenshots/song_playing" width="32%" alt="Songs" />
+<img src="screenshots/song_playing.png" width="32%" alt="Songs" />
 
-<img src="screenshots/albums_page" width="32%" alt="Albums" />
+<img src="screenshots/albums_page.png" width="32%" alt="Albums" />
 
   
 ## :iphone: Download
