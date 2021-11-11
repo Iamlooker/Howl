@@ -21,7 +21,7 @@ object Coil {
 }
 
 object Compose {
-    const val composeVersion = "1.1.0-beta01"
+    const val composeVersion = "1.1.0-beta02"
     private const val activityComposeVersion = "1.4.0"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
