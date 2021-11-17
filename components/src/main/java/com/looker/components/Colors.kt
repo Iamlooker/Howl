@@ -20,7 +20,7 @@ fun Color.compositeOverBackground(
 @Composable
 fun rememberDominantColorState(
     context: Context = LocalContext.current,
-    defaultColor: Color = MaterialTheme.colors.primaryVariant,
+    defaultColor: Color = MaterialTheme.colors.surface,
     cacheSize: Int = 12,
 ): DominantColorState = remember {
     DominantColorState(context, defaultColor, cacheSize)
@@ -49,7 +49,7 @@ class DominantColorState(
         return if (url != null) {
             cache?.get(url)
                 ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
-                    DominantColors(color = dominantColor).also { result -> cache?.put(url, result) }
+                    DominantColors(dominantColor).also { result -> cache?.put(url, result) }
                 }
         } else null
 

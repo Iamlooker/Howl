@@ -7,15 +7,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.unit.dp
 import com.looker.domain_music.Song
 import com.looker.ui_songs.components.SongsCard
 
 @Composable
 fun Songs(
     songsList: List<Song>,
-    onSongClick: (Int) -> Unit
+    onSongClick: (Int) -> Unit,
 ) {
     Surface(color = MaterialTheme.colors.background) {
         SongsList(
@@ -29,12 +27,11 @@ fun Songs(
 fun SongsList(
     modifier: Modifier = Modifier,
     songsList: List<Song>,
-    onSongClick: (Int) -> Unit = {}
+    onSongClick: (Int) -> Unit = {},
 ) {
-    val height = with(LocalConfiguration.current) { screenHeightDp.dp / 14 }
     LazyColumn(modifier = modifier) {
         itemsIndexed(songsList) { index, song ->
-            SongsCard(Modifier.fillMaxWidth(), song, height) { onSongClick(index) }
+            SongsCard(Modifier.fillMaxWidth(), song) { onSongClick(index) }
         }
     }
 }
