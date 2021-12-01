@@ -14,8 +14,8 @@ private val DefaultElevation = Elevations()
 
 @Composable
 fun HowlMusicTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) HowlColorsDark
-    else HowlColorsLight
+    val colors = if (darkTheme) darkColors
+    else lightColors
 
     CompositionLocalProvider(
         LocalDurations provides DefaultDuration,

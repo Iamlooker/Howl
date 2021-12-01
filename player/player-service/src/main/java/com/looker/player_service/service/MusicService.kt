@@ -66,7 +66,7 @@ open class MusicService : MediaBrowserServiceCompat() {
     private val playerListener = PlayerEventListener()
 
     private val exoPlayer: ExoPlayer by lazy {
-        SimpleExoPlayer.Builder(this).build().apply {
+        ExoPlayer.Builder(this).build().apply {
             setAudioAttributes(howlAudioAttributes, true)
             setHandleAudioBecomingNoisy(true)
             addListener(playerListener)
@@ -326,7 +326,6 @@ open class MusicService : MediaBrowserServiceCompat() {
 
         override fun onCommand(
             player: Player,
-            controlDispatcher: ControlDispatcher,
             command: String,
             extras: Bundle?,
             cb: ResultReceiver?

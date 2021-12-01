@@ -1,5 +1,5 @@
 object Accompanist {
-    private const val accompanistVersion = "0.19.0"
+    private const val accompanistVersion = "0.21.3-beta"
     const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
@@ -21,7 +21,7 @@ object Coil {
 }
 
 object Compose {
-    const val composeVersion = "1.1.0-beta02"
+    const val composeVersion = "1.1.0-beta03"
     private const val activityComposeVersion = "1.4.0"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -31,7 +31,7 @@ object Compose {
     const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
     const val ui = "androidx.compose.ui:ui:$composeVersion"
     const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:$composeVersion"
-    private const val navigationVersion = "2.4.0-beta01"
+    private const val navigationVersion = "2.4.0-beta02"
     const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
@@ -40,7 +40,7 @@ object Excludes {
 }
 
 object ExoPlayer {
-    private const val exoplayerVersion = "2.15.1"
+    private const val exoplayerVersion = "2.16.1"
     const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
     const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
     const val exoplayerMediaSession =
@@ -62,7 +62,7 @@ object Hilt {
 }
 
 object Lifecycle {
-    private const val lifecycleVersion = "1.0.0-alpha07"
+    private const val lifecycleVersion = "2.4.0"
     const val lifecycleViewModelCompose =
         "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }

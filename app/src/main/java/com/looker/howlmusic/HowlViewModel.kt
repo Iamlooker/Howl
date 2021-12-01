@@ -11,8 +11,8 @@ import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.looker.components.state.PlayState
 import com.looker.components.state.PlayState.PAUSED
 import com.looker.components.state.PlayState.PLAYING
@@ -38,7 +38,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HowlViewModel
 @Inject constructor(
-    private val exoPlayer: SimpleExoPlayer,
+    private val exoPlayer: ExoPlayer,
     private val songsRepository: SongsRepository,
     private val albumsRepository: AlbumsRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -84,22 +84,26 @@ class HowlViewModel
     @ExperimentalMaterialApi
     fun setBackdropValue(currentValue: BackdropValue) {
         viewModelScope.launch(ioDispatcher) {
-            _backdropValue.emit(when (currentValue) {
-                Concealed -> HIDDEN
-                Revealed -> VISIBLE
-            })
+            _backdropValue.emit(
+                when (currentValue) {
+                    Concealed -> HIDDEN
+                    Revealed -> VISIBLE
+                }
+            )
         }
     }
 
     fun updateToggle() {
         viewModelScope.launch(ioDispatcher) {
-            _toggle.emit(when (backdropValue.value) {
-                HIDDEN -> when (playState.value) {
-                    PAUSED -> false
-                    PLAYING -> true
+            _toggle.emit(
+                when (backdropValue.value) {
+                    HIDDEN -> when (playState.value) {
+                        PAUSED -> false
+                        PLAYING -> true
+                    }
+                    VISIBLE -> false
                 }
-                VISIBLE -> false
-            })
+            )
         }
     }
 
@@ -116,10 +120,12 @@ class HowlViewModel
     }
 
     private suspend fun updatePlayIcon() {
-        _playIcon.emit(when (playState.value) {
-            is PAUSED -> Icons.Rounded.PlayArrow
-            is PLAYING -> Icons.Rounded.Pause
-        })
+        _playIcon.emit(
+            when (playState.value) {
+                is PAUSED -> Icons.Rounded.PlayArrow
+                is PLAYING -> Icons.Rounded.Pause
+            }
+        )
     }
 
     fun onPlayPause(isPlaying: PlayState) {
@@ -139,20 +145,24 @@ class HowlViewModel
     fun setToggleIcon(currentState: SheetsState) {
         viewModelScope.launch(ioDispatcher) {
             _playIcon.collect {
-                _toggleIcon.emit(when (currentState) {
-                    is HIDDEN -> it
-                    is VISIBLE -> Icons.Rounded.Shuffle
-                })
+                _toggleIcon.emit(
+                    when (currentState) {
+                        is HIDDEN -> it
+                        is VISIBLE -> Icons.Rounded.Shuffle
+                    }
+                )
             }
         }
     }
 
     fun setHandleIcon(currentState: SheetsState) {
         viewModelScope.launch(ioDispatcher) {
-            _handleIcon.emit(when (currentState) {
-                is HIDDEN -> 1f
-                is VISIBLE -> 0f
-            })
+            _handleIcon.emit(
+                when (currentState) {
+                    is HIDDEN -> 1f
+                    is VISIBLE -> 0f
+                }
+            )
         }
     }
 
@@ -179,7 +189,7 @@ class HowlViewModel
         }
     }
 
-    private suspend fun SimpleExoPlayer.setMediaItems(index: Int) {
+    private suspend fun ExoPlayer.setMediaItems(index: Int) {
         withContext(ioDispatcher) {
             val mediaItems = arrayListOf<MediaItem>()
             launch { songsList.value.forEach { mediaItems.add(MediaItem.fromUri(it.songUri)) } }
@@ -200,7 +210,7 @@ class HowlViewModel
     }
 
     fun playNext() {
-        if (exoPlayer.hasNextWindow()) {
+        if (exoPlayer.hasNextMediaItem()) {
             exoPlayer.seekToNext()
             viewModelScope.launch { setCurrentIndex(_currentIndex.value.inc()) }
             viewModelScope.launch {
@@ -214,7 +224,7 @@ class HowlViewModel
     }
 
     fun playPrevious() {
-        if (exoPlayer.hasPreviousWindow()) {
+        if (exoPlayer.hasPreviousMediaItem()) {
             exoPlayer.seekToPrevious()
             viewModelScope.launch { setCurrentIndex(_currentIndex.value.dec()) }
             viewModelScope.launch {
