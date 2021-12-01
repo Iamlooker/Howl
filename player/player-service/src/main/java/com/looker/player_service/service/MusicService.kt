@@ -19,8 +19,7 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.player_service.service.extensions.*
 import com.looker.player_service.service.library.*
 import kotlinx.coroutines.*
@@ -35,8 +34,8 @@ open class MusicService : MediaBrowserServiceCompat() {
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
-    protected lateinit var mediaSession: MediaSessionCompat
-    protected lateinit var mediaSessionConnector: MediaSessionConnector
+    private lateinit var mediaSession: MediaSessionCompat
+    private lateinit var mediaSessionConnector: MediaSessionConnector
     private var currentPlaylistItems: List<MediaMetadataCompat> = emptyList()
 
     private lateinit var storage: PersistentStorage
@@ -45,18 +44,11 @@ open class MusicService : MediaBrowserServiceCompat() {
         BrowseTree(applicationContext, mediaSource)
     }
 
-    private val dataSourceFactory: DefaultDataSourceFactory by lazy {
-        DefaultDataSourceFactory(
-            /* context= */ this,
-            Util.getUserAgent(/* context= */ this, HOWL_USER_AGENT), /* listener= */
-            null
-        )
+    private val dataSourceFactory: DefaultDataSource.Factory by lazy {
+        DefaultDataSource.Factory(this)
     }
 
     private var isForegroundService = false
-
-    private val remoteJsonSource: Uri =
-        Uri.parse("https://storage.googleapis.com/howl/catalog.json")
 
     private val howlAudioAttributes = AudioAttributes.Builder()
         .setContentType(C.CONTENT_TYPE_MUSIC)
@@ -117,7 +109,8 @@ open class MusicService : MediaBrowserServiceCompat() {
         saveRecentSongToStorage()
         super.onTaskRemoved(rootIntent)
 
-        currentPlayer.stop(true)
+        currentPlayer.clearMediaItems()
+        currentPlayer.stop()
     }
 
     override fun onDestroy() {
@@ -211,9 +204,10 @@ open class MusicService : MediaBrowserServiceCompat() {
         currentPlaylistItems = metadataList
 
         currentPlayer.playWhenReady = playWhenReady
-        currentPlayer.stop(/* reset= */ true)
+        currentPlayer.clearMediaItems()
+        currentPlayer.stop()
         val mediaSource = metadataList.toMediaSource(dataSourceFactory)
-        exoPlayer.prepare(mediaSource)
+        exoPlayer.setMediaSource(mediaSource)
         exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs)
 
     }
@@ -226,23 +220,25 @@ open class MusicService : MediaBrowserServiceCompat() {
         if (previousPlayer != null) {
             val playbackState = previousPlayer.playbackState
             if (currentPlaylistItems.isEmpty()) {
-                currentPlayer.stop(true)
+                currentPlayer.clearMediaItems()
+                currentPlayer.stop()
             } else if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
                 preparePlaylist(
                     metadataList = currentPlaylistItems,
-                    itemToPlay = currentPlaylistItems[previousPlayer.currentWindowIndex],
+                    itemToPlay = currentPlaylistItems[previousPlayer.currentMediaItemIndex],
                     playWhenReady = previousPlayer.playWhenReady,
                     playbackStartPositionMs = previousPlayer.currentPosition
                 )
             }
         }
         mediaSessionConnector.setPlayer(newPlayer)
-        previousPlayer?.stop(true)
+        previousPlayer?.clearMediaItems()
+        previousPlayer?.stop()
     }
 
     private fun saveRecentSongToStorage() {
 
-        val description = currentPlaylistItems[currentPlayer.currentWindowIndex].description
+        val description = currentPlaylistItems[currentPlayer.currentMediaItemIndex].description
         val position = currentPlayer.currentPosition
 
         serviceScope.launch {
@@ -360,7 +356,7 @@ open class MusicService : MediaBrowserServiceCompat() {
         }
     }
 
-    private inner class PlayerEventListener : Player.EventListener {
+    private inner class PlayerEventListener : Player.Listener {
         override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             when (playbackState) {
                 Player.STATE_BUFFERING,
@@ -391,8 +387,6 @@ private const val CONTENT_STYLE_PLAYABLE_HINT = "android.media.browse.CONTENT_ST
 private const val CONTENT_STYLE_SUPPORTED = "android.media.browse.CONTENT_STYLE_SUPPORTED"
 private const val CONTENT_STYLE_LIST = 1
 private const val CONTENT_STYLE_GRID = 2
-
-private const val HOWL_USER_AGENT = "howl.next"
 
 const val MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms"
 
