@@ -1,7 +1,4 @@
 apply("$rootDir/android-library.gradle")
-plugins {
-    id("kotlin-kapt")
-}
 
 val implementation by configurations
 val api by configurations
