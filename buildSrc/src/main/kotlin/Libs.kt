@@ -1,10 +1,10 @@
 object Accompanist {
-    private const val accompanistVersion = "0.21.4-beta"
+    private const val accompanistVersion = "0.21.5-rc"
     const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
 object Classpath {
-    private const val gradleVersion = "7.0.3"
+    private const val gradleVersion = "7.0.4"
     const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
     const val gradleKotlin =
         "org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
@@ -21,7 +21,8 @@ object Coil {
 }
 
 object Compose {
-    const val composeVersion = "1.1.0-beta04"
+    const val composeCompiler = "1.1.0-rc02"
+    private const val composeVersion = "1.1.0-rc01"
     private const val activityComposeVersion = "1.4.0"
     const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -73,7 +74,7 @@ object Palette {
 }
 
 object Room {
-    private const val roomVersion = "2.4.0-rc01"
+    private const val roomVersion = "2.4.0"
     const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
     const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
     const val roomKtx = "androidx.room:room-ktx:$roomVersion"
@@ -81,5 +82,5 @@ object Room {
 }
 
 object Version {
-    const val kotlinVersion = "1.6.0"
+    const val kotlinVersion = "1.6.10"
 }

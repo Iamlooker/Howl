@@ -88,7 +88,6 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
         playState = playState,
         enableGesture = enableGesture,
         header = {
-            val cornerRadiusState = remember { mutableStateOf(15) }
 
             val toggleIcon by viewModel.toggleIcon.collectAsState()
             val toggle by viewModel.toggle.collectAsState()
@@ -105,16 +104,13 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
                     viewModel.setToggleIcon(backdropValue)
                     viewModel.updateToggle()
                 }
-                launch {
-                    cornerRadiusState.value = when (playState) {
-                        PlayState.PLAYING -> 50
-                        PlayState.PAUSED -> 15
-                    }
-                }
             }
 
             val corner by animateIntAsState(
-                targetValue = cornerRadiusState.value,
+                targetValue = when (playState) {
+                    PlayState.PLAYING -> 50
+                    PlayState.PAUSED -> 15
+                },
                 animationSpec = tweenAnimation()
             )
 

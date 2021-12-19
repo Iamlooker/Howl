@@ -19,13 +19,13 @@ object ViewModelModule {
     @Singleton
     @Provides
     fun provideSongsRepository(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ): SongsRepository = SongsRepository(context)
 
     @Singleton
     @Provides
     fun provideAlbumsRepository(
-        @ApplicationContext context: Context,
+        @ApplicationContext context: Context
     ): AlbumsRepository = AlbumsRepository(context)
 
     @Singleton

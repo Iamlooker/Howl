@@ -46,10 +46,8 @@ class HowlViewModel
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            songsRepository.getAllSongs().collect { list -> _songsList.emit(list) }
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            albumsRepository.getAllAlbums().collect { _albumsList.emit(it.distinct()) }
+            launch { songsRepository.getAllSongs().collect { list -> _songsList.emit(list) } }
+            launch { albumsRepository.getAllAlbums().collect { _albumsList.emit(it.distinct()) } }
         }
     }
 
@@ -170,10 +168,10 @@ class HowlViewModel
         viewModelScope.launch(ioDispatcher) {
             setPlayState(true)
             updatePlayIcon()
+            launch { setCurrentIndex(index) }
         }
-        viewModelScope.launch(ioDispatcher) { setCurrentIndex(index) }
-        viewModelScope.launch(Dispatchers.Main) { setCurrentSong(songsList.value[index]) }
         viewModelScope.launch(Dispatchers.Main) {
+            launch { setCurrentSong(songsList.value[index]) }
             exoPlayer.apply {
                 clearMediaItems()
                 setMediaItems(index)
@@ -212,11 +210,13 @@ class HowlViewModel
     fun playNext() {
         if (exoPlayer.hasNextMediaItem()) {
             exoPlayer.seekToNext()
-            viewModelScope.launch { setCurrentIndex(_currentIndex.value.inc()) }
             viewModelScope.launch {
-                songsList.collect { songs ->
-                    _currentIndex.collect { index ->
-                        setCurrentSong(songs[index])
+                launch { setCurrentIndex(_currentIndex.value.inc()) }
+                launch {
+                    songsList.collect { songs ->
+                        _currentIndex.collect { index ->
+                            setCurrentSong(songs[index])
+                        }
                     }
                 }
             }
@@ -226,11 +226,13 @@ class HowlViewModel
     fun playPrevious() {
         if (exoPlayer.hasPreviousMediaItem()) {
             exoPlayer.seekToPrevious()
-            viewModelScope.launch { setCurrentIndex(_currentIndex.value.dec()) }
             viewModelScope.launch {
-                songsList.collect { songs ->
-                    _currentIndex.collect { index ->
-                        setCurrentSong(songs[index])
+                launch { setCurrentIndex(_currentIndex.value.dec()) }
+                launch {
+                    songsList.collect { songs ->
+                        _currentIndex.collect { index ->
+                            setCurrentSong(songs[index])
+                        }
                     }
                 }
             }
