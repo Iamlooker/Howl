@@ -113,7 +113,8 @@ private fun SmallCardItem(
         TitleSubText(
             title = title ?: "",
             subText = secondaryText ?: "",
-            itemTextAlignment = Alignment.Start
+            itemTextAlignment = Alignment.Start,
+            maxLines = 1
         )
     }
 }
