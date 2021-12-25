@@ -1,6 +1,9 @@
 package com.looker.howlmusic.utils
 
 import android.content.Context
+import com.google.android.exoplayer2.DefaultRenderersFactory
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.RenderersFactory
 import com.looker.data_music.data.AlbumsRepository
 import com.looker.data_music.data.SongsRepository
 import dagger.Module
@@ -31,4 +34,18 @@ object AppModule {
 	@Singleton
 	@Provides
 	fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+	@Singleton
+	@Provides
+	fun provideRenderersFactory(
+		@ApplicationContext context: Context
+	): RenderersFactory = DefaultRenderersFactory(context)
+
+	@Singleton
+	@Provides
+	fun providePlayer(
+		@ApplicationContext context: Context,
+		renderersFactory: RenderersFactory,
+	): ExoPlayer =
+		ExoPlayer.Builder(context, renderersFactory).build()
 }

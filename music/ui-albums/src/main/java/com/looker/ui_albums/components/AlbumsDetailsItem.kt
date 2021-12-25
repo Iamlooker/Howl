@@ -5,6 +5,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.looker.components.HowlImage
 import com.looker.components.TitleSubText
@@ -52,6 +53,8 @@ fun DetailsText(
 		subText = artistName ?: "",
 		titleTextStyle = MaterialTheme.typography.h5,
 		subTextTextStyle = MaterialTheme.typography.body1,
-		itemTextAlignment = Alignment.CenterHorizontally
+		itemTextAlignment = Alignment.CenterHorizontally,
+		textAlign = TextAlign.Center,
+		maxLines = 1
 	)
 }

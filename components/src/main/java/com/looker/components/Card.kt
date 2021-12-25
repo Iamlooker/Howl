@@ -146,7 +146,8 @@ private fun LargeCardItem(
 			titleTextStyle = MaterialTheme.typography.h6,
 			subTextTextStyle = MaterialTheme.typography.body2,
 			itemTextAlignment = Alignment.CenterHorizontally,
-			textAlign = TextAlign.Center
+			textAlign = TextAlign.Center,
+			maxLines = 2
 		)
 		Spacer(modifier = Modifier.height(8.dp))
 	}

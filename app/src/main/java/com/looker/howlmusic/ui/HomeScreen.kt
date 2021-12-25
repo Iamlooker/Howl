@@ -34,6 +34,7 @@ import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import com.looker.ui_player.PlayerControls
+import com.looker.ui_player.PlayerHeader
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -98,7 +99,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 				animationSpec = tweenAnimation(LocalDurations.current.crossFade)
 			)
 
-			PlayerHeader(
+			Player(
 				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
 				icon = toggleIcon,
 				albumArt = currentSong.albumArt,
@@ -231,7 +232,7 @@ fun FrontLayer(
 }
 
 @Composable
-fun PlayerHeader(
+fun Player(
 	modifier: Modifier = Modifier,
 	albumArt: String?,
 	songName: String?,
@@ -241,7 +242,7 @@ fun PlayerHeader(
 	imageCorner: Int,
 	toggleAction: () -> Unit,
 ) {
-	com.looker.ui_player.PlayerHeader(
+	PlayerHeader(
 		modifier = modifier
 			.statusBarsPadding()
 			.padding(bottom = 20.dp),
