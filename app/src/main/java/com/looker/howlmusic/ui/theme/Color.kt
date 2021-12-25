@@ -13,21 +13,21 @@ val Green100 = Color(0xFFC8E6C9)
 val Green200 = Color(0xFFA5D6A7)
 
 val lightColors = lightColors(
-    primary = Orange300,
-    primaryVariant = Orange200,
-    onPrimary = Color.Black,
-    secondary = Green200,
-    secondaryVariant = Green100,
-    onSecondary = Color.Black,
-    surface = Orange50
+	primary = Orange300,
+	primaryVariant = Orange200,
+	onPrimary = Color.Black,
+	secondary = Green200,
+	secondaryVariant = Green100,
+	onSecondary = Color.Black,
+	surface = Orange50
 )
 
 val darkColors = darkColors(
-    primary = Orange200,
-    primaryVariant = Orange100,
-    onPrimary = Color.Black,
-    secondary = Green200,
-    secondaryVariant = Green100,
-    onSecondary = Color.Black,
-    surface = Orange900
+	primary = Orange200,
+	primaryVariant = Orange100,
+	onPrimary = Color.Black,
+	secondary = Green200,
+	secondaryVariant = Green100,
+	onSecondary = Color.Black,
+	surface = Orange900
 )

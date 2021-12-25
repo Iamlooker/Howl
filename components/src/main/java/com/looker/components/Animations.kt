@@ -8,13 +8,13 @@ import com.looker.components.localComposers.LocalDurations
 
 @Composable
 fun <T> tweenAnimation(
-    durationMillis: Int = LocalDurations.current.fadeIn,
-    delayMillis: Int = 0,
-    easing: Easing = FastOutSlowInEasing
+	durationMillis: Int = LocalDurations.current.fadeIn,
+	delayMillis: Int = 0,
+	easing: Easing = FastOutSlowInEasing
 ) = myTween<T>(durationMillis, delayMillis, easing)
 
 fun <T> myTween(
-    durationMillis: Int,
-    delayMillis: Int = 0,
-    easing: Easing = FastOutSlowInEasing
+	durationMillis: Int,
+	delayMillis: Int = 0,
+	easing: Easing = FastOutSlowInEasing
 ) = TweenSpec<T>(durationMillis, delayMillis, easing)

@@ -19,39 +19,39 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Genres(
-    viewModel: GenresViewModel = viewModel(
-        factory = GenresViewModelFactory(
-            GenresRepository()
-        )
-    )
+	viewModel: GenresViewModel = viewModel(
+		factory = GenresViewModelFactory(
+			GenresRepository()
+		)
+	)
 ) {
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    val scope = rememberCoroutineScope()
+	val scope = rememberCoroutineScope()
 
-    val genresList by viewModel.genresList.observeAsState(listOf())
+	val genresList by viewModel.genresList.observeAsState(listOf())
 
-    LaunchedEffect(genresList) { launch { viewModel.getGenreList(context) } }
+	LaunchedEffect(genresList) { launch { viewModel.getGenreList(context) } }
 
-    GenresList(
-        genresList = genresList,
-        onGenreClick = {
-            scope.launch { }
-        }
-    )
+	GenresList(
+		genresList = genresList,
+		onGenreClick = {
+			scope.launch { }
+		}
+	)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GenresList(
-    genresList: List<Genre>,
-    onGenreClick: (Genre) -> Unit
+	genresList: List<Genre>,
+	onGenreClick: (Genre) -> Unit
 ) {
-    LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
-        items(genresList) { genre ->
-            GenresCard(genre = genre) {
-                onGenreClick(genre)
-            }
-        }
-    }
+	LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
+		items(genresList) { genre ->
+			GenresCard(genre = genre) {
+				onGenreClick(genre)
+			}
+		}
+	}
 }

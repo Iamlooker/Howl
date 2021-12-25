@@ -14,26 +14,26 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AlbumsCard(
-    modifier: Modifier = Modifier,
-    album: Album,
-    cardWidth: Dp,
-    onClick: () -> Unit
+	modifier: Modifier = Modifier,
+	album: Album,
+	cardWidth: Dp,
+	onClick: () -> Unit
 ) {
-    val backgroundColor = rememberDominantColorState()
-    LaunchedEffect(album) { launch { backgroundColor.updateColorsFromImageUrl(album.albumArt) } }
+	val backgroundColor = rememberDominantColorState()
+	LaunchedEffect(album) { launch { backgroundColor.updateColorsFromImageUrl(album.albumArt) } }
 
-    val animateColor by animateColorAsState(
-        targetValue = backgroundColor.color.copy(0.4f),
-        animationSpec = tweenAnimation()
-    )
+	val animateColor by animateColorAsState(
+		targetValue = backgroundColor.color.copy(0.4f),
+		animationSpec = tweenAnimation()
+	)
 
-    LargeCard(
-        modifier = modifier,
-        imageUrl = album.albumArt,
-        title = album.albumName,
-        subText = album.artistName,
-        cardColor = animateColor,
-        imageSize = cardWidth,
-        onClick = onClick
-    )
+	LargeCard(
+		modifier = modifier,
+		imageUrl = album.albumArt,
+		title = album.albumName,
+		subText = album.artistName,
+		cardColor = animateColor,
+		imageSize = cardWidth,
+		onClick = onClick
+	)
 }

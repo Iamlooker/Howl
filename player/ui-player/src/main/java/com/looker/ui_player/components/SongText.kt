@@ -15,29 +15,29 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SongText(
-    modifier: Modifier = Modifier,
-    songName: String?,
-    artistName: String?
+	modifier: Modifier = Modifier,
+	songName: String?,
+	artistName: String?
 ) {
-    Column(
-        modifier = modifier.padding(horizontal = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = songName ?: "",
-            style = MaterialTheme.typography.h4,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center
-        )
-        Text(
-            text = artistName ?: "",
-            style = MaterialTheme.typography.subtitle1,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            textAlign = TextAlign.Center
-        )
-    }
+	Column(
+		modifier = modifier.padding(horizontal = 20.dp),
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.spacedBy(8.dp)
+	) {
+		Text(
+			text = songName ?: "",
+			style = MaterialTheme.typography.h4,
+			maxLines = 2,
+			overflow = TextOverflow.Ellipsis,
+			textAlign = TextAlign.Center
+		)
+		Text(
+			text = artistName ?: "",
+			style = MaterialTheme.typography.subtitle1,
+			fontWeight = FontWeight.SemiBold,
+			maxLines = 1,
+			overflow = TextOverflow.Ellipsis,
+			textAlign = TextAlign.Center
+		)
+	}
 }

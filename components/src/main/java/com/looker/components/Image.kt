@@ -28,66 +28,66 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 suspend fun String.bitmap(context: Context): Bitmap {
-    val r = ImageRequest.Builder(context)
-        .data(this)
-        .size(128)
-        .scale(Scale.FILL)
-        .allowHardware(false)
-        .build()
+	val r = ImageRequest.Builder(context)
+		.data(this)
+		.size(128)
+		.scale(Scale.FILL)
+		.allowHardware(false)
+		.build()
 
-    return when (val result = Coil.execute(r)) {
-        is SuccessResult -> result.drawable.toBitmap()
-        is ErrorResult -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
-    }
+	return when (val result = Coil.execute(r)) {
+		is SuccessResult -> result.drawable.toBitmap()
+		is ErrorResult -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
+	}
 }
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HowlImage(
-    modifier: Modifier = Modifier,
-    data: String?,
-    contentScale: ContentScale = ContentScale.Crop,
-    backgroundColor: Color = MaterialTheme.colors.surface,
-    shape: CornerBasedShape = MaterialTheme.shapes.medium
+	modifier: Modifier = Modifier,
+	data: String?,
+	contentScale: ContentScale = ContentScale.Crop,
+	backgroundColor: Color = MaterialTheme.colors.surface,
+	shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
-    Box(modifier) {
-        val painter = rememberImagePainter(data = data)
+	Box(modifier) {
+		val painter = rememberImagePainter(data = data)
 
-        Image(
-            painter = painter,
-            contentDescription = "This is Album Art",
-            contentScale = contentScale,
-            modifier = Modifier
-                .matchParentSize()
-                .clip(shape)
-        )
+		Image(
+			painter = painter,
+			contentDescription = "This is Album Art",
+			contentScale = contentScale,
+			modifier = Modifier
+				.matchParentSize()
+				.clip(shape)
+		)
 
-        if (painter.state is ImagePainter.State.Loading) {
-            Spacer(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(backgroundColor)
-            )
-        }
-    }
+		if (painter.state is ImagePainter.State.Loading) {
+			Spacer(
+				modifier = Modifier
+					.matchParentSize()
+					.background(backgroundColor)
+			)
+		}
+	}
 }
 
 suspend fun Bitmap?.getVibrantColor(): Color? = withContext(Dispatchers.IO) {
-    this@getVibrantColor?.let {
-        Palette.Builder(it)
-            .resizeBitmapArea(0)
-            .clearFilters()
-            .maximumColorCount(8)
-            .generate()
-    }?.getVibrantColor(0)?.toColor()
+	this@getVibrantColor?.let {
+		Palette.Builder(it)
+			.resizeBitmapArea(0)
+			.clearFilters()
+			.maximumColorCount(8)
+			.generate()
+	}?.getVibrantColor(0)?.toColor()
 }
 
 suspend fun Bitmap?.getDominantColor(): Color? = withContext(Dispatchers.IO) {
-    this@getDominantColor?.let {
-        Palette.Builder(it)
-            .resizeBitmapArea(0)
-            .clearFilters()
-            .maximumColorCount(8)
-            .generate()
-    }?.getDominantColor(0)?.toColor()
+	this@getDominantColor?.let {
+		Palette.Builder(it)
+			.resizeBitmapArea(0)
+			.clearFilters()
+			.maximumColorCount(8)
+			.generate()
+	}?.getDominantColor(0)?.toColor()
 }

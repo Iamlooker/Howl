@@ -36,104 +36,104 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OnBoardingPage(
-    viewModel: OnBoardingViewModel = viewModel(),
-    navigate: (Boolean) -> Unit,
+	viewModel: OnBoardingViewModel = viewModel(),
+	navigate: (Boolean) -> Unit,
 ) {
 
-    val bannerText = remember { viewModel.bannerText }
-    val buttonText by viewModel.buttonText.observeAsState("Grant Permission")
-    val buttonIcon by viewModel.buttonIcon.observeAsState(Icons.Rounded.Close)
-    val buttonColor by viewModel.buttonColor.observeAsState(MaterialTheme.colors.primary)
+	val bannerText = remember { viewModel.bannerText }
+	val buttonText by viewModel.buttonText.observeAsState("Grant Permission")
+	val buttonIcon by viewModel.buttonIcon.observeAsState(Icons.Rounded.Close)
+	val buttonColor by viewModel.buttonColor.observeAsState(MaterialTheme.colors.primary)
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {
-            if (it) {
-                viewModel.onPermissionGranted()
-            } else {
-                viewModel.onPermissionDenied()
-            }
-        }
-    )
+	val permissionLauncher = rememberLauncherForActivityResult(
+		contract = ActivityResultContracts.RequestPermission(),
+		onResult = {
+			if (it) {
+				viewModel.onPermissionGranted()
+			} else {
+				viewModel.onPermissionDenied()
+			}
+		}
+	)
 
-    val context = LocalContext.current
+	val context = LocalContext.current
 
-    LaunchedEffect(buttonText) {
-        launch {
-            delay(250)
-            if (checkReadPermission(context)) navigate(checkReadPermission(context))
-        }
-    }
+	LaunchedEffect(buttonText) {
+		launch {
+			delay(250)
+			if (checkReadPermission(context)) navigate(checkReadPermission(context))
+		}
+	}
 
-    OnBoardImage(
-        bannerText = bannerText,
-        buttonText = buttonText,
-        buttonIcon = buttonIcon,
-        buttonColor = buttonColor
-    ) {
-        handlePermissions(
-            context,
-            permissionLauncher,
-            onGranted = { viewModel.onPermissionGranted() },
-            onDenied = { viewModel.onPermissionDenied() }
-        )
-    }
+	OnBoardImage(
+		bannerText = bannerText,
+		buttonText = buttonText,
+		buttonIcon = buttonIcon,
+		buttonColor = buttonColor
+	) {
+		handlePermissions(
+			context,
+			permissionLauncher,
+			onGranted = { viewModel.onPermissionGranted() },
+			onDenied = { viewModel.onPermissionDenied() }
+		)
+	}
 
 }
 
 @Composable
 fun OnBoardImage(
-    bannerText: AnnotatedString,
-    buttonText: String,
-    buttonIcon: ImageVector,
-    buttonColor: Color,
-    onClick: () -> Unit,
+	bannerText: AnnotatedString,
+	buttonText: String,
+	buttonIcon: ImageVector,
+	buttonColor: Color,
+	onClick: () -> Unit,
 ) {
-    OnBoardContent(
-        bannerText = bannerText,
-        buttonText = buttonText,
-        buttonIcon = buttonIcon,
-        buttonColor = buttonColor,
-        painter = painterResource(id = R.drawable.empty),
-        onClick = onClick
-    )
+	OnBoardContent(
+		bannerText = bannerText,
+		buttonText = buttonText,
+		buttonIcon = buttonIcon,
+		buttonColor = buttonColor,
+		painter = painterResource(id = R.drawable.empty),
+		onClick = onClick
+	)
 }
 
 @Composable
 fun OnBoardContent(
-    bannerText: AnnotatedString,
-    buttonText: String,
-    buttonIcon: ImageVector,
-    buttonColor: Color,
-    painter: Painter,
-    onClick: () -> Unit,
+	bannerText: AnnotatedString,
+	buttonText: String,
+	buttonIcon: ImageVector,
+	buttonColor: Color,
+	painter: Painter,
+	onClick: () -> Unit,
 ) {
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+	Surface(
+		modifier = Modifier.fillMaxSize()
+	) {
+		Column(
+			modifier = Modifier.fillMaxSize(),
+			verticalArrangement = Arrangement.SpaceEvenly,
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
 
-            Image(
-                modifier = Modifier.padding(horizontal = 20.dp),
-                painter = painter,
-                contentDescription = null
-            )
+			Image(
+				modifier = Modifier.padding(horizontal = 20.dp),
+				painter = painter,
+				contentDescription = null
+			)
 
-            Text(
-                text = bannerText,
-                textAlign = TextAlign.Center
-            )
+			Text(
+				text = bannerText,
+				textAlign = TextAlign.Center
+			)
 
-            AnimatedButton(
-                buttonText = buttonText,
-                buttonIcon = buttonIcon,
-                buttonColor = buttonColor,
-                onClick = onClick
-            )
-        }
-    }
+			AnimatedButton(
+				buttonText = buttonText,
+				buttonIcon = buttonIcon,
+				buttonColor = buttonColor,
+				onClick = onClick
+			)
+		}
+	}
 }

@@ -23,21 +23,21 @@ import com.looker.components.localComposers.LocalElevations
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheets(
-    modifier: Modifier = Modifier,
-    state: ModalBottomSheetState,
-    sheetContent: @Composable ColumnScope.() -> Unit,
-    content: @Composable () -> Unit
+	modifier: Modifier = Modifier,
+	state: ModalBottomSheetState,
+	sheetContent: @Composable ColumnScope.() -> Unit,
+	content: @Composable () -> Unit
 ) {
-    ModalBottomSheetLayout(
-        modifier = modifier,
-        sheetElevation = LocalElevations.current.default,
-        sheetState = state,
-        sheetContent = sheetContent,
-        content = content,
-        sheetBackgroundColor = MaterialTheme.colors.background,
-        scrimColor = MaterialTheme.colors.background.copy(0.3f),
-        sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-    )
+	ModalBottomSheetLayout(
+		modifier = modifier,
+		sheetElevation = LocalElevations.current.default,
+		sheetState = state,
+		sheetContent = sheetContent,
+		content = content,
+		sheetBackgroundColor = MaterialTheme.colors.background,
+		scrimColor = MaterialTheme.colors.background.copy(0.3f),
+		sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+	)
 }
 
 /**
@@ -47,49 +47,49 @@ fun BottomSheets(
  */
 @Composable
 fun HandleIcon(
-    angle: Float,
-    backgroundColor: Color = MaterialTheme.colors.background,
-    onClick: () -> Unit = {}
+	angle: Float,
+	backgroundColor: Color = MaterialTheme.colors.background,
+	onClick: () -> Unit = {}
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(backgroundColor)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        CanvasHandleIcon(
-            modifier = Modifier
-                .size(30.dp)
-                .padding(6.dp),
-            angle = angle
-        )
-    }
+	Box(
+		modifier = Modifier
+			.fillMaxWidth()
+			.background(backgroundColor)
+			.clickable { onClick() },
+		contentAlignment = Alignment.Center
+	) {
+		CanvasHandleIcon(
+			modifier = Modifier
+				.size(30.dp)
+				.padding(6.dp),
+			angle = angle
+		)
+	}
 }
 
 @Composable
 fun CanvasHandleIcon(
-    modifier: Modifier = Modifier,
-    angle: Float,
-    color: Color = MaterialTheme.colors.onBackground
+	modifier: Modifier = Modifier,
+	angle: Float,
+	color: Color = MaterialTheme.colors.onBackground
 ) {
-    val animateIcon by animateFloatAsState(
-        targetValue = angle * 2,
-        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-    )
+	val animateIcon by animateFloatAsState(
+		targetValue = angle * 2,
+		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+	)
 
-    Canvas(modifier = modifier) {
-        drawLine(
-            color = color,
-            strokeWidth = 5f,
-            start = Offset(0f, center.y),
-            end = Offset(center.x, animateIcon * center.y)
-        )
-        drawLine(
-            color = color,
-            strokeWidth = 5f,
-            start = Offset(center.x, animateIcon * center.y),
-            end = Offset(size.width, center.y)
-        )
-    }
+	Canvas(modifier = modifier) {
+		drawLine(
+			color = color,
+			strokeWidth = 5f,
+			start = Offset(0f, center.y),
+			end = Offset(center.x, animateIcon * center.y)
+		)
+		drawLine(
+			color = color,
+			strokeWidth = 5f,
+			start = Offset(center.x, animateIcon * center.y),
+			end = Offset(size.width, center.y)
+		)
+	}
 }

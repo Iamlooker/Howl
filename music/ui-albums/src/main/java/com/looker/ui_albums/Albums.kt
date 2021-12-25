@@ -14,47 +14,47 @@ import com.looker.ui_albums.components.AlbumsCard
 
 @Composable
 fun Albums(
-    albumsList: List<Album>,
-    onAlbumClick: (Int) -> Unit,
+	albumsList: List<Album>,
+	onAlbumClick: (Int) -> Unit,
 ) {
-    Albums(
-        modifier = Modifier.fillMaxSize(),
-        albumsList = albumsList,
-        onAlbumClick = onAlbumClick
-    )
+	Albums(
+		modifier = Modifier.fillMaxSize(),
+		albumsList = albumsList,
+		onAlbumClick = onAlbumClick
+	)
 }
 
 @Composable
 private fun Albums(
-    modifier: Modifier = Modifier,
-    albumsList: List<Album>,
-    onAlbumClick: (Int) -> Unit,
+	modifier: Modifier = Modifier,
+	albumsList: List<Album>,
+	onAlbumClick: (Int) -> Unit,
 ) {
-    AlbumsList(
-        modifier = modifier,
-        albumsList = albumsList,
-        onAlbumClick = onAlbumClick
-    )
+	AlbumsList(
+		modifier = modifier,
+		albumsList = albumsList,
+		onAlbumClick = onAlbumClick
+	)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumsList(
-    modifier: Modifier = Modifier,
-    albumsList: List<Album>,
-    onAlbumClick: (Int) -> Unit,
+	modifier: Modifier = Modifier,
+	albumsList: List<Album>,
+	onAlbumClick: (Int) -> Unit,
 ) {
-    val width = with(LocalConfiguration.current) {
-        val ratio = screenWidthDp / 150
-        screenWidthDp.dp / ratio - 16.dp
-    }
+	val width = with(LocalConfiguration.current) {
+		val ratio = screenWidthDp / 150
+		screenWidthDp.dp / ratio - 16.dp
+	}
 
-    LazyVerticalGrid(
-        modifier = modifier,
-        cells = GridCells.Adaptive(150.dp)
-    ) {
-        itemsIndexed(albumsList) { index, album ->
-            AlbumsCard(album = album, cardWidth = width) { onAlbumClick(index) }
-        }
-    }
+	LazyVerticalGrid(
+		modifier = modifier,
+		cells = GridCells.Adaptive(150.dp)
+	) {
+		itemsIndexed(albumsList) { index, album ->
+			AlbumsCard(album = album, cardWidth = width) { onAlbumClick(index) }
+		}
+	}
 }

@@ -10,16 +10,16 @@ import com.looker.domain_music.Genre
 import kotlinx.coroutines.launch
 
 class GenresViewModel(
-    private val genresRepository: GenresRepository
+	private val genresRepository: GenresRepository
 ) : ViewModel() {
 
-    private val _genresList = MutableLiveData<List<Genre>>()
+	private val _genresList = MutableLiveData<List<Genre>>()
 
-    val genresList: LiveData<List<Genre>> = _genresList
+	val genresList: LiveData<List<Genre>> = _genresList
 
-    fun getGenreList(context: Context) {
-        viewModelScope.launch {
-            _genresList.value = genresRepository.getAllGenres(context)
-        }
-    }
+	fun getGenreList(context: Context) {
+		viewModelScope.launch {
+			_genresList.value = genresRepository.getAllGenres(context)
+		}
+	}
 }

@@ -12,26 +12,26 @@ import com.looker.ui_songs.components.SongsCard
 
 @Composable
 fun Songs(
-    songsList: List<Song>,
-    onSongClick: (Int) -> Unit,
+	songsList: List<Song>,
+	onSongClick: (Int) -> Unit,
 ) {
-    Surface(color = MaterialTheme.colors.background) {
-        SongsList(
-            songsList = songsList,
-            onSongClick = onSongClick
-        )
-    }
+	Surface(color = MaterialTheme.colors.background) {
+		SongsList(
+			songsList = songsList,
+			onSongClick = onSongClick
+		)
+	}
 }
 
 @Composable
 fun SongsList(
-    modifier: Modifier = Modifier,
-    songsList: List<Song>,
-    onSongClick: (Int) -> Unit = {},
+	modifier: Modifier = Modifier,
+	songsList: List<Song>,
+	onSongClick: (Int) -> Unit = {},
 ) {
-    LazyColumn(modifier = modifier) {
-        itemsIndexed(songsList) { index, song ->
-            SongsCard(Modifier.fillMaxWidth(), song) { onSongClick(index) }
-        }
-    }
+	LazyColumn(modifier = modifier) {
+		itemsIndexed(songsList) { index, song ->
+			SongsCard(Modifier.fillMaxWidth(), song) { onSongClick(index) }
+		}
+	}
 }

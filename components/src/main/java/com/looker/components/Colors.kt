@@ -12,62 +12,62 @@ fun Int.toColor() = Color(this)
 
 @Composable
 fun Color.compositeOverBackground(
-    alpha: Float = 0.3f,
-    backgroundColor: Color = MaterialTheme.colors.background,
+	alpha: Float = 0.3f,
+	backgroundColor: Color = MaterialTheme.colors.background,
 ): Color =
-    this.copy(alpha).compositeOver(backgroundColor)
+	this.copy(alpha).compositeOver(backgroundColor)
 
 @Composable
 fun rememberDominantColorState(
-    context: Context = LocalContext.current,
-    defaultColor: Color = MaterialTheme.colors.surface,
-    cacheSize: Int = 12,
+	context: Context = LocalContext.current,
+	defaultColor: Color = MaterialTheme.colors.surface,
+	cacheSize: Int = 12,
 ): DominantColorState = remember {
-    DominantColorState(context, defaultColor, cacheSize)
+	DominantColorState(context, defaultColor, cacheSize)
 }
 
 @Stable
 class DominantColorState(
-    private val context: Context,
-    private val defaultColor: Color,
-    cacheSize: Int = 50,
+	private val context: Context,
+	private val defaultColor: Color,
+	cacheSize: Int = 50,
 ) {
-    var color by mutableStateOf(defaultColor)
-        private set
+	var color by mutableStateOf(defaultColor)
+		private set
 
-    private val cache = when {
-        cacheSize > 0 -> LruCache<String, DominantColors>(cacheSize)
-        else -> null
-    }
+	private val cache = when {
+		cacheSize > 0 -> LruCache<String, DominantColors>(cacheSize)
+		else -> null
+	}
 
-    suspend fun updateColorsFromImageUrl(url: String?) {
-        val result = calculateDominantColorFromUrl(url)
-        color = result?.color ?: defaultColor
-    }
+	suspend fun updateColorsFromImageUrl(url: String?) {
+		val result = calculateDominantColorFromUrl(url)
+		color = result?.color ?: defaultColor
+	}
 
-    private suspend fun calculateDominantColorFromUrl(url: String?): DominantColors? {
-        return if (url != null) {
-            cache?.get(url)
-                ?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
-                    DominantColors(dominantColor).also { result -> cache?.put(url, result) }
-                }
-        } else null
+	private suspend fun calculateDominantColorFromUrl(url: String?): DominantColors? {
+		return if (url != null) {
+			cache?.get(url)
+				?: calculateColorFromImageUrl(context, url)?.let { dominantColor ->
+					DominantColors(dominantColor).also { result -> cache?.put(url, result) }
+				}
+		} else null
 
-    }
+	}
 }
 
 @Immutable
 data class DominantColors(val color: Color = Color.Unspecified)
 
 private suspend fun calculateColorFromImageUrl(
-    context: Context,
-    imageUrl: String,
+	context: Context,
+	imageUrl: String,
 ): Color? {
-    val bitmap = imageUrl.bitmap(context)
+	val bitmap = imageUrl.bitmap(context)
 
-    val vibrant = bitmap.getVibrantColor()
-    val dominant = bitmap.getDominantColor()
+	val vibrant = bitmap.getVibrantColor()
+	val dominant = bitmap.getDominantColor()
 
-    return if (vibrant == Color(0)) dominant
-    else vibrant
+	return if (vibrant == Color(0)) dominant
+	else vibrant
 }

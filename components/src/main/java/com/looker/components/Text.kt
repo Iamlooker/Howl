@@ -16,36 +16,36 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TitleSubText(
-    modifier: Modifier = Modifier,
-    title: String,
-    subText: String,
-    titleTextStyle: TextStyle = MaterialTheme.typography.body1,
-    subTextTextStyle: TextStyle = MaterialTheme.typography.caption,
-    itemTextAlignment: Alignment.Horizontal,
-    textColor: Color = MaterialTheme.colors.onBackground,
-    textAlign: TextAlign = TextAlign.Start,
-    maxLines: Int = 3
+	modifier: Modifier = Modifier,
+	title: String,
+	subText: String,
+	titleTextStyle: TextStyle = MaterialTheme.typography.body1,
+	subTextTextStyle: TextStyle = MaterialTheme.typography.caption,
+	itemTextAlignment: Alignment.Horizontal,
+	textColor: Color = MaterialTheme.colors.onBackground,
+	textAlign: TextAlign = TextAlign.Start,
+	maxLines: Int = 3
 ) {
-    Column(
-        modifier = modifier.padding(horizontal = 8.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = itemTextAlignment
-    ) {
-        Text(
-            text = title,
-            style = titleTextStyle,
-            textAlign = textAlign,
-            color = textColor,
-            maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = subText,
-            style = subTextTextStyle,
-            textAlign = textAlign,
-            color = textColor.copy(0.7f),
-            maxLines = maxLines,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
+	Column(
+		modifier = modifier.padding(horizontal = 8.dp),
+		verticalArrangement = Arrangement.Center,
+		horizontalAlignment = itemTextAlignment
+	) {
+		Text(
+			text = title,
+			style = titleTextStyle,
+			textAlign = textAlign,
+			color = textColor,
+			maxLines = maxLines,
+			overflow = TextOverflow.Ellipsis
+		)
+		Text(
+			text = subText,
+			style = subTextTextStyle,
+			textAlign = textAlign,
+			color = textColor.copy(0.7f),
+			maxLines = maxLines,
+			overflow = TextOverflow.Ellipsis
+		)
+	}
 }

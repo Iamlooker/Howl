@@ -8,16 +8,16 @@ import com.looker.howlmusic.ui.components.BottomNavigationItems
 @Preview(showBackground = true, heightDp = 60)
 @Composable
 fun BottomNavigationItemPreview() {
-    Row {
-        BottomNavigationItems(
-            icon = Icons.Default.Person,
-            label = "Person",
-            selected = true
-        ) {}
-        BottomNavigationItems(
-            icon = Icons.Default.Person,
-            label = "Person",
-            selected = false
-        ) {}
-    }
+	Row {
+		BottomNavigationItems(
+			icon = Icons.Default.Person,
+			label = "Person",
+			selected = true
+		) {}
+		BottomNavigationItems(
+			icon = Icons.Default.Person,
+			label = "Person",
+			selected = false
+		) {}
+	}
 }

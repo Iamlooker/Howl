@@ -15,34 +15,34 @@ import com.looker.components.compositeOverBackground
 
 @Composable
 fun QueueHeader(
-    modifier: Modifier = Modifier,
-    openQueue: () -> Unit,
+	modifier: Modifier = Modifier,
+	openQueue: () -> Unit,
 ) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.matchParentSize(),
-            verticalArrangement = Arrangement.SpaceAround,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = "UpNext",
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.subtitle1
-            )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.small)
-                    .background(MaterialTheme.colors.primaryVariant.compositeOverBackground())
-                    .clickable(onClick = openQueue)
-                    .padding(8.dp),
-                text = "Next Song",
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.caption
-            )
-        }
-    }
+	Box(
+		modifier = modifier,
+		contentAlignment = Alignment.Center
+	) {
+		Column(
+			modifier = Modifier.matchParentSize(),
+			verticalArrangement = Arrangement.SpaceAround,
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
+			Text(
+				text = "UpNext",
+				color = MaterialTheme.colors.primary,
+				style = MaterialTheme.typography.subtitle1
+			)
+			Text(
+				modifier = Modifier
+					.fillMaxWidth()
+					.clip(MaterialTheme.shapes.small)
+					.background(MaterialTheme.colors.primaryVariant.compositeOverBackground())
+					.clickable(onClick = openQueue)
+					.padding(8.dp),
+				text = "Next Song",
+				textAlign = TextAlign.Center,
+				style = MaterialTheme.typography.caption
+			)
+		}
+	}
 }

@@ -15,45 +15,45 @@ import androidx.compose.ui.graphics.Color
 import kotlin.math.pow
 
 inline fun Modifier.rippleClick(
-    crossinline onClick: () -> Unit
+	crossinline onClick: () -> Unit
 ): Modifier = composed {
-    clickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = null
-    ) { onClick() }
+	clickable(
+		interactionSource = remember { MutableInteractionSource() },
+		indication = null
+	) { onClick() }
 }
 
 fun Modifier.backgroundGradient(
-    color: Color,
-    @FloatRange(from = 0.0, to = 1.0) startYPercentage: Float = 1f,
-    @FloatRange(from = 0.0, to = 1.0) endYPercentage: Float = 0f,
-    decay: Float = 1.0f,
-    numStops: Int = 16,
+	color: Color,
+	@FloatRange(from = 0.0, to = 1.0) startYPercentage: Float = 1f,
+	@FloatRange(from = 0.0, to = 1.0) endYPercentage: Float = 0f,
+	decay: Float = 1.0f,
+	numStops: Int = 16,
 ): Modifier = composed {
-    val colors = remember(color, numStops) {
-        if (decay != 1f) {
-            val baseAlpha = color.alpha
-            List(numStops) { i ->
-                val x = i * 1f / (numStops - 1)
-                val opacity = x.pow(decay)
-                color.copy(alpha = baseAlpha * opacity)
-            }
-        } else {
-            listOf(color.copy(alpha = 0f), color)
-        }
-    }
+	val colors = remember(color, numStops) {
+		if (decay != 1f) {
+			val baseAlpha = color.alpha
+			List(numStops) { i ->
+				val x = i * 1f / (numStops - 1)
+				val opacity = x.pow(decay)
+				color.copy(alpha = baseAlpha * opacity)
+			}
+		} else {
+			listOf(color.copy(alpha = 0f), color)
+		}
+	}
 
-    var height by remember { mutableStateOf(0f) }
-    val brush = remember(color, numStops, startYPercentage, endYPercentage, height) {
-        Brush.verticalGradient(
-            colors = colors,
-            startY = height * startYPercentage,
-            endY = height * endYPercentage
-        )
-    }
+	var height by remember { mutableStateOf(0f) }
+	val brush = remember(color, numStops, startYPercentage, endYPercentage, height) {
+		Brush.verticalGradient(
+			colors = colors,
+			startY = height * startYPercentage,
+			endY = height * endYPercentage
+		)
+	}
 
-    drawBehind {
-        height = size.height
-        drawRect(brush = brush)
-    }
+	drawBehind {
+		height = size.height
+		drawRect(brush = brush)
+	}
 }

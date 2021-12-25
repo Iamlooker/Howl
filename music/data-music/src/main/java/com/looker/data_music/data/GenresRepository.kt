@@ -4,5 +4,5 @@ import android.content.Context
 import com.looker.data_music.GenresData
 
 class GenresRepository {
-    suspend fun getAllGenres(context: Context) = GenresData(context).getGenresList()
+	suspend fun getAllGenres(context: Context) = GenresData(context).getGenresList()
 }

@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import com.looker.domain_music.Song
 
 @Database(
-    entities = [Song::class],
-    version = 1
+	entities = [Song::class],
+	version = 1
 )
 abstract class Database : RoomDatabase() {
-    abstract fun songsDao(): SongsDao
+	abstract fun songsDao(): SongsDao
 }

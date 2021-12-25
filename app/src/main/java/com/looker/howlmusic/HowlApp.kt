@@ -14,18 +14,18 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class HowlApp : Application(), ImageLoaderFactory {
-    override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this).build()
+	override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this).build()
 }
 
 @Composable
 fun App() {
-    val context = LocalContext.current
-    var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
+	val context = LocalContext.current
+	var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 
-    HowlMusicTheme {
-        ProvideWindowInsets {
-            if (canReadStorage) Home()
-            else OnBoardingPage { canReadStorage = it }
-        }
-    }
+	HowlMusicTheme {
+		ProvideWindowInsets {
+			if (canReadStorage) Home()
+			else OnBoardingPage { canReadStorage = it }
+		}
+	}
 }

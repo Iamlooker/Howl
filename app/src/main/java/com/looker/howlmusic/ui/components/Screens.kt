@@ -17,61 +17,61 @@ import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs
 
 object MainScreens {
-    const val HOME = "home"
+	const val HOME = "home"
 }
 
 sealed class HomeScreens(
-    val title: String,
-    val icon: ImageVector,
-    val route: String,
+	val title: String,
+	val icon: ImageVector,
+	val route: String,
 ) {
-    object SONGS : HomeScreens("Songs", Icons.Rounded.MusicNote, "$HOME/songs")
-    object ALBUMS : HomeScreens("Albums", Icons.Rounded.Album, "$HOME/albums")
+	object SONGS : HomeScreens("Songs", Icons.Rounded.MusicNote, "$HOME/songs")
+	object ALBUMS : HomeScreens("Albums", Icons.Rounded.Album, "$HOME/albums")
 }
 
 @Composable
 fun HomeNavGraph(
-    navController: NavHostController,
-    songsList: List<Song>,
-    albumsList: List<Album>,
-    onSongClick: (Int) -> Unit,
-    onAlbumClick: (Int) -> Unit,
+	navController: NavHostController,
+	songsList: List<Song>,
+	albumsList: List<Album>,
+	onSongClick: (Int) -> Unit,
+	onAlbumClick: (Int) -> Unit,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = HOME,
-        builder = {
-            homeGraph(
-                songsList = songsList,
-                albumsList = albumsList,
-                onSongClick = onSongClick,
-                onAlbumClick = onAlbumClick
-            )
-        }
-    )
+	NavHost(
+		navController = navController,
+		startDestination = HOME,
+		builder = {
+			homeGraph(
+				songsList = songsList,
+				albumsList = albumsList,
+				onSongClick = onSongClick,
+				onAlbumClick = onAlbumClick
+			)
+		}
+	)
 }
 
 internal fun NavGraphBuilder.homeGraph(
-    songsList: List<Song>,
-    albumsList: List<Album>,
-    onSongClick: (Int) -> Unit,
-    onAlbumClick: (Int) -> Unit,
+	songsList: List<Song>,
+	albumsList: List<Album>,
+	onSongClick: (Int) -> Unit,
+	onAlbumClick: (Int) -> Unit,
 ) {
-    navigation(
-        route = HOME,
-        startDestination = HomeScreens.SONGS.route
-    ) {
-        composable(HomeScreens.SONGS.route) {
-            Songs(
-                songsList = songsList,
-                onSongClick = onSongClick
-            )
-        }
-        composable(HomeScreens.ALBUMS.route) {
-            Albums(
-                albumsList = albumsList,
-                onAlbumClick = onAlbumClick
-            )
-        }
-    }
+	navigation(
+		route = HOME,
+		startDestination = HomeScreens.SONGS.route
+	) {
+		composable(HomeScreens.SONGS.route) {
+			Songs(
+				songsList = songsList,
+				onSongClick = onSongClick
+			)
+		}
+		composable(HomeScreens.ALBUMS.route) {
+			Albums(
+				albumsList = albumsList,
+				onAlbumClick = onAlbumClick
+			)
+		}
+	}
 }

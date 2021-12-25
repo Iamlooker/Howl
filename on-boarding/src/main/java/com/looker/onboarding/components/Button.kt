@@ -21,35 +21,35 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AnimatedButton(
-    buttonText: String,
-    buttonIcon: ImageVector,
-    buttonColor: Color,
-    onClick: () -> Unit,
+	buttonText: String,
+	buttonIcon: ImageVector,
+	buttonColor: Color,
+	onClick: () -> Unit,
 ) {
 
-    OutlinedButton(
-        onClick = onClick,
-        colors = buttonColors(backgroundColor = buttonColor.copy(0.4f)),
-        shape = CircleShape,
-        contentPadding = PaddingValues(vertical = 20.dp, horizontal = 30.dp)
-    ) {
-        Row(
-            modifier = Modifier.wrapContentSize(),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = buttonIcon,
-                contentDescription = "Permission Icon",
-                tint = buttonColor
-            )
-            Text(
-                text = AnnotatedString(
-                    text = buttonText,
-                    SpanStyle(color = buttonColor)
-                ),
-                modifier = Modifier.animateContentSize()
-            )
-        }
-    }
+	OutlinedButton(
+		onClick = onClick,
+		colors = buttonColors(backgroundColor = buttonColor.copy(0.4f)),
+		shape = CircleShape,
+		contentPadding = PaddingValues(vertical = 20.dp, horizontal = 30.dp)
+	) {
+		Row(
+			modifier = Modifier.wrapContentSize(),
+			horizontalArrangement = Arrangement.spacedBy(5.dp),
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			Icon(
+				imageVector = buttonIcon,
+				contentDescription = "Permission Icon",
+				tint = buttonColor
+			)
+			Text(
+				text = AnnotatedString(
+					text = buttonText,
+					SpanStyle(color = buttonColor)
+				),
+				modifier = Modifier.animateContentSize()
+			)
+		}
+	}
 }

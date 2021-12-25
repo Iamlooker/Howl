@@ -14,21 +14,21 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object ViewModelModule {
+object AppModule {
 
-    @Singleton
-    @Provides
-    fun provideSongsRepository(
-        @ApplicationContext context: Context
-    ): SongsRepository = SongsRepository(context)
+	@Singleton
+	@Provides
+	fun provideSongsRepository(
+		@ApplicationContext context: Context
+	): SongsRepository = SongsRepository(context)
 
-    @Singleton
-    @Provides
-    fun provideAlbumsRepository(
-        @ApplicationContext context: Context
-    ): AlbumsRepository = AlbumsRepository(context)
+	@Singleton
+	@Provides
+	fun provideAlbumsRepository(
+		@ApplicationContext context: Context
+	): AlbumsRepository = AlbumsRepository(context)
 
-    @Singleton
-    @Provides
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
+	@Singleton
+	@Provides
+	fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
 }

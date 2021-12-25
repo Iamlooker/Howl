@@ -21,93 +21,93 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AlbumArtAndUtils(
-    modifier: Modifier = Modifier,
-    albumArt: String?,
-    icon: ImageVector,
-    toggled: Boolean,
-    contentDescription: String?,
-    albumArtCorner: Int,
-    onToggle: () -> Unit,
-    overlayItems: @Composable RowScope.() -> Unit,
+	modifier: Modifier = Modifier,
+	albumArt: String?,
+	icon: ImageVector,
+	toggled: Boolean,
+	contentDescription: String?,
+	albumArtCorner: Int,
+	onToggle: () -> Unit,
+	overlayItems: @Composable RowScope.() -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
-    var overlayVisible by remember { mutableStateOf(false) }
+	val scope = rememberCoroutineScope()
+	var overlayVisible by remember { mutableStateOf(false) }
 
-    Box {
-        AlbumArt(
-            modifier = modifier.graphicsLayer {
-                shape = RoundedCornerShape(albumArtCorner)
-                clip = true
-            },
-            albumArt = albumArt,
-            overlayVisible = overlayVisible,
-            onClick = { scope.launch(Dispatchers.IO) { overlayVisible = !overlayVisible } },
-            overlayItems = overlayItems
-        )
+	Box {
+		AlbumArt(
+			modifier = modifier.graphicsLayer {
+				shape = RoundedCornerShape(albumArtCorner)
+				clip = true
+			},
+			albumArt = albumArt,
+			overlayVisible = overlayVisible,
+			onClick = { scope.launch(Dispatchers.IO) { overlayVisible = !overlayVisible } },
+			overlayItems = overlayItems
+		)
 
-        ToggleButton(
-            modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 8.dp)
-                .align(Alignment.BottomEnd),
-            icon = icon,
-            toggled = toggled,
-            shape = MaterialTheme.shapes.medium,
-            contentPadding = PaddingValues(vertical = 16.dp),
-            onToggle = onToggle,
-            contentDescription = contentDescription
-        )
-    }
+		ToggleButton(
+			modifier = Modifier
+				.padding(horizontal = 24.dp, vertical = 8.dp)
+				.align(Alignment.BottomEnd),
+			icon = icon,
+			toggled = toggled,
+			shape = MaterialTheme.shapes.medium,
+			contentPadding = PaddingValues(vertical = 16.dp),
+			onToggle = onToggle,
+			contentDescription = contentDescription
+		)
+	}
 }
 
 @Composable
 fun AlbumArt(
-    modifier: Modifier = Modifier,
-    albumArt: String?,
-    overlayVisible: Boolean,
-    onClick: () -> Unit,
-    overlayItems: @Composable (RowScope.() -> Unit),
+	modifier: Modifier = Modifier,
+	albumArt: String?,
+	overlayVisible: Boolean,
+	onClick: () -> Unit,
+	overlayItems: @Composable (RowScope.() -> Unit),
 ) {
-    val overlay by animateFloatAsState(
-        targetValue = if (overlayVisible) 1f else 0f,
-        animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-    )
+	val overlay by animateFloatAsState(
+		targetValue = if (overlayVisible) 1f else 0f,
+		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+	)
 
-    Box(modifier) {
-        HowlImage(
-            modifier = Modifier
-                .matchParentSize()
-                .rippleClick(onClick = onClick),
-            data = albumArt
-        )
-        AlbumArtOverlay(
-            modifier = Modifier
-                .matchParentSize()
-                .graphicsLayer {
-                    scaleX = overlay
-                    scaleY = overlay
-                },
-            onClick = onClick,
-            content = overlayItems
-        )
-    }
+	Box(modifier) {
+		HowlImage(
+			modifier = Modifier
+				.matchParentSize()
+				.rippleClick(onClick = onClick),
+			data = albumArt
+		)
+		AlbumArtOverlay(
+			modifier = Modifier
+				.matchParentSize()
+				.graphicsLayer {
+					scaleX = overlay
+					scaleY = overlay
+				},
+			onClick = onClick,
+			content = overlayItems
+		)
+	}
 }
 
 @Composable
 fun AlbumArtOverlay(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit,
+	modifier: Modifier = Modifier,
+	onClick: () -> Unit,
+	content: @Composable RowScope.() -> Unit,
 ) {
-    Surface(
-        modifier = modifier
-            .rippleClick(onClick = onClick),
-        color = MaterialTheme.colors.onBackground.copy(0.4f),
-        content = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                content = content
-            )
-        }
-    )
+	Surface(
+		modifier = modifier
+			.rippleClick(onClick = onClick),
+		color = MaterialTheme.colors.onBackground.copy(0.4f),
+		content = {
+			Row(
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.SpaceEvenly,
+				content = content
+			)
+		}
+	)
 }

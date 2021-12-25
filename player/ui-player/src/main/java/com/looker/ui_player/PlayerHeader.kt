@@ -18,46 +18,46 @@ import com.looker.ui_player.components.SongText
 
 @Composable
 fun PlayerHeader(
-    modifier: Modifier = Modifier,
-    albumArt: String?,
-    songName: String?,
-    artistName: String?,
-    onImageIcon: ImageVector,
-    repeatIcon: ImageVector,
-    toggled: Boolean,
-    imageCorner: Int = 50,
-    toggleAction: () -> Unit
+	modifier: Modifier = Modifier,
+	albumArt: String?,
+	songName: String?,
+	artistName: String?,
+	onImageIcon: ImageVector,
+	repeatIcon: ImageVector,
+	toggled: Boolean,
+	imageCorner: Int = 50,
+	toggleAction: () -> Unit
 ) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AlbumArtAndUtils(
-            modifier = Modifier
-                .fillMaxHeight(0.27f)
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp),
-            albumArt = albumArt,
-            icon = onImageIcon,
-            toggled = toggled,
-            onToggle = toggleAction,
-            albumArtCorner = imageCorner,
-            contentDescription = "Play"
-        ) {
-            ToggleButton(
-                icon = repeatIcon,
-                toggled = toggled,
-                onToggle = {},
-                contentDescription = "Repeat"
-            )
-            ShapedIconButton(
-                modifier = Modifier.clip(CircleShape),
-                icon = Icons.Rounded.MoreHoriz,
-                backgroundColor = MaterialTheme.colors.surface,
-                contentDescription = "More"
-            ) {}
-        }
-        SongText(songName = songName, artistName = artistName)
-    }
+	Column(
+		modifier = modifier,
+		verticalArrangement = Arrangement.spacedBy(20.dp),
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
+		AlbumArtAndUtils(
+			modifier = Modifier
+				.fillMaxHeight(0.27f)
+				.fillMaxWidth()
+				.padding(horizontal = 20.dp),
+			albumArt = albumArt,
+			icon = onImageIcon,
+			toggled = toggled,
+			onToggle = toggleAction,
+			albumArtCorner = imageCorner,
+			contentDescription = "Play"
+		) {
+			ToggleButton(
+				icon = repeatIcon,
+				toggled = toggled,
+				onToggle = {},
+				contentDescription = "Repeat"
+			)
+			ShapedIconButton(
+				modifier = Modifier.clip(CircleShape),
+				icon = Icons.Rounded.MoreHoriz,
+				backgroundColor = MaterialTheme.colors.surface,
+				contentDescription = "More"
+			) {}
+		}
+		SongText(songName = songName, artistName = artistName)
+	}
 }

@@ -14,48 +14,48 @@ import androidx.lifecycle.ViewModel
 
 class OnBoardingViewModel : ViewModel() {
 
-    private val orange = Color(0xFFFF9e80)
-    private val green = Color(0xFF69f0ae)
+	private val orange = Color(0xFFFF9e80)
+	private val green = Color(0xFF69f0ae)
 
-    private val _buttonText = MutableLiveData<String>()
-    private val _buttonIcon = MutableLiveData<ImageVector>()
-    private val _buttonColor = MutableLiveData<Color>()
+	private val _buttonText = MutableLiveData<String>()
+	private val _buttonIcon = MutableLiveData<ImageVector>()
+	private val _buttonColor = MutableLiveData<Color>()
 
-    val buttonText = _buttonText
-    val buttonIcon = _buttonIcon
-    val buttonColor = _buttonColor
+	val buttonText = _buttonText
+	val buttonIcon = _buttonIcon
+	val buttonColor = _buttonColor
 
-    fun onPermissionGranted() {
-        _buttonText.value = "Granted"
-        _buttonIcon.value = Icons.Rounded.DoneAll
-        _buttonColor.value = green
-    }
+	fun onPermissionGranted() {
+		_buttonText.value = "Granted"
+		_buttonIcon.value = Icons.Rounded.DoneAll
+		_buttonColor.value = green
+	}
 
-    fun onPermissionDenied() {
-        _buttonText.value = "Denied"
-        _buttonIcon.value = Icons.Rounded.Close
-        _buttonColor.value = orange
-    }
+	fun onPermissionDenied() {
+		_buttonText.value = "Denied"
+		_buttonIcon.value = Icons.Rounded.Close
+		_buttonColor.value = orange
+	}
 
-    val bannerText = buildAnnotatedString {
+	val bannerText = buildAnnotatedString {
 
-        withStyle(
-            style = SpanStyle(fontSize = 24.sp)
-        ) {
-            append("Whoops")
-        }
-        withStyle(
-            style = SpanStyle(
-                color = buttonColor.value ?: orange,
-                fontSize = 24.sp
-            )
-        ) {
-            append(" Nothing ")
-        }
-        withStyle(
-            style = SpanStyle(fontSize = 24.sp)
-        ) {
-            append("Here")
-        }
-    }
+		withStyle(
+			style = SpanStyle(fontSize = 24.sp)
+		) {
+			append("Whoops")
+		}
+		withStyle(
+			style = SpanStyle(
+				color = buttonColor.value ?: orange,
+				fontSize = 24.sp
+			)
+		) {
+			append(" Nothing ")
+		}
+		withStyle(
+			style = SpanStyle(fontSize = 24.sp)
+		) {
+			append("Here")
+		}
+	}
 }

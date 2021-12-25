@@ -11,29 +11,29 @@ import com.looker.domain_music.Genre
 
 @Composable
 fun GenresCard(
-    modifier: Modifier = Modifier,
-    genre: Genre,
-    onClick: () -> Unit
+	modifier: Modifier = Modifier,
+	genre: Genre,
+	onClick: () -> Unit
 ) {
-    val cardWidth = with(LocalConfiguration.current) { screenWidthDp.dp / 2 - 16.dp }
+	val cardWidth = with(LocalConfiguration.current) { screenWidthDp.dp / 2 - 16.dp }
 
-    GenresCard(modifier, genre, cardWidth, onClick)
+	GenresCard(modifier, genre, cardWidth, onClick)
 }
 
 @Composable
 private fun GenresCard(
-    modifier: Modifier = Modifier,
-    genre: Genre,
-    cardWidth: Dp,
-    onClick: () -> Unit
+	modifier: Modifier = Modifier,
+	genre: Genre,
+	cardWidth: Dp,
+	onClick: () -> Unit
 ) {
-    LargeCard(
-        modifier = modifier,
-        imageShape = CircleShape,
-        imageUrl = null,
-        title = genre.genreName,
-        subText = "${genre.count} Songs",
-        imageSize = cardWidth,
-        onClick = onClick
-    )
+	LargeCard(
+		modifier = modifier,
+		imageShape = CircleShape,
+		imageUrl = null,
+		title = genre.genreName,
+		subText = "${genre.count} Songs",
+		imageSize = cardWidth,
+		onClick = onClick
+	)
 }

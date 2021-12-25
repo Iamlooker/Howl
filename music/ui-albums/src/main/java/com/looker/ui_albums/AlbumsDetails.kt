@@ -19,48 +19,50 @@ import com.looker.ui_songs.SongsList
 
 @Composable
 fun AlbumsBottomSheetContent(
-    modifier: Modifier = Modifier,
-    currentAlbum: Album?,
-    songsList: List<Song>,
-    dominantColor: Color = MaterialTheme.colors.surface
+	modifier: Modifier = Modifier,
+	currentAlbum: Album?,
+	songsList: List<Song>,
+	dominantColor: Color = MaterialTheme.colors.surface
 ) {
-    AlbumBottomSheetItem(
-        modifier = modifier,
-        album = currentAlbum,
-        albumDominantColor = dominantColor,
-        songsList = songsList
-    )
+	AlbumBottomSheetItem(
+		modifier = modifier,
+		album = currentAlbum,
+		albumDominantColor = dominantColor,
+		songsList = songsList
+	)
 }
 
 @Composable
 fun AlbumBottomSheetItem(
-    modifier: Modifier = Modifier,
-    album: Album?,
-    albumDominantColor: Color,
-    songsList: List<Song>
+	modifier: Modifier = Modifier,
+	album: Album?,
+	albumDominantColor: Color,
+	songsList: List<Song>
 ) {
-    Column(modifier = modifier.backgroundGradient(albumDominantColor)) {
-        AlbumHeader(album = album)
-        AlbumSongsList(songsList = songsList)
-    }
+	Column(modifier = modifier.backgroundGradient(albumDominantColor)) {
+		AlbumHeader(album = album)
+		AlbumSongsList(songsList = songsList)
+	}
 }
 
 @Composable
 fun AlbumHeader(album: Album?) {
-    Crossfade(targetState = album,
-        animationSpec = tweenAnimation(LocalDurations.current.crossFade)) {
-        AlbumsDetailsItem(
-            albumArt = it?.albumArt,
-            albumName = it?.albumName,
-            artistName = it?.artistName
-        )
-    }
+	Crossfade(
+		targetState = album,
+		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+	) {
+		AlbumsDetailsItem(
+			albumArt = it?.albumArt,
+			albumName = it?.albumName,
+			artistName = it?.artistName
+		)
+	}
 }
 
 @Composable
 fun AlbumSongsList(
-    songsList: List<Song>
+	songsList: List<Song>
 ) {
-    SongsList(songsList = songsList)
-    Spacer(modifier = Modifier.height(50.dp))
+	SongsList(songsList = songsList)
+	Spacer(modifier = Modifier.height(50.dp))
 }

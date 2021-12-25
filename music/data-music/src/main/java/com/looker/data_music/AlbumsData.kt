@@ -10,37 +10,37 @@ import kotlinx.coroutines.flow.flow
 
 class AlbumsData(private val context: Context) {
 
-    companion object {
-        val albumsProjections = arrayOf(
-            MediaStore.Audio.Media.ALBUM_ID,
-            MediaStore.Audio.Media.ALBUM,
-            MediaStore.Audio.Media.ARTIST,
-        )
-        const val sortOrderAlbum = MediaStore.Audio.Media.ALBUM + " COLLATE NOCASE ASC"
-    }
+	companion object {
+		val albumsProjections = arrayOf(
+			MediaStore.Audio.Media.ALBUM_ID,
+			MediaStore.Audio.Media.ALBUM,
+			MediaStore.Audio.Media.ARTIST,
+		)
+		const val sortOrderAlbum = MediaStore.Audio.Media.ALBUM + " COLLATE NOCASE ASC"
+	}
 
-    suspend fun createAlbumsList(): Flow<List<Album>> = flow {
-        val list = mutableListOf<Album>()
-        getAlbumFlow().collect { list.add(it) }
-        emit(list)
-    }
+	suspend fun createAlbumsList(): Flow<List<Album>> = flow {
+		val list = mutableListOf<Album>()
+		getAlbumFlow().collect { list.add(it) }
+		emit(list)
+	}
 
 
-    private fun getAlbumFlow(): Flow<Album> = flow {
+	private fun getAlbumFlow(): Flow<Album> = flow {
 
-        val albumCursor = MusicCursor().generateCursor(context, albumsProjections, sortOrderAlbum)
+		val albumCursor = MusicCursor().generateCursor(context, albumsProjections, sortOrderAlbum)
 
-        albumCursor?.let {
-            if (it.moveToFirst()) {
-                do {
-                    val albumId = it.getLong(0)
-                    val albumName = it.getString(1)
-                    val artistName = it.getString(2)
-                    val albumArt = "content://media/external/audio/albumart/$albumId"
-                    emit(Album(albumId, albumName, artistName, albumArt))
-                } while (it.moveToNext())
-            }
-            it.close()
-        }
-    }
+		albumCursor?.let {
+			if (it.moveToFirst()) {
+				do {
+					val albumId = it.getLong(0)
+					val albumName = it.getString(1)
+					val artistName = it.getString(2)
+					val albumArt = "content://media/external/audio/albumart/$albumId"
+					emit(Album(albumId, albumName, artistName, albumArt))
+				} while (it.moveToNext())
+			}
+			it.close()
+		}
+	}
 }

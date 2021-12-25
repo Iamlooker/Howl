@@ -8,16 +8,16 @@ import com.looker.domain_music.Song
 
 @Composable
 fun SongsCard(
-    modifier: Modifier = Modifier,
-    song: Song,
-    onClick: () -> Unit
+	modifier: Modifier = Modifier,
+	song: Song,
+	onClick: () -> Unit
 ) {
-    SmallCard(
-        modifier = modifier,
-        imageUrl = song.albumArt,
-        title = song.songName,
-        subText = song.artistName,
-        imageSize = 62.dp,
-        onClick = onClick
-    )
+	SmallCard(
+		modifier = modifier,
+		imageUrl = song.albumArt,
+		title = song.songName,
+		subText = song.artistName,
+		imageSize = 62.dp,
+		onClick = onClick
+	)
 }
