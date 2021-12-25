@@ -1,5 +1,6 @@
 package com.looker.ui_player.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -20,7 +21,9 @@ fun SongText(
 	artistName: String?
 ) {
 	Column(
-		modifier = modifier.padding(horizontal = 20.dp),
+		modifier = modifier
+			.animateContentSize()
+			.padding(horizontal = 20.dp),
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(8.dp)
 	) {

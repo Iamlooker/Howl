@@ -64,10 +64,20 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val toggleIcon by viewModel.toggleIcon.collectAsState()
 			val toggle by viewModel.toggle.collectAsState()
 			val backgroundColor = rememberDominantColorState()
+			val imageCorner = remember { mutableStateOf(50) }
 
 			LaunchedEffect(currentSong) {
 				launch {
 					backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
+				}
+			}
+
+			LaunchedEffect(playState) {
+				launch(Dispatchers.IO) {
+					imageCorner.value = when (playState) {
+						PlayState.PLAYING -> 50
+						PlayState.PAUSED -> 15
+					}
 				}
 			}
 
@@ -79,10 +89,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			}
 
 			val corner by animateIntAsState(
-				targetValue = when (playState) {
-					PlayState.PLAYING -> 50
-					PlayState.PAUSED -> 15
-				},
+				targetValue = imageCorner.value,
 				animationSpec = tweenAnimation()
 			)
 
