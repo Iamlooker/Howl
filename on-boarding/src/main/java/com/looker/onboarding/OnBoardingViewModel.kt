@@ -4,37 +4,43 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.DoneAll
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class OnBoardingViewModel : ViewModel() {
 
 	private val orange = Color(0xFFFF9e80)
 	private val green = Color(0xFF69f0ae)
 
-	private val _buttonText = MutableLiveData<String>()
-	private val _buttonIcon = MutableLiveData<ImageVector>()
-	private val _buttonColor = MutableLiveData<Color>()
+	private val _buttonText = MutableStateFlow("Grant Permission")
+	private val _buttonIcon = MutableStateFlow(Icons.Rounded.Close)
+	private val _buttonColor = MutableStateFlow(orange)
 
-	val buttonText = _buttonText
-	val buttonIcon = _buttonIcon
-	val buttonColor = _buttonColor
+	val buttonText = _buttonText.asStateFlow()
+	val buttonIcon = _buttonIcon.asStateFlow()
+	val buttonColor = _buttonColor.asStateFlow()
 
 	fun onPermissionGranted() {
-		_buttonText.value = "Granted"
-		_buttonIcon.value = Icons.Rounded.DoneAll
-		_buttonColor.value = green
+		viewModelScope.launch {
+			_buttonText.emit("Granted")
+			_buttonIcon.emit(Icons.Rounded.DoneAll)
+			_buttonColor.emit(green)
+		}
 	}
 
 	fun onPermissionDenied() {
-		_buttonText.value = "Denied"
-		_buttonIcon.value = Icons.Rounded.Close
-		_buttonColor.value = orange
+		viewModelScope.launch {
+			_buttonText.emit("Denied")
+			_buttonIcon.emit(Icons.Rounded.Close)
+			_buttonColor.emit(orange)
+		}
 	}
 
 	val bannerText = buildAnnotatedString {
@@ -46,7 +52,7 @@ class OnBoardingViewModel : ViewModel() {
 		}
 		withStyle(
 			style = SpanStyle(
-				color = buttonColor.value ?: orange,
+				color = buttonColor.value,
 				fontSize = 24.sp
 			)
 		) {

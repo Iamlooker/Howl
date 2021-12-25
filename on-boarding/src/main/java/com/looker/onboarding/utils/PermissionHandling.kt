@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.core.content.ContextCompat
-import com.looker.constants.Constants.READ_PERMISSION
+
+const val READ_PERMISSION = "android.permission.READ_EXTERNAL_STORAGE"
 
 fun checkReadPermission(context: Context) =
 	ContextCompat.checkSelfPermission(

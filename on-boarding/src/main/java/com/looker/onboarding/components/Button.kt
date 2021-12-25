@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -40,13 +39,11 @@ fun AnimatedButton(
 		) {
 			Icon(
 				imageVector = buttonIcon,
-				contentDescription = "Permission Icon",
-				tint = buttonColor
+				contentDescription = "Permission Icon"
 			)
 			Text(
 				text = AnnotatedString(
-					text = buttonText,
-					SpanStyle(color = buttonColor)
+					text = buttonText
 				),
 				modifier = Modifier.animateContentSize()
 			)

@@ -24,6 +24,8 @@ object Compose {
 	const val composeCompiler = "1.1.0-rc02"
 	private const val composeVersion = "1.1.0-rc01"
 	private const val activityComposeVersion = "1.4.0"
+	private const val navigationVersion = "2.4.0-rc01"
+
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
 	const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
@@ -31,8 +33,7 @@ object Compose {
 	const val material = "androidx.compose.material:material:$composeVersion"
 	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
 	const val ui = "androidx.compose.ui:ui:$composeVersion"
-	const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:$composeVersion"
-	private const val navigationVersion = "2.4.0-beta02"
+	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
 	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
@@ -72,7 +73,6 @@ object Room {
 	const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
 	const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
 	const val roomKtx = "androidx.room:room-ktx:$roomVersion"
-
 }
 
 object Version {
