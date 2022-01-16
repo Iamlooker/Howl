@@ -37,6 +37,20 @@ suspend fun String.bitmap(context: Context): Bitmap {
 
 	return when (val result = Coil.execute(r)) {
 		is SuccessResult -> result.drawable.toBitmap()
+		is ErrorResult -> R.drawable.error_image.bitmap(context)
+	}
+}
+
+suspend fun Int.bitmap(context: Context): Bitmap {
+	val r = ImageRequest.Builder(context)
+		.data(this)
+		.size(128)
+		.scale(Scale.FILL)
+		.allowHardware(false)
+		.build()
+
+	return when (val result = Coil.execute(r)) {
+		is SuccessResult -> result.drawable.toBitmap()
 		is ErrorResult -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
 	}
 }

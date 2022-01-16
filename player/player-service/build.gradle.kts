@@ -1,14 +1,13 @@
 apply("$rootDir/android-library.gradle")
 
 val implementation by configurations
-val api by configurations
-val kapt by configurations
 
 dependencies {
 	implementation(project(Modules.constants))
+	implementation(project(Modules.components))
 	implementation(project(Modules.domainMusic))
 
-	implementation(Coil.coil)
-	implementation(ExoPlayer.exoplayer)
-	implementation(ExoPlayer.exoplayerMediaSession)
+	implementation(Media3.media3Session)
+	implementation(Media3.media3ExoPlayer)
+	implementation(project(mapOf("path" to ":app")))
 }

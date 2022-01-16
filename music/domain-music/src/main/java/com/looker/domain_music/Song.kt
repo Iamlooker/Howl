@@ -1,14 +1,9 @@
 package com.looker.domain_music
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "songs")
 data class Song(
-	@PrimaryKey
 	val songUri: String,
 	val albumId: Long,
-	val genreId: Long,
+	val genreId: Long?,
 	val songName: String?,
 	val artistName: String?,
 	val albumName: String?,

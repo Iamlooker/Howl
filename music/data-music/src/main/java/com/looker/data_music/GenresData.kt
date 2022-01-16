@@ -31,7 +31,7 @@ class GenresData(private val context: Context) {
 
 	private fun getGenreFlow(): Flow<Genre> = flow {
 
-		val genreCursor = MusicCursor().generateCursor(context, genresProjections, sortOrderGenre)
+		val genreCursor = MusicCursor.generateCursor(context, genresProjections, sortOrderGenre)
 
 		genreCursor?.let {
 			if (it.moveToFirst()) {

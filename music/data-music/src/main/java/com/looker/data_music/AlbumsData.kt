@@ -28,7 +28,7 @@ class AlbumsData(private val context: Context) {
 
 	private fun getAlbumFlow(): Flow<Album> = flow {
 
-		val albumCursor = MusicCursor().generateCursor(context, albumsProjections, sortOrderAlbum)
+		val albumCursor = MusicCursor.generateCursor(context, albumsProjections, sortOrderAlbum)
 
 		albumCursor?.let {
 			if (it.moveToFirst()) {

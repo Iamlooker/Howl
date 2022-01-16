@@ -21,8 +21,8 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.1.0-rc02"
-	private const val composeVersion = "1.1.0-rc01"
+	const val composeCompiler = "1.2.0-alpha01"
+	private const val composeVersion = "1.2.0-alpha01"
 	private const val activityComposeVersion = "1.4.0"
 	private const val navigationVersion = "2.4.0-rc01"
 
@@ -63,13 +63,19 @@ object Lifecycle {
 		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }
 
+object Media3 {
+	private const val media3Version = "1.0.0-alpha01"
+	const val media3Session = "androidx.media3:media3-session:$media3Version"
+	const val media3ExoPlayer = "androidx.media3:media3-exoplayer:$media3Version"
+}
+
 object Palette {
 	private const val paletteVersion = "1.0.0"
 	const val palette = "androidx.palette:palette-ktx:$paletteVersion"
 }
 
 object Room {
-	private const val roomVersion = "2.4.0"
+	private const val roomVersion = "2.4.1"
 	const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
 	const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
 	const val roomKtx = "androidx.room:room-ktx:$roomVersion"

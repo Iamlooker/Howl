@@ -9,17 +9,14 @@ import com.looker.components.localComposers.Elevations
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations
 
-private val DefaultDuration = Durations()
-private val DefaultElevation = Elevations()
-
 @Composable
 fun HowlMusicTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
 	val colors = if (darkTheme) darkColors
 	else lightColors
 
 	CompositionLocalProvider(
-		LocalDurations provides DefaultDuration,
-		LocalElevations provides DefaultElevation
+		LocalDurations provides Durations(),
+		LocalElevations provides Elevations()
 	) {
 		MaterialTheme(
 			colors = colors,

@@ -1,9 +1,10 @@
 package com.looker.data_music
 
 import android.content.Context
-import android.net.Uri
 import android.provider.MediaStore
+import androidx.core.database.getLongOrNull
 import com.looker.data_music.utils.MusicCursor
+import com.looker.data_music.utils.MusicCursor.externalUri
 import com.looker.domain_music.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -13,15 +14,14 @@ class SongsData(private val context: Context) {
 
 	companion object {
 		val songsProjections = arrayOf(
-			MediaStore.Audio.Media._ID,
-			MediaStore.Audio.Media.ALBUM_ID,
+			MediaStore.Audio.AudioColumns._ID,
+			MediaStore.Audio.AudioColumns.ALBUM_ID,
 			MediaStore.Audio.Genres._ID,
-			MediaStore.Audio.Media.TITLE,
-			MediaStore.Audio.Media.ARTIST,
-			MediaStore.Audio.Media.ALBUM,
-			MediaStore.Audio.Media.DURATION
+			MediaStore.Audio.AudioColumns.TITLE,
+			MediaStore.Audio.AudioColumns.ARTIST,
+			MediaStore.Audio.AudioColumns.ALBUM,
+			MediaStore.Audio.AudioColumns.DURATION
 		)
-		val externalUri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
 		const val sortOrderSong = MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC"
 	}
 
@@ -34,14 +34,14 @@ class SongsData(private val context: Context) {
 
 	private fun getSongFlow(): Flow<Song> = flow {
 
-		val songCursor = MusicCursor().generateCursor(context, songsProjections, sortOrderSong)
+		val songCursor = MusicCursor.generateCursor(context, songsProjections, sortOrderSong)
 
 		songCursor?.let {
 			if (it.moveToFirst()) {
 				do {
 					val songId = it.getLong(0)
 					val albumId = it.getLong(1)
-					val genreId = it.getLong(2)
+					val genreId = it.getLongOrNull(2)
 					val songName = it.getString(3)
 					val artistName = it.getString(4)
 					val albumName = it.getString(5)

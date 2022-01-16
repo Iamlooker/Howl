@@ -16,7 +16,7 @@ fun askReadPermission(launcher: ManagedActivityResultLauncher<String, Boolean>) 
 	launcher.launch(READ_PERMISSION)
 }
 
-fun handlePermissions(
+inline fun handlePermissions(
 	context: Context,
 	launcher: ManagedActivityResultLauncher<String, Boolean>,
 	onGranted: () -> Unit,

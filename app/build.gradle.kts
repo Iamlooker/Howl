@@ -15,9 +15,7 @@ android {
 		versionCode = Android.versionCode
 		versionName = Android.versionName
 
-		vectorDrawables {
-			useSupportLibrary = true
-		}
+		vectorDrawables { useSupportLibrary = true }
 	}
 
 	signingConfigs {
@@ -74,8 +72,8 @@ android {
 
 dependencies {
 
-	implementation(project(Modules.constants))
 	implementation(project(Modules.onBoarding))
+	implementation(project(Modules.constants))
 	implementation(project(Modules.domainMusic))
 	implementation(project(Modules.dataMusic))
 	implementation(project(Modules.uiSongs))
@@ -97,7 +95,6 @@ dependencies {
 	implementation(Compose.ui)
 
 	implementation(ExoPlayer.exoplayerCore)
-	implementation(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Hilt.hiltAndroid)
 	kapt(Hilt.hiltCompiler)
