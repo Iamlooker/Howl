@@ -60,9 +60,7 @@ fun AlbumHeader(album: Album?) {
 }
 
 @Composable
-fun AlbumSongsList(
-	songsList: List<Song>
-) {
+fun AlbumSongsList(songsList: List<Song>) {
 	SongsList(songsList = songsList)
 	Spacer(modifier = Modifier.height(50.dp))
 }

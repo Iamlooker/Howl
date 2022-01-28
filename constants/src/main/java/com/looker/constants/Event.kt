@@ -1,7 +1,6 @@
-package com.looker.howlmusic.utils
+package com.looker.constants
 
-class Event<out T>(private val content: T) {
-
+open class Event<out T>(private val data: T) {
 	var hasBeenHandled = false
 		private set
 
@@ -10,9 +9,9 @@ class Event<out T>(private val content: T) {
 			null
 		} else {
 			hasBeenHandled = true
-			content
+			data
 		}
 	}
 
-	fun peekContent(): T = content
+	fun peekContent() = data
 }

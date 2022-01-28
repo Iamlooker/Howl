@@ -25,12 +25,11 @@ class SongsData(private val context: Context) {
 		const val sortOrderSong = MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC"
 	}
 
-	suspend fun createSongsList(): Flow<List<Song>> = flow {
-		val list = mutableListOf<Song>()
-		getSongFlow().collect { list.add(it) }
-		emit(list)
+	suspend fun createSongsList(): List<Song> {
+		val song = mutableListOf<Song>()
+		getSongFlow().collect { song.add(it) }
+		return song
 	}
-
 
 	private fun getSongFlow(): Flow<Song> = flow {
 
@@ -50,6 +49,7 @@ class SongsData(private val context: Context) {
 					val albumArt = "content://media/external/audio/albumart/$albumId"
 					emit(
 						Song(
+							mediaId = songId.toString(),
 							songUri = songUri,
 							albumId = albumId,
 							genreId = genreId,

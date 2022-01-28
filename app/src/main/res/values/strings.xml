@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Howl</string>
+    <string name="notification_channel_name">Now Playing</string>
+    <string name="notification_channel_description">Shows and Controls Current playing Media"</string>
 </resources>

@@ -1,11 +1,9 @@
 object Accompanist {
-	private const val accompanistVersion = "0.22.0-rc"
+	private const val accompanistVersion = "0.22.1-rc"
 	const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
 object Classpath {
-	private const val gradleVersion = "7.0.4"
-	const val gradleClasspath = "com.android.tools.build:gradle:$gradleVersion"
 	const val gradleKotlin =
 		"org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
 }
@@ -21,10 +19,10 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0-alpha01"
-	private const val composeVersion = "1.2.0-alpha01"
+	const val composeCompiler = "1.1.0-rc03"
+	private const val composeVersion = "1.1.0-rc03"
 	private const val activityComposeVersion = "1.4.0"
-	private const val navigationVersion = "2.4.0-rc01"
+	private const val navigationVersion = "2.4.0"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -34,6 +32,7 @@ object Compose {
 	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
 	const val ui = "androidx.compose.ui:ui:$composeVersion"
 	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
+	const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$composeVersion"
 	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
@@ -44,7 +43,6 @@ object Excludes {
 object ExoPlayer {
 	private const val exoplayerVersion = "2.16.1"
 	const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
-	const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
 	const val exoplayerMediaSession =
 		"com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
@@ -61,12 +59,6 @@ object Lifecycle {
 	private const val lifecycleVersion = "2.4.0"
 	const val lifecycleViewModelCompose =
 		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
-}
-
-object Media3 {
-	private const val media3Version = "1.0.0-alpha01"
-	const val media3Session = "androidx.media3:media3-session:$media3Version"
-	const val media3ExoPlayer = "androidx.media3:media3-exoplayer:$media3Version"
 }
 
 object Palette {

@@ -3,6 +3,7 @@ package com.looker.components
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.Coil
+import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
@@ -39,6 +41,18 @@ suspend fun String.bitmap(context: Context): Bitmap {
 		is SuccessResult -> result.drawable.toBitmap()
 		is ErrorResult -> R.drawable.error_image.bitmap(context)
 	}
+}
+
+fun toBitmap(context: Context, data: String, onLoaded: (Bitmap) -> Unit): Bitmap? {
+	val loader = ImageLoader(context)
+	val req = ImageRequest.Builder(context)
+		.data(data)
+		.target { result ->
+			onLoaded((result as BitmapDrawable).bitmap)
+		}
+		.build()
+	loader.enqueue(req)
+	return null
 }
 
 suspend fun Int.bitmap(context: Context): Bitmap {

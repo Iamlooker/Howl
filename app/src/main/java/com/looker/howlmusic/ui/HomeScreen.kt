@@ -11,11 +11,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.navigationBarsHeight
 import com.google.accompanist.insets.statusBarsHeight
@@ -25,6 +25,7 @@ import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.state.PlayState
 import com.looker.components.state.SheetsState
+import com.looker.constants.Resource
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.HowlViewModel
@@ -32,6 +33,7 @@ import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
+import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import com.looker.ui_player.PlayerControls
 import com.looker.ui_player.PlayerHeader
@@ -40,14 +42,17 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(viewModel: HowlViewModel = viewModel()) {
+fun Home(viewModel: HowlViewModel) {
 
 	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
 	val currentSong by viewModel.currentSong.collectAsState()
+	val currentPlayingSong by viewModel.currentPlayingSong.observeAsState()
 	val backdropValue by viewModel.backdropValue.collectAsState()
 	val enableGesture by viewModel.enableGesture.collectAsState()
+
+	val mediaItems by viewModel.mediaItems.collectAsState()
 
 	val playState by viewModel.playState.collectAsState()
 
@@ -102,9 +107,9 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			Player(
 				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
 				icon = toggleIcon,
-				albumArt = currentSong.albumArt,
-				songName = currentSong.songName,
-				artistName = currentSong.artistName,
+				albumArt = currentPlayingSong.toSong.albumArt,
+				songName = currentPlayingSong.toSong.songName,
+				artistName = currentPlayingSong.toSong.artistName,
 				toggled = toggle,
 				imageCorner = corner,
 				toggleAction = { viewModel.onToggle(backdropValue, playState) }
@@ -114,13 +119,11 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val bottomSheetState =
 				rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-			val handleIcon by viewModel.handleIcon.collectAsState()
-			val songsList by viewModel.songsList.collectAsState()
 			val albumsList by viewModel.albumsList.collectAsState()
 			val currentAlbum by viewModel.currentAlbum.collectAsState()
+
 			val albumDominant = rememberDominantColorState()
 
-			LaunchedEffect(backdropValue) { launch { viewModel.setHandleIcon(backdropValue) } }
 			LaunchedEffect(currentAlbum) {
 				launch { albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt) }
 			}
@@ -135,12 +138,12 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
 			FrontLayer(
 				bottomSheetState = bottomSheetState,
-				songsList = songsList,
+				songsList = mediaItems,
 				albumsList = albumsList,
-				handleIcon = handleIcon,
+				handleIcon = 1F,
 				currentAlbum = currentAlbum,
 				albumsDominantColor = albumDominant.color,
-				onSongClick = { viewModel.onSongClicked(it) },
+				onSongClick = { viewModel.playOrToggleSong(it) },
 				openPlayer = {
 					scope.launch(Dispatchers.IO) {
 						state.animateTo(BackdropValue.Revealed, myTween(400))
@@ -164,7 +167,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			Controls(
 				isPlaying = playState,
 				progress = progress,
-				onPlayPause = { viewModel.onPlayPause(it) },
+				onPlayPause = { viewModel.playOrToggleSong(currentPlayingSong.toSong, true) },
 				skipNextClick = { viewModel.playNext() },
 				skipPrevClick = { viewModel.playPrevious() },
 				onSeek = { seekTo -> viewModel.onSeek(seekTo) },
@@ -178,13 +181,13 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 @Composable
 fun FrontLayer(
 	bottomSheetState: ModalBottomSheetState,
-	songsList: List<Song>,
+	songsList: Resource<List<Song>>,
 	albumsList: List<Album>,
 	handleIcon: Float,
 	currentAlbum: Album,
 	albumsDominantColor: Color,
 	openPlayer: () -> Unit,
-	onSongClick: (Int) -> Unit,
+	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Int) -> Unit,
 ) {
 	val navController = rememberNavController()
@@ -194,7 +197,7 @@ fun FrontLayer(
 		sheetContent = {
 			AlbumsBottomSheetContent(
 				currentAlbum = currentAlbum,
-				songsList = songsList.filter { it.albumId == currentAlbum.albumId },
+				songsList = songsList.data ?: emptyList(),
 				dominantColor = albumsDominantColor.copy(0.4f)
 			)
 		}

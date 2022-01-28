@@ -1,6 +1,7 @@
 package com.looker.domain_music
 
 data class Song(
+	val mediaId: String,
 	val songUri: String,
 	val albumId: Long,
 	val genreId: Long?,
@@ -8,11 +9,11 @@ data class Song(
 	val artistName: String?,
 	val albumName: String?,
 	val albumArt: String?,
-	val browsable: Boolean = true,
 	val duration: Long = 0,
 )
 
 val emptySong = Song(
+	mediaId = "",
 	songUri = "",
 	albumId = 0,
 	genreId = 0,

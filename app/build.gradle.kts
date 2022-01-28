@@ -3,6 +3,18 @@ plugins {
 	kotlin("android")
 	kotlin("kapt")
 	id(Hilt.hiltPlugin)
+	id("com.google.devtools.ksp") version "1.6.10-1.0.2"
+}
+
+kotlin {
+	sourceSets {
+		debug {
+			kotlin.srcDir("build/generated/ksp/debug/kotlin")
+		}
+		release {
+			kotlin.srcDir("build/generated/ksp/release/kotlin")
+		}
+	}
 }
 
 android {
@@ -93,8 +105,10 @@ dependencies {
 	implementation(Compose.foundation)
 	implementation(Compose.navigation)
 	implementation(Compose.ui)
+	implementation(Compose.runtimeLivedata)
 
-	implementation(ExoPlayer.exoplayerCore)
+	implementation(ExoPlayer.exoplayer)
+	implementation(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Hilt.hiltAndroid)
 	kapt(Hilt.hiltCompiler)

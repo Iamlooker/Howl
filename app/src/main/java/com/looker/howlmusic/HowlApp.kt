@@ -18,13 +18,13 @@ class HowlApp : Application(), ImageLoaderFactory {
 }
 
 @Composable
-fun App() {
+fun App(viewModel: HowlViewModel) {
 	val context = LocalContext.current
 	var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 
 	HowlMusicTheme {
 		ProvideWindowInsets {
-			if (canReadStorage) Home()
+			if (canReadStorage) Home(viewModel)
 			else OnBoardingPage { canReadStorage = it }
 		}
 	}

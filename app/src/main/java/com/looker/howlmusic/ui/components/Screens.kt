@@ -9,7 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import com.looker.constants.Resource
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.ui.components.MainScreens.HOME
@@ -32,46 +32,40 @@ sealed class HomeScreens(
 @Composable
 fun HomeNavGraph(
 	navController: NavHostController,
-	songsList: List<Song>,
+	songsList: Resource<List<Song>>,
 	albumsList: List<Album>,
-	onSongClick: (Int) -> Unit,
+	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Int) -> Unit,
 ) {
 	NavHost(
 		navController = navController,
-		startDestination = HOME,
-		builder = {
-			homeGraph(
-				songsList = songsList,
-				albumsList = albumsList,
-				onSongClick = onSongClick,
-				onAlbumClick = onAlbumClick
-			)
-		}
-	)
+		startDestination = HomeScreens.SONGS.route
+	) {
+		homeGraph(
+			songsList = songsList,
+			albumsList = albumsList,
+			onSongClick = onSongClick,
+			onAlbumClick = onAlbumClick
+		)
+	}
 }
 
 internal fun NavGraphBuilder.homeGraph(
-	songsList: List<Song>,
+	songsList: Resource<List<Song>>,
 	albumsList: List<Album>,
-	onSongClick: (Int) -> Unit,
+	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Int) -> Unit,
 ) {
-	navigation(
-		route = HOME,
-		startDestination = HomeScreens.SONGS.route
-	) {
-		composable(HomeScreens.SONGS.route) {
-			Songs(
-				songsList = songsList,
-				onSongClick = onSongClick
-			)
-		}
-		composable(HomeScreens.ALBUMS.route) {
-			Albums(
-				albumsList = albumsList,
-				onAlbumClick = onAlbumClick
-			)
-		}
+	composable(HomeScreens.SONGS.route) {
+		Songs(
+			songsList = songsList,
+			onSongClick = onSongClick
+		)
+	}
+	composable(HomeScreens.ALBUMS.route) {
+		Albums(
+			albumsList = albumsList,
+			onAlbumClick = onAlbumClick
+		)
 	}
 }
