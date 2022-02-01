@@ -22,7 +22,6 @@ import com.looker.components.state.PlayState
 import com.looker.components.state.PlayState.PAUSED
 import com.looker.components.state.PlayState.PLAYING
 import com.looker.components.tweenAnimation
-import com.looker.ui_player.components.QueueHeader
 import com.looker.ui_player.components.SeekBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,7 +31,6 @@ fun PlayerControls(
 	modifier: Modifier = Modifier,
 	isPlaying: PlayState,
 	@FloatRange(from = 0.0, to = 1.0) progressValue: Float,
-	openQueue: () -> Unit,
 	onSeek: (Float) -> Unit,
 	onPlayPause: (PlayState) -> Unit,
 	skipNextClick: () -> Unit,
@@ -42,18 +40,15 @@ fun PlayerControls(
 		modifier = modifier.padding(20.dp),
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		SeekBar(
-			progress = progressValue,
-			onValueChanged = onSeek
-		)
 		PlayAndSkipButton(
 			isPlaying = isPlaying,
 			playClick = onPlayPause,
 			skipNextClick = skipNextClick
 		)
-		PreviousAndQueue(
-			openQueue = openQueue,
-			skipPrevClick = skipPrevClick
+		PreviousAndSeekBar(
+			progress = progressValue,
+			skipPrevClick = skipPrevClick,
+			onSeek = onSeek
 		)
 	}
 }
@@ -119,10 +114,11 @@ fun PlayAndSkipButton(
 }
 
 @Composable
-fun PreviousAndQueue(
+fun PreviousAndSeekBar(
 	modifier: Modifier = Modifier,
+	progress: Float,
 	skipPrevClick: () -> Unit,
-	openQueue: () -> Unit,
+	onSeek: (Float) -> Unit,
 ) {
 	Row(
 		modifier = modifier.fillMaxWidth(),
@@ -139,11 +135,12 @@ fun PreviousAndQueue(
 			contentColor = MaterialTheme.colors.onSecondary,
 			contentDescription = "Play Previous Song"
 		)
-		QueueHeader(
+		SeekBar(
 			modifier = Modifier
 				.height(60.dp)
 				.weight(3f),
-			openQueue = openQueue
+			progress = progress,
+			onValueChanged = onSeek
 		)
 	}
 }

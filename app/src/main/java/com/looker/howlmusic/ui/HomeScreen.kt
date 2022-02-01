@@ -47,12 +47,11 @@ fun Home(viewModel: HowlViewModel) {
 	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
-	val currentSong by viewModel.currentSong.collectAsState()
-	val currentPlayingSong by viewModel.currentPlayingSong.observeAsState()
+	val currentSong by viewModel.nowPlaying.observeAsState()
 	val backdropValue by viewModel.backdropValue.collectAsState()
 	val enableGesture by viewModel.enableGesture.collectAsState()
 
-	val mediaItems by viewModel.mediaItems.collectAsState()
+	val songsList by viewModel.mediaItems.collectAsState()
 
 	val playState by viewModel.playState.collectAsState()
 
@@ -74,7 +73,7 @@ fun Home(viewModel: HowlViewModel) {
 
 			LaunchedEffect(currentSong) {
 				launch {
-					backgroundColor.updateColorsFromImageUrl(currentSong.albumArt)
+					backgroundColor.updateColorsFromImageUrl(currentSong?.toSong?.albumArt)
 				}
 			}
 
@@ -107,9 +106,9 @@ fun Home(viewModel: HowlViewModel) {
 			Player(
 				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
 				icon = toggleIcon,
-				albumArt = currentPlayingSong.toSong.albumArt,
-				songName = currentPlayingSong.toSong.songName,
-				artistName = currentPlayingSong.toSong.artistName,
+				albumArt = currentSong?.toSong?.albumArt,
+				songName = currentSong?.toSong?.songName,
+				artistName = currentSong?.toSong?.artistName,
 				toggled = toggle,
 				imageCorner = corner,
 				toggleAction = { viewModel.onToggle(backdropValue, playState) }
@@ -138,12 +137,12 @@ fun Home(viewModel: HowlViewModel) {
 
 			FrontLayer(
 				bottomSheetState = bottomSheetState,
-				songsList = mediaItems,
+				songsList = songsList,
 				albumsList = albumsList,
 				handleIcon = 1F,
 				currentAlbum = currentAlbum,
 				albumsDominantColor = albumDominant.color,
-				onSongClick = { viewModel.playOrToggleSong(it) },
+				onSongClick = { viewModel.onSongClick(it) },
 				openPlayer = {
 					scope.launch(Dispatchers.IO) {
 						state.animateTo(BackdropValue.Revealed, myTween(400))
@@ -167,11 +166,10 @@ fun Home(viewModel: HowlViewModel) {
 			Controls(
 				isPlaying = playState,
 				progress = progress,
-				onPlayPause = { viewModel.playOrToggleSong(currentPlayingSong.toSong, true) },
+				onPlayPause = { currentSong?.toSong?.let { song -> viewModel.playMedia(song) } },
 				skipNextClick = { viewModel.playNext() },
 				skipPrevClick = { viewModel.playPrevious() },
 				onSeek = { seekTo -> viewModel.onSeek(seekTo) },
-				openQueue = { scope.launch { state.conceal() } }
 			)
 		}
 	)
@@ -197,7 +195,8 @@ fun FrontLayer(
 		sheetContent = {
 			AlbumsBottomSheetContent(
 				currentAlbum = currentAlbum,
-				songsList = songsList.data ?: emptyList(),
+				songsList = songsList.data?.filter { it.albumId == currentAlbum.albumId }
+					?: emptyList(),
 				dominantColor = albumsDominantColor.copy(0.4f)
 			)
 		}
@@ -268,7 +267,6 @@ fun Controls(
 	onPlayPause: (PlayState) -> Unit,
 	skipNextClick: () -> Unit,
 	onSeek: (Float) -> Unit,
-	openQueue: () -> Unit,
 	skipPrevClick: () -> Unit,
 ) {
 	Column(modifier) {
@@ -279,7 +277,6 @@ fun Controls(
 			skipNextClick = skipNextClick,
 			skipPrevClick = skipPrevClick,
 			onSeek = { seekTo -> onSeek(seekTo) },
-			openQueue = openQueue
 		)
 		Spacer(Modifier.statusBarsHeight())
 	}

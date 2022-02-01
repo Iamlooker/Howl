@@ -21,7 +21,7 @@ import com.looker.howlmusic.service.notification.MusicNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class MusicService : MediaBrowserServiceCompat() {
 	@Inject
 	lateinit var musicSource: MusicSource
 
-	private val serviceJob = Job()
+	private val serviceJob = SupervisorJob()
 	private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
 	@Inject
@@ -156,6 +156,10 @@ class MusicService : MediaBrowserServiceCompat() {
 
 	override fun onDestroy() {
 		super.onDestroy()
+		mediaSession.run {
+			isActive = false
+			release()
+		}
 		serviceJob.cancel()
 		exoPlayer.removeListener(musicPlayerEventListener)
 		exoPlayer.release()

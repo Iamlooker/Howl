@@ -12,5 +12,5 @@ inline val MediaBrowserCompat.MediaItem.toSong
 		description.title.toString(),
 		description.subtitle.toString(),
 		null,
-		description.mediaUri?.toString()
+		description.iconUri.toString()
 	)

@@ -2,7 +2,7 @@ package com.looker.howlmusic
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
-import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_ID
+import android.util.Log
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
@@ -27,11 +27,9 @@ import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptyAlbum
 import com.looker.domain_music.emptySong
+import com.looker.howlmusic.service.MusicService
 import com.looker.howlmusic.service.MusicServiceConnection
-import com.looker.howlmusic.utils.extension.isPlayEnabled
-import com.looker.howlmusic.utils.extension.isPlaying
-import com.looker.howlmusic.utils.extension.isPrepared
-import com.looker.howlmusic.utils.extension.toSong
+import com.looker.howlmusic.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,10 +45,12 @@ class HowlViewModel
 	private val albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
-	private val _mediaItems = MutableStateFlow<Resource<List<Song>>>(
-		Resource.Loading(listOf(emptySong))
-	)
+	private val _mediaItems =
+		MutableStateFlow<Resource<List<Song>>>(Resource.Loading(listOf(emptySong)))
 	val mediaItems: StateFlow<Resource<List<Song>>> = _mediaItems
+
+	private val _albumsList = MutableStateFlow(emptyList<Album>())
+	val albumsList: StateFlow<List<Album>> = _albumsList
 
 	init {
 		musicServiceConnection.subscribe(
@@ -72,11 +72,8 @@ class HowlViewModel
 	}
 
 	val isConnected = musicServiceConnection.isConnected
-	val currentPlayingSong = musicServiceConnection.currentSong
-	private val playbackState = musicServiceConnection.playbackState
 
-	private val _albumsList = MutableStateFlow(emptyList<Album>())
-	val albumsList: StateFlow<List<Album>> = _albumsList
+	val nowPlaying = musicServiceConnection.nowPlaying
 
 	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 	private val _currentAlbum = MutableStateFlow(emptyAlbum)
@@ -87,6 +84,7 @@ class HowlViewModel
 	private val _progress = MutableStateFlow(0f)
 	private val _toggle = MutableStateFlow(false)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
+	private val _currentSongDuration = MutableStateFlow(0L)
 
 	val backdropValue: StateFlow<SheetsState> = _backdropValue
 	val currentAlbum: StateFlow<Album> = _currentAlbum
@@ -96,6 +94,7 @@ class HowlViewModel
 	val playState: StateFlow<PlayState> = _playState
 	val toggle: StateFlow<Boolean> = _toggle
 	val toggleIcon: StateFlow<ImageVector> = _toggleIcon
+	private val currentSongDuration: StateFlow<Long> = _currentSongDuration
 
 	@ExperimentalMaterialApi
 	fun setBackdropValue(currentValue: BackdropValue) {
@@ -131,6 +130,10 @@ class HowlViewModel
 		_playState.emit(isPlaying)
 	}
 
+	private suspend fun setPlayState(isPlaying: Boolean) {
+		_playState.emit(if (isPlaying) PLAYING else PAUSED)
+	}
+
 	private suspend fun updatePlayIcon() {
 		_playIcon.emit(
 			when (playState.value) {
@@ -143,8 +146,7 @@ class HowlViewModel
 	private fun onPlayPause(isPlaying: PlayState) {
 		viewModelScope.launch(Dispatchers.IO) { setPlayState(isPlaying) }
 		viewModelScope.launch(Dispatchers.Main) {
-			// TODO: Set Play State
-//			setPlayState(exoPlayer.isPlaying)
+			playMedia(currentSong.value)
 			updatePlayIcon()
 		}
 	}
@@ -173,25 +175,56 @@ class HowlViewModel
 		}
 	}
 
-	fun playOrToggleSong(mediaItem: Song, toggle: Boolean = false) {
-		val isPrepared = playbackState.value?.isPrepared ?: false
-		if (isPrepared && mediaItem.mediaId
-			== currentPlayingSong.value?.getString(METADATA_KEY_MEDIA_ID)
-		) {
-			playbackState.value?.let { playbackState ->
+	fun onSongClick(song: Song) {
+		playMedia(song, pauseAllowed = false)
+	}
+
+	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
+		val nowPlaying = musicServiceConnection.nowPlaying.value
+		val transportControls = musicServiceConnection.transportControls
+
+		val isPrepared = musicServiceConnection.playbackState.value?.isPrepared ?: false
+		if (isPrepared && mediaItem.mediaId == nowPlaying?.id) {
+			musicServiceConnection.playbackState.value?.let { playbackState ->
 				when {
-					playbackState.isPlaying -> if (toggle) musicServiceConnection.transportControls.pause()
-					playbackState.isPlayEnabled -> musicServiceConnection.transportControls.play()
-					else -> Unit
+					playbackState.isPlaying ->
+						if (pauseAllowed) transportControls.pause() else Unit
+					playbackState.isPlayEnabled -> transportControls.play()
+					else -> {
+						Log.w(
+							"HowlViewModel",
+							"Playable item clicked but neither play nor pause are enabled!" +
+									" (mediaId=${mediaItem.mediaId})"
+						)
+					}
 				}
 			}
 		} else {
-			musicServiceConnection.transportControls.playFromMediaId(mediaItem.mediaId, null)
+			transportControls.playFromMediaId(mediaItem.mediaId, null)
+		}
+		musicServiceConnection.playbackState.value?.let {
+			viewModelScope.launch { setPlayState(!it.isPlaying) }
 		}
 	}
 
 	fun onSeek(seekTo: Float) {
-//		musicServiceConnection.transportControls.seekTo((exoPlayer.contentDuration * seekTo).toLong())
+		musicServiceConnection.transportControls.seekTo(
+			currentSongDuration.value.times(seekTo).toLong()
+		)
+	}
+
+	private fun updateCurrentPlayerPosition() {
+		val playbackState = musicServiceConnection.playbackState
+		viewModelScope.launch {
+			while (true) {
+				val pos =
+					(playbackState.value?.currentPlayBackPosition?.div(MusicService.currentSongDuration))?.toFloat()
+				if (progress.value != pos) {
+					_progress.emit(pos ?: 0F)
+					_currentSongDuration.emit(MusicService.currentSongDuration)
+				}
+			}
+		}
 	}
 
 	fun playNext() {
@@ -204,6 +237,6 @@ class HowlViewModel
 
 	override fun onCleared() {
 		super.onCleared()
-		musicServiceConnection.unsubscribe(MEDIA_ROOT_ID, object : SubscriptionCallback() {})
+		musicServiceConnection.unsubscribe(MEDIA_ROOT_ID)
 	}
 }
