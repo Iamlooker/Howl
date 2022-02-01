@@ -4,7 +4,7 @@
 
 # Howl Music Player
 
-### A sleek and minimal offline music player made wit. 
+### A sleek and minimal offline music player made with love
 
 <div align="left">
 
@@ -19,11 +19,11 @@
 
 ## :camera: Screenshots
 
-<img src="screenshots/now_playing.png" width="32%" alt="Now Playing" />
+<img src="metadata/en-US/images/phoneScreenshots/now_playing.png" width="32%" alt="Now Playing" />
 
-<img src="screenshots/song_playing.png" width="32%" alt="Songs" />
+<img src="metadata/en-US/images/phoneScreenshots/song_playing.png" width="32%" alt="Songs" />
 
-<img src="screenshots/albums_page.png" width="32%" alt="Albums" />
+<img src="metadata/en-US/images/phoneScreenshots/albums_page.png" width="32%" alt="Albums" />
 
   
 ## :iphone: Download

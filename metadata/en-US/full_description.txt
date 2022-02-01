@@ -1,0 +1,9 @@
+A sleek and minimal offline music player made with love
+
+Features
+
+- Sleek and responsive UI , following material design
+
+- Minimal layout with amazing transitions
+
+- More will be added as it grows ....
