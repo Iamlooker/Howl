@@ -14,7 +14,6 @@ import com.looker.howlmusic.utils.extension.id
 class MusicServiceConnection(context: Context) {
 
 	private val _isConnected = MutableLiveData<Boolean>()
-	val isConnected: LiveData<Boolean> = _isConnected
 
 	private val _playbackState = MutableLiveData<PlaybackStateCompat>()
 	val playbackState: LiveData<PlaybackStateCompat> = _playbackState

@@ -122,12 +122,6 @@ class HowlViewModel
 		viewModelScope.launch { _enableGesture.emit(allowGesture) }
 	}
 
-	private suspend fun setPlayState(isPlaying: Boolean) {
-		_playState.emit(if (isPlaying) PLAYING else PAUSED)
-	}
-
-	fun onToggle(currentState: SheetsState, playState: PlayState) = Unit
-
 	fun setToggleIcon(currentState: SheetsState) {
 		viewModelScope.launch(Dispatchers.IO) {
 			_playIcon.collect {
@@ -148,7 +142,7 @@ class HowlViewModel
 	}
 
 	fun onSongClick(song: Song) {
-		playMedia(song, pauseAllowed = false)
+		playMedia(song)
 	}
 
 	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {

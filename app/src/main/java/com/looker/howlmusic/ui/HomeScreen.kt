@@ -111,7 +111,7 @@ fun Home(viewModel: HowlViewModel) {
 				artistName = currentSong?.toSong?.artistName,
 				toggled = toggle,
 				imageCorner = corner,
-				toggleAction = { viewModel.onToggle(backdropValue, playState) }
+				toggleAction = { }
 			)
 		},
 		frontLayerContent = {

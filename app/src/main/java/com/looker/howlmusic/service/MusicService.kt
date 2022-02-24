@@ -13,6 +13,7 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.util.EventLogger
 import com.looker.constants.Constants.MEDIA_ROOT_ID
 import com.looker.howlmusic.service.callback.MusicPlaybackPreparer
 import com.looker.howlmusic.service.callback.MusicPlayerEventListener
@@ -97,6 +98,7 @@ class MusicService : MediaBrowserServiceCompat() {
 		musicPlayerEventListener = MusicPlayerEventListener(this)
 
 		exoPlayer.addListener(musicPlayerEventListener)
+		exoPlayer.addAnalyticsListener(EventLogger(null))
 		musicNotificationManager.showNotification(exoPlayer)
 	}
 
