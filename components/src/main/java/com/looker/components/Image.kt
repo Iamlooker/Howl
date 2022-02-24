@@ -29,6 +29,18 @@ import coil.size.Scale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+fun toBitmap(context: Context, data: String, onLoaded: (Bitmap) -> Unit): Bitmap? {
+	val loader = ImageLoader(context)
+	val req = ImageRequest.Builder(context)
+		.data(data)
+		.target { result ->
+			onLoaded((result as BitmapDrawable).bitmap)
+		}
+		.build()
+	loader.enqueue(req)
+	return null
+}
+
 suspend fun String.bitmap(context: Context): Bitmap {
 	val r = ImageRequest.Builder(context)
 		.data(this)
@@ -41,18 +53,6 @@ suspend fun String.bitmap(context: Context): Bitmap {
 		is SuccessResult -> result.drawable.toBitmap()
 		is ErrorResult -> R.drawable.error_image.bitmap(context)
 	}
-}
-
-fun toBitmap(context: Context, data: String, onLoaded: (Bitmap) -> Unit): Bitmap? {
-	val loader = ImageLoader(context)
-	val req = ImageRequest.Builder(context)
-		.data(data)
-		.target { result ->
-			onLoaded((result as BitmapDrawable).bitmap)
-		}
-		.build()
-	loader.enqueue(req)
-	return null
 }
 
 suspend fun Int.bitmap(context: Context): Bitmap {

@@ -52,7 +52,6 @@ class DominantColorState(
 					DominantColors(dominantColor).also { result -> cache?.put(url, result) }
 				}
 		} else null
-
 	}
 }
 
@@ -62,12 +61,7 @@ data class DominantColors(val color: Color = Color.Unspecified)
 private suspend fun calculateColorFromImageUrl(
 	context: Context,
 	imageUrl: String,
-): Color? {
-	val bitmap = imageUrl.bitmap(context)
-
-	val vibrant = bitmap.getVibrantColor()
-	val dominant = bitmap.getDominantColor()
-
-	return if (vibrant == Color(0)) dominant
-	else vibrant
+): Color? = imageUrl.bitmap(context).let {
+	if (it.getVibrantColor() == Color(0)) it.getDominantColor()
+	else it.getVibrantColor()
 }

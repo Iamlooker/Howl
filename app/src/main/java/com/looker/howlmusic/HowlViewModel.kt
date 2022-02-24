@@ -8,7 +8,6 @@ import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -62,22 +61,22 @@ class HowlViewModel
 				) {
 					super.onChildrenLoaded(parentId, children)
 					val items = children.map { it.toSong }
-					viewModelScope.launch { _mediaItems.emit(Resource.Success(items)) }
+					viewModelScope.launch {
+						_mediaItems.emit(Resource.Success(items))
+					}
 				}
 			}
 		)
 		viewModelScope.launch(Dispatchers.IO) {
 			albumsRepository.getAllAlbums().collect { _albumsList.emit(it) }
 		}
+		viewModelScope.launch(Dispatchers.Default) { updateCurrentPlayerPosition() }
 	}
-
-	val isConnected = musicServiceConnection.isConnected
 
 	val nowPlaying = musicServiceConnection.nowPlaying
 
 	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 	private val _currentAlbum = MutableStateFlow(emptyAlbum)
-	private val _currentSong = MutableStateFlow(emptySong)
 	private val _enableGesture = MutableStateFlow(true)
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _playState = MutableStateFlow<PlayState>(PAUSED)
@@ -88,7 +87,6 @@ class HowlViewModel
 
 	val backdropValue: StateFlow<SheetsState> = _backdropValue
 	val currentAlbum: StateFlow<Album> = _currentAlbum
-	val currentSong: StateFlow<Song> = _currentSong
 	val enableGesture: StateFlow<Boolean> = _enableGesture
 	val progress: StateFlow<Float> = _progress
 	val playState: StateFlow<PlayState> = _playState
@@ -126,35 +124,11 @@ class HowlViewModel
 		viewModelScope.launch { _enableGesture.emit(allowGesture) }
 	}
 
-	private suspend fun setPlayState(isPlaying: PlayState) {
-		_playState.emit(isPlaying)
-	}
-
 	private suspend fun setPlayState(isPlaying: Boolean) {
 		_playState.emit(if (isPlaying) PLAYING else PAUSED)
 	}
 
-	private suspend fun updatePlayIcon() {
-		_playIcon.emit(
-			when (playState.value) {
-				is PAUSED -> Icons.Rounded.PlayArrow
-				is PLAYING -> Icons.Rounded.Pause
-			}
-		)
-	}
-
-	private fun onPlayPause(isPlaying: PlayState) {
-		viewModelScope.launch(Dispatchers.IO) { setPlayState(isPlaying) }
-		viewModelScope.launch(Dispatchers.Main) {
-			playMedia(currentSong.value)
-			updatePlayIcon()
-		}
-	}
-
-	fun onToggle(currentState: SheetsState, playState: PlayState) = when (currentState) {
-		is HIDDEN -> onPlayPause(playState)
-		is VISIBLE -> Unit
-	}
+	fun onToggle(currentState: SheetsState, playState: PlayState) = Unit
 
 	fun setToggleIcon(currentState: SheetsState) {
 		viewModelScope.launch(Dispatchers.IO) {
@@ -184,8 +158,8 @@ class HowlViewModel
 		val transportControls = musicServiceConnection.transportControls
 
 		val isPrepared = musicServiceConnection.playbackState.value?.isPrepared ?: false
-		if (isPrepared && mediaItem.mediaId == nowPlaying?.id) {
-			musicServiceConnection.playbackState.value?.let { playbackState ->
+		musicServiceConnection.playbackState.value?.let { playbackState ->
+			if (isPrepared && mediaItem.mediaId == nowPlaying?.id) {
 				when {
 					playbackState.isPlaying ->
 						if (pauseAllowed) transportControls.pause() else Unit
@@ -198,12 +172,23 @@ class HowlViewModel
 						)
 					}
 				}
+			} else {
+				transportControls.playFromMediaId(mediaItem.mediaId, null)
 			}
-		} else {
-			transportControls.playFromMediaId(mediaItem.mediaId, null)
 		}
-		musicServiceConnection.playbackState.value?.let {
-			viewModelScope.launch { setPlayState(!it.isPlaying) }
+	}
+
+	private suspend fun updateCurrentPlayerPosition() {
+		val playbackState = musicServiceConnection.playbackState
+		while (true) {
+			val pos =
+				(playbackState.value?.currentPlayBackPosition?.div(MusicService.currentSongDuration))?.toFloat()
+			progress.let {
+				if (it.value != pos) {
+					_progress.emit(pos ?: 0F)
+					_currentSongDuration.emit(MusicService.currentSongDuration)
+				}
+			}
 		}
 	}
 
@@ -211,20 +196,6 @@ class HowlViewModel
 		musicServiceConnection.transportControls.seekTo(
 			currentSongDuration.value.times(seekTo).toLong()
 		)
-	}
-
-	private fun updateCurrentPlayerPosition() {
-		val playbackState = musicServiceConnection.playbackState
-		viewModelScope.launch {
-			while (true) {
-				val pos =
-					(playbackState.value?.currentPlayBackPosition?.div(MusicService.currentSongDuration))?.toFloat()
-				if (progress.value != pos) {
-					_progress.emit(pos ?: 0F)
-					_currentSongDuration.emit(MusicService.currentSongDuration)
-				}
-			}
-		}
 	}
 
 	fun playNext() {
