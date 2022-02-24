@@ -3,18 +3,6 @@ plugins {
 	kotlin("android")
 	kotlin("kapt")
 	id(Hilt.hiltPlugin)
-	id("com.google.devtools.ksp") version "1.6.10-1.0.2"
-}
-
-kotlin {
-	sourceSets {
-		debug {
-			kotlin.srcDir("build/generated/ksp/debug/kotlin")
-		}
-		release {
-			kotlin.srcDir("build/generated/ksp/release/kotlin")
-		}
-	}
 }
 
 android {
@@ -28,16 +16,6 @@ android {
 		versionName = Android.versionName
 
 		vectorDrawables { useSupportLibrary = true }
-	}
-
-	signingConfigs {
-
-		getByName("debug") {
-			storeFile = rootProject.file("keystore/debug.jks")
-			storePassword = "123456"
-			keyAlias = "debug"
-			keyPassword = "123456"
-		}
 	}
 
 	buildTypes {

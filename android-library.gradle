@@ -1,7 +1,5 @@
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
-apply plugin: "kotlin-kapt"
-apply plugin: Hilt.hiltPlugin
 
 android {
     compileSdk = Android.compileSdk
@@ -12,9 +10,7 @@ android {
         versionCode = Android.versionCode
         versionName = Android.versionName
 
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        vectorDrawables { useSupportLibrary = true }
     }
 
     buildTypes {
@@ -63,9 +59,5 @@ dependencies {
     implementation Compose.foundation
     implementation Compose.material
     implementation Compose.ui
-
-    implementation Hilt.hiltAndroid
-    kapt Hilt.hiltCompiler
-
     debugImplementation Compose.tooling
 }

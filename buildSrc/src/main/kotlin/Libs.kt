@@ -1,5 +1,5 @@
 object Accompanist {
-	private const val accompanistVersion = "0.22.1-rc"
+	private const val accompanistVersion = "0.24.2-alpha"
 	const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
@@ -19,8 +19,8 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.1.0-rc03"
-	private const val composeVersion = "1.1.0-rc03"
+	const val composeCompiler = "1.1.1"
+	private const val composeVersion = "1.1.1"
 	private const val activityComposeVersion = "1.4.0"
 	private const val navigationVersion = "2.4.0"
 
@@ -41,14 +41,14 @@ object Excludes {
 }
 
 object ExoPlayer {
-	private const val exoplayerVersion = "2.16.1"
+	private const val exoplayerVersion = "2.17.0"
 	const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
 	const val exoplayerMediaSession =
 		"com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
 
 object Hilt {
-	private const val hiltVersion = "2.40.5"
+	private const val hiltVersion = "2.41"
 	const val hiltClasspath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 	const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
 	const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
@@ -67,7 +67,7 @@ object Palette {
 }
 
 object Room {
-	private const val roomVersion = "2.4.1"
+	private const val roomVersion = "2.4.2"
 	const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
 	const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
 	const val roomKtx = "androidx.room:room-ktx:$roomVersion"

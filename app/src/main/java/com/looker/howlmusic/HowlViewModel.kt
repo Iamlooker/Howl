@@ -26,7 +26,6 @@ import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptyAlbum
 import com.looker.domain_music.emptySong
-import com.looker.howlmusic.service.MusicService
 import com.looker.howlmusic.service.MusicServiceConnection
 import com.looker.howlmusic.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,7 +69,6 @@ class HowlViewModel
 		viewModelScope.launch(Dispatchers.IO) {
 			albumsRepository.getAllAlbums().collect { _albumsList.emit(it) }
 		}
-		viewModelScope.launch(Dispatchers.Default) { updateCurrentPlayerPosition() }
 	}
 
 	val nowPlaying = musicServiceConnection.nowPlaying
@@ -174,20 +172,6 @@ class HowlViewModel
 				}
 			} else {
 				transportControls.playFromMediaId(mediaItem.mediaId, null)
-			}
-		}
-	}
-
-	private suspend fun updateCurrentPlayerPosition() {
-		val playbackState = musicServiceConnection.playbackState
-		while (true) {
-			val pos =
-				(playbackState.value?.currentPlayBackPosition?.div(MusicService.currentSongDuration))?.toFloat()
-			progress.let {
-				if (it.value != pos) {
-					_progress.emit(pos ?: 0F)
-					_currentSongDuration.emit(MusicService.currentSongDuration)
-				}
 			}
 		}
 	}
