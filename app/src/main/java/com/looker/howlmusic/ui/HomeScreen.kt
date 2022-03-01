@@ -88,7 +88,7 @@ fun Home(viewModel: HowlViewModel) {
 
 			LaunchedEffect(backdropValue, playState) {
 				launch {
-					viewModel.setToggleIcon(backdropValue)
+					viewModel.setToggleIcon()
 					viewModel.updateToggle()
 				}
 			}

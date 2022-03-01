@@ -122,11 +122,11 @@ class HowlViewModel
 		viewModelScope.launch { _enableGesture.emit(allowGesture) }
 	}
 
-	fun setToggleIcon(currentState: SheetsState) {
+	fun setToggleIcon() {
 		viewModelScope.launch(Dispatchers.IO) {
 			_playIcon.collect {
 				_toggleIcon.emit(
-					when (currentState) {
+					when (backdropValue.value) {
 						is HIDDEN -> it
 						is VISIBLE -> Icons.Rounded.Shuffle
 					}
