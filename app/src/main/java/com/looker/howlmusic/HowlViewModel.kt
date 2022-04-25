@@ -123,39 +123,39 @@ class HowlViewModel
 	}
 
 	fun setToggleIcon() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _playIcon.collect {
-                _toggleIcon.emit(
-                    when (backdropValue.value) {
-                        is HIDDEN -> it
-                        is VISIBLE -> Icons.Rounded.Shuffle
-                    }
-                )
-            }
-        }
-    }
+		viewModelScope.launch(Dispatchers.IO) {
+			_playIcon.collect {
+				_toggleIcon.emit(
+					when (backdropValue.value) {
+						is HIDDEN -> it
+						is VISIBLE -> Icons.Rounded.Shuffle
+					}
+				)
+			}
+		}
+	}
 
-    fun onAlbumClick(album: Album) {
-        viewModelScope.launch(Dispatchers.IO) {
-            albumsList.collect { albums -> _currentAlbum.emit(album) }
-        }
-    }
+	fun onAlbumClick(album: Album) {
+		viewModelScope.launch(Dispatchers.IO) {
+			albumsList.collect { albums -> _currentAlbum.emit(album) }
+		}
+	}
 
-    fun onSongClick(song: Song) {
-        playMedia(song)
-    }
+	fun onSongClick(song: Song) {
+		playMedia(song)
+	}
 
-    fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
-        val nowPlaying = musicServiceConnection.nowPlaying.value
-        val transportControls = musicServiceConnection.transportControls
+	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
+		val nowPlaying = musicServiceConnection.nowPlaying.value
+		val transportControls = musicServiceConnection.transportControls
 
-        val isPrepared = musicServiceConnection.playbackState.value?.isPrepared ?: false
-        musicServiceConnection.playbackState.value?.let { playbackState ->
-            if (isPrepared && mediaItem.mediaId == nowPlaying?.id) {
-                when {
-                    playbackState.isPlaying ->
-                        if (pauseAllowed) transportControls.pause() else Unit
-                    playbackState.isPlayEnabled -> transportControls.play()
+		val isPrepared = musicServiceConnection.playbackState.value?.isPrepared ?: false
+		musicServiceConnection.playbackState.value?.let { playbackState ->
+			if (isPrepared && mediaItem.mediaId == nowPlaying?.id) {
+				when {
+					playbackState.isPlaying ->
+						if (pauseAllowed) transportControls.pause() else Unit
+					playbackState.isPlayEnabled -> transportControls.play()
 					else -> {
 						Log.w(
 							"HowlViewModel",

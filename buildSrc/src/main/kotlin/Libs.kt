@@ -74,5 +74,5 @@ object Room {
 }
 
 object Version {
-    const val kotlinVersion = "1.6.20"
+    const val kotlinVersion = "1.6.10"
 }
