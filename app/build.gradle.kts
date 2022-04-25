@@ -1,8 +1,8 @@
 plugins {
 	id("com.android.application")
-	kotlin("android")
-	kotlin("kapt")
-	id(Hilt.hiltPlugin)
+    id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id(Hilt.hiltPlugin)
 }
 
 android {

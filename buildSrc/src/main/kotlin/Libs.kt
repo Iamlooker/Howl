@@ -1,6 +1,6 @@
 object Accompanist {
-	private const val accompanistVersion = "0.24.2-alpha"
-	const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
+    private const val accompanistVersion = "0.23.1"
+    const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
 object Classpath {
@@ -19,21 +19,21 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.1.1"
-	private const val composeVersion = "1.1.1"
-	private const val activityComposeVersion = "1.4.0"
-	private const val navigationVersion = "2.4.0"
+    const val composeCompiler = "1.1.1"
+    private const val composeVersion = "1.1.1"
+    private const val activityComposeVersion = "1.4.0"
+    private const val navigationVersion = "2.4.2"
 
-	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
+    const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
-	const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
-	const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
-	const val material = "androidx.compose.material:material:$composeVersion"
-	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
-	const val ui = "androidx.compose.ui:ui:$composeVersion"
-	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
-	const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$composeVersion"
-	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
+    const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
+    const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
+    const val material = "androidx.compose.material:material:$composeVersion"
+    const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
+    const val ui = "androidx.compose.ui:ui:$composeVersion"
+    const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
+    const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$composeVersion"
+    const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
 object Excludes {
@@ -41,10 +41,10 @@ object Excludes {
 }
 
 object ExoPlayer {
-	private const val exoplayerVersion = "2.17.0"
-	const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
-	const val exoplayerMediaSession =
-		"com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
+    private const val exoplayerVersion = "2.17.1"
+    const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
+    const val exoplayerMediaSession =
+        "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
 
 object Hilt {
@@ -56,9 +56,9 @@ object Hilt {
 }
 
 object Lifecycle {
-	private const val lifecycleVersion = "2.4.0"
-	const val lifecycleViewModelCompose =
-		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
+    private const val lifecycleVersion = "2.4.1"
+    const val lifecycleViewModelCompose =
+        "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }
 
 object Palette {
@@ -74,5 +74,5 @@ object Room {
 }
 
 object Version {
-	const val kotlinVersion = "1.6.10"
+    const val kotlinVersion = "1.6.20"
 }

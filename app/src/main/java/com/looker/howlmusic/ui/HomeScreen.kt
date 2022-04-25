@@ -178,15 +178,15 @@ fun Home(viewModel: HowlViewModel) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FrontLayer(
-	bottomSheetState: ModalBottomSheetState,
-	songsList: Resource<List<Song>>,
-	albumsList: List<Album>,
-	handleIcon: Float,
-	currentAlbum: Album,
-	albumsDominantColor: Color,
-	openPlayer: () -> Unit,
-	onSongClick: (Song) -> Unit,
-	onAlbumClick: (Int) -> Unit,
+    bottomSheetState: ModalBottomSheetState,
+    songsList: Resource<List<Song>>,
+    albumsList: List<Album>,
+    handleIcon: Float,
+    currentAlbum: Album,
+    albumsDominantColor: Color,
+    openPlayer: () -> Unit,
+    onSongClick: (Song) -> Unit,
+    onAlbumClick: (Album) -> Unit,
 ) {
 	val navController = rememberNavController()
 	val items = listOf(HomeScreens.SONGS, HomeScreens.ALBUMS)
@@ -245,18 +245,18 @@ fun Player(
 	toggleAction: () -> Unit,
 ) {
 	PlayerHeader(
-		modifier = modifier
-			.statusBarsPadding()
-			.padding(bottom = 20.dp),
-		songName = songName,
-		artistName = artistName,
-		albumArt = albumArt,
-		onImageIcon = icon,
-		repeatIcon = Icons.Rounded.RepeatOne,
-		toggled = toggled,
-		toggleAction = toggleAction,
-		imageCorner = imageCorner
-	)
+        modifier = modifier
+            .statusBarsPadding()
+            .padding(bottom = 20.dp),
+        songName = songName,
+        artistName = artistName,
+        albumArt = albumArt,
+        onImageIcon = icon,
+        repeatIcon = Icons.Rounded.RepeatOne,
+        toggled = toggled,
+        toggleAction = toggleAction,
+        imageCorner = imageCorner
+    )
 }
 
 @Composable
