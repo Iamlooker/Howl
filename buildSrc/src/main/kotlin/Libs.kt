@@ -1,6 +1,6 @@
 object Accompanist {
-    private const val accompanistVersion = "0.23.1"
-    const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
+    private const val accompanistVersion = "0.24.8-beta"
+	const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
 }
 
 object Classpath {
@@ -9,30 +9,30 @@ object Classpath {
 }
 
 object Core {
-	private const val coreVersion = "1.7.0"
+	private const val coreVersion = "1.8.0-rc01"
 	const val core = "androidx.core:core-ktx:$coreVersion"
 }
 
 object Coil {
-	private const val coilVersion = "1.4.0"
+	private const val coilVersion = "2.0.0"
 	const val coil = "io.coil-kt:coil-compose:$coilVersion"
 }
 
 object Compose {
-    const val composeCompiler = "1.1.1"
-    private const val composeVersion = "1.1.1"
-    private const val activityComposeVersion = "1.4.0"
-    private const val navigationVersion = "2.4.2"
+	const val composeCompiler = "1.2.0-beta01"
+	private const val composeVersion = "1.2.0-beta01"
+	private const val activityComposeVersion = "1.5.0-rc01"
+	private const val navigationVersion = "2.5.0-rc01"
 
-    const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
+	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
-    const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
-    const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
-    const val material = "androidx.compose.material:material:$composeVersion"
-    const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
-    const val ui = "androidx.compose.ui:ui:$composeVersion"
-    const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
-    const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$composeVersion"
+	const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
+	const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
+	const val material = "androidx.compose.material:material:$composeVersion"
+	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
+	const val ui = "androidx.compose.ui:ui:$composeVersion"
+	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
+	const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$composeVersion"
     const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
@@ -48,7 +48,7 @@ object ExoPlayer {
 }
 
 object Hilt {
-	private const val hiltVersion = "2.41"
+	private const val hiltVersion = "2.42"
 	const val hiltClasspath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 	const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
 	const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
@@ -74,5 +74,5 @@ object Room {
 }
 
 object Version {
-    const val kotlinVersion = "1.6.10"
+	const val kotlinVersion = "1.6.21"
 }

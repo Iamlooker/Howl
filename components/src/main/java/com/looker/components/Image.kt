@@ -17,11 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
-import coil.Coil
 import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.ImagePainter
-import coil.compose.rememberImagePainter
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.imageLoader
 import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
@@ -42,34 +41,33 @@ fun toBitmap(context: Context, data: String, onLoaded: (Bitmap) -> Unit): Bitmap
 }
 
 suspend fun String.bitmap(context: Context): Bitmap {
-	val r = ImageRequest.Builder(context)
+	val imageRequest = ImageRequest.Builder(context)
 		.data(this)
 		.size(128)
 		.scale(Scale.FILL)
 		.allowHardware(false)
 		.build()
 
-	return when (val result = Coil.execute(r)) {
+	return when (val result = imageRequest.context.imageLoader.execute(imageRequest)) {
 		is SuccessResult -> result.drawable.toBitmap()
 		is ErrorResult -> R.drawable.error_image.bitmap(context)
 	}
 }
 
 suspend fun Int.bitmap(context: Context): Bitmap {
-	val r = ImageRequest.Builder(context)
+	val imageRequest = ImageRequest.Builder(context)
 		.data(this)
 		.size(128)
 		.scale(Scale.FILL)
 		.allowHardware(false)
 		.build()
 
-	return when (val result = Coil.execute(r)) {
+	return when (val result = imageRequest.context.imageLoader.execute(imageRequest)) {
 		is SuccessResult -> result.drawable.toBitmap()
 		is ErrorResult -> BitmapFactory.decodeResource(context.resources, R.drawable.error_image)
 	}
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun HowlImage(
 	modifier: Modifier = Modifier,
@@ -79,8 +77,16 @@ fun HowlImage(
 	shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
 	Box(modifier) {
-		val painter = rememberImagePainter(data = data)
+		val painter = rememberAsyncImagePainter(model = data)
 
+
+		if (painter.state is AsyncImagePainter.State.Loading) {
+			Spacer(
+				modifier = Modifier
+					.matchParentSize()
+					.background(backgroundColor)
+			)
+		}
 		Image(
 			painter = painter,
 			contentDescription = "This is Album Art",
@@ -89,14 +95,6 @@ fun HowlImage(
 				.matchParentSize()
 				.clip(shape)
 		)
-
-		if (painter.state is ImagePainter.State.Loading) {
-			Spacer(
-				modifier = Modifier
-					.matchParentSize()
-					.background(backgroundColor)
-			)
-		}
 	}
 }
 

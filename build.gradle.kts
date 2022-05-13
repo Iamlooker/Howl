@@ -4,8 +4,8 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-        classpath("com.android.tools.build:gradle:7.1.3")
-        classpath(Classpath.gradleKotlin)
+        classpath("com.android.tools.build:gradle:7.2.0")
+		classpath(Classpath.gradleKotlin)
         classpath(Hilt.hiltClasspath)
     }
 }
