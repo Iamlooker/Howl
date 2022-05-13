@@ -12,30 +12,60 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.data_music.data.SongsRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 class MusicSource @Inject constructor(private val songsRepository: SongsRepository) {
 
 	var songs = emptyList<MediaMetadataCompat>()
 
-	suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
-		state = State.STATE_INITIALIZING
-		songs = songsRepository.getAllSongs().map { song ->
-			Builder()
-				.putString(METADATA_KEY_ARTIST, song.artistName)
-				.putString(METADATA_KEY_MEDIA_ID, song.mediaId)
-				.putString(METADATA_KEY_TITLE, song.songName)
-				.putString(METADATA_KEY_DISPLAY_TITLE, song.songName)
-				.putString(METADATA_KEY_DISPLAY_ICON_URI, song.albumArt)
-				.putString(METADATA_KEY_MEDIA_URI, song.songUri)
-				.putString(METADATA_KEY_ALBUM_ART_URI, song.albumArt)
-				.putString(METADATA_KEY_DISPLAY_SUBTITLE, song.artistName)
-				.putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.artistName)
-				.build()
+	private var state: State = State.STATE_CREATED
+		set(value) {
+			if (value == State.STATE_INITIALIZED || value == State.STATE_ERROR) {
+				synchronized(onReadyListeners) {
+					field = value
+					onReadyListeners.forEach { listener ->
+						listener(state == State.STATE_INITIALIZED)
+					}
+				}
+			} else {
+				field = value
+			}
 		}
-		launch(Dispatchers.Main) { state = State.STATE_INITIALIZED }
+
+	init {
+		state = State.STATE_INITIALIZING
+	}
+
+	suspend fun load() {
+		fetchMediaData()?.let { songList ->
+			songs = songList
+			state = State.STATE_INITIALIZED
+		} ?: run {
+			songs = emptyList()
+			state = State.STATE_ERROR
+		}
+	}
+
+	private suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
+		try {
+			songsRepository.getAllSongs().map { song ->
+				Builder()
+					.putString(METADATA_KEY_ARTIST, song.artistName)
+					.putString(METADATA_KEY_MEDIA_ID, song.mediaId)
+					.putString(METADATA_KEY_TITLE, song.songName)
+					.putString(METADATA_KEY_DISPLAY_TITLE, song.songName)
+					.putString(METADATA_KEY_DISPLAY_ICON_URI, song.albumArt)
+					.putString(METADATA_KEY_MEDIA_URI, song.songUri)
+					.putString(METADATA_KEY_ALBUM_ART_URI, song.albumArt)
+					.putString(METADATA_KEY_DISPLAY_SUBTITLE, song.artistName)
+					.putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.artistName)
+					.build()
+			}
+		} catch (ioException: IOException) {
+			null
+		}
 	}
 
 	fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {
@@ -60,31 +90,19 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 		MediaBrowserCompat.MediaItem(description, FLAG_PLAYABLE)
 	}.toMutableList()
 
-	private val onReadyListener = mutableListOf<(Boolean) -> Unit>()
+	private val onReadyListeners = mutableListOf<(Boolean) -> Unit>()
 
-	private var state: State = State.STATE_CREATED
-		set(value) {
-			if (value == State.STATE_INITIALIZED || value == State.STATE_ERROR) {
-				synchronized(onReadyListener) {
-					field = value
-					onReadyListener.forEach { listener ->
-						listener(state == State.STATE_INITIALIZED)
-					}
-				}
-			} else {
-				field = value
+	fun whenReady(performAction: (Boolean) -> Unit): Boolean =
+		when (state) {
+			State.STATE_CREATED, State.STATE_INITIALIZING -> {
+				onReadyListeners += performAction
+				false
+			}
+			else -> {
+				performAction(state != State.STATE_ERROR)
+				true
 			}
 		}
-
-	fun whenReady(action: (Boolean) -> Unit): Boolean {
-		return if (state == State.STATE_CREATED || state == State.STATE_INITIALIZING) {
-			onReadyListener += action
-			false
-		} else {
-			action(state == State.STATE_INITIALIZED)
-			true
-		}
-	}
 }
 
 enum class State {
