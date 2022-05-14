@@ -1,6 +1,8 @@
 package com.looker.ui_player.components
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -14,10 +16,6 @@ import androidx.compose.ui.unit.dp
 import com.looker.components.HowlImage
 import com.looker.components.ToggleButton
 import com.looker.components.ext.rippleClick
-import com.looker.components.localComposers.LocalDurations
-import com.looker.components.tweenAnimation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun AlbumArtAndUtils(
@@ -30,7 +28,6 @@ fun AlbumArtAndUtils(
 	onToggle: () -> Unit,
 	overlayItems: @Composable RowScope.() -> Unit,
 ) {
-	val scope = rememberCoroutineScope()
 	var overlayVisible by remember { mutableStateOf(false) }
 
 	Box {
@@ -41,7 +38,7 @@ fun AlbumArtAndUtils(
 			},
 			albumArt = albumArt,
 			overlayVisible = overlayVisible,
-			onClick = { scope.launch(Dispatchers.IO) { overlayVisible = !overlayVisible } },
+			onClick = { overlayVisible = !overlayVisible },
 			overlayItems = overlayItems
 		)
 
@@ -67,11 +64,6 @@ fun AlbumArt(
 	onClick: () -> Unit,
 	overlayItems: @Composable (RowScope.() -> Unit),
 ) {
-	val overlay by animateFloatAsState(
-		targetValue = if (overlayVisible) 1f else 0f,
-		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-	)
-
 	Box(modifier) {
 		HowlImage(
 			modifier = Modifier
@@ -79,16 +71,17 @@ fun AlbumArt(
 				.rippleClick(onClick = onClick),
 			data = albumArt
 		)
-		AlbumArtOverlay(
-			modifier = Modifier
-				.matchParentSize()
-				.graphicsLayer {
-					scaleX = overlay
-					scaleY = overlay
-				},
-			onClick = onClick,
-			content = overlayItems
-		)
+		AnimatedVisibility(
+			modifier = Modifier.matchParentSize(),
+			enter = fadeIn(),
+			exit = fadeOut(),
+			visible = overlayVisible
+		) {
+			AlbumArtOverlay(
+				onClick = onClick,
+				content = overlayItems
+			)
+		}
 	}
 }
 
@@ -99,8 +92,7 @@ fun AlbumArtOverlay(
 	content: @Composable RowScope.() -> Unit,
 ) {
 	Surface(
-		modifier = modifier
-			.rippleClick(onClick = onClick),
+		modifier = modifier.rippleClick(onClick = onClick),
 		color = MaterialTheme.colors.onBackground.copy(0.4f),
 		content = {
 			Row(
