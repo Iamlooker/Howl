@@ -7,8 +7,6 @@ inline val MediaBrowserCompat.MediaItem.toSong
 	get() = Song(
 		mediaId!!,
 		description.mediaUri.toString(),
-		0,
-		null,
 		description.title.toString(),
 		description.subtitle.toString(),
 		null,

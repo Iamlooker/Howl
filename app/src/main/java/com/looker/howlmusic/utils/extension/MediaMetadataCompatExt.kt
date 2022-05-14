@@ -6,14 +6,12 @@ import com.looker.domain_music.Song
 inline val MediaMetadataCompat.toSong
 	get() = description?.let {
 		Song(
-			it.mediaId ?: "",
-			it.mediaUri.toString(),
-			0,
-			null,
-			it.title.toString(),
-			it.subtitle.toString(),
-			null,
-			it.iconUri.toString()
+			mediaId = it.mediaId ?: "",
+			songUri = it.mediaUri.toString(),
+			songName = it.title.toString(),
+			artistName = it.subtitle.toString(),
+			albumName = null,
+			albumArt = it.iconUri.toString()
 		)
 	}
 
@@ -29,6 +27,7 @@ inline val Song.toMediaMetadataCompat: MediaMetadataCompat
 			.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, song.albumArt)
 			.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, song.artistName)
 			.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, song.artistName)
+			.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
 			.build()
 	}
 

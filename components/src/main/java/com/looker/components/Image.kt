@@ -79,7 +79,6 @@ fun HowlImage(
 	Box(modifier) {
 		val painter = rememberAsyncImagePainter(model = data)
 
-
 		if (painter.state is AsyncImagePainter.State.Loading) {
 			Spacer(
 				modifier = Modifier

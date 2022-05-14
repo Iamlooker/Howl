@@ -1,10 +1,10 @@
 package com.looker.domain_music
 
 data class Album(
-	val albumId: Long,
+	val albumId: String,
 	val albumName: String?,
 	val artistName: String?,
 	val albumArt: String?,
 )
 
-val emptyAlbum = Album(0, null, null, null)
+val emptyAlbum = Album("", null, null, null)

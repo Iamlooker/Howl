@@ -190,7 +190,7 @@ fun FrontLayer(
 		sheetContent = {
 			AlbumsBottomSheetContent(
 				currentAlbum = currentAlbum,
-				songsList = songsList.data?.filter { it.albumId == currentAlbum.albumId }
+				songsList = songsList.data?.filter { it.mediaId == currentAlbum.albumId }
 					?: emptyList(),
 				dominantColor = albumsDominantColor.copy(0.4f)
 			)
