@@ -26,10 +26,12 @@ import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptyAlbum
 import com.looker.domain_music.emptySong
+import com.looker.howlmusic.service.MusicService
 import com.looker.howlmusic.service.MusicServiceConnection
 import com.looker.howlmusic.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -48,6 +50,15 @@ class HowlViewModel
 
 	private val _albumsList = MutableStateFlow(emptyList<Album>())
 	val albumsList: StateFlow<List<Album>> = _albumsList
+
+	val nowPlaying = musicServiceConnection.nowPlaying
+	val playbackState = musicServiceConnection.playbackState
+
+	private val _currentSongDuration = MutableStateFlow(0L)
+	private val currentSongDuration: StateFlow<Long> = _currentSongDuration
+
+	private val _progress = MutableStateFlow(0F)
+	val progress: StateFlow<Float> = _progress
 
 	init {
 		musicServiceConnection.subscribe(
@@ -68,29 +79,23 @@ class HowlViewModel
 		viewModelScope.launch(Dispatchers.IO) {
 			albumsRepository.getAllAlbums().collect { _albumsList.emit(it) }
 		}
+
+		updateCurrentPlayerPosition()
 	}
-
-
-	val nowPlaying = musicServiceConnection.nowPlaying
-	val isPlaying = musicServiceConnection.playbackState
 
 	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 	private val _currentAlbum = MutableStateFlow(emptyAlbum)
 	private val _enableGesture = MutableStateFlow(true)
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
-	private val _progress = MutableStateFlow(0f)
 	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
-	private val _currentSongDuration = MutableStateFlow(0L)
 
 	val backdropValue: StateFlow<SheetsState> = _backdropValue
 	val currentAlbum: StateFlow<Album> = _currentAlbum
 	val enableGesture: StateFlow<Boolean> = _enableGesture
 	val playIcon: StateFlow<ImageVector> = _playIcon
-	val progress: StateFlow<Float> = _progress
 	val toggle: StateFlow<ToggleState> = _toggle
 	val toggleIcon: StateFlow<ImageVector> = _toggleIcon
-	private val currentSongDuration: StateFlow<Long> = _currentSongDuration
 
 	@ExperimentalMaterialApi
 	fun setBackdropValue(currentValue: BackdropValue) {
@@ -175,6 +180,7 @@ class HowlViewModel
 	}
 
 	fun onSeek(seekTo: Float) {
+		_progress.value = seekTo
 		musicServiceConnection.transportControls.seekTo(
 			currentSongDuration.value.times(seekTo).toLong()
 		)
@@ -191,6 +197,19 @@ class HowlViewModel
 	private fun shuffleModeToggle() {
 		val transportControls = musicServiceConnection.transportControls
 		transportControls.setShuffleMode(SHUFFLE_MODE_NONE)
+	}
+
+	private fun updateCurrentPlayerPosition() {
+		viewModelScope.launch {
+			while (true) {
+				val pos = playbackState.value?.currentPlaybackPosition?.toFloat()
+				if (progress.value != pos) {
+					_progress.emit(pos?.div(MusicService.currentSongDuration) ?: 0F)
+					_currentSongDuration.emit(MusicService.currentSongDuration)
+				}
+				delay(100)
+			}
+		}
 	}
 
 	override fun onCleared() {

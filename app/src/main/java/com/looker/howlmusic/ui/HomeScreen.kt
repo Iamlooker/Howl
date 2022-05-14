@@ -48,7 +48,7 @@ fun Home(viewModel: HowlViewModel) {
 
 	val songsList by viewModel.mediaItems.collectAsState()
 
-	val playbackState by viewModel.isPlaying.observeAsState()
+	val playbackState by viewModel.playbackState.observeAsState()
 
 	LaunchedEffect(state.currentValue.name) {
 		launch { viewModel.setBackdropValue(state.currentValue) }
