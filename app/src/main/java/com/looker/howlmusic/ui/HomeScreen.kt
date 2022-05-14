@@ -51,8 +51,8 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
 	val playbackState by viewModel.playbackState.observeAsState()
 
-	LaunchedEffect(state.currentValue.name) {
-		launch { viewModel.setBackdropValue(state.currentValue) }
+	LaunchedEffect(state.isConcealed) {
+		viewModel.setBackdropValue(state.currentValue)
 	}
 
 	Backdrop(
@@ -68,22 +68,16 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val imageCorner = remember { mutableStateOf(50) }
 
 			LaunchedEffect(currentSong) {
-				launch {
-					backgroundColor.updateColorsFromImageUrl(currentSong?.toSong?.albumArt)
-				}
+				backgroundColor.updateColorsFromImageUrl(currentSong?.toSong?.albumArt)
 			}
 
 			LaunchedEffect(playbackState) {
-				launch(Dispatchers.IO) {
-					imageCorner.value = if (playbackState?.isPlaying == true) 50 else 15
-				}
+				imageCorner.value = if (playbackState?.isPlaying == true) 50 else 15
 			}
 
 			LaunchedEffect(backdropValue, playbackState) {
-				launch {
-					viewModel.setToggleIcon(playbackState?.isPlaying == true)
-					viewModel.updateToggle()
-				}
+				viewModel.setToggleIcon(playbackState?.isPlaying == true)
+				viewModel.updateToggle()
 			}
 
 			val corner by animateIntAsState(
@@ -117,15 +111,12 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val albumDominant = rememberDominantColorState()
 
 			LaunchedEffect(currentAlbum) {
-				launch { albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt) }
+				albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt)
 			}
 
 			LaunchedEffect(bottomSheetState.isVisible, currentAlbum) {
-				launch {
-					if (backdropValue == SheetsState.HIDDEN) {
-						viewModel.gestureState(!bottomSheetState.isVisible)
-					} else viewModel.gestureState(true)
-				}
+				if (backdropValue == SheetsState.HIDDEN) viewModel.gestureState(!bottomSheetState.isVisible)
+				else viewModel.gestureState(true)
 			}
 
 			FrontLayer(
