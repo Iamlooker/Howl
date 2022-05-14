@@ -16,7 +16,6 @@ import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 
-
 @InstallIn(ServiceComponent::class)
 @Module
 object ServiceModule {
@@ -25,8 +24,7 @@ object ServiceModule {
 	@Provides
 	fun provideDataSourceFactory(
 		@ApplicationContext context: Context
-	): DefaultDataSource.Factory =
-		DefaultDataSource.Factory(context)
+	): DefaultDataSource.Factory = DefaultDataSource.Factory(context)
 
 	@ServiceScoped
 	@Provides
@@ -48,9 +46,9 @@ object ServiceModule {
 		@ApplicationContext context: Context,
 		renderersFactory: RenderersFactory,
 		audioAttributes: AudioAttributes
-	): ExoPlayer =
-		ExoPlayer.Builder(context, renderersFactory).setAudioAttributes(audioAttributes, true)
-			.build()
+	): ExoPlayer = ExoPlayer.Builder(context, renderersFactory)
+		.setAudioAttributes(audioAttributes, true)
+		.build()
 
 	@ServiceScoped
 	@Provides
