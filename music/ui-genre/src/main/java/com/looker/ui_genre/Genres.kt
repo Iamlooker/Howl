@@ -1,9 +1,9 @@
 package com.looker.ui_genre
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -43,7 +43,7 @@ fun GenresList(
 	genresList: List<Genre>,
 	onGenreClick: (Genre) -> Unit
 ) {
-	LazyVerticalGrid(cells = GridCells.Adaptive(200.dp)) {
+	LazyVerticalGrid(columns = GridCells.Adaptive(200.dp)) {
 		items(genresList) { genre ->
 			GenresCard(genre = genre) {
 				onGenreClick(genre)

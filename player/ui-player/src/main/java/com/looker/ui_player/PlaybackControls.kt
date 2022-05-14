@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
@@ -15,12 +14,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
-import com.looker.components.state.PlayState
-import com.looker.components.state.PlayState.PAUSED
-import com.looker.components.state.PlayState.PLAYING
 import com.looker.components.tweenAnimation
 import com.looker.ui_player.components.SeekBar
 import kotlinx.coroutines.Dispatchers
@@ -29,10 +26,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun PlayerControls(
 	modifier: Modifier = Modifier,
-	isPlaying: PlayState,
+	isPlaying: Boolean,
 	@FloatRange(from = 0.0, to = 1.0) progressValue: Float,
+	playIcon: ImageVector = Icons.Rounded.PlayArrow,
 	onSeek: (Float) -> Unit,
-	onPlayPause: (PlayState) -> Unit,
+	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	skipPrevClick: () -> Unit,
 ) {
@@ -42,6 +40,7 @@ fun PlayerControls(
 	) {
 		PlayAndSkipButton(
 			isPlaying = isPlaying,
+			playIcon = playIcon,
 			playClick = onPlayPause,
 			skipNextClick = skipNextClick
 		)
@@ -56,12 +55,12 @@ fun PlayerControls(
 @Composable
 fun PlayAndSkipButton(
 	modifier: Modifier = Modifier,
-	isPlaying: PlayState,
-	playClick: (PlayState) -> Unit,
+	isPlaying: Boolean,
+	playIcon: ImageVector,
+	playClick: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 ) {
 	val cornerRadius = remember { mutableStateOf(15) }
-	var playIcon by remember(isPlaying) { mutableStateOf(Icons.Rounded.PlayArrow) }
 	val buttonShape by animateIntAsState(
 		targetValue = cornerRadius.value,
 		animationSpec = tweenAnimation()
@@ -69,14 +68,7 @@ fun PlayAndSkipButton(
 
 	LaunchedEffect(isPlaying) {
 		launch(Dispatchers.IO) {
-			playIcon = when (isPlaying) {
-				PLAYING -> Icons.Rounded.Pause
-				PAUSED -> Icons.Rounded.PlayArrow
-			}
-			cornerRadius.value = when (isPlaying) {
-				PLAYING -> 50
-				PAUSED -> 15
-			}
+			cornerRadius.value = if (isPlaying) 50 else 15
 		}
 	}
 

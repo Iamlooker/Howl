@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.looker.components.state.PlayState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -20,21 +19,18 @@ import kotlinx.coroutines.launch
 fun Backdrop(
 	modifier: Modifier = Modifier,
 	state: BackdropScaffoldState,
-	playState: PlayState,
+	isPlaying: Boolean,
 	enableGesture: Boolean = true,
 	header: @Composable () -> Unit,
 	backLayerContent: @Composable () -> Unit,
 	frontLayerContent: @Composable () -> Unit
 ) {
 	val expandedPeekHeight = with(LocalConfiguration.current) { screenHeightDp.dp / 3 }
-	val peekHeight = remember(playState) { mutableStateOf(50.dp) }
+	val peekHeight = remember(isPlaying) { mutableStateOf(50.dp) }
 
-	LaunchedEffect(playState) {
+	LaunchedEffect(isPlaying) {
 		launch(Dispatchers.IO) {
-			peekHeight.value = when (playState) {
-				is PlayState.PLAYING -> expandedPeekHeight
-				is PlayState.PAUSED -> 50.dp
-			}
+			peekHeight.value = if (isPlaying) expandedPeekHeight else 50.dp
 		}
 	}
 

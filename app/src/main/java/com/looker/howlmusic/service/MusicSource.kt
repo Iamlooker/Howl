@@ -4,13 +4,14 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.MediaMetadataCompat.*
+import android.support.v4.media.MediaMetadataCompat.METADATA_KEY_MEDIA_URI
 import androidx.core.net.toUri
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.data_music.data.SongsRepository
+import com.looker.howlmusic.utils.extension.toMediaMetadataCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -50,19 +51,7 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 
 	private suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
 		try {
-			songsRepository.getAllSongs().map { song ->
-				Builder()
-					.putString(METADATA_KEY_ARTIST, song.artistName)
-					.putString(METADATA_KEY_MEDIA_ID, song.mediaId)
-					.putString(METADATA_KEY_TITLE, song.songName)
-					.putString(METADATA_KEY_DISPLAY_TITLE, song.songName)
-					.putString(METADATA_KEY_DISPLAY_ICON_URI, song.albumArt)
-					.putString(METADATA_KEY_MEDIA_URI, song.songUri)
-					.putString(METADATA_KEY_ALBUM_ART_URI, song.albumArt)
-					.putString(METADATA_KEY_DISPLAY_SUBTITLE, song.artistName)
-					.putString(METADATA_KEY_DISPLAY_DESCRIPTION, song.artistName)
-					.build()
-			}
+			songsRepository.getAllSongs().map { it.toMediaMetadataCompat }
 		} catch (ioException: IOException) {
 			null
 		}

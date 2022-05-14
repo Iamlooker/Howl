@@ -2,10 +2,7 @@ package com.looker.howlmusic.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
@@ -17,15 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.statusBarsHeight
-import com.google.accompanist.insets.statusBarsPadding
 import com.looker.components.*
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
-import com.looker.components.state.PlayState
 import com.looker.components.state.SheetsState
 import com.looker.constants.Resource
+import com.looker.constants.states.ToggleState
 import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.howlmusic.HowlViewModel
@@ -33,6 +27,7 @@ import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
 import com.looker.howlmusic.ui.components.HomeScreens
+import com.looker.howlmusic.utils.extension.isPlaying
 import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import com.looker.ui_player.PlayerControls
@@ -53,7 +48,7 @@ fun Home(viewModel: HowlViewModel) {
 
 	val songsList by viewModel.mediaItems.collectAsState()
 
-	val playState by viewModel.playState.collectAsState()
+	val playbackState by viewModel.isPlaying.observeAsState()
 
 	LaunchedEffect(state.currentValue.name) {
 		launch { viewModel.setBackdropValue(state.currentValue) }
@@ -62,7 +57,7 @@ fun Home(viewModel: HowlViewModel) {
 	Backdrop(
 		modifier = Modifier,
 		state = state,
-		playState = playState,
+		isPlaying = playbackState?.isPlaying == true,
 		enableGesture = enableGesture,
 		header = {
 
@@ -77,18 +72,15 @@ fun Home(viewModel: HowlViewModel) {
 				}
 			}
 
-			LaunchedEffect(playState) {
+			LaunchedEffect(playbackState) {
 				launch(Dispatchers.IO) {
-					imageCorner.value = when (playState) {
-						PlayState.PLAYING -> 50
-						PlayState.PAUSED -> 15
-					}
+					imageCorner.value = if (playbackState?.isPlaying == true) 50 else 15
 				}
 			}
 
-			LaunchedEffect(backdropValue, playState) {
+			LaunchedEffect(backdropValue, playbackState) {
 				launch {
-					viewModel.setToggleIcon()
+					viewModel.setToggleIcon(playbackState?.isPlaying == true)
 					viewModel.updateToggle()
 				}
 			}
@@ -111,7 +103,7 @@ fun Home(viewModel: HowlViewModel) {
 				artistName = currentSong?.toSong?.artistName,
 				toggled = toggle,
 				imageCorner = corner,
-				toggleAction = { }
+				toggleAction = { viewModel.onToggleClick() }
 			)
 		},
 		frontLayerContent = {
@@ -162,10 +154,12 @@ fun Home(viewModel: HowlViewModel) {
 		backLayerContent = {
 
 			val progress by viewModel.progress.collectAsState()
+			val playIcon by viewModel.playIcon.collectAsState()
 
 			Controls(
-				isPlaying = playState,
+				isPlaying = playbackState?.isPlaying == true,
 				progress = progress,
+				playIcon = playIcon,
 				onPlayPause = { currentSong?.toSong?.let { song -> viewModel.playMedia(song) } },
 				skipNextClick = { viewModel.playNext() },
 				skipPrevClick = { viewModel.playPrevious() },
@@ -178,15 +172,15 @@ fun Home(viewModel: HowlViewModel) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FrontLayer(
-    bottomSheetState: ModalBottomSheetState,
-    songsList: Resource<List<Song>>,
-    albumsList: List<Album>,
-    handleIcon: Float,
-    currentAlbum: Album,
-    albumsDominantColor: Color,
-    openPlayer: () -> Unit,
-    onSongClick: (Song) -> Unit,
-    onAlbumClick: (Album) -> Unit,
+	bottomSheetState: ModalBottomSheetState,
+	songsList: Resource<List<Song>>,
+	albumsList: List<Album>,
+	handleIcon: Float,
+	currentAlbum: Album,
+	albumsDominantColor: Color,
+	openPlayer: () -> Unit,
+	onSongClick: (Song) -> Unit,
+	onAlbumClick: (Album) -> Unit,
 ) {
 	val navController = rememberNavController()
 	val items = listOf(HomeScreens.SONGS, HomeScreens.ALBUMS)
@@ -204,7 +198,7 @@ fun FrontLayer(
 		Scaffold(
 			bottomBar = {
 				BottomAppBar(
-					modifier = Modifier.navigationBarsHeight(56.dp),
+					modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars),
 					navController = navController,
 					items = items
 				)
@@ -240,31 +234,32 @@ fun Player(
 	songName: String?,
 	artistName: String?,
 	icon: ImageVector,
-	toggled: Boolean,
+	toggled: ToggleState,
 	imageCorner: Int,
 	toggleAction: () -> Unit,
 ) {
 	PlayerHeader(
-        modifier = modifier
-            .statusBarsPadding()
-            .padding(bottom = 20.dp),
-        songName = songName,
-        artistName = artistName,
-        albumArt = albumArt,
-        onImageIcon = icon,
-        repeatIcon = Icons.Rounded.RepeatOne,
-        toggled = toggled,
-        toggleAction = toggleAction,
-        imageCorner = imageCorner
-    )
+		modifier = modifier
+			.statusBarsPadding()
+			.padding(bottom = 20.dp),
+		songName = songName,
+		artistName = artistName,
+		albumArt = albumArt,
+		onImageIcon = icon,
+		repeatIcon = Icons.Rounded.RepeatOne,
+		toggled = toggled.enabled,
+		toggleAction = toggleAction,
+		imageCorner = imageCorner
+	)
 }
 
 @Composable
 fun Controls(
 	modifier: Modifier = Modifier,
 	progress: Float,
-	isPlaying: PlayState,
-	onPlayPause: (PlayState) -> Unit,
+	isPlaying: Boolean,
+	playIcon: ImageVector,
+	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	onSeek: (Float) -> Unit,
 	skipPrevClick: () -> Unit,
@@ -273,11 +268,12 @@ fun Controls(
 		PlayerControls(
 			isPlaying = isPlaying,
 			progressValue = progress,
+			playIcon = playIcon,
 			onPlayPause = { onPlayPause(it) },
 			skipNextClick = skipNextClick,
 			skipPrevClick = skipPrevClick,
 			onSeek = { seekTo -> onSeek(seekTo) },
 		)
-		Spacer(Modifier.statusBarsHeight())
+		Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
 	}
 }
