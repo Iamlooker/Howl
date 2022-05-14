@@ -5,7 +5,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import com.google.accompanist.insets.ProvideWindowInsets
 import com.looker.howlmusic.ui.Home
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.onboarding.OnBoardingPage
@@ -23,9 +22,7 @@ fun App(viewModel: HowlViewModel) {
 	var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 
 	HowlMusicTheme {
-		ProvideWindowInsets {
-			if (canReadStorage) Home(viewModel)
-			else OnBoardingPage { canReadStorage = it }
-		}
+		if (canReadStorage) Home(viewModel)
+		else OnBoardingPage { canReadStorage = it }
 	}
 }

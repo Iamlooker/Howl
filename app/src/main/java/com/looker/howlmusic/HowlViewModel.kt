@@ -70,6 +70,7 @@ class HowlViewModel
 		}
 	}
 
+
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val isPlaying = musicServiceConnection.playbackState
 

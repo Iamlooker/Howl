@@ -198,7 +198,7 @@ fun FrontLayer(
 		Scaffold(
 			bottomBar = {
 				BottomAppBar(
-					modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars),
+					modifier = Modifier.navigationBarsPadding(),
 					navController = navController,
 					items = items
 				)
