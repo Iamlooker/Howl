@@ -90,7 +90,6 @@ class HowlViewModel
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
-	private val _shuffleMode = MutableStateFlow(0)
 
 	val backdropValue: StateFlow<SheetsState> = _backdropValue
 	val currentAlbum: StateFlow<Album> = _currentAlbum
@@ -98,7 +97,9 @@ class HowlViewModel
 	val playIcon: StateFlow<ImageVector> = _playIcon
 	val toggle: StateFlow<ToggleState> = _toggle
 	val toggleIcon: StateFlow<ImageVector> = _toggleIcon
-	val shuffleMode: StateFlow<Int> = _shuffleMode
+
+	private val _shuffleMode = MutableStateFlow(0)
+	private val shuffleMode: StateFlow<Int> = _shuffleMode
 
 	@ExperimentalMaterialApi
 	fun setBackdropValue(currentValue: BackdropValue) {
@@ -115,11 +116,10 @@ class HowlViewModel
 	fun updateToggle() {
 		viewModelScope.launch(Dispatchers.IO) {
 			_toggle.emit(
-				ToggleState.PlayControl
-//				when (backdropValue.value) {
-//					HIDDEN -> ToggleState.PlayControl
-//					VISIBLE -> ToggleState.Shuffle
-//				}
+				when (backdropValue.value) {
+					HIDDEN -> ToggleState.PlayControl
+					VISIBLE -> ToggleState.Shuffle
+				}
 			)
 		}
 	}
@@ -134,21 +134,19 @@ class HowlViewModel
 				if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
 			)
 			_toggleIcon.emit(
-				if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-//				when (backdropValue.value) {
-//					is HIDDEN -> if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-//					is VISIBLE -> Icons.Rounded.Shuffle
-//				}
+				when (backdropValue.value) {
+					is HIDDEN -> if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+					is VISIBLE -> Icons.Rounded.Shuffle
+				}
 			)
 		}
 	}
 
 	fun onToggleClick() {
-		playMedia(nowPlaying.value?.toSong ?: emptySong)
-//		when (toggle.value) {
-//			ToggleState.PlayControl -> musicServiceConnection.transportControls.pause()
-//			ToggleState.Shuffle -> {}
-//		}
+		when (toggle.value) {
+			ToggleState.PlayControl -> musicServiceConnection.transportControls.pause()
+			ToggleState.Shuffle -> shuffleModeToggle()
+		}
 	}
 
 	fun onAlbumClick(album: Album) {
