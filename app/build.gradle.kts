@@ -71,8 +71,6 @@ dependencies {
 	implementation(project(Modules.uiPlayer))
 	implementation(project(Modules.components))
 
-	implementation(Accompanist.insets)
-
 	implementation(Core.core)
 
 	implementation(Coil.coil)

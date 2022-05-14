@@ -25,7 +25,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.google.accompanist.insets.navigationBarsPadding
 import com.looker.components.compositeOverBackground
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations

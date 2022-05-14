@@ -1,8 +1,3 @@
-object Accompanist {
-    private const val accompanistVersion = "0.24.8-beta"
-	const val insets = "com.google.accompanist:accompanist-insets:$accompanistVersion"
-}
-
 object Classpath {
 	const val gradleKotlin =
 		"org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"

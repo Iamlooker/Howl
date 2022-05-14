@@ -29,14 +29,18 @@ class MusicNotificationManager(
 				.setChannelDescriptionResourceId(R.string.notification_channel_description)
 				.setMediaDescriptionAdapter(DescriptionAdapter(mediaController))
 				.setNotificationListener(notificationListener)
-				.setSmallIconResourceId(R.drawable.ic_play)
+				.setSmallIconResourceId(R.drawable.howl)
 				.setPlayActionIconResourceId(R.drawable.ic_play)
 				.setPauseActionIconResourceId(R.drawable.ic_pause)
 				.setPreviousActionIconResourceId(R.drawable.ic_previous)
 				.setNextActionIconResourceId(R.drawable.ic_next)
-				.setRewindActionIconResourceId(R.drawable.ic_fast_rewind)
-				.setFastForwardActionIconResourceId(R.drawable.ic_fast_forward)
-				.build().apply { setMediaSessionToken(sessionToken) }
+				.build().apply {
+					setMediaSessionToken(sessionToken)
+					setUseNextActionInCompactView(true)
+					setUsePreviousActionInCompactView(true)
+					setUseFastForwardAction(false)
+					setUseRewindAction(false)
+				}
 	}
 
 	fun showNotification(player: Player) {
