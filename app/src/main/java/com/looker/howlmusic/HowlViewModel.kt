@@ -2,6 +2,7 @@ package com.looker.howlmusic
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
+import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
 import android.util.Log
 import androidx.compose.material.BackdropValue
@@ -89,6 +90,7 @@ class HowlViewModel
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
+	private val _shuffleMode = MutableStateFlow(0)
 
 	val backdropValue: StateFlow<SheetsState> = _backdropValue
 	val currentAlbum: StateFlow<Album> = _currentAlbum
@@ -96,6 +98,7 @@ class HowlViewModel
 	val playIcon: StateFlow<ImageVector> = _playIcon
 	val toggle: StateFlow<ToggleState> = _toggle
 	val toggleIcon: StateFlow<ImageVector> = _toggleIcon
+	val shuffleMode: StateFlow<Int> = _shuffleMode
 
 	@ExperimentalMaterialApi
 	fun setBackdropValue(currentValue: BackdropValue) {
@@ -112,10 +115,11 @@ class HowlViewModel
 	fun updateToggle() {
 		viewModelScope.launch(Dispatchers.IO) {
 			_toggle.emit(
-				when (backdropValue.value) {
-					HIDDEN -> ToggleState.PlayControl
-					VISIBLE -> ToggleState.Shuffle
-				}
+				ToggleState.PlayControl
+//				when (backdropValue.value) {
+//					HIDDEN -> ToggleState.PlayControl
+//					VISIBLE -> ToggleState.Shuffle
+//				}
 			)
 		}
 	}
@@ -130,19 +134,21 @@ class HowlViewModel
 				if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
 			)
 			_toggleIcon.emit(
-				when (backdropValue.value) {
-					is HIDDEN -> if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-					is VISIBLE -> Icons.Rounded.Shuffle
-				}
+				if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+//				when (backdropValue.value) {
+//					is HIDDEN -> if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+//					is VISIBLE -> Icons.Rounded.Shuffle
+//				}
 			)
 		}
 	}
 
 	fun onToggleClick() {
-		when (toggle.value) {
-			ToggleState.PlayControl -> musicServiceConnection.transportControls.pause()
-			ToggleState.Shuffle -> shuffleModeToggle()
-		}
+		playMedia(nowPlaying.value?.toSong ?: emptySong)
+//		when (toggle.value) {
+//			ToggleState.PlayControl -> musicServiceConnection.transportControls.pause()
+//			ToggleState.Shuffle -> {}
+//		}
 	}
 
 	fun onAlbumClick(album: Album) {
@@ -194,9 +200,16 @@ class HowlViewModel
 		musicServiceConnection.transportControls.skipToPrevious()
 	}
 
+	// TODO: Improve this
 	private fun shuffleModeToggle() {
 		val transportControls = musicServiceConnection.transportControls
-		transportControls.setShuffleMode(SHUFFLE_MODE_NONE)
+		transportControls.setShuffleMode(if (shuffleMode.value == SHUFFLE_MODE_NONE) SHUFFLE_MODE_ALL else SHUFFLE_MODE_NONE)
+		viewModelScope.launch {
+			val toggleEnable = ToggleState.Shuffle
+			toggleEnable.enabled = shuffleMode.value == SHUFFLE_MODE_ALL
+			_toggle.emit(toggleEnable)
+			_shuffleMode.emit(if (shuffleMode.value == SHUFFLE_MODE_NONE) SHUFFLE_MODE_ALL else SHUFFLE_MODE_NONE)
+		}
 	}
 
 	private fun updateCurrentPlayerPosition() {
