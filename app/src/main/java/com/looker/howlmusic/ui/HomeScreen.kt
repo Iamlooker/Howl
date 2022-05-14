@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.looker.components.*
 import com.looker.components.ext.backgroundGradient
@@ -37,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(viewModel: HowlViewModel) {
+fun Home(viewModel: HowlViewModel = viewModel()) {
 
 	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
