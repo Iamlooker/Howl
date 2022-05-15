@@ -5,7 +5,6 @@ import android.provider.MediaStore
 import com.looker.data_music.utils.MusicCursor
 import com.looker.domain_music.Genre
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class GenresData(private val context: Context) {

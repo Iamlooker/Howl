@@ -27,7 +27,7 @@ object Compose {
 	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
 	const val ui = "androidx.compose.ui:ui:$composeVersion"
 	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
-    const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
+	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
 object Excludes {
@@ -35,10 +35,10 @@ object Excludes {
 }
 
 object ExoPlayer {
-    private const val exoplayerVersion = "2.17.1"
-    const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
-    const val exoplayerMediaSession =
-        "com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
+	private const val exoplayerVersion = "2.17.1"
+	const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
+	const val exoplayerMediaSession =
+		"com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }
 
 object Hilt {
@@ -50,9 +50,9 @@ object Hilt {
 }
 
 object Lifecycle {
-    private const val lifecycleVersion = "2.4.1"
-    const val lifecycleViewModelCompose =
-        "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
+	private const val lifecycleVersion = "2.4.1"
+	const val lifecycleViewModelCompose =
+		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }
 
 object Palette {

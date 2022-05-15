@@ -31,11 +31,11 @@ sealed class HomeScreens(
 
 @Composable
 fun HomeNavGraph(
-    navController: NavHostController,
-    songsList: Resource<List<Song>>,
-    albumsList: List<Album>,
-    onSongClick: (Song) -> Unit,
-    onAlbumClick: (Album) -> Unit,
+	navController: NavHostController,
+	songsList: Resource<List<Song>>,
+	albumsList: List<Album>,
+	onSongClick: (Song) -> Unit,
+	onAlbumClick: (Album) -> Unit,
 ) {
 	NavHost(
 		navController = navController,
@@ -51,10 +51,10 @@ fun HomeNavGraph(
 }
 
 internal fun NavGraphBuilder.homeGraph(
-    songsList: Resource<List<Song>>,
-    albumsList: List<Album>,
-    onSongClick: (Song) -> Unit,
-    onAlbumClick: (Album) -> Unit,
+	songsList: Resource<List<Song>>,
+	albumsList: List<Album>,
+	onSongClick: (Song) -> Unit,
+	onAlbumClick: (Album) -> Unit,
 ) {
 	composable(HomeScreens.SONGS.route) {
 		Songs(
