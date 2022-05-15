@@ -221,7 +221,7 @@ class HowlViewModel
 					_progress.emit(pos / MusicService.songDuration)
 					_songDuration.emit(MusicService.songDuration)
 				}
-				delay(500)
+				delay(100)
 			}
 		}
 	}

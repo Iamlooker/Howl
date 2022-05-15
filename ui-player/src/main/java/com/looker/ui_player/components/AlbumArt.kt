@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,12 +48,15 @@ fun AlbumArt(
 			modifier = Modifier
 				.padding(horizontal = 24.dp, vertical = 8.dp)
 				.align(Alignment.BottomEnd),
-			icon = toggleIcon,
 			toggled = toggled,
 			shape = MaterialTheme.shapes.medium,
 			contentPadding = PaddingValues(vertical = 16.dp),
-			onToggle = onToggle,
-			contentDescription = contentDescription
-		)
+			onToggle = onToggle
+		) {
+			Icon(
+				imageVector = toggleIcon,
+				contentDescription = contentDescription
+			)
+		}
 	}
 }

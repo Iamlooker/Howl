@@ -1,10 +1,10 @@
 package com.looker.ui_player
 
-import androidx.annotation.FloatRange
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -21,18 +21,16 @@ import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.tweenAnimation
-import com.looker.ui_player.components.SeekBar
 
 @Composable
 fun PlayerControls(
 	modifier: Modifier = Modifier,
 	isPlaying: Boolean,
-	@FloatRange(from = 0.0, to = 1.0) progressValue: Float,
 	playIcon: ImageVector = Icons.Rounded.PlayArrow,
-	onSeek: (Float) -> Unit,
 	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	skipPrevClick: () -> Unit,
+	progressBar: @Composable () -> Unit
 ) {
 	Column(
 		modifier = modifier.padding(20.dp),
@@ -40,14 +38,17 @@ fun PlayerControls(
 	) {
 		PlayAndSkipButton(
 			isPlaying = isPlaying,
-			playIcon = playIcon,
 			playClick = onPlayPause,
 			skipNextClick = skipNextClick
-		)
+		) {
+			Icon(
+				imageVector = playIcon,
+				contentDescription = null
+			)
+		}
 		PreviousAndSeekBar(
-			progress = progressValue,
 			skipPrevClick = skipPrevClick,
-			onSeek = onSeek
+			progressBar = progressBar
 		)
 	}
 }
@@ -56,9 +57,9 @@ fun PlayerControls(
 fun PlayAndSkipButton(
 	modifier: Modifier = Modifier,
 	isPlaying: Boolean,
-	playIcon: ImageVector,
 	playClick: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
+	playIcon: @Composable () -> Unit,
 ) {
 	val buttonShape by animateIntAsState(
 		targetValue = if (isPlaying) 50 else 15,
@@ -80,8 +81,7 @@ fun PlayAndSkipButton(
 			onClick = { playClick(isPlaying) },
 			icon = playIcon,
 			backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(0.9f),
-			contentColor = MaterialTheme.colors.onPrimary,
-			contentDescription = "Play Pause Song"
+			contentColor = MaterialTheme.colors.onPrimary
 		)
 
 		ShapedIconButton(
@@ -90,20 +90,22 @@ fun PlayAndSkipButton(
 				.weight(1f)
 				.clip(CircleShape),
 			onClick = skipNextClick,
-			icon = Icons.Rounded.SkipNext,
 			backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground(0.9f),
-			contentColor = MaterialTheme.colors.onSecondary,
-			contentDescription = "Play Next Song"
-		)
+			contentColor = MaterialTheme.colors.onSecondary
+		) {
+			Icon(
+				imageVector = Icons.Rounded.SkipNext,
+				contentDescription = null
+			)
+		}
 	}
 }
 
 @Composable
 fun PreviousAndSeekBar(
 	modifier: Modifier = Modifier,
-	progress: Float,
 	skipPrevClick: () -> Unit,
-	onSeek: (Float) -> Unit,
+	progressBar: @Composable () -> Unit
 ) {
 	Row(
 		modifier = modifier.fillMaxWidth(),
@@ -112,20 +114,17 @@ fun PreviousAndSeekBar(
 		ShapedIconButton(
 			modifier = Modifier
 				.height(60.dp)
-				.weight(1f)
+				.weight(0.3f)
 				.clip(CircleShape),
 			onClick = skipPrevClick,
-			icon = Icons.Rounded.SkipPrevious,
 			backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground(0.9f),
-			contentColor = MaterialTheme.colors.onSecondary,
-			contentDescription = "Play Previous Song"
-		)
-		SeekBar(
-			modifier = Modifier
-				.height(60.dp)
-				.weight(3f),
-			progress = progress,
-			onValueChanged = onSeek
-		)
+			contentColor = MaterialTheme.colors.onSecondary
+		) {
+			Icon(
+				imageVector = Icons.Rounded.SkipPrevious,
+				contentDescription = null
+			)
+		}
+		progressBar()
 	}
 }

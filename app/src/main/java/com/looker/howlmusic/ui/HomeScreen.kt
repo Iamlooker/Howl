@@ -4,7 +4,9 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +32,7 @@ import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import com.looker.ui_player.PlayerControls
 import com.looker.ui_player.PlayerHeader
+import com.looker.ui_player.components.SeekBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -135,13 +138,17 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
 			Controls(
 				isPlaying = playbackState.isPlaying,
-				progress = progress,
 				playIcon = playIcon,
 				onPlayPause = { viewModel.playMedia(currentSong.toSong) },
 				skipNextClick = { viewModel.playNext() },
-				skipPrevClick = { viewModel.playPrevious() },
-				onSeek = { seekTo -> viewModel.onSeek(seekTo) },
-			)
+				skipPrevClick = { viewModel.playPrevious() }
+			) {
+				SeekBar(
+					modifier = Modifier.height(60.dp),
+					progress = progress,
+					onValueChanged = {viewModel.onSeek(it)}
+				)
+			}
 		}
 	)
 }
@@ -182,12 +189,15 @@ fun FrontLayer(
 			},
 			floatingActionButton = {
 				ShapedIconButton(
-					icon = Icons.Rounded.KeyboardArrowDown,
 					backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(),
 					contentPadding = PaddingValues(vertical = 16.dp),
-					contentDescription = "Expand Player",
 					onClick = openPlayer
-				)
+				) {
+					Icon(
+						imageVector = Icons.Rounded.KeyboardArrowDown,
+						contentDescription = null
+					)
+				}
 			}
 		) { bottomNavigationPadding ->
 			Column(Modifier.padding(bottomNavigationPadding)) {
@@ -228,23 +238,21 @@ fun Player(
 @Composable
 fun Controls(
 	modifier: Modifier = Modifier,
-	progress: Float,
 	isPlaying: Boolean,
 	playIcon: ImageVector,
 	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
-	onSeek: (Float) -> Unit,
 	skipPrevClick: () -> Unit,
+	progressBar: @Composable () -> Unit
 ) {
 	Column(modifier) {
 		PlayerControls(
 			isPlaying = isPlaying,
-			progressValue = progress,
 			playIcon = playIcon,
 			onPlayPause = { onPlayPause(it) },
 			skipNextClick = skipNextClick,
 			skipPrevClick = skipPrevClick,
-			onSeek = { seekTo -> onSeek(seekTo) },
+			progressBar = progressBar
 		)
 		Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
 	}
