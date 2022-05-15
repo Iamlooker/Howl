@@ -21,9 +21,7 @@ android {
             minifyEnabled false
         }
         all {
-            proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt")
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
     }
 
@@ -52,9 +50,6 @@ android {
 }
 
 dependencies {
-    implementation Core.core
-
-    implementation Compose.activity
     implementation Compose.icons
     implementation Compose.foundation
     implementation Compose.material
