@@ -81,7 +81,6 @@ dependencies {
 	implementation(Compose.foundation)
 	implementation(Compose.navigation)
 	implementation(Compose.ui)
-	implementation(Compose.runtimeLivedata)
 
 	implementation(ExoPlayer.exoplayer)
 	implementation(ExoPlayer.exoplayerMediaSession)

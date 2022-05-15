@@ -7,19 +7,19 @@ import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.looker.howlmusic.utils.extension.id
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MusicServiceConnection(context: Context) {
 
-	private val _isConnected = MutableLiveData<Boolean>()
+	private val _isConnected = MutableStateFlow(false)
 
-	private val _playbackState = MutableLiveData<PlaybackStateCompat>()
-	val playbackState: LiveData<PlaybackStateCompat> = _playbackState
+	private val _playbackState = MutableStateFlow(EMPTY_PLAYBACK_STATE)
+	val playbackState = _playbackState.asStateFlow()
 
-	private val _nowPlaying = MutableLiveData<MediaMetadataCompat?>()
-	val nowPlaying: LiveData<MediaMetadataCompat?> = _nowPlaying
+	private val _nowPlaying = MutableStateFlow(NOTHING_PLAYING)
+	val nowPlaying = _nowPlaying.asStateFlow()
 
 	lateinit var mediaController: MediaControllerCompat
 
@@ -53,29 +53,27 @@ class MusicServiceConnection(context: Context) {
 			mediaController = MediaControllerCompat(context, mediaBrowser.sessionToken).apply {
 				registerCallback(MediaControllerCallback())
 			}
-			_isConnected.postValue(true)
+			_isConnected.value = true
 		}
 
 		override fun onConnectionSuspended() {
-			_isConnected.postValue(false)
+			_isConnected.value = false
 		}
 
 		override fun onConnectionFailed() {
-			_isConnected.postValue(false)
+			_isConnected.value = false
 		}
 	}
 
 	private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
 		override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-			_playbackState.postValue(state ?: EMPTY_PLAYBACK_STATE)
+			_playbackState.value = state ?: EMPTY_PLAYBACK_STATE
 		}
 
 		override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-			_nowPlaying.postValue(
-				if (metadata?.id == null) NOTHING_PLAYING
-				else metadata
-			)
+			_nowPlaying.value = if (metadata?.id == null) NOTHING_PLAYING else metadata
+
 		}
 
 		override fun onSessionDestroyed() {

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.components.state.SheetsState
@@ -27,6 +26,7 @@ import com.looker.domain_music.Album
 import com.looker.domain_music.Song
 import com.looker.domain_music.emptyAlbum
 import com.looker.domain_music.emptySong
+import com.looker.howlmusic.service.EMPTY_PLAYBACK_STATE
 import com.looker.howlmusic.service.MusicService
 import com.looker.howlmusic.service.MusicServiceConnection
 import com.looker.howlmusic.utils.extension.*
@@ -34,9 +34,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+typealias ResourceSongs = Resource<List<Song>>
 
 @HiltViewModel
 class HowlViewModel
@@ -45,21 +49,37 @@ class HowlViewModel
 	private val albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
-	private val _mediaItems =
-		MutableStateFlow<Resource<List<Song>>>(Resource.Loading(listOf(emptySong)))
-	val mediaItems: StateFlow<Resource<List<Song>>> = _mediaItems
-
-	private val _albumsList = MutableStateFlow(emptyList<Album>())
-	val albumsList: StateFlow<List<Album>> = _albumsList
-
 	val nowPlaying = musicServiceConnection.nowPlaying
-	val playbackState = musicServiceConnection.playbackState
 
-	private val _currentSongDuration = MutableStateFlow(0L)
-	private val currentSongDuration: StateFlow<Long> = _currentSongDuration
+	val playbackState = musicServiceConnection.playbackState.stateIn(
+		scope = viewModelScope,
+		started = SharingStarted.WhileSubscribed(5000),
+		initialValue = EMPTY_PLAYBACK_STATE
+	)
 
+	private val _songDuration = MutableStateFlow(0L)
+
+	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
+	private val _currentAlbum = MutableStateFlow(emptyAlbum)
+	private val _enableGesture = MutableStateFlow(true)
+	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
+	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
+	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 	private val _progress = MutableStateFlow(0F)
-	val progress: StateFlow<Float> = _progress
+	private val _albumsList = MutableStateFlow(emptyList<Album>())
+	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf(emptySong)))
+	private val _shuffleMode = MutableStateFlow(0)
+
+	val backdropValue = _backdropValue.asStateFlow()
+	val currentAlbum = _currentAlbum.asStateFlow()
+	val enableGesture = _enableGesture.asStateFlow()
+	val playIcon = _playIcon.asStateFlow()
+	val toggle = _toggle.asStateFlow()
+	val toggleIcon = _toggleIcon.asStateFlow()
+	val progress = _progress.asStateFlow()
+	val albumsList = _albumsList.asStateFlow()
+	val songsList = _songsList.asStateFlow()
+	private val shuffleMode = _shuffleMode.asStateFlow()
 
 	init {
 		musicServiceConnection.subscribe(
@@ -72,7 +92,7 @@ class HowlViewModel
 					super.onChildrenLoaded(parentId, children)
 					val items = children.map { it.toSong }
 					viewModelScope.launch {
-						_mediaItems.emit(Resource.Success(items))
+						_songsList.emit(Resource.Success(items))
 					}
 				}
 			}
@@ -83,23 +103,6 @@ class HowlViewModel
 
 		updateCurrentPlayerPosition()
 	}
-
-	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
-	private val _currentAlbum = MutableStateFlow(emptyAlbum)
-	private val _enableGesture = MutableStateFlow(true)
-	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
-	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
-	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
-
-	val backdropValue: StateFlow<SheetsState> = _backdropValue
-	val currentAlbum: StateFlow<Album> = _currentAlbum
-	val enableGesture: StateFlow<Boolean> = _enableGesture
-	val playIcon: StateFlow<ImageVector> = _playIcon
-	val toggle: StateFlow<ToggleState> = _toggle
-	val toggleIcon: StateFlow<ImageVector> = _toggleIcon
-
-	private val _shuffleMode = MutableStateFlow(0)
-	private val shuffleMode: StateFlow<Int> = _shuffleMode
 
 	@ExperimentalMaterialApi
 	fun setBackdropValue(currentValue: BackdropValue) {
@@ -163,9 +166,9 @@ class HowlViewModel
 		val nowPlaying = musicServiceConnection.nowPlaying.value
 		val transportControls = musicServiceConnection.transportControls
 
-		val isPrepared = musicServiceConnection.playbackState.value?.isPrepared ?: false
-		musicServiceConnection.playbackState.value?.let { playbackState ->
-			if (isPrepared && mediaItem.mediaId == nowPlaying?.id) {
+		val isPrepared = musicServiceConnection.playbackState.value.isPrepared
+		musicServiceConnection.playbackState.value.let { playbackState ->
+			if (isPrepared && mediaItem.mediaId == nowPlaying.id) {
 				when {
 					playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
 					playbackState.isPlayEnabled -> transportControls.play()
@@ -186,7 +189,7 @@ class HowlViewModel
 	fun onSeek(seekTo: Float) {
 		_progress.value = seekTo
 		musicServiceConnection.transportControls.seekTo(
-			currentSongDuration.value.times(seekTo).toLong()
+			_songDuration.value.times(seekTo).toLong()
 		)
 	}
 
@@ -211,14 +214,14 @@ class HowlViewModel
 	}
 
 	private fun updateCurrentPlayerPosition() {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.IO) {
 			while (true) {
-				val pos = playbackState.value?.currentPlaybackPosition?.toFloat()
+				val pos = playbackState.value.currentPlaybackPosition.toFloat()
 				if (progress.value != pos) {
-					_progress.emit(pos?.div(MusicService.currentSongDuration) ?: 0F)
-					_currentSongDuration.emit(MusicService.currentSongDuration)
+					_progress.emit(pos / MusicService.songDuration)
+					_songDuration.emit(MusicService.songDuration)
 				}
-				delay(100)
+				delay(500)
 			}
 		}
 	}

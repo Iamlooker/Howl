@@ -27,7 +27,6 @@ object Compose {
 	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
 	const val ui = "androidx.compose.ui:ui:$composeVersion"
 	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
-	const val runtimeLivedata = "androidx.compose.runtime:runtime-livedata:$composeVersion"
     const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 

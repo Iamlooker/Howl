@@ -6,7 +6,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,13 +40,13 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
-	val currentSong by viewModel.nowPlaying.observeAsState()
+	val currentSong by viewModel.nowPlaying.collectAsState()
 	val backdropValue by viewModel.backdropValue.collectAsState()
 	val enableGesture by viewModel.enableGesture.collectAsState()
 
-	val songsList by viewModel.mediaItems.collectAsState()
+	val songsList by viewModel.songsList.collectAsState()
 
-	val playbackState by viewModel.playbackState.observeAsState()
+	val playbackState by viewModel.playbackState.collectAsState()
 
 	LaunchedEffect(state.isConcealed) {
 		viewModel.setBackdropValue(state.currentValue)
@@ -56,7 +55,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 	Backdrop(
 		modifier = Modifier,
 		state = state,
-		isPlaying = playbackState?.isPlaying == true,
+		isPlaying = playbackState.isPlaying,
 		enableGesture = enableGesture,
 		header = {
 
@@ -65,11 +64,11 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val backgroundColor = rememberDominantColorState()
 
 			LaunchedEffect(currentSong) {
-				backgroundColor.updateColorsFromImageUrl(currentSong?.toSong?.albumArt)
+				backgroundColor.updateColorsFromImageUrl(currentSong.toSong.albumArt)
 			}
 
 			LaunchedEffect(backdropValue, playbackState) {
-				viewModel.setToggleIcon(playbackState?.isPlaying == true)
+				viewModel.setToggleIcon(playbackState.isPlaying)
 				viewModel.updateToggle()
 			}
 
@@ -82,7 +81,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
 				icon = toggleIcon,
 				currentSong = currentSong.toSong,
-				isPlaying = playbackState?.isPlaying == true,
+				isPlaying = playbackState.isPlaying,
 				toggled = toggle,
 				toggleAction = { viewModel.onToggleClick() }
 			)
@@ -135,10 +134,10 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val playIcon by viewModel.playIcon.collectAsState()
 
 			Controls(
-				isPlaying = playbackState?.isPlaying == true,
+				isPlaying = playbackState.isPlaying,
 				progress = progress,
 				playIcon = playIcon,
-				onPlayPause = { currentSong?.toSong?.let { song -> viewModel.playMedia(song) } },
+				onPlayPause = { viewModel.playMedia(currentSong.toSong) },
 				skipNextClick = { viewModel.playNext() },
 				skipPrevClick = { viewModel.playPrevious() },
 				onSeek = { seekTo -> viewModel.onSeek(seekTo) },
