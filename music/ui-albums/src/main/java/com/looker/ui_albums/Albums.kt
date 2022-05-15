@@ -1,6 +1,5 @@
 package com.looker.ui_albums
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -37,7 +36,6 @@ private fun Albums(
 	)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumsList(
 	modifier: Modifier = Modifier,

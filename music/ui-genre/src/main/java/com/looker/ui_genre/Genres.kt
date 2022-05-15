@@ -1,6 +1,5 @@
 package com.looker.ui_genre
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -37,7 +36,6 @@ fun Genres(
 	)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GenresList(
 	genresList: List<Genre>,

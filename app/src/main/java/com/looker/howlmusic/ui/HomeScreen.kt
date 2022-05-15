@@ -146,7 +146,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 	)
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@ExperimentalMaterialApi
 @Composable
 fun FrontLayer(
 	bottomSheetState: ModalBottomSheetState,
