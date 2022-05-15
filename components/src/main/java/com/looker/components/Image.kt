@@ -4,10 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -18,8 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import coil.ImageLoader
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.request.ErrorResult
 import coil.request.ImageRequest
@@ -73,22 +69,12 @@ fun HowlImage(
 	modifier: Modifier = Modifier,
 	data: String?,
 	contentScale: ContentScale = ContentScale.Crop,
-	backgroundColor: Color = MaterialTheme.colors.surface,
 	shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
 	Box(modifier) {
-		val painter = rememberAsyncImagePainter(model = data)
-
-		if (painter.state is AsyncImagePainter.State.Loading) {
-			Spacer(
-				modifier = Modifier
-					.matchParentSize()
-					.background(backgroundColor)
-			)
-		}
-		Image(
-			painter = painter,
-			contentDescription = "This is Album Art",
+		AsyncImage(
+			model = data,
+			contentDescription = null,
 			contentScale = contentScale,
 			modifier = Modifier
 				.matchParentSize()

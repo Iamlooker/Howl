@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.RepeatOne
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -238,7 +237,6 @@ fun Player(
 		artistName = artistName,
 		albumArt = albumArt,
 		onImageIcon = icon,
-		repeatIcon = Icons.Rounded.RepeatOne,
 		toggled = toggled.enabled,
 		toggleAction = toggleAction,
 		imageCorner = imageCorner
