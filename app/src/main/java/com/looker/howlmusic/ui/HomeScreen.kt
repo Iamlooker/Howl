@@ -1,7 +1,6 @@
 package com.looker.howlmusic.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -64,25 +63,15 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			val toggleIcon by viewModel.toggleIcon.collectAsState()
 			val toggle by viewModel.toggle.collectAsState()
 			val backgroundColor = rememberDominantColorState()
-			val imageCorner = remember { mutableStateOf(50) }
 
 			LaunchedEffect(currentSong) {
 				backgroundColor.updateColorsFromImageUrl(currentSong?.toSong?.albumArt)
-			}
-
-			LaunchedEffect(playbackState) {
-				imageCorner.value = if (playbackState?.isPlaying == true) 50 else 15
 			}
 
 			LaunchedEffect(backdropValue, playbackState) {
 				viewModel.setToggleIcon(playbackState?.isPlaying == true)
 				viewModel.updateToggle()
 			}
-
-			val corner by animateIntAsState(
-				targetValue = imageCorner.value,
-				animationSpec = tweenAnimation()
-			)
 
 			val animatedBackgroundScrim by animateColorAsState(
 				targetValue = backgroundColor.color.copy(0.3f),
@@ -92,11 +81,9 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			Player(
 				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
 				icon = toggleIcon,
-				albumArt = currentSong?.toSong?.albumArt,
-				songName = currentSong?.toSong?.songName,
-				artistName = currentSong?.toSong?.artistName,
+				currentSong = currentSong.toSong,
+				isPlaying = playbackState?.isPlaying == true,
 				toggled = toggle,
-				imageCorner = corner,
 				toggleAction = { viewModel.onToggleClick() }
 			)
 		},
@@ -221,25 +208,21 @@ fun FrontLayer(
 @Composable
 fun Player(
 	modifier: Modifier = Modifier,
-	albumArt: String?,
-	songName: String?,
-	artistName: String?,
+	currentSong: Song,
+	isPlaying: Boolean,
 	icon: ImageVector,
 	toggled: ToggleState,
-	imageCorner: Int,
 	toggleAction: () -> Unit,
 ) {
 	PlayerHeader(
 		modifier = modifier
 			.statusBarsPadding()
 			.padding(vertical = 20.dp),
-		songName = songName,
-		artistName = artistName,
-		albumArt = albumArt,
-		onImageIcon = icon,
+		song = currentSong,
+		isPlaying = isPlaying,
+		toggleIcon = icon,
 		toggled = toggled.enabled,
-		toggleAction = toggleAction,
-		imageCorner = imageCorner
+		toggleAction = toggleAction
 	)
 }
 

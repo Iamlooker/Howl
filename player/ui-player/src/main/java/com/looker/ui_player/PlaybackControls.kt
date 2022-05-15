@@ -10,7 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
@@ -18,10 +19,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
+import com.looker.components.localComposers.LocalDurations
 import com.looker.components.tweenAnimation
 import com.looker.ui_player.components.SeekBar
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun PlayerControls(
@@ -60,17 +60,10 @@ fun PlayAndSkipButton(
 	playClick: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 ) {
-	val cornerRadius = remember { mutableStateOf(15) }
 	val buttonShape by animateIntAsState(
-		targetValue = cornerRadius.value,
-		animationSpec = tweenAnimation()
+		targetValue = if (isPlaying) 50 else 15,
+		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
 	)
-
-	LaunchedEffect(isPlaying) {
-		launch(Dispatchers.IO) {
-			cornerRadius.value = if (isPlaying) 50 else 15
-		}
-	}
 
 	Row(
 		modifier = modifier.fillMaxWidth(),

@@ -4,5 +4,6 @@ val implementation by configurations
 
 dependencies {
 	implementation(project(Modules.components))
+	implementation(project(Modules.domainMusic))
 	implementation(Coil.coil)
 }

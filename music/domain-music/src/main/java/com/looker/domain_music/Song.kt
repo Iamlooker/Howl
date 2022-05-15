@@ -3,7 +3,7 @@ package com.looker.domain_music
 data class Song(
 	val mediaId: String,
 	val songUri: String,
-	val songName: String?,
+	val name: String?,
 	val artistName: String?,
 	val albumName: String?,
 	val albumArt: String?,
@@ -13,7 +13,7 @@ data class Song(
 val emptySong = Song(
 	mediaId = "",
 	songUri = "",
-	songName = null,
+	name = null,
 	artistName = null,
 	albumName = null,
 	albumArt = null

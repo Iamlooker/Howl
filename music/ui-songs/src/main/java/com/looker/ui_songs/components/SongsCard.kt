@@ -15,7 +15,7 @@ fun SongsCard(
 	SmallCard(
 		modifier = modifier,
 		imageUrl = song.albumArt,
-		title = song.songName,
+		title = song.name,
 		subText = song.artistName,
 		imageSize = 62.dp,
 		onClick = onClick

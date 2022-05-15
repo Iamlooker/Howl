@@ -47,7 +47,7 @@ class SongsData(private val context: Context) {
 						Song(
 							mediaId = songId.toString(),
 							songUri = songUri,
-							songName = songName,
+							name = songName,
 							artistName = artistName,
 							albumName = albumName,
 							duration = songDurationMillis,

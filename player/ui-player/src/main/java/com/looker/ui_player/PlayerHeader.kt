@@ -6,18 +6,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.looker.ui_player.components.AlbumArtAndUtils
+import com.looker.domain_music.Song
+import com.looker.ui_player.components.AlbumArt
 import com.looker.ui_player.components.SongText
 
 @Composable
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
-	albumArt: String?,
-	songName: String?,
-	artistName: String?,
-	onImageIcon: ImageVector,
+	song: Song,
+	isPlaying: Boolean,
+	toggleIcon: ImageVector,
 	toggled: Boolean,
-	imageCorner: Int = 50,
 	toggleAction: () -> Unit
 ) {
 	Column(
@@ -25,18 +24,18 @@ fun PlayerHeader(
 		verticalArrangement = Arrangement.spacedBy(20.dp),
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
-		AlbumArtAndUtils(
+		AlbumArt(
 			modifier = Modifier
 				.fillMaxHeight(0.27f)
 				.fillMaxWidth()
 				.padding(horizontal = 20.dp),
-			albumArt = albumArt,
-			icon = onImageIcon,
+			isPlaying = isPlaying,
+			albumArt = song.albumArt,
+			toggleIcon = toggleIcon,
 			toggled = toggled,
 			onToggle = toggleAction,
-			albumArtCorner = imageCorner,
 			contentDescription = "Play"
 		)
-		SongText(songName = songName, artistName = artistName)
+		SongText(songName = song.name, artistName = song.artistName)
 	}
 }
