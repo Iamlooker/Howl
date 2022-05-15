@@ -12,9 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
@@ -22,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.looker.onboarding.components.AnimatedButton
+import com.looker.onboarding.utils.ButtonState
 import com.looker.onboarding.utils.checkReadPermission
 import com.looker.onboarding.utils.handlePermissions
 import kotlinx.coroutines.delay
@@ -34,9 +33,7 @@ fun OnBoardingPage(
 ) {
 
 	val bannerText = remember { viewModel.bannerText }
-	val buttonText by viewModel.buttonText.collectAsState()
-	val buttonIcon by viewModel.buttonIcon.collectAsState()
-	val buttonColor by viewModel.buttonColor.collectAsState()
+	val buttonState by viewModel.buttonState.collectAsState()
 
 	val permissionLauncher = rememberLauncherForActivityResult(
 		contract = ActivityResultContracts.RequestPermission(),
@@ -48,18 +45,16 @@ fun OnBoardingPage(
 
 	val context = LocalContext.current
 
-	LaunchedEffect(buttonText) {
+	LaunchedEffect(buttonState) {
 		launch {
 			delay(250)
 			if (checkReadPermission(context)) navigate(checkReadPermission(context))
 		}
 	}
 
-	OnBoardImage(
+	OnBoard(
 		bannerText = bannerText,
-		buttonText = buttonText,
-		buttonIcon = buttonIcon,
-		buttonColor = buttonColor
+		buttonState = buttonState
 	) {
 		handlePermissions(
 			context,
@@ -72,18 +67,14 @@ fun OnBoardingPage(
 }
 
 @Composable
-fun OnBoardImage(
+fun OnBoard(
 	bannerText: AnnotatedString,
-	buttonText: String,
-	buttonIcon: ImageVector,
-	buttonColor: Color,
+	buttonState: ButtonState,
 	onClick: () -> Unit,
 ) {
 	OnBoardContent(
 		bannerText = bannerText,
-		buttonText = buttonText,
-		buttonIcon = buttonIcon,
-		buttonColor = buttonColor,
+		buttonState = buttonState,
 		painter = painterResource(id = R.drawable.empty),
 		onClick = onClick
 	)
@@ -92,9 +83,7 @@ fun OnBoardImage(
 @Composable
 fun OnBoardContent(
 	bannerText: AnnotatedString,
-	buttonText: String,
-	buttonIcon: ImageVector,
-	buttonColor: Color,
+	buttonState: ButtonState,
 	painter: Painter,
 	onClick: () -> Unit,
 ) {
@@ -119,9 +108,9 @@ fun OnBoardContent(
 			)
 
 			AnimatedButton(
-				buttonText = buttonText,
-				buttonIcon = buttonIcon,
-				buttonColor = buttonColor,
+				buttonText = buttonState.text,
+				buttonIcon = buttonState.icon,
+				buttonColor = buttonState.color,
 				onClick = onClick
 			)
 		}

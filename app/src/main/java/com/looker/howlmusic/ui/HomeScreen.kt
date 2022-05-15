@@ -233,7 +233,7 @@ fun Player(
 	PlayerHeader(
 		modifier = modifier
 			.statusBarsPadding()
-			.padding(bottom = 20.dp),
+			.padding(vertical = 20.dp),
 		songName = songName,
 		artistName = artistName,
 		albumArt = albumArt,
