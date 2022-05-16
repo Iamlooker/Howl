@@ -10,14 +10,16 @@ import androidx.compose.ui.Modifier
 fun SeekBar(
 	modifier: Modifier = Modifier,
 	progress: Float,
-	onValueChanged: (Float) -> Unit
+	onValueChange: (Float) -> Unit,
+	onValueChanged: () -> Unit
 ) {
 	val sliderColors = SliderDefaults.colors(inactiveTrackColor = MaterialTheme.colors.surface)
 
 	Slider(
 		modifier = modifier,
 		value = progress,
-		onValueChange = onValueChanged,
-		colors = sliderColors
+		onValueChange = onValueChange,
+		colors = sliderColors,
+		onValueChangeFinished = onValueChanged
 	)
 }

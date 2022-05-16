@@ -29,3 +29,4 @@ include(":music:ui-albums")
 
 include(":ui-player")
 include(":core-model")
+include(":feature-player")

@@ -8,4 +8,5 @@ object Modules {
 	const val constants = ":constants"
 	const val dataMusic = ":music:data-music"
 	const val coreModel = ":core-model"
+	const val featurePlayer = ":feature-player"
 }

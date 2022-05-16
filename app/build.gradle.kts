@@ -69,6 +69,7 @@ dependencies {
 	implementation(project(Modules.uiSongs))
 	implementation(project(Modules.uiAlbums))
 	implementation(project(Modules.uiPlayer))
+	implementation(project(Modules.featurePlayer))
 	implementation(project(Modules.components))
 
 	implementation(Core.core)

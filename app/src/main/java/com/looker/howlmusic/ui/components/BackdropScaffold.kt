@@ -19,21 +19,10 @@ import kotlinx.coroutines.launch
 fun Backdrop(
 	modifier: Modifier = Modifier,
 	state: BackdropScaffoldState,
-	isPlaying: Boolean,
-	enableGesture: Boolean = true,
 	header: @Composable () -> Unit,
 	backLayerContent: @Composable () -> Unit,
 	frontLayerContent: @Composable () -> Unit
 ) {
-	val expandedPeekHeight = with(LocalConfiguration.current) { screenHeightDp.dp / 3 }
-	val peekHeight = remember(isPlaying) { mutableStateOf(50.dp) }
-
-	LaunchedEffect(isPlaying) {
-		launch(Dispatchers.IO) {
-			peekHeight.value = if (isPlaying) expandedPeekHeight else 50.dp
-		}
-	}
-
 	BackdropScaffold(
 		modifier = modifier,
 		scaffoldState = state,
@@ -41,9 +30,8 @@ fun Backdrop(
 		backLayerContent = backLayerContent,
 		frontLayerContent = frontLayerContent,
 		backLayerBackgroundColor = MaterialTheme.colors.background,
-		peekHeight = peekHeight.value,
+		peekHeight = 50.dp,
 		frontLayerShape = MaterialTheme.shapes.large,
 		frontLayerBackgroundColor = MaterialTheme.colors.background,
-		gesturesEnabled = enableGesture
 	)
 }

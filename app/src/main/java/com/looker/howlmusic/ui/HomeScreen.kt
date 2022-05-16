@@ -1,24 +1,30 @@
 package com.looker.howlmusic.ui
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.looker.components.*
-import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
-import com.looker.components.state.SheetsState
 import com.looker.constants.Resource
-import com.looker.constants.states.ToggleState
 import com.looker.core_model.Album
 import com.looker.core_model.Song
+import com.looker.feature_player.PlayerHeader
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -27,9 +33,7 @@ import com.looker.howlmusic.utils.extension.isPlaying
 import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import com.looker.ui_player.PlayerControls
-import com.looker.ui_player.PlayerHeader
 import com.looker.ui_player.components.SeekBar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -38,49 +42,56 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
 	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
-
 	val currentSong by viewModel.nowPlaying.collectAsState()
-	val backdropValue by viewModel.backdropValue.collectAsState()
-	val enableGesture by viewModel.enableGesture.collectAsState()
-
 	val playbackState by viewModel.playbackState.collectAsState()
-
-	LaunchedEffect(state.isConcealed) {
-		viewModel.setBackdropValue(state.currentValue)
-	}
 
 	Backdrop(
 		modifier = Modifier,
 		state = state,
-		isPlaying = playbackState.isPlaying,
-		enableGesture = enableGesture,
 		header = {
-			val toggleIcon by viewModel.toggleIcon.collectAsState()
-			val toggle by viewModel.toggle.collectAsState()
-			val backgroundColor = rememberDominantColorState()
-
-			LaunchedEffect(currentSong) {
-				backgroundColor.updateColorsFromImageUrl(currentSong.toSong.albumArt)
-			}
-
-			LaunchedEffect(backdropValue, playbackState) {
-				viewModel.setToggleIcon(playbackState.isPlaying)
-				viewModel.updateToggle()
-			}
-
-			val animatedBackgroundScrim by animateColorAsState(
-				targetValue = backgroundColor.color.copy(0.3f),
-				animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-			)
-
-			Player(
-				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
-				currentSong = currentSong.toSong,
-				isPlaying = playbackState.isPlaying,
-				toggled = toggle,
-				toggleAction = { viewModel.onToggleClick() }
+			// TODO: Add Background Scrim
+			PlayerHeader(
+				modifier = Modifier.statusBarsPadding(),
+				onToggleClick = { viewModel.onToggleClick() },
+				songText = {
+					Text(
+						modifier = Modifier.animateContentSize(),
+						text = currentSong.toSong.name,
+						style = MaterialTheme.typography.h4,
+						maxLines = 2,
+						overflow = TextOverflow.Ellipsis,
+						textAlign = TextAlign.Center
+					)
+					Text(
+						modifier = Modifier.animateContentSize(),
+						text = currentSong.toSong.artist,
+						style = MaterialTheme.typography.subtitle1,
+						fontWeight = FontWeight.SemiBold,
+						maxLines = 1,
+						overflow = TextOverflow.Ellipsis,
+						textAlign = TextAlign.Center
+					)
+				},
+				toggleIcon = {
+					val toggleIcon by viewModel.toggleIcon.collectAsState()
+					Icon(imageVector = toggleIcon, contentDescription = null)
+				}
 			) {
-				Icon(imageVector = toggleIcon, contentDescription = null)
+				val imageCorner by animateIntAsState(
+					targetValue = if (playbackState.isPlaying) 50 else 15,
+					animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+				)
+				AsyncImage(
+					modifier = Modifier
+						.matchParentSize()
+						.graphicsLayer {
+							shape = RoundedCornerShape(imageCorner)
+							clip = true
+						},
+					model = currentSong.toSong.albumArt,
+					contentScale = ContentScale.Crop,
+					contentDescription = "Album Art"
+				)
 			}
 		},
 		frontLayerContent = {
@@ -97,11 +108,6 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 				albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt)
 			}
 
-			LaunchedEffect(bottomSheetState.isVisible, currentAlbum) {
-				if (backdropValue == SheetsState.HIDDEN) viewModel.gestureState(!bottomSheetState.isVisible)
-				else viewModel.gestureState(true)
-			}
-
 			FrontLayer(
 				bottomSheetState = bottomSheetState,
 				songsList = songsList,
@@ -111,7 +117,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 				albumsDominantColor = albumDominant.color,
 				onSongClick = { viewModel.onSongClick(it) },
 				openPlayer = {
-					scope.launch(Dispatchers.IO) {
+					scope.launch {
 						state.animateTo(BackdropValue.Revealed, myTween(400))
 					}
 				},
@@ -127,7 +133,7 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			)
 		},
 		backLayerContent = {
-			Controls(
+			PlayerControls(
 				isPlaying = playbackState.isPlaying,
 				onPlayPause = { viewModel.playMedia(currentSong.toSong) },
 				skipNextClick = { viewModel.playNext() },
@@ -144,7 +150,8 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 				SeekBar(
 					modifier = Modifier.height(60.dp),
 					progress = progress,
-					onValueChanged = { viewModel.onSeek(it) }
+					onValueChange = { viewModel.onSeek(it) },
+					onValueChanged = { viewModel.onSeeked() }
 				)
 			}
 		}
@@ -209,49 +216,5 @@ fun FrontLayer(
 				)
 			}
 		}
-	}
-}
-
-@Composable
-fun Player(
-	modifier: Modifier = Modifier,
-	currentSong: Song,
-	isPlaying: Boolean,
-	toggled: ToggleState,
-	toggleAction: () -> Unit,
-	icon: @Composable () -> Unit
-) {
-	PlayerHeader(
-		modifier = modifier
-			.statusBarsPadding()
-			.padding(vertical = 20.dp),
-		song = currentSong,
-		isPlaying = isPlaying,
-		toggleIcon = icon,
-		toggled = toggled.enabled,
-		toggleAction = toggleAction
-	)
-}
-
-@Composable
-fun Controls(
-	modifier: Modifier = Modifier,
-	isPlaying: Boolean,
-	onPlayPause: (Boolean) -> Unit,
-	skipNextClick: () -> Unit,
-	skipPrevClick: () -> Unit,
-	playIcon: @Composable () -> Unit,
-	progressBar: @Composable () -> Unit
-) {
-	Column(modifier) {
-		PlayerControls(
-			isPlaying = isPlaying,
-			playIcon = playIcon,
-			onPlayPause = { onPlayPause(it) },
-			skipNextClick = skipNextClick,
-			skipPrevClick = skipPrevClick,
-			progressBar = progressBar
-		)
-		Spacer(Modifier.windowInsetsTopHeight(WindowInsets.statusBars))
 	}
 }

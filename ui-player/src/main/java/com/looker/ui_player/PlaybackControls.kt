@@ -27,7 +27,7 @@ fun PlayerControls(
 	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	skipPrevClick: () -> Unit,
-	playIcon: @Composable () -> Unit,
+	playIcon: @Composable RowScope.() -> Unit,
 	progressBar: @Composable () -> Unit
 ) {
 	Column(
@@ -53,7 +53,7 @@ fun PlayAndSkipButton(
 	isPlaying: Boolean,
 	playClick: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
-	playIcon: @Composable () -> Unit,
+	playIcon: @Composable RowScope.() -> Unit,
 ) {
 	val buttonShape by animateIntAsState(
 		targetValue = if (isPlaying) 50 else 15,

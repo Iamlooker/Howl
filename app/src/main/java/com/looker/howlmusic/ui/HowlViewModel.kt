@@ -5,19 +5,11 @@ import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
 import android.util.Log
-import androidx.compose.material.BackdropValue
-import androidx.compose.material.BackdropValue.Concealed
-import androidx.compose.material.BackdropValue.Revealed
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.components.state.SheetsState
-import com.looker.components.state.SheetsState.HIDDEN
-import com.looker.components.state.SheetsState.VISIBLE
 import com.looker.constants.Constants.MEDIA_ROOT_ID
 import com.looker.constants.Resource
 import com.looker.constants.states.ToggleState
@@ -57,9 +49,7 @@ class HowlViewModel
 
 	private val _songDuration = MutableStateFlow(0L)
 
-	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 	private val _currentAlbum = MutableStateFlow(Album())
-	private val _enableGesture = MutableStateFlow(true)
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
@@ -68,9 +58,7 @@ class HowlViewModel
 	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
 	private val _shuffleMode = MutableStateFlow(0)
 
-	val backdropValue = _backdropValue.asStateFlow()
 	val currentAlbum = _currentAlbum.asStateFlow()
-	val enableGesture = _enableGesture.asStateFlow()
 	val playIcon = _playIcon.asStateFlow()
 	val toggle = _toggle.asStateFlow()
 	val toggleIcon = _toggleIcon.asStateFlow()
@@ -100,47 +88,6 @@ class HowlViewModel
 		}
 
 		updateCurrentPlayerPosition()
-	}
-
-	@ExperimentalMaterialApi
-	fun setBackdropValue(currentValue: BackdropValue) {
-		viewModelScope.launch(Dispatchers.IO) {
-			_backdropValue.emit(
-				when (currentValue) {
-					Concealed -> HIDDEN
-					Revealed -> VISIBLE
-				}
-			)
-		}
-	}
-
-	fun updateToggle() {
-		viewModelScope.launch(Dispatchers.IO) {
-			_toggle.emit(
-				when (backdropValue.value) {
-					HIDDEN -> ToggleState.PlayControl
-					VISIBLE -> ToggleState.Shuffle
-				}
-			)
-		}
-	}
-
-	fun gestureState(allowGesture: Boolean) {
-		viewModelScope.launch { _enableGesture.emit(allowGesture) }
-	}
-
-	fun setToggleIcon(isPlaying: Boolean) {
-		viewModelScope.launch(Dispatchers.IO) {
-			_playIcon.emit(
-				if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-			)
-			_toggleIcon.emit(
-				when (backdropValue.value) {
-					is HIDDEN -> if (isPlaying) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
-					is VISIBLE -> Icons.Rounded.Shuffle
-				}
-			)
-		}
 	}
 
 	fun onToggleClick() {
@@ -185,10 +132,11 @@ class HowlViewModel
 	}
 
 	fun onSeek(seekTo: Float) {
-		_progress.value = seekTo
-		musicServiceConnection.transportControls.seekTo(
-			_songDuration.value.times(seekTo).toLong()
-		)
+		viewModelScope.launch { _progress.emit(seekTo) }
+	}
+
+	fun onSeeked() {
+		musicServiceConnection.transportControls.seekTo((_songDuration.value * progress.value).toLong())
 	}
 
 	fun playNext() {

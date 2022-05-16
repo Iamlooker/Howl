@@ -2,6 +2,7 @@ package com.looker.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.*
@@ -22,7 +23,7 @@ fun ShapedIconButton(
 	buttonElevation: ButtonElevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
 	contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
 	onClick: () -> Unit,
-	icon: @Composable () -> Unit
+	icon: @Composable RowScope.() -> Unit
 ) {
 	Button(
 		modifier = modifier,
@@ -32,10 +33,9 @@ fun ShapedIconButton(
 			contentColor = contentColor
 		),
 		elevation = buttonElevation,
-		contentPadding = contentPadding
-	) {
-		icon()
-	}
+		contentPadding = contentPadding,
+		content = icon
+	)
 }
 
 @Composable
@@ -46,7 +46,7 @@ fun ToggleButton(
 	activeColor: Color = MaterialTheme.colors.secondaryVariant,
 	contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
 	onToggle: () -> Unit,
-	icon: @Composable () -> Unit
+	icon: @Composable RowScope.() -> Unit
 ) {
 	val toggleColor by animateColorAsState(
 		targetValue = if (toggled) activeColor.compositeOverBackground(0.6f)
