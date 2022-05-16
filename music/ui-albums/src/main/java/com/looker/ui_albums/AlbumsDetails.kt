@@ -12,8 +12,8 @@ import androidx.compose.ui.unit.dp
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.tweenAnimation
-import com.looker.domain_music.Album
-import com.looker.domain_music.Song
+import com.looker.core_model.Album
+import com.looker.core_model.Song
 import com.looker.ui_albums.components.AlbumsDetailsItem
 import com.looker.ui_songs.SongsList
 
@@ -53,8 +53,8 @@ fun AlbumHeader(album: Album?) {
 	) {
 		AlbumsDetailsItem(
 			albumArt = it?.albumArt,
-			albumName = it?.albumName,
-			artistName = it?.artistName
+			albumName = it?.name,
+			artistName = it?.artist
 		)
 	}
 }

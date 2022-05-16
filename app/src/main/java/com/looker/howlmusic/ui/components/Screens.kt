@@ -10,8 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.looker.constants.Resource
-import com.looker.domain_music.Album
-import com.looker.domain_music.Song
+import com.looker.core_model.Album
+import com.looker.core_model.Song
 import com.looker.howlmusic.ui.components.MainScreens.HOME
 import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs

@@ -1,12 +1,16 @@
 package com.looker.ui_player
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.looker.domain_music.Song
+import com.looker.core_model.Song
 import com.looker.ui_player.components.AlbumArt
 import com.looker.ui_player.components.SongText
 
@@ -15,9 +19,9 @@ fun PlayerHeader(
 	modifier: Modifier = Modifier,
 	song: Song,
 	isPlaying: Boolean,
-	toggleIcon: ImageVector,
 	toggled: Boolean,
-	toggleAction: () -> Unit
+	toggleAction: () -> Unit,
+	toggleIcon: @Composable () -> Unit
 ) {
 	Column(
 		modifier = modifier,
@@ -33,9 +37,24 @@ fun PlayerHeader(
 			albumArt = song.albumArt,
 			toggleIcon = toggleIcon,
 			toggled = toggled,
-			onToggle = toggleAction,
-			contentDescription = "Play"
+			onToggle = toggleAction
 		)
-		SongText(songName = song.name, artistName = song.artistName)
+		SongText {
+			Text(
+				text = song.name,
+				style = MaterialTheme.typography.h4,
+				maxLines = 2,
+				overflow = TextOverflow.Ellipsis,
+				textAlign = TextAlign.Center
+			)
+			Text(
+				text = song.artist,
+				style = MaterialTheme.typography.subtitle1,
+				fontWeight = FontWeight.SemiBold,
+				maxLines = 1,
+				overflow = TextOverflow.Ellipsis,
+				textAlign = TextAlign.Center
+			)
+		}
 	}
 }

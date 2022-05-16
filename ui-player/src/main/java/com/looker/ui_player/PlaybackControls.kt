@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.Composable
@@ -15,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.compositeOverBackground
@@ -26,10 +24,10 @@ import com.looker.components.tweenAnimation
 fun PlayerControls(
 	modifier: Modifier = Modifier,
 	isPlaying: Boolean,
-	playIcon: ImageVector = Icons.Rounded.PlayArrow,
 	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	skipPrevClick: () -> Unit,
+	playIcon: @Composable () -> Unit,
 	progressBar: @Composable () -> Unit
 ) {
 	Column(
@@ -39,13 +37,9 @@ fun PlayerControls(
 		PlayAndSkipButton(
 			isPlaying = isPlaying,
 			playClick = onPlayPause,
-			skipNextClick = skipNextClick
-		) {
-			Icon(
-				imageVector = playIcon,
-				contentDescription = null
-			)
-		}
+			skipNextClick = skipNextClick,
+			playIcon = playIcon
+		)
 		PreviousAndSeekBar(
 			skipPrevClick = skipPrevClick,
 			progressBar = progressBar
@@ -114,7 +108,7 @@ fun PreviousAndSeekBar(
 		ShapedIconButton(
 			modifier = Modifier
 				.height(60.dp)
-				.weight(0.3f)
+				.weight(1f)
 				.clip(CircleShape),
 			onClick = skipPrevClick,
 			backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground(0.9f),
@@ -125,6 +119,8 @@ fun PreviousAndSeekBar(
 				contentDescription = null
 			)
 		}
-		progressBar()
+		Box(modifier = Modifier.weight(3f)) {
+			progressBar()
+		}
 	}
 }

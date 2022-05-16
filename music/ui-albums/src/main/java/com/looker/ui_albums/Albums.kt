@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.looker.domain_music.Album
+import com.looker.core_model.Album
 import com.looker.ui_albums.components.AlbumsCard
 
 @Composable

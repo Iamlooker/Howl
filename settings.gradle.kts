@@ -23,10 +23,9 @@ include(":constants")
 include(":components")
 
 include(":music")
-include(":music:domain-music")
 include(":music:data-music")
 include(":music:ui-songs")
 include(":music:ui-albums")
-include(":music:ui-genre")
 
 include(":ui-player")
+include(":core-model")

@@ -9,7 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.looker.constants.Resource
-import com.looker.domain_music.Song
+import com.looker.core_model.Song
 import com.looker.ui_songs.components.SongsCard
 
 @Composable

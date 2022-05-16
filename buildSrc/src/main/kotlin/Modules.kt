@@ -7,5 +7,5 @@ object Modules {
 	const val uiPlayer = ":ui-player"
 	const val constants = ":constants"
 	const val dataMusic = ":music:data-music"
-	const val domainMusic = ":music:domain-music"
+	const val coreModel = ":core-model"
 }

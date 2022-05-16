@@ -2,9 +2,9 @@ package com.looker.data_music
 
 import android.content.Context
 import android.provider.MediaStore
+import com.looker.core_model.Song
 import com.looker.data_music.utils.MusicCursor
 import com.looker.data_music.utils.MusicCursor.externalUri
-import com.looker.domain_music.Song
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -46,10 +46,10 @@ class SongsData(private val context: Context) {
 					emit(
 						Song(
 							mediaId = songId.toString(),
-							songUri = songUri,
+							pathUri = songUri,
 							name = songName,
-							artistName = artistName,
-							albumName = albumName,
+							artist = artistName,
+							album = albumName,
 							duration = songDurationMillis,
 							albumArt = albumArt
 						)

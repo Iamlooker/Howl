@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.Dp
 import com.looker.components.LargeCard
 import com.looker.components.rememberDominantColorState
 import com.looker.components.tweenAnimation
-import com.looker.domain_music.Album
+import com.looker.core_model.Album
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,8 +30,8 @@ fun AlbumsCard(
 	LargeCard(
 		modifier = modifier,
 		imageUrl = album.albumArt,
-		title = album.albumName,
-		subText = album.artistName,
+		title = album.name,
+		subText = album.artist,
 		cardColor = animateColor,
 		imageSize = cardWidth,
 		onClick = onClick

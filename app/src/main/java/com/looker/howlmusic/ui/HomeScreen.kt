@@ -4,13 +4,10 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
@@ -20,9 +17,8 @@ import com.looker.components.localComposers.LocalDurations
 import com.looker.components.state.SheetsState
 import com.looker.constants.Resource
 import com.looker.constants.states.ToggleState
-import com.looker.domain_music.Album
-import com.looker.domain_music.Song
-import com.looker.howlmusic.HowlViewModel
+import com.looker.core_model.Album
+import com.looker.core_model.Song
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
@@ -47,8 +43,6 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 	val backdropValue by viewModel.backdropValue.collectAsState()
 	val enableGesture by viewModel.enableGesture.collectAsState()
 
-	val songsList by viewModel.songsList.collectAsState()
-
 	val playbackState by viewModel.playbackState.collectAsState()
 
 	LaunchedEffect(state.isConcealed) {
@@ -61,7 +55,6 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 		isPlaying = playbackState.isPlaying,
 		enableGesture = enableGesture,
 		header = {
-
 			val toggleIcon by viewModel.toggleIcon.collectAsState()
 			val toggle by viewModel.toggle.collectAsState()
 			val backgroundColor = rememberDominantColorState()
@@ -82,18 +75,20 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 
 			Player(
 				modifier = Modifier.backgroundGradient(animatedBackgroundScrim),
-				icon = toggleIcon,
 				currentSong = currentSong.toSong,
 				isPlaying = playbackState.isPlaying,
 				toggled = toggle,
 				toggleAction = { viewModel.onToggleClick() }
-			)
+			) {
+				Icon(imageVector = toggleIcon, contentDescription = null)
+			}
 		},
 		frontLayerContent = {
 			val bottomSheetState =
 				rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
 			val albumsList by viewModel.albumsList.collectAsState()
+			val songsList by viewModel.songsList.collectAsState()
 			val currentAlbum by viewModel.currentAlbum.collectAsState()
 
 			val albumDominant = rememberDominantColorState()
@@ -132,21 +127,24 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			)
 		},
 		backLayerContent = {
-
-			val progress by viewModel.progress.collectAsState()
-			val playIcon by viewModel.playIcon.collectAsState()
-
 			Controls(
 				isPlaying = playbackState.isPlaying,
-				playIcon = playIcon,
 				onPlayPause = { viewModel.playMedia(currentSong.toSong) },
 				skipNextClick = { viewModel.playNext() },
-				skipPrevClick = { viewModel.playPrevious() }
+				skipPrevClick = { viewModel.playPrevious() },
+				playIcon = {
+					val playIcon by viewModel.playIcon.collectAsState()
+					Icon(
+						imageVector = playIcon,
+						contentDescription = null
+					)
+				}
 			) {
+				val progress by viewModel.progress.collectAsState()
 				SeekBar(
 					modifier = Modifier.height(60.dp),
 					progress = progress,
-					onValueChanged = {viewModel.onSeek(it)}
+					onValueChanged = { viewModel.onSeek(it) }
 				)
 			}
 		}
@@ -173,7 +171,7 @@ fun FrontLayer(
 		sheetContent = {
 			AlbumsBottomSheetContent(
 				currentAlbum = currentAlbum,
-				songsList = songsList.data?.filter { it.mediaId == currentAlbum.albumId }
+				songsList = songsList.data?.filter { it.mediaId == currentAlbum.mediaId }
 					?: emptyList(),
 				dominantColor = albumsDominantColor.copy(0.4f)
 			)
@@ -219,9 +217,9 @@ fun Player(
 	modifier: Modifier = Modifier,
 	currentSong: Song,
 	isPlaying: Boolean,
-	icon: ImageVector,
 	toggled: ToggleState,
 	toggleAction: () -> Unit,
+	icon: @Composable () -> Unit
 ) {
 	PlayerHeader(
 		modifier = modifier
@@ -239,10 +237,10 @@ fun Player(
 fun Controls(
 	modifier: Modifier = Modifier,
 	isPlaying: Boolean,
-	playIcon: ImageVector,
 	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	skipPrevClick: () -> Unit,
+	playIcon: @Composable () -> Unit,
 	progressBar: @Composable () -> Unit
 ) {
 	Column(modifier) {

@@ -11,6 +11,7 @@ android {
         versionName = Android.versionName
 
         vectorDrawables { useSupportLibrary = true }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -21,7 +22,8 @@ android {
             minifyEnabled false
         }
         all {
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro")
         }
     }
 

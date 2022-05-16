@@ -1,0 +1,1 @@
+apply("$rootDir/android-library.gradle")

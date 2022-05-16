@@ -1,4 +1,4 @@
-package com.looker.howlmusic
+package com.looker.howlmusic.ui
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
@@ -21,11 +21,9 @@ import com.looker.components.state.SheetsState.VISIBLE
 import com.looker.constants.Constants.MEDIA_ROOT_ID
 import com.looker.constants.Resource
 import com.looker.constants.states.ToggleState
+import com.looker.core_model.Album
+import com.looker.core_model.Song
 import com.looker.data_music.data.AlbumsRepository
-import com.looker.domain_music.Album
-import com.looker.domain_music.Song
-import com.looker.domain_music.emptyAlbum
-import com.looker.domain_music.emptySong
 import com.looker.howlmusic.service.EMPTY_PLAYBACK_STATE
 import com.looker.howlmusic.service.MusicService
 import com.looker.howlmusic.service.MusicServiceConnection
@@ -60,14 +58,14 @@ class HowlViewModel
 	private val _songDuration = MutableStateFlow(0L)
 
 	private val _backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
-	private val _currentAlbum = MutableStateFlow(emptyAlbum)
+	private val _currentAlbum = MutableStateFlow(Album())
 	private val _enableGesture = MutableStateFlow(true)
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 	private val _progress = MutableStateFlow(0F)
 	private val _albumsList = MutableStateFlow(emptyList<Album>())
-	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf(emptySong)))
+	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
 	private val _shuffleMode = MutableStateFlow(0)
 
 	val backdropValue = _backdropValue.asStateFlow()
