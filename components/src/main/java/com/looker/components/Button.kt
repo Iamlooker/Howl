@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ShapedIconButton(
+fun OpaqueIconButton(
 	modifier: Modifier = Modifier,
 	backgroundColor: Color = MaterialTheme.colors.primary,
 	contentColor: Color = contentColorFor(backgroundColor),
@@ -39,7 +39,7 @@ fun ShapedIconButton(
  * Don't use with changing icons
  */
 @Composable
-fun ShapedIconButton(
+fun OpaqueIconButton(
 	modifier: Modifier = Modifier,
 	backgroundColor: Color = MaterialTheme.colors.primary,
 	contentColor: Color = contentColorFor(backgroundColor),

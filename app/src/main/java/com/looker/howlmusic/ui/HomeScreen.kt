@@ -164,7 +164,7 @@ fun Home(
 						targetValue = if (playbackState.isPlaying) 50 else 15,
 						animationSpec = tween(LocalDurations.current.crossFade)
 					)
-					ShapedIconButton(
+					OpaqueIconButton(
 						modifier = Modifier
 							.height(60.dp)
 							.weight(3f)
@@ -248,7 +248,7 @@ fun FrontLayer(
 				}
 			},
 			floatingActionButton = {
-				ShapedIconButton(
+				OpaqueIconButton(
 					backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(),
 					contentPadding = PaddingValues(vertical = 16.dp),
 					onClick = openPlayer,

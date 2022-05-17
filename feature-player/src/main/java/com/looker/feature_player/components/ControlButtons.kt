@@ -8,7 +8,7 @@ import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.looker.components.ShapedIconButton
+import com.looker.components.OpaqueIconButton
 import com.looker.components.overBackground
 
 @Composable
@@ -22,7 +22,7 @@ fun PlayAndSkipButton(
 		horizontalArrangement = Arrangement.spacedBy(20.dp)
 	) {
 		playButton()
-		ShapedIconButton(
+		OpaqueIconButton(
 			modifier = Modifier
 				.height(60.dp)
 				.weight(1f),
@@ -44,7 +44,7 @@ fun PreviousAndSeekBar(
 		modifier = modifier.fillMaxWidth(),
 		horizontalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		ShapedIconButton(
+		OpaqueIconButton(
 			modifier = Modifier
 				.height(60.dp)
 				.weight(1f),
