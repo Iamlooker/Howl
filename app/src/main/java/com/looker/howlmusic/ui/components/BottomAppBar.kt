@@ -2,6 +2,7 @@ package com.looker.howlmusic.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -21,10 +22,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.looker.components.overBackground
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations
-import com.looker.components.tweenAnimation
+import com.looker.components.overBackground
 
 @Composable
 fun BottomAppBar(
@@ -58,13 +58,13 @@ fun RowScope.BottomNavigationItems(
 	val backgroundColor by animateColorAsState(
 		targetValue = if (selected) selectedBackgroundColor.overBackground()
 		else unselectedBackgroundColor,
-		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+		animationSpec = tween(LocalDurations.current.crossFade)
 	)
 
 	val itemColor by animateColorAsState(
 		targetValue = if (selected) selectedContentColor
 		else unselectedContentColor.overBackground(0.5f),
-		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+		animationSpec = tween(LocalDurations.current.crossFade)
 	)
 
 	val selectedLabel = if (selected) label else null
@@ -108,7 +108,7 @@ fun BaselineBottomNavigationItem(
 		Icon(imageVector = icon, tint = itemColor, contentDescription = null)
 		Spacer(modifier = Modifier.width(4.dp))
 		Text(
-			modifier = Modifier.animateContentSize(tweenAnimation()),
+			modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
 			text = label ?: "",
 			color = itemColor,
 			fontWeight = FontWeight.SemiBold

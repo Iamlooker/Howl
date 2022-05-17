@@ -1,14 +1,15 @@
 package com.looker.ui_albums.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.looker.components.LargeCard
+import com.looker.components.localComposers.LocalDurations
 import com.looker.components.rememberDominantColorState
-import com.looker.components.tweenAnimation
 import com.looker.core_model.Album
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,7 @@ fun AlbumsCard(
 
 	val animateColor by animateColorAsState(
 		targetValue = backgroundColor.color.copy(0.4f),
-		animationSpec = tweenAnimation()
+		animationSpec = tween(LocalDurations.current.fadeIn)
 	)
 
 	LargeCard(

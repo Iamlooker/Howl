@@ -1,6 +1,7 @@
 package com.looker.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -75,7 +76,7 @@ fun CanvasHandleIcon(
 ) {
 	val animateIcon by animateFloatAsState(
 		targetValue = angle * 2,
-		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+		animationSpec = tween(LocalDurations.current.crossFade)
 	)
 
 	Canvas(modifier = modifier) {

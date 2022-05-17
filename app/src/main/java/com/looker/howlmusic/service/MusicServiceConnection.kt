@@ -19,6 +19,9 @@ class MusicServiceConnection(context: Context) {
 
 	private val _isConnected = MutableStateFlow(false)
 
+	private val _shuffleMode = MutableStateFlow(false)
+	val shuffleMode = _shuffleMode.asStateFlow()
+
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	val playIcon = _playIcon.asStateFlow()
 
@@ -74,9 +77,16 @@ class MusicServiceConnection(context: Context) {
 
 	private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
+		override fun onShuffleModeChanged(shuffleMode: Int) {
+			super.onShuffleModeChanged(shuffleMode)
+			_shuffleMode.value =
+				shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL || shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL
+		}
+
 		override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
 			_playbackState.value = state ?: EMPTY_PLAYBACK_STATE
-			_playIcon.value = if (state?.isPlaying == true) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
+			_playIcon.value =
+				if (state?.isPlaying == true) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
 		}
 
 		override fun onMetadataChanged(metadata: MediaMetadataCompat?) {

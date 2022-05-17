@@ -1,7 +1,9 @@
 package com.looker.howlmusic.ui
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -43,8 +45,6 @@ fun Home(
 	items: Array<HomeScreens>,
 	viewModel: HowlViewModel = viewModel()
 ) {
-
-	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
 	val currentSong by viewModel.nowPlaying.collectAsState()
 	val playbackState by viewModel.playbackState.collectAsState()
@@ -59,7 +59,9 @@ fun Home(
 				onToggleClick = { viewModel.onToggleClick() },
 				songText = {
 					Text(
-						modifier = Modifier.animateContentSize(),
+						modifier = Modifier.animateContentSize(
+							animationSpec = tween(LocalDurations.current.fadeIn)
+						),
 						text = currentSong.toSong.name,
 						style = MaterialTheme.typography.h4,
 						maxLines = 2,
@@ -83,7 +85,7 @@ fun Home(
 			) {
 				val imageCorner by animateIntAsState(
 					targetValue = if (playbackState.isPlaying) 50 else 15,
-					animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+					animationSpec = tween(LocalDurations.current.crossFade)
 				)
 				AsyncImage(
 					modifier = Modifier
@@ -107,6 +109,7 @@ fun Home(
 			val currentAlbum by viewModel.currentAlbum.collectAsState()
 
 			val albumDominant = rememberDominantColorState()
+			val scope = rememberCoroutineScope()
 
 			LaunchedEffect(currentAlbum) {
 				albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt)
@@ -123,14 +126,14 @@ fun Home(
 				onSongClick = { viewModel.onSongClick(it) },
 				openPlayer = {
 					scope.launch {
-						state.animateTo(BackdropValue.Revealed, myTween(400))
+						state.animateTo(BackdropValue.Revealed, TweenSpec(400))
 					}
 				},
 				onAlbumClick = {
 					scope.launch {
 						bottomSheetState.animateTo(
 							ModalBottomSheetValue.HalfExpanded,
-							myTween(400)
+							TweenSpec(400)
 						)
 					}
 					viewModel.onAlbumClick(it)
@@ -144,7 +147,7 @@ fun Home(
 				playButton = {
 					val buttonShape by animateIntAsState(
 						targetValue = if (playbackState.isPlaying) 50 else 15,
-						animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+						animationSpec = tween(LocalDurations.current.crossFade)
 					)
 					ShapedIconButton(
 						modifier = Modifier

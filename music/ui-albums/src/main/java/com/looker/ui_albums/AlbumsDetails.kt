@@ -1,6 +1,7 @@
 package com.looker.ui_albums
 
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -11,7 +12,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
-import com.looker.components.tweenAnimation
 import com.looker.core_model.Album
 import com.looker.core_model.Song
 import com.looker.ui_albums.components.AlbumsDetailsItem
@@ -49,7 +49,7 @@ fun AlbumBottomSheetItem(
 fun AlbumHeader(album: Album?) {
 	Crossfade(
 		targetState = album,
-		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
+		animationSpec = tween(LocalDurations.current.crossFade)
 	) {
 		AlbumsDetailsItem(
 			albumArt = it?.albumArt,

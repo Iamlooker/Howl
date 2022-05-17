@@ -6,7 +6,6 @@ import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
 import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
 import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,6 +40,7 @@ class HowlViewModel
 
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
+	private val shuffleMode = musicServiceConnection.shuffleMode
 
 	val playbackState = musicServiceConnection.playbackState.stateIn(
 		scope = viewModelScope,
@@ -56,7 +56,6 @@ class HowlViewModel
 	private val _progress = MutableStateFlow(0F)
 	private val _albumsList = MutableStateFlow(emptyList<Album>())
 	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
-	private val _shuffleMode = MutableStateFlow(0)
 
 	val currentAlbum = _currentAlbum.asStateFlow()
 	val toggle = _toggle.asStateFlow()
@@ -64,7 +63,6 @@ class HowlViewModel
 	val progress = _progress.asStateFlow()
 	val albumsList = _albumsList.asStateFlow()
 	val songsList = _songsList.asStateFlow()
-	private val shuffleMode = _shuffleMode.asStateFlow()
 
 	init {
 		musicServiceConnection.subscribe(
@@ -146,16 +144,9 @@ class HowlViewModel
 		musicServiceConnection.transportControls.skipToPrevious()
 	}
 
-	// TODO: Improve this
 	private fun shuffleModeToggle() {
 		val transportControls = musicServiceConnection.transportControls
-		transportControls.setShuffleMode(if (shuffleMode.value == SHUFFLE_MODE_NONE) SHUFFLE_MODE_ALL else SHUFFLE_MODE_NONE)
-		viewModelScope.launch {
-			val toggleEnable = ToggleState.Shuffle
-			toggleEnable.enabled = shuffleMode.value == SHUFFLE_MODE_ALL
-			_toggle.emit(toggleEnable)
-			_shuffleMode.emit(if (shuffleMode.value == SHUFFLE_MODE_NONE) SHUFFLE_MODE_ALL else SHUFFLE_MODE_NONE)
-		}
+		transportControls.setShuffleMode(if (shuffleMode.value) SHUFFLE_MODE_NONE else SHUFFLE_MODE_ALL)
 	}
 
 	private fun updateCurrentPlayerPosition() {
