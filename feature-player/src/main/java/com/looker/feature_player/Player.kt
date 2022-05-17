@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.looker.feature_player.components.AlbumArt
+import com.looker.feature_player.components.PlayAndSkipButton
+import com.looker.feature_player.components.PreviousAndSeekBar
 import com.looker.feature_player.components.SongText
 
 @Composable
@@ -33,5 +35,28 @@ fun PlayerHeader(
 			image = albumArt
 		)
 		SongText(text = songText)
+	}
+}
+
+@Composable
+fun Controls(
+	modifier: Modifier = Modifier,
+	skipNextClick: () -> Unit,
+	skipPrevClick: () -> Unit,
+	playButton: @Composable RowScope.() -> Unit,
+	progressBar: @Composable () -> Unit
+) {
+	Column(
+		modifier = modifier.padding(20.dp),
+		verticalArrangement = Arrangement.spacedBy(20.dp)
+	) {
+		PlayAndSkipButton(
+			skipNextClick = skipNextClick,
+			playButton = playButton
+		)
+		PreviousAndSeekBar(
+			skipPrevClick = skipPrevClick,
+			progressBar = progressBar
+		)
 	}
 }

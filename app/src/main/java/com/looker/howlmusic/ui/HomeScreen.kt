@@ -31,13 +31,14 @@ import com.looker.components.localComposers.LocalDurations
 import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
+import com.looker.feature_player.Controls
 import com.looker.feature_player.PlayerHeader
+import com.looker.feature_player.components.PlayPauseIcon
+import com.looker.feature_player.components.SeekBar
 import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.utils.extension.isPlaying
 import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
-import com.looker.ui_player.PlayerControls
-import com.looker.ui_player.components.SeekBar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -56,17 +57,16 @@ fun Home(
 		header = {
 			val dominantColor = rememberDominantColorState()
 			val backgroundColor by animateColorAsState(targetValue = dominantColor.color.overBackground())
-
-			LaunchedEffect(currentSong) {
-				dominantColor.updateColorsFromImageUrl(currentSong.toSong.albumArt)
-			}
-
 			val toggle by viewModel.shuffleMode.collectAsState()
 			val toggleColor by animateColorAsState(
 				targetValue = if (toggle) MaterialTheme.colors.secondaryVariant
 				else MaterialTheme.colors.background,
 				animationSpec = tween(LocalDurations.current.crossFade)
 			)
+
+			LaunchedEffect(currentSong) {
+				dominantColor.updateColorsFromImageUrl(currentSong.toSong.albumArt)
+			}
 
 			PlayerHeader(
 				modifier = Modifier
@@ -106,8 +106,8 @@ fun Home(
 					modifier = Modifier
 						.matchParentSize()
 						.graphicsLayer {
-							shape = RoundedCornerShape(imageCorner)
 							clip = true
+							shape = RoundedCornerShape(imageCorner)
 						},
 					model = currentSong.toSong.albumArt,
 					contentScale = ContentScale.Crop,
@@ -156,7 +156,7 @@ fun Home(
 			)
 		},
 		backLayerContent = {
-			PlayerControls(
+			Controls(
 				skipNextClick = { viewModel.playNext() },
 				skipPrevClick = { viewModel.playPrevious() },
 				playButton = {
@@ -177,10 +177,7 @@ fun Home(
 						contentColor = MaterialTheme.colors.onPrimary
 					) {
 						val playIcon by viewModel.playIcon.collectAsState()
-						Icon(
-							imageVector = playIcon,
-							contentDescription = null
-						)
+						PlayPauseIcon(playIcon)
 					}
 				}
 			) {

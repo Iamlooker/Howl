@@ -27,6 +27,5 @@ include(":music:data-music")
 include(":music:ui-songs")
 include(":music:ui-albums")
 
-include(":ui-player")
 include(":core-model")
 include(":feature-player")

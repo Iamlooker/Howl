@@ -1,4 +1,4 @@
-package com.looker.ui_player
+package com.looker.feature_player.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,28 +14,6 @@ import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
 import com.looker.components.overBackground
 
-@Composable
-fun PlayerControls(
-	modifier: Modifier = Modifier,
-	skipNextClick: () -> Unit,
-	skipPrevClick: () -> Unit,
-	playButton: @Composable RowScope.() -> Unit,
-	progressBar: @Composable () -> Unit
-) {
-	Column(
-		modifier = modifier.padding(20.dp),
-		verticalArrangement = Arrangement.spacedBy(20.dp)
-	) {
-		PlayAndSkipButton(
-			skipNextClick = skipNextClick,
-			playButton = playButton
-		)
-		PreviousAndSeekBar(
-			skipPrevClick = skipPrevClick,
-			progressBar = progressBar
-		)
-	}
-}
 
 @Composable
 fun PlayAndSkipButton(
