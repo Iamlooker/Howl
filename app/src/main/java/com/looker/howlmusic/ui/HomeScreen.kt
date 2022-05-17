@@ -251,13 +251,10 @@ fun FrontLayer(
 				ShapedIconButton(
 					backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(),
 					contentPadding = PaddingValues(vertical = 16.dp),
-					onClick = openPlayer
-				) {
-					Icon(
-						imageVector = Icons.Rounded.KeyboardArrowDown,
-						contentDescription = null
-					)
-				}
+					onClick = openPlayer,
+					shape = MaterialTheme.shapes.small,
+					icon = Icons.Rounded.KeyboardArrowDown
+				)
 			}
 		) { bottomNavigationPadding ->
 			Column(Modifier.padding(bottomNavigationPadding)) {
