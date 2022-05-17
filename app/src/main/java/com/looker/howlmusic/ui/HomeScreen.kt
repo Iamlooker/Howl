@@ -212,9 +212,10 @@ fun FrontLayer(
 		sheetContent = {
 			AlbumsBottomSheetContent(
 				currentAlbum = currentAlbum,
-				songsList = songsList.data?.filter { it.mediaId == currentAlbum.mediaId }
+				songsList = songsList.data?.filter { it.albumArt == currentAlbum.albumArt }
 					?: emptyList(),
-				dominantColor = albumsDominantColor.copy(0.4f)
+				dominantColor = albumsDominantColor.copy(0.4f),
+				onSongClick = onSongClick
 			)
 		}
 	) {
@@ -264,7 +265,7 @@ fun FrontLayer(
 				HomeNavGraph(
 					navController = navController,
 					songsList = songsList,
-					albumsList = albumsList,
+					albumsList = albumsList.distinctBy { it.albumId },
 					onSongClick = onSongClick,
 					onAlbumClick = onAlbumClick
 				)

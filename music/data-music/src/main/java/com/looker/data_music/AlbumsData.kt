@@ -12,7 +12,6 @@ class AlbumsData(private val context: Context) {
 	companion object {
 		val albumsProjections = arrayOf(
 			MediaStore.Audio.Media.ALBUM_ID,
-			MediaStore.Audio.AudioColumns._ID,
 			MediaStore.Audio.Media.ALBUM,
 			MediaStore.Audio.Media.ARTIST,
 		)
@@ -34,11 +33,18 @@ class AlbumsData(private val context: Context) {
 			if (it.moveToFirst()) {
 				do {
 					val albumArtLong = it.getLong(0)
-					val albumId = it.getLong(1).toString()
-					val albumName = it.getString(2)
-					val artistName = it.getString(3)
+					val albumId = it.getLong(0)
+					val albumName = it.getString(1)
+					val artistName = it.getString(2)
 					val albumArt = "content://media/external/audio/albumart/$albumArtLong"
-					emit(Album(albumId, albumName, artistName, albumArt))
+					emit(
+						Album(
+							albumId = albumId,
+							name = albumName,
+							artist = artistName,
+							albumArt = albumArt
+						)
+					)
 				} while (it.moveToNext())
 			}
 			it.close()

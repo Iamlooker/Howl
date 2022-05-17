@@ -8,7 +8,6 @@ inline val MediaBrowserCompat.MediaItem.toSong
 		mediaId = mediaId!!,
 		name = description.title.toString(),
 		artist = description.subtitle.toString(),
-		album = "",
 		albumArt = description.iconUri.toString(),
 		pathUri = description.mediaUri.toString()
 	)

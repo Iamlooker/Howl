@@ -46,6 +46,7 @@ class SongsData(private val context: Context) {
 					emit(
 						Song(
 							mediaId = songId.toString(),
+							albumId = albumId,
 							pathUri = songUri,
 							name = songName,
 							artist = artistName,

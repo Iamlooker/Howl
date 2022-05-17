@@ -10,7 +10,6 @@ inline val MediaMetadataCompat?.toSong
 			pathUri = it.mediaUri.toString(),
 			name = it.title.toString(),
 			artist = it.subtitle.toString(),
-			album = "",
 			albumArt = it.iconUri.toString()
 		)
 	} ?: Song()

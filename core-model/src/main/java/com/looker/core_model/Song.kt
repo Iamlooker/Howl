@@ -2,6 +2,7 @@ package com.looker.core_model
 
 data class Song(
 	val mediaId: String = "",
+	val albumId: Long = 0,
 	val name: String = "",
 	val artist: String = "",
 	val album: String = "",
