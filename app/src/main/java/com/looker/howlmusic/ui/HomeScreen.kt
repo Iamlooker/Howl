@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateIntAsState
@@ -25,6 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.looker.components.*
+import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.constants.Resource
 import com.looker.core_model.Album
@@ -53,15 +55,29 @@ fun Home(
 		modifier = Modifier,
 		state = state,
 		header = {
-			// TODO: Add Background Scrim
+			val dominantColor = rememberDominantColorState()
+			val backgroundColor by animateColorAsState(targetValue = dominantColor.color.overBackground())
+
+			LaunchedEffect(currentSong) {
+				dominantColor.updateColorsFromImageUrl(currentSong.toSong.albumArt)
+			}
+
+			val toggle by viewModel.shuffleMode.collectAsState()
+			val toggleColor by animateColorAsState(
+				targetValue = if (toggle) MaterialTheme.colors.secondaryVariant
+				else MaterialTheme.colors.background,
+				animationSpec = tween(LocalDurations.current.crossFade)
+			)
+
 			PlayerHeader(
-				modifier = Modifier.statusBarsPadding(),
+				modifier = Modifier
+					.backgroundGradient(backgroundColor)
+					.statusBarsPadding(),
+				toggleColor = toggleColor.overBackground(0.9f),
 				onToggleClick = { viewModel.onToggleClick() },
 				songText = {
 					Text(
-						modifier = Modifier.animateContentSize(
-							animationSpec = tween(LocalDurations.current.fadeIn)
-						),
+						modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
 						text = currentSong.toSong.name,
 						style = MaterialTheme.typography.h4,
 						maxLines = 2,
@@ -69,7 +85,7 @@ fun Home(
 						textAlign = TextAlign.Center
 					)
 					Text(
-						modifier = Modifier.animateContentSize(),
+						modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
 						text = currentSong.toSong.artist,
 						style = MaterialTheme.typography.subtitle1,
 						fontWeight = FontWeight.SemiBold,

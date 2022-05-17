@@ -10,13 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun AlbumArt(
 	modifier: Modifier = Modifier,
 	onButtonClick: () -> Unit,
-	backgroundColor: Color = MaterialTheme.colors.primary,
+	backgroundColor: Color,
 	contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
 	buttonIcon: @Composable RowScope.() -> Unit,
 	image: @Composable BoxScope.() -> Unit

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.looker.feature_player.components.AlbumArt
 import com.looker.feature_player.components.SongText
@@ -11,6 +12,7 @@ import com.looker.feature_player.components.SongText
 @Composable
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
+	toggleColor: Color,
 	onToggleClick: () -> Unit,
 	songText: @Composable ColumnScope.() -> Unit,
 	toggleIcon: @Composable RowScope.() -> Unit,
@@ -25,6 +27,7 @@ fun PlayerHeader(
 			modifier = Modifier
 				.fillMaxWidth()
 				.fillMaxHeight(0.27f),
+			backgroundColor = toggleColor,
 			onButtonClick = onToggleClick,
 			buttonIcon = toggleIcon,
 			image = albumArt

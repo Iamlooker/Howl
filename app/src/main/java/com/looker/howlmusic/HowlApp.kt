@@ -15,7 +15,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class HowlApp : Application(), ImageLoaderFactory {
-	override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this).build()
+	override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this).crossfade(400).build()
 }
 
 @Composable

@@ -40,7 +40,7 @@ class HowlViewModel
 
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
-	private val shuffleMode = musicServiceConnection.shuffleMode
+	val shuffleMode = musicServiceConnection.shuffleMode
 
 	val playbackState = musicServiceConnection.playbackState.stateIn(
 		scope = viewModelScope,
