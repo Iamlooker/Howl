@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.constants.Constants.MEDIA_ROOT_ID
 import com.looker.constants.Resource
-import com.looker.constants.states.ToggleState
 import com.looker.core_model.Album
 import com.looker.core_model.Song
 import com.looker.data_music.data.AlbumsRepository
@@ -49,16 +48,13 @@ class HowlViewModel
 	)
 
 	private val _songDuration = MutableStateFlow(0L)
-
 	private val _currentAlbum = MutableStateFlow(Album())
-	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 	private val _progress = MutableStateFlow(0F)
 	private val _albumsList = MutableStateFlow(emptyList<Album>())
 	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
 
 	val currentAlbum = _currentAlbum.asStateFlow()
-	val toggle = _toggle.asStateFlow()
 	val toggleIcon = _toggleIcon.asStateFlow()
 	val progress = _progress.asStateFlow()
 	val albumsList = _albumsList.asStateFlow()
@@ -87,12 +83,7 @@ class HowlViewModel
 		updateCurrentPlayerPosition()
 	}
 
-	fun onToggleClick() {
-		when (toggle.value) {
-			ToggleState.PlayControl -> musicServiceConnection.transportControls.pause()
-			ToggleState.Shuffle -> shuffleModeToggle()
-		}
-	}
+	fun onToggleClick() = shuffleModeToggle()
 
 	fun onAlbumClick(album: Album) {
 		viewModelScope.launch(Dispatchers.IO) {
@@ -100,9 +91,7 @@ class HowlViewModel
 		}
 	}
 
-	fun onSongClick(song: Song) {
-		playMedia(song, false)
-	}
+	fun onSongClick(song: Song) = playMedia(song, false)
 
 	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
 		val nowPlaying = musicServiceConnection.nowPlaying.value
