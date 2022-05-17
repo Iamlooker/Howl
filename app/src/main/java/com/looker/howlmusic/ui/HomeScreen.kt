@@ -52,7 +52,6 @@ fun Home(
 	val playbackState by viewModel.playbackState.collectAsState()
 
 	Backdrop(
-		modifier = Modifier,
 		state = state,
 		header = {
 			val dominantColor = rememberDominantColorState()
