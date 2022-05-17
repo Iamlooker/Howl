@@ -20,13 +20,13 @@ object MainScreens {
 	const val HOME = "home"
 }
 
-sealed class HomeScreens(
+enum class HomeScreens(
 	val title: String,
 	val icon: ImageVector,
-	val route: String,
+	val route: String
 ) {
-	object SONGS : HomeScreens("Songs", Icons.Rounded.MusicNote, "$HOME/songs")
-	object ALBUMS : HomeScreens("Albums", Icons.Rounded.Album, "$HOME/albums")
+	SONGS("Songs", Icons.Rounded.MusicNote, "$HOME/songs"),
+	ALBUMS("Albums", Icons.Rounded.Album, "$HOME/albums")
 }
 
 @Composable

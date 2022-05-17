@@ -47,7 +47,7 @@ fun BottomSheets(
  */
 @Composable
 fun HandleIcon(
-	angle: Float,
+	angle: Float = 1F,
 	backgroundColor: Color = MaterialTheme.colors.background,
 	onClick: () -> Unit = {}
 ) {

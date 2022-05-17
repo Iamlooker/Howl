@@ -11,20 +11,17 @@ import androidx.compose.ui.platform.LocalContext
 fun Int.toColor() = Color(this)
 
 @Composable
-fun Color.compositeOverBackground(
+fun Color.overBackground(
 	alpha: Float = 0.3f,
 	backgroundColor: Color = MaterialTheme.colors.background,
-): Color =
-	this.copy(alpha).compositeOver(backgroundColor)
+): Color = copy(alpha).compositeOver(backgroundColor)
 
 @Composable
 fun rememberDominantColorState(
 	context: Context = LocalContext.current,
 	defaultColor: Color = MaterialTheme.colors.surface,
 	cacheSize: Int = 12,
-): DominantColorState = remember {
-	DominantColorState(context, defaultColor, cacheSize)
-}
+): DominantColorState = remember { DominantColorState(context, defaultColor, cacheSize) }
 
 @Stable
 class DominantColorState(

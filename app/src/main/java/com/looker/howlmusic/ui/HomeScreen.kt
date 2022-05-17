@@ -17,7 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.looker.components.*
 import com.looker.components.localComposers.LocalDurations
@@ -25,10 +28,7 @@ import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
 import com.looker.feature_player.PlayerHeader
-import com.looker.howlmusic.ui.components.Backdrop
-import com.looker.howlmusic.ui.components.BottomAppBar
-import com.looker.howlmusic.ui.components.HomeNavGraph
-import com.looker.howlmusic.ui.components.HomeScreens
+import com.looker.howlmusic.ui.components.*
 import com.looker.howlmusic.utils.extension.isPlaying
 import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
@@ -38,7 +38,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(viewModel: HowlViewModel = viewModel()) {
+fun Home(
+	navController: NavHostController,
+	items: Array<HomeScreens>,
+	viewModel: HowlViewModel = viewModel()
+) {
 
 	val scope = rememberCoroutineScope()
 	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
@@ -109,10 +113,11 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 			}
 
 			FrontLayer(
+				navController = navController,
+				items = items,
 				bottomSheetState = bottomSheetState,
 				songsList = songsList,
 				albumsList = albumsList,
-				handleIcon = 1F,
 				currentAlbum = currentAlbum,
 				albumsDominantColor = albumDominant.color,
 				onSongClick = { viewModel.onSongClick(it) },
@@ -134,16 +139,31 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 		},
 		backLayerContent = {
 			PlayerControls(
-				isPlaying = playbackState.isPlaying,
-				onPlayPause = { viewModel.playMedia(currentSong.toSong) },
 				skipNextClick = { viewModel.playNext() },
 				skipPrevClick = { viewModel.playPrevious() },
-				playIcon = {
-					val playIcon by viewModel.playIcon.collectAsState()
-					Icon(
-						imageVector = playIcon,
-						contentDescription = null
+				playButton = {
+					val buttonShape by animateIntAsState(
+						targetValue = if (playbackState.isPlaying) 50 else 15,
+						animationSpec = tweenAnimation(LocalDurations.current.crossFade)
 					)
+					ShapedIconButton(
+						modifier = Modifier
+							.height(60.dp)
+							.weight(3f)
+							.graphicsLayer {
+								shape = RoundedCornerShape(buttonShape)
+								clip = true
+							},
+						onClick = { viewModel.playMedia(currentSong.toSong) },
+						backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(0.9f),
+						contentColor = MaterialTheme.colors.onPrimary
+					) {
+						val playIcon by viewModel.playIcon.collectAsState()
+						Icon(
+							imageVector = playIcon,
+							contentDescription = null
+						)
+					}
 				}
 			) {
 				val progress by viewModel.progress.collectAsState()
@@ -161,18 +181,17 @@ fun Home(viewModel: HowlViewModel = viewModel()) {
 @ExperimentalMaterialApi
 @Composable
 fun FrontLayer(
+	navController: NavHostController,
+	items: Array<HomeScreens>,
 	bottomSheetState: ModalBottomSheetState,
 	songsList: Resource<List<Song>>,
 	albumsList: List<Album>,
-	handleIcon: Float,
 	currentAlbum: Album,
 	albumsDominantColor: Color,
 	openPlayer: () -> Unit,
 	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Album) -> Unit,
 ) {
-	val navController = rememberNavController()
-	val items = listOf(HomeScreens.SONGS, HomeScreens.ALBUMS)
 	BottomSheets(
 		state = bottomSheetState,
 		sheetContent = {
@@ -186,15 +205,35 @@ fun FrontLayer(
 	) {
 		Scaffold(
 			bottomBar = {
+				val navBackStackEntry by navController.currentBackStackEntryAsState()
+				val currentDestination = navBackStackEntry?.destination
 				BottomAppBar(
-					modifier = Modifier.navigationBarsPadding(),
-					navController = navController,
-					items = items
-				)
+					modifier = Modifier.windowInsetsBottomHeight(
+						WindowInsets.navigationBars.add(WindowInsets(bottom = 56.dp))
+					)
+				) {
+					items.forEach { screen ->
+						BottomNavigationItems(
+							modifier = Modifier.navigationBarsPadding(),
+							icon = screen.icon,
+							label = screen.title,
+							selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+							onSelected = {
+								navController.navigate(screen.route) {
+									popUpTo(navController.graph.findStartDestination().id) {
+										saveState = true
+									}
+									launchSingleTop = true
+									restoreState = true
+								}
+							}
+						)
+					}
+				}
 			},
 			floatingActionButton = {
 				ShapedIconButton(
-					backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(),
+					backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(),
 					contentPadding = PaddingValues(vertical = 16.dp),
 					onClick = openPlayer
 				) {
@@ -206,7 +245,7 @@ fun FrontLayer(
 			}
 		) { bottomNavigationPadding ->
 			Column(Modifier.padding(bottomNavigationPadding)) {
-				HandleIcon(handleIcon) { openPlayer() }
+				HandleIcon { openPlayer() }
 				HomeNavGraph(
 					navController = navController,
 					songsList = songsList,

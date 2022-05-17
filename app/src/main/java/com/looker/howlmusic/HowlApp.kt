@@ -3,9 +3,11 @@ package com.looker.howlmusic
 import android.app.Application
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.looker.howlmusic.ui.Home
+import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.onboarding.OnBoardingPage
 import com.looker.onboarding.utils.checkReadPermission
@@ -20,9 +22,11 @@ class HowlApp : Application(), ImageLoaderFactory {
 fun App() {
 	val context = LocalContext.current
 	var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
+	val navController = rememberNavController()
+	val items = remember { HomeScreens.values() }
 
 	HowlMusicTheme {
-		if (canReadStorage) Home()
+		if (canReadStorage) Home(navController, items)
 		else OnBoardingPage { canReadStorage = it }
 	}
 }

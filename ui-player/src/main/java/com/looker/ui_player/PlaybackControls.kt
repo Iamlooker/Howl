@@ -1,33 +1,25 @@
 package com.looker.ui_player
 
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import com.looker.components.ShapedIconButton
-import com.looker.components.compositeOverBackground
-import com.looker.components.localComposers.LocalDurations
-import com.looker.components.tweenAnimation
+import com.looker.components.overBackground
 
 @Composable
 fun PlayerControls(
 	modifier: Modifier = Modifier,
-	isPlaying: Boolean,
-	onPlayPause: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
 	skipPrevClick: () -> Unit,
-	playIcon: @Composable RowScope.() -> Unit,
+	playButton: @Composable RowScope.() -> Unit,
 	progressBar: @Composable () -> Unit
 ) {
 	Column(
@@ -35,10 +27,8 @@ fun PlayerControls(
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
 		PlayAndSkipButton(
-			isPlaying = isPlaying,
-			playClick = onPlayPause,
 			skipNextClick = skipNextClick,
-			playIcon = playIcon
+			playButton = playButton
 		)
 		PreviousAndSeekBar(
 			skipPrevClick = skipPrevClick,
@@ -50,41 +40,21 @@ fun PlayerControls(
 @Composable
 fun PlayAndSkipButton(
 	modifier: Modifier = Modifier,
-	isPlaying: Boolean,
-	playClick: (Boolean) -> Unit,
 	skipNextClick: () -> Unit,
-	playIcon: @Composable RowScope.() -> Unit,
+	playButton: @Composable RowScope.() -> Unit
 ) {
-	val buttonShape by animateIntAsState(
-		targetValue = if (isPlaying) 50 else 15,
-		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
-	)
-
 	Row(
 		modifier = modifier.fillMaxWidth(),
 		horizontalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		ShapedIconButton(
-			modifier = Modifier
-				.height(60.dp)
-				.weight(3f)
-				.graphicsLayer {
-					shape = RoundedCornerShape(buttonShape)
-					clip = true
-				},
-			onClick = { playClick(isPlaying) },
-			icon = playIcon,
-			backgroundColor = MaterialTheme.colors.primaryVariant.compositeOverBackground(0.9f),
-			contentColor = MaterialTheme.colors.onPrimary
-		)
-
+		playButton()
 		ShapedIconButton(
 			modifier = Modifier
 				.height(60.dp)
 				.weight(1f)
 				.clip(CircleShape),
 			onClick = skipNextClick,
-			backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground(0.9f),
+			backgroundColor = MaterialTheme.colors.secondaryVariant.overBackground(0.9f),
 			contentColor = MaterialTheme.colors.onSecondary
 		) {
 			Icon(
@@ -111,7 +81,7 @@ fun PreviousAndSeekBar(
 				.weight(1f)
 				.clip(CircleShape),
 			onClick = skipPrevClick,
-			backgroundColor = MaterialTheme.colors.secondaryVariant.compositeOverBackground(0.9f),
+			backgroundColor = MaterialTheme.colors.secondaryVariant.overBackground(0.9f),
 			contentColor = MaterialTheme.colors.onSecondary
 		) {
 			Icon(

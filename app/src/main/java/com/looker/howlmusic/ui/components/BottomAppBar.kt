@@ -21,11 +21,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.looker.components.compositeOverBackground
+import com.looker.components.overBackground
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations
 import com.looker.components.tweenAnimation
@@ -33,34 +29,16 @@ import com.looker.components.tweenAnimation
 @Composable
 fun BottomAppBar(
 	modifier: Modifier = Modifier,
-	navController: NavController,
-	items: List<HomeScreens>
+	bottomAppBarItem: @Composable RowScope.() -> Unit
 ) {
-	val navBackStackEntry by navController.currentBackStackEntryAsState()
-	val currentDestination = navBackStackEntry?.destination
 	BottomNavigation(
 		modifier = modifier
 			.clip(MaterialTheme.shapes.small)
 			.background(MaterialTheme.colors.surface),
-		backgroundColor = Color.Transparent,
-		elevation = LocalElevations.current.default
-	) {
-		items.forEach { screen ->
-			BottomNavigationItems(
-				modifier = Modifier.navigationBarsPadding(),
-				icon = screen.icon,
-				label = screen.title,
-				selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-				onSelected = {
-					navController.navigate(screen.route) {
-						popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-						launchSingleTop = true
-						restoreState = true
-					}
-				}
-			)
-		}
-	}
+		backgroundColor = MaterialTheme.colors.surface,
+		elevation = LocalElevations.current.default,
+		content = bottomAppBarItem
+	)
 }
 
 @Composable
@@ -78,19 +56,18 @@ fun RowScope.BottomNavigationItems(
 ) {
 
 	val backgroundColor by animateColorAsState(
-		targetValue = if (selected) selectedBackgroundColor.compositeOverBackground()
+		targetValue = if (selected) selectedBackgroundColor.overBackground()
 		else unselectedBackgroundColor,
 		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
 	)
 
 	val itemColor by animateColorAsState(
 		targetValue = if (selected) selectedContentColor
-		else unselectedContentColor.compositeOverBackground(0.5f),
+		else unselectedContentColor.overBackground(0.5f),
 		animationSpec = tweenAnimation(LocalDurations.current.crossFade)
 	)
 
-	val selectedLabel = if (selected) label
-	else null
+	val selectedLabel = if (selected) label else null
 
 	Box(
 		modifier = modifier
