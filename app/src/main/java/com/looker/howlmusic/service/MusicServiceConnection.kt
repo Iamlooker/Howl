@@ -7,13 +7,20 @@ import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
 import com.looker.howlmusic.utils.extension.id
+import com.looker.howlmusic.utils.extension.isPlaying
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MusicServiceConnection(context: Context) {
 
 	private val _isConnected = MutableStateFlow(false)
+
+	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
+	val playIcon = _playIcon.asStateFlow()
 
 	private val _playbackState = MutableStateFlow(EMPTY_PLAYBACK_STATE)
 	val playbackState = _playbackState.asStateFlow()
@@ -69,6 +76,7 @@ class MusicServiceConnection(context: Context) {
 
 		override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
 			_playbackState.value = state ?: EMPTY_PLAYBACK_STATE
+			_playIcon.value = if (state?.isPlaying == true) Icons.Rounded.Pause else Icons.Rounded.PlayArrow
 		}
 
 		override fun onMetadataChanged(metadata: MediaMetadataCompat?) {

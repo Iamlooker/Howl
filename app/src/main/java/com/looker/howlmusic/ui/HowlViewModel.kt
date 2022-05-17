@@ -40,6 +40,7 @@ class HowlViewModel
 ) : ViewModel() {
 
 	val nowPlaying = musicServiceConnection.nowPlaying
+	val playIcon = musicServiceConnection.playIcon
 
 	val playbackState = musicServiceConnection.playbackState.stateIn(
 		scope = viewModelScope,
@@ -50,7 +51,6 @@ class HowlViewModel
 	private val _songDuration = MutableStateFlow(0L)
 
 	private val _currentAlbum = MutableStateFlow(Album())
-	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _toggle = MutableStateFlow<ToggleState>(ToggleState.Shuffle)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 	private val _progress = MutableStateFlow(0F)
@@ -59,7 +59,6 @@ class HowlViewModel
 	private val _shuffleMode = MutableStateFlow(0)
 
 	val currentAlbum = _currentAlbum.asStateFlow()
-	val playIcon = _playIcon.asStateFlow()
 	val toggle = _toggle.asStateFlow()
 	val toggleIcon = _toggleIcon.asStateFlow()
 	val progress = _progress.asStateFlow()
@@ -167,7 +166,7 @@ class HowlViewModel
 					_progress.emit(pos / MusicService.songDuration)
 					_songDuration.emit(MusicService.songDuration)
 				}
-				delay(100)
+				delay(500)
 			}
 		}
 	}
