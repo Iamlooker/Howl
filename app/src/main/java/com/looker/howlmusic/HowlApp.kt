@@ -20,7 +20,7 @@ class HowlApp : Application(), ImageLoaderFactory {
 
 @Composable
 fun App() {
-	val context = LocalContext.current
+	val context = LocalContext.current.applicationContext
 	var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 	val navController = rememberNavController()
 	val items = remember { HomeScreens.values() }
