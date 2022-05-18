@@ -54,6 +54,7 @@ fun Home(
 
 	Backdrop(
 		state = state,
+		isPlaying = playbackState.isPlaying,
 		header = {
 			val dominantColor = rememberDominantColorState()
 			val backgroundColor by animateColorAsState(targetValue = dominantColor.color.overBackground())

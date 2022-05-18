@@ -1,5 +1,6 @@
 package com.looker.components
 
+import androidx.annotation.FloatRange
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -48,6 +49,7 @@ fun BottomSheets(
  */
 @Composable
 fun HandleIcon(
+	@FloatRange(from = 0.0, to = 1.0)
 	angle: Float = 1F,
 	backgroundColor: Color = MaterialTheme.colors.background,
 	onClick: () -> Unit = {}
