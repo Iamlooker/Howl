@@ -16,8 +16,8 @@ import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 
-@InstallIn(ServiceComponent::class)
 @Module
+@InstallIn(ServiceComponent::class)
 object ServiceModule {
 
 	@ServiceScoped
@@ -38,7 +38,6 @@ object ServiceModule {
 		.setUsage(C.USAGE_MEDIA)
 		.setContentType(C.CONTENT_TYPE_MUSIC)
 		.build()
-
 
 	@ServiceScoped
 	@Provides

@@ -20,12 +20,12 @@ class HowlApp : Application(), ImageLoaderFactory {
 
 @Composable
 fun App() {
-	val context = LocalContext.current.applicationContext
-	var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
-	val navController = rememberNavController()
-	val items = remember { HomeScreens.values() }
-
 	HowlMusicTheme {
+		val context = LocalContext.current.applicationContext
+		var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
+		val navController = rememberNavController()
+		val items = remember { HomeScreens.values() }
+
 		if (canReadStorage) Home(navController, items)
 		else OnBoardingPage { canReadStorage = it }
 	}
