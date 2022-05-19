@@ -1,6 +1,5 @@
 package com.looker.howlmusic.ui
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.TweenSpec
@@ -89,7 +88,6 @@ fun Home(
 					Icon(imageVector = toggleIcon, contentDescription = null)
 				}
 			) {
-				Log.e("recompose", "recomposed")
 				val imageCorner by animateIntAsState(
 					targetValue = if (playbackState.isPlaying) 50 else 15,
 					animationSpec = tween(LocalDurations.current.crossFade)
