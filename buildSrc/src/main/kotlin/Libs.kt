@@ -4,23 +4,24 @@ object Classpath {
 }
 
 object Core {
-	private const val coreVersion = "1.8.0-rc01"
+	private const val coreVersion = "1.8.0-rc02"
 	const val core = "androidx.core:core-ktx:$coreVersion"
 }
 
 object Coil {
-	private const val coilVersion = "2.0.0"
+	private const val coilVersion = "2.1.0"
 	const val coil = "io.coil-kt:coil-compose:$coilVersion"
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0-beta01"
-	private const val composeVersion = "1.2.0-beta01"
+	const val composeCompiler = "1.2.0-beta02"
+	private const val composeVersion = "1.2.0-beta02"
 	private const val activityComposeVersion = "1.5.0-rc01"
 	private const val navigationVersion = "2.5.0-rc01"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
+	const val animation = "androidx.compose.animation:animation:$composeVersion"
 	const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
 	const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
 	const val material = "androidx.compose.material:material:$composeVersion"

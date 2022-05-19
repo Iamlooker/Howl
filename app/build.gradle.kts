@@ -76,6 +76,8 @@ dependencies {
 	implementation(Coil.coil)
 
 	implementation(Compose.activity)
+	implementation(Compose.animation)
+	implementation(Compose.runtime)
 	implementation(Compose.icons)
 	implementation(Compose.material)
 	implementation(Compose.foundation)

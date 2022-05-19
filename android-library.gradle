@@ -54,6 +54,7 @@ android {
 dependencies {
     implementation Compose.icons
     implementation Compose.foundation
+    implementation Compose.runtime
     implementation Compose.material
     implementation Compose.ui
     debugImplementation Compose.tooling

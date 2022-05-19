@@ -67,8 +67,6 @@ fun RowScope.BottomNavigationItems(
 		animationSpec = tween(LocalDurations.current.crossFade)
 	)
 
-	val selectedLabel = if (selected) label else null
-
 	Box(
 		modifier = modifier
 			.weight(1f)
@@ -87,8 +85,9 @@ fun RowScope.BottomNavigationItems(
 				.matchParentSize()
 				.background(backgroundColor),
 			icon = icon,
-			label = selectedLabel,
-			itemColor = itemColor
+			label = label,
+			itemColor = itemColor,
+			isSelected = selected
 		)
 	}
 }
@@ -97,8 +96,9 @@ fun RowScope.BottomNavigationItems(
 fun BaselineBottomNavigationItem(
 	modifier: Modifier = Modifier,
 	icon: ImageVector,
-	label: String?,
-	itemColor: Color
+	label: String,
+	itemColor: Color,
+	isSelected: Boolean
 ) {
 	Row(
 		modifier = modifier,
@@ -109,7 +109,7 @@ fun BaselineBottomNavigationItem(
 		Spacer(modifier = Modifier.width(4.dp))
 		Text(
 			modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
-			text = label ?: "",
+			text = if (isSelected) label else "",
 			color = itemColor,
 			fontWeight = FontWeight.SemiBold
 		)
