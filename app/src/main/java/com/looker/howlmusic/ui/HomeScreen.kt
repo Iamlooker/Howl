@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.TweenSpec
@@ -26,7 +27,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.looker.components.*
-import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.constants.Resource
 import com.looker.core_model.Album
@@ -54,25 +54,15 @@ fun Home(
 
 	Backdrop(
 		state = state,
-		isPlaying = playbackState.isPlaying,
 		header = {
-			val dominantColor = rememberDominantColorState()
-			val backgroundColor by animateColorAsState(targetValue = dominantColor.color.overBackground())
 			val toggle by viewModel.shuffleMode.collectAsState()
 			val toggleColor by animateColorAsState(
 				targetValue = if (toggle) MaterialTheme.colors.secondaryVariant
 				else MaterialTheme.colors.background,
 				animationSpec = tween(LocalDurations.current.crossFade)
 			)
-
-			LaunchedEffect(currentSong) {
-				dominantColor.updateColorsFromImageUrl(currentSong.toSong.albumArt)
-			}
-
 			PlayerHeader(
-				modifier = Modifier
-					.backgroundGradient(backgroundColor)
-					.statusBarsPadding(),
+				modifier = Modifier.statusBarsPadding(),
 				toggleColor = toggleColor.overBackground(0.9f),
 				onToggleClick = { viewModel.onToggleClick() },
 				songText = {
@@ -99,6 +89,7 @@ fun Home(
 					Icon(imageVector = toggleIcon, contentDescription = null)
 				}
 			) {
+				Log.e("recompose", "recomposed")
 				val imageCorner by animateIntAsState(
 					targetValue = if (playbackState.isPlaying) 50 else 15,
 					animationSpec = tween(LocalDurations.current.crossFade)
