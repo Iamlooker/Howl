@@ -14,10 +14,8 @@ import com.looker.feature_player.components.SongText
 @Composable
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
-	toggleColor: Color,
-	onToggleClick: () -> Unit,
 	songText: @Composable ColumnScope.() -> Unit,
-	toggleIcon: @Composable RowScope.() -> Unit,
+	toggleIcon: @Composable BoxScope.() -> Unit,
 	albumArt: @Composable BoxScope.() -> Unit
 ) {
 	Column(
@@ -29,9 +27,7 @@ fun PlayerHeader(
 			modifier = Modifier
 				.fillMaxWidth()
 				.fillMaxHeight(0.27f),
-			backgroundColor = toggleColor,
-			onButtonClick = onToggleClick,
-			buttonIcon = toggleIcon,
+			button = toggleIcon,
 			image = albumArt
 		)
 		SongText(text = songText)

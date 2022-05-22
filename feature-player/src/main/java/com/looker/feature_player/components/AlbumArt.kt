@@ -15,24 +15,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AlbumArt(
 	modifier: Modifier = Modifier,
-	onButtonClick: () -> Unit,
-	backgroundColor: Color,
-	contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
-	buttonIcon: @Composable RowScope.() -> Unit,
+	button: @Composable BoxScope.() -> Unit,
 	image: @Composable BoxScope.() -> Unit
 ) {
 	Box(modifier = modifier.padding(horizontal = 20.dp)) {
 		image()
-		Button(
-			modifier = Modifier
-				.clip(MaterialTheme.shapes.medium)
-				.align(Alignment.BottomEnd)
-				.drawBehind { drawRect(backgroundColor) },
-			elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
-			contentPadding = contentPadding,
-			colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-			onClick = onButtonClick,
-			content = buttonIcon
-		)
+		button()
 	}
 }

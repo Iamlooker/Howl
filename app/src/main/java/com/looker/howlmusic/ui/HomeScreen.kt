@@ -1,7 +1,6 @@
 package com.looker.howlmusic.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -13,13 +12,14 @@ import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.looker.components.*
+import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.state.SheetsState
 import com.looker.constants.Resource
@@ -52,41 +53,48 @@ fun Home(
 	val state = rememberBackdropScaffoldState(Concealed)
 	val currentSong by viewModel.nowPlaying.collectAsState()
 	val isPlaying by viewModel.isPlaying.collectAsState()
+	val dominantColorState = rememberDominantColorState()
 
 	Backdrop(
 		state = state,
-		isPlaying = isPlaying,
+		isPlaying = if (state.currentValue == Concealed) isPlaying else true,
 		header = {
-			val toggle by viewModel.shuffleMode.collectAsState()
-			val toggleColor by animateColorAsState(
-				targetValue = if (toggle) MaterialTheme.colors.secondaryVariant
-				else MaterialTheme.colors.background,
+			val backgroundColor by animateColorAsState(
+				targetValue = dominantColorState.color.overBackground(),
 				animationSpec = tween(LocalDurations.current.crossFade)
 			)
+
+			LaunchedEffect(currentSong.toSong.albumArt) {
+				dominantColorState.updateColorsFromImageUrl(currentSong.toSong.albumArt)
+			}
+
 			PlayerHeader(
-				modifier = Modifier.statusBarsPadding(),
-				toggleColor = toggleColor.overBackground(0.9f),
-				onToggleClick = { viewModel.onToggleClick() },
+				modifier = Modifier
+					.backgroundGradient(backgroundColor)
+					.statusBarsPadding(),
 				songText = {
-					Text(
-						modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
+					AnimatedText(
 						text = currentSong.toSong.name,
-						style = MaterialTheme.typography.h4,
 						maxLines = 2,
-						overflow = TextOverflow.Ellipsis,
-						textAlign = TextAlign.Center
+						style = MaterialTheme.typography.h4
 					)
-					Text(
-						modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
+					AnimatedText(
 						text = currentSong.toSong.artist,
 						style = MaterialTheme.typography.subtitle1,
-						fontWeight = FontWeight.SemiBold,
-						maxLines = 1,
-						overflow = TextOverflow.Ellipsis,
-						textAlign = TextAlign.Center
+						fontWeight = FontWeight.SemiBold
 					)
 				},
 				toggleIcon = {
+					val toggleIcon by viewModel.toggleIcon.collectAsState()
+					val toggle by viewModel.shuffleMode.collectAsState()
+
+					val toggleColor by animateColorAsState(
+						targetValue =
+						if (toggle) MaterialTheme.colors.secondaryVariant.overBackground()
+						else MaterialTheme.colors.background,
+						animationSpec = tween(LocalDurations.current.crossFade)
+					)
+
 					LaunchedEffect(state.currentValue) {
 						viewModel.backdropValue.value = when (state.currentValue) {
 							Concealed -> SheetsState.HIDDEN
@@ -94,8 +102,18 @@ fun Home(
 						}
 						viewModel.updateToggleIcon()
 					}
-					val toggleIcon by viewModel.toggleIcon.collectAsState()
-					Icon(imageVector = toggleIcon, contentDescription = null)
+
+					Button(
+						modifier = Modifier
+							.clip(MaterialTheme.shapes.medium)
+							.align(Alignment.BottomEnd)
+							.drawBehind { drawRect(toggleColor) },
+						colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+						elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
+						onClick = { viewModel.onToggleClick() },
+					) {
+						Icon(imageVector = toggleIcon, contentDescription = null)
+					}
 				}
 			) {
 				val imageCorner by animateIntAsState(
@@ -169,8 +187,8 @@ fun Home(
 							.height(60.dp)
 							.weight(3f)
 							.graphicsLayer {
-								shape = RoundedCornerShape(buttonShape)
 								clip = true
+								shape = RoundedCornerShape(buttonShape)
 							},
 						onClick = { viewModel.playMedia(currentSong.toSong) },
 						backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(0.9f),

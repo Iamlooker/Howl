@@ -1,5 +1,7 @@
 package com.looker.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,9 +12,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.looker.components.localComposers.LocalDurations
+
+@Composable
+fun AnimatedText(
+	text: String,
+	modifier: Modifier = Modifier,
+	style: TextStyle = MaterialTheme.typography.h4,
+	maxLines: Int = 1,
+	overflow: TextOverflow = TextOverflow.Ellipsis,
+	textAlign: TextAlign = TextAlign.Center,
+	fontWeight: FontWeight = FontWeight.Medium
+) {
+	Text(
+		modifier = modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
+		text = text,
+		style = style,
+		maxLines = maxLines,
+		overflow = overflow,
+		textAlign = textAlign,
+		fontWeight = fontWeight
+	)
+}
 
 @Composable
 fun TitleSubText(
