@@ -8,6 +8,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.BackdropValue.Concealed
+import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.runtime.*
@@ -27,6 +29,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.looker.components.*
 import com.looker.components.localComposers.LocalDurations
+import com.looker.components.state.SheetsState
 import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
@@ -35,7 +38,6 @@ import com.looker.feature_player.PlayerHeader
 import com.looker.feature_player.components.PlayPauseIcon
 import com.looker.feature_player.components.SeekBar
 import com.looker.howlmusic.ui.components.*
-import com.looker.howlmusic.utils.extension.isPlaying
 import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import kotlinx.coroutines.launch
@@ -47,12 +49,13 @@ fun Home(
 	items: Array<HomeScreens>,
 	viewModel: HowlViewModel = viewModel()
 ) {
-	val state = rememberBackdropScaffoldState(BackdropValue.Concealed)
+	val state = rememberBackdropScaffoldState(Concealed)
 	val currentSong by viewModel.nowPlaying.collectAsState()
-	val playbackState by viewModel.playbackState.collectAsState()
+	val isPlaying by viewModel.isPlaying.collectAsState()
 
 	Backdrop(
 		state = state,
+		isPlaying = isPlaying,
 		header = {
 			val toggle by viewModel.shuffleMode.collectAsState()
 			val toggleColor by animateColorAsState(
@@ -84,12 +87,19 @@ fun Home(
 					)
 				},
 				toggleIcon = {
+					LaunchedEffect(state.currentValue) {
+						viewModel.backdropValue.value = when (state.currentValue) {
+							Concealed -> SheetsState.HIDDEN
+							Revealed -> SheetsState.VISIBLE
+						}
+						viewModel.updateToggleIcon()
+					}
 					val toggleIcon by viewModel.toggleIcon.collectAsState()
 					Icon(imageVector = toggleIcon, contentDescription = null)
 				}
 			) {
 				val imageCorner by animateIntAsState(
-					targetValue = if (playbackState.isPlaying) 50 else 15,
+					targetValue = if (isPlaying) 50 else 15,
 					animationSpec = tween(LocalDurations.current.crossFade)
 				)
 				AsyncImage(
@@ -131,7 +141,7 @@ fun Home(
 				onSongClick = { viewModel.onSongClick(it) },
 				openPlayer = {
 					scope.launch {
-						state.animateTo(BackdropValue.Revealed, TweenSpec(400))
+						state.animateTo(Revealed, TweenSpec(400))
 					}
 				},
 				onAlbumClick = {
@@ -151,7 +161,7 @@ fun Home(
 				skipPrevClick = { viewModel.playPrevious() },
 				playButton = {
 					val buttonShape by animateIntAsState(
-						targetValue = if (playbackState.isPlaying) 50 else 15,
+						targetValue = if (isPlaying) 50 else 15,
 						animationSpec = tween(LocalDurations.current.crossFade)
 					)
 					OpaqueIconButton(

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.looker.components.state.SheetsState
 import com.looker.constants.Constants.MEDIA_ROOT_ID
 import com.looker.constants.Resource
 import com.looker.core_model.Album
@@ -21,10 +22,7 @@ import com.looker.howlmusic.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,8 +38,9 @@ class HowlViewModel
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
 	val shuffleMode = musicServiceConnection.shuffleMode
+	val isPlaying = musicServiceConnection.isPlaying
 
-	val playbackState = musicServiceConnection.playbackState.stateIn(
+	private val playbackState = musicServiceConnection.playbackState.stateIn(
 		scope = viewModelScope,
 		started = SharingStarted.WhileSubscribed(5000),
 		initialValue = EMPTY_PLAYBACK_STATE
@@ -53,6 +52,8 @@ class HowlViewModel
 	private val _progress = MutableStateFlow(0F)
 	private val _albumsList = MutableStateFlow(emptyList<Album>())
 	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
+
+	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
 
 	val currentAlbum = _currentAlbum.asStateFlow()
 	val toggleIcon = _toggleIcon.asStateFlow()
@@ -83,7 +84,23 @@ class HowlViewModel
 		updateCurrentPlayerPosition()
 	}
 
-	fun onToggleClick() = shuffleModeToggle()
+	fun updateToggleIcon() {
+		viewModelScope.launch(Dispatchers.Default) {
+			playIcon.collectLatest {
+				_toggleIcon.value = when (backdropValue.value) {
+					SheetsState.HIDDEN -> it
+					SheetsState.VISIBLE -> Icons.Rounded.Shuffle
+				}
+			}
+		}
+	}
+
+	fun onToggleClick() {
+		when (backdropValue.value) {
+			SheetsState.HIDDEN -> playMedia(nowPlaying.value.toSong)
+			SheetsState.VISIBLE -> shuffleModeToggle()
+		}
+	}
 
 	fun onAlbumClick(album: Album) {
 		viewModelScope.launch(Dispatchers.IO) {

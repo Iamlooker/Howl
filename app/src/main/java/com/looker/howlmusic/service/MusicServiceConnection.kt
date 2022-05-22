@@ -19,14 +19,18 @@ class MusicServiceConnection(context: Context) {
 
 	private val _isConnected = MutableStateFlow(false)
 	private val _shuffleMode = MutableStateFlow(false)
+	private val _isPlaying = MutableStateFlow(false)
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _playbackState = MutableStateFlow(EMPTY_PLAYBACK_STATE)
 	private val _nowPlaying = MutableStateFlow(NOTHING_PLAYING)
 
 	val shuffleMode = _shuffleMode.asStateFlow()
+	val isPlaying = _isPlaying.asStateFlow()
 	val playIcon = _playIcon.asStateFlow()
 	val playbackState = _playbackState.asStateFlow()
 	val nowPlaying = _nowPlaying.asStateFlow()
+
+	private var previousPlayState: Boolean = false
 
 	lateinit var mediaController: MediaControllerCompat
 
@@ -84,6 +88,8 @@ class MusicServiceConnection(context: Context) {
 			_playbackState.value = state ?: EMPTY_PLAYBACK_STATE
 			_playIcon.value = if (state?.isPlaying == true) Icons.Rounded.Pause
 			else Icons.Rounded.PlayArrow
+			if (state?.isPlaying != previousPlayState) _isPlaying.value = state?.isPlaying == true
+			previousPlayState = state?.isPlaying == true
 		}
 
 		override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
