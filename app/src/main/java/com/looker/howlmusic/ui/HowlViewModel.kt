@@ -35,10 +35,13 @@ class HowlViewModel
 	private val albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
+	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
+
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
 	val shuffleMode = musicServiceConnection.shuffleMode
 	val isPlaying = musicServiceConnection.isPlaying
+	val toggle = if (backdropValue.value == SheetsState.VISIBLE) shuffleMode else isPlaying
 
 	private val playbackState = musicServiceConnection.playbackState.stateIn(
 		scope = viewModelScope,
@@ -53,7 +56,6 @@ class HowlViewModel
 	private val _albumsList = MutableStateFlow(emptyList<Album>())
 	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
 
-	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
 
 	val currentAlbum = _currentAlbum.asStateFlow()
 	val toggleIcon = _toggleIcon.asStateFlow()

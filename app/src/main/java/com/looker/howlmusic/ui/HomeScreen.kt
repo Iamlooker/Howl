@@ -85,8 +85,7 @@ fun Home(
 					)
 				},
 				toggleIcon = {
-					val toggleIcon by viewModel.toggleIcon.collectAsState()
-					val toggle by viewModel.shuffleMode.collectAsState()
+					val toggle by viewModel.toggle.collectAsState()
 
 					val toggleColor by animateColorAsState(
 						targetValue =
@@ -94,14 +93,6 @@ fun Home(
 						else MaterialTheme.colors.background,
 						animationSpec = tween(LocalDurations.current.crossFade)
 					)
-
-					LaunchedEffect(state.currentValue) {
-						viewModel.backdropValue.value = when (state.currentValue) {
-							Concealed -> SheetsState.HIDDEN
-							Revealed -> SheetsState.VISIBLE
-						}
-						viewModel.updateToggleIcon()
-					}
 
 					Button(
 						modifier = Modifier
@@ -112,6 +103,16 @@ fun Home(
 						elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
 						onClick = { viewModel.onToggleClick() },
 					) {
+						LaunchedEffect(state.currentValue) {
+							viewModel.backdropValue.value = when (state.currentValue) {
+								Concealed -> SheetsState.HIDDEN
+								Revealed -> SheetsState.VISIBLE
+							}
+							viewModel.updateToggleIcon()
+						}
+
+						val toggleIcon by viewModel.toggleIcon.collectAsState()
+
 						Icon(imageVector = toggleIcon, contentDescription = null)
 					}
 				}
