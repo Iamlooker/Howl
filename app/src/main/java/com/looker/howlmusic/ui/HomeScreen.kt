@@ -57,7 +57,7 @@ fun Home(
 
 	Backdrop(
 		state = state,
-		isPlaying = if (state.currentValue == Concealed) isPlaying else true,
+		isPlaying = isPlaying,
 		header = {
 			val backgroundColor by animateColorAsState(
 				targetValue = dominantColorState.color.overBackground(),
