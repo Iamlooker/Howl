@@ -6,7 +6,7 @@ import com.looker.core_model.Song
 inline val MediaMetadataCompat?.toSong
 	get() = this?.description?.let {
 		Song(
-			mediaId = it.mediaId ?: "",
+			mediaId = it.mediaId.toString(),
 			pathUri = it.mediaUri.toString(),
 			name = it.title.toString(),
 			artist = it.subtitle.toString(),
