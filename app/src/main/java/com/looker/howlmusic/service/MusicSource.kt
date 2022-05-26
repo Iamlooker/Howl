@@ -60,7 +60,7 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 	fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {
 		val concatenatingMediaSource = ConcatenatingMediaSource()
 		songs.forEach { song ->
-			val mediaItem = MediaItem.fromUri(song.getString(METADATA_KEY_MEDIA_URI))
+			val mediaItem = MediaItem.fromUri(song.getString(METADATA_KEY_MEDIA_URI) ?: "null")
 			val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
 				.createMediaSource(mediaItem)
 			concatenatingMediaSource.addMediaSource(mediaSource)
@@ -69,11 +69,12 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 	}
 
 	fun asMediaItem() = songs.map { song ->
+		val mediaUri = song.getString(METADATA_KEY_MEDIA_URI) ?: "null"
 		val description = MediaDescriptionCompat.Builder()
-			.setMediaUri(song.getString(METADATA_KEY_MEDIA_URI).toUri())
+			.setMediaUri(mediaUri.toUri())
 			.setTitle(song.description.title)
 			.setSubtitle(song.description.subtitle)
-			.setMediaId(song.description.mediaId)
+			.setMediaId(song.description.mediaId ?: "null")
 			.setIconUri(song.description.iconUri)
 			.build()
 		MediaBrowserCompat.MediaItem(description, FLAG_PLAYABLE)

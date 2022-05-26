@@ -131,7 +131,8 @@ class HowlViewModel
 					}
 				}
 			} else {
-				transportControls.playFromMediaId(mediaItem.mediaId, null)
+				if (mediaItem.mediaId.isNotEmpty()) transportControls.playFromMediaId(mediaItem.mediaId, null)
+				else Unit
 			}
 		}
 	}
