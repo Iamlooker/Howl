@@ -44,10 +44,10 @@ object ExoPlayer {
 
 object Hilt {
 	private const val hiltVersion = "2.42"
-	const val hiltClasspath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
-	const val hiltAndroid = "com.google.dagger:hilt-android:$hiltVersion"
-	const val hiltCompiler = "com.google.dagger:hilt-compiler:$hiltVersion"
-	const val hiltPlugin = "dagger.hilt.android.plugin"
+	const val classpath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+	const val android = "com.google.dagger:hilt-android:$hiltVersion"
+	const val compiler = "com.google.dagger:hilt-compiler:$hiltVersion"
+	const val plugin = "dagger.hilt.android.plugin"
 }
 
 object Lifecycle {

@@ -1,4 +1,4 @@
-package com.looker.howlmusic.service
+package com.looker.feature_player.service
 
 import android.app.PendingIntent
 import android.content.Intent
@@ -15,10 +15,10 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.util.EventLogger
 import com.looker.constants.Constants.MEDIA_ROOT_ID
-import com.looker.howlmusic.service.callback.MusicPlaybackPreparer
-import com.looker.howlmusic.service.callback.MusicPlayerEventListener
-import com.looker.howlmusic.service.callback.MusicPlayerNotificationListener
-import com.looker.howlmusic.service.notification.MusicNotificationManager
+import com.looker.feature_player.service.callback.MusicPlaybackPreparer
+import com.looker.feature_player.service.callback.MusicPlayerEventListener
+import com.looker.feature_player.service.callback.MusicPlayerNotificationListener
+import com.looker.feature_player.service.notification.MusicNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -1,9 +1,9 @@
-package com.looker.howlmusic.service.callback
+package com.looker.feature_player.service.callback
 
 import android.widget.Toast
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
-import com.looker.howlmusic.service.MusicService
+import com.looker.feature_player.service.MusicService
 
 class MusicPlayerEventListener(
 	private val musicService: MusicService

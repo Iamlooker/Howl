@@ -1,15 +1,14 @@
-package com.looker.feature_player
+package com.looker.feature_player.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.looker.feature_player.components.AlbumArt
-import com.looker.feature_player.components.PlayAndSkipButton
-import com.looker.feature_player.components.PreviousAndSeekBar
-import com.looker.feature_player.components.SongText
+import com.looker.feature_player.ui.components.AlbumArt
+import com.looker.feature_player.ui.components.PlayAndSkipButton
+import com.looker.feature_player.ui.components.PreviousAndSeekBar
+import com.looker.feature_player.ui.components.SongText
 
 @Composable
 fun PlayerHeader(

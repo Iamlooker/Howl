@@ -1,4 +1,4 @@
-package com.looker.feature_player.components
+package com.looker.feature_player.ui.components
 
 import androidx.annotation.FloatRange
 import androidx.compose.material.Slider

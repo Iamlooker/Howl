@@ -1,4 +1,4 @@
-package com.looker.howlmusic.utils.extension
+package com.looker.feature_player.utils.extension
 
 import android.support.v4.media.MediaMetadataCompat
 import com.looker.core_model.Song

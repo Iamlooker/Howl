@@ -1,4 +1,4 @@
-package com.looker.howlmusic.service
+package com.looker.feature_player.service
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.MediaItem.FLAG_PLAYABLE
@@ -11,7 +11,7 @@ import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.data_music.data.SongsRepository
-import com.looker.howlmusic.utils.extension.toMediaMetadataCompat
+import com.looker.feature_player.utils.extension.toMediaMetadataCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException

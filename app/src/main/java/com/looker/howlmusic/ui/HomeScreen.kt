@@ -34,12 +34,12 @@ import com.looker.components.state.SheetsState
 import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
-import com.looker.feature_player.Controls
-import com.looker.feature_player.PlayerHeader
-import com.looker.feature_player.components.PlayPauseIcon
-import com.looker.feature_player.components.SeekBar
+import com.looker.feature_player.ui.Controls
+import com.looker.feature_player.ui.PlayerHeader
+import com.looker.feature_player.ui.components.PlayPauseIcon
+import com.looker.feature_player.ui.components.SeekBar
+import com.looker.feature_player.utils.extension.toSong
 import com.looker.howlmusic.ui.components.*
-import com.looker.howlmusic.utils.extension.toSong
 import com.looker.ui_albums.AlbumsBottomSheetContent
 import kotlinx.coroutines.launch
 

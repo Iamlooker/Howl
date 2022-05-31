@@ -1,4 +1,4 @@
-package com.looker.howlmusic.service
+package com.looker.feature_player.service
 
 import android.content.ComponentName
 import android.content.Context
@@ -10,8 +10,10 @@ import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
-import com.looker.howlmusic.utils.extension.id
-import com.looker.howlmusic.utils.extension.isPlaying
+import com.looker.core_model.Song
+import com.looker.feature_player.utils.extension.id
+import com.looker.feature_player.utils.extension.isPlaying
+import com.looker.feature_player.utils.extension.toSong
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -46,8 +48,19 @@ class MusicServiceConnection(context: Context) {
 		null
 	).apply { connect() }
 
-	fun subscribe(parentId: String, callback: SubscriptionCallback) {
-		mediaBrowser.subscribe(parentId, callback)
+	fun subscribe(parentId: String, callback: (List<Song>) -> Unit) {
+		mediaBrowser.subscribe(
+			parentId,
+			object : SubscriptionCallback() {
+				override fun onChildrenLoaded(
+					parentId: String,
+					children: MutableList<MediaBrowserCompat.MediaItem>
+				) {
+					super.onChildrenLoaded(parentId, children)
+					callback(children.map { it.toSong })
+				}
+			}
+		)
 	}
 
 	fun unsubscribe(

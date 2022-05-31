@@ -2,7 +2,7 @@ plugins {
 	id("com.android.application")
 	id("org.jetbrains.kotlin.android")
 	kotlin("kapt")
-	id(Hilt.hiltPlugin)
+	id(Hilt.plugin)
 }
 
 android {
@@ -84,11 +84,10 @@ dependencies {
 	implementation(Compose.navigation)
 	implementation(Compose.ui)
 
-	implementation(ExoPlayer.exoplayer)
 	implementation(ExoPlayer.exoplayerMediaSession)
 
-	implementation(Hilt.hiltAndroid)
-	kapt(Hilt.hiltCompiler)
+	implementation(Hilt.android)
+	kapt(Hilt.compiler)
 
 	debugImplementation(Compose.tooling)
 }

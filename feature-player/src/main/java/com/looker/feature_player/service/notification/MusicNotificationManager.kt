@@ -1,4 +1,4 @@
-package com.looker.howlmusic.service.notification
+package com.looker.feature_player.service.notification
 
 import android.app.PendingIntent
 import android.content.Context
@@ -10,7 +10,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.looker.components.toBitmap
 import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.constants.Constants.NOTIFICATION_ID
-import com.looker.howlmusic.R
+import com.looker.feature_player.R
 
 class MusicNotificationManager(
 	private val context: Context,

@@ -1,11 +1,11 @@
-package com.looker.howlmusic.service.callback
+package com.looker.feature_player.service.callback
 
 import android.app.Notification
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.looker.constants.Constants.NOTIFICATION_ID
-import com.looker.howlmusic.service.MusicService
+import com.looker.feature_player.service.MusicService
 
 class MusicPlayerNotificationListener(
 	private val musicService: MusicService

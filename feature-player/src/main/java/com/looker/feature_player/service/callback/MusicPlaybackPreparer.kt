@@ -1,4 +1,4 @@
-package com.looker.howlmusic.service.callback
+package com.looker.feature_player.service.callback
 
 import android.net.Uri
 import android.os.Bundle
@@ -7,7 +7,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
-import com.looker.howlmusic.service.MusicSource
+import com.looker.feature_player.service.MusicSource
 
 class MusicPlaybackPreparer(
 	private val musicSource: MusicSource,

@@ -1,4 +1,4 @@
-package com.looker.feature_player.components
+package com.looker.feature_player.ui.components
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.material.Icon

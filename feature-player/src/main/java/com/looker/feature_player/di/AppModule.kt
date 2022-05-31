@@ -1,8 +1,8 @@
-package com.looker.howlmusic.utils
+package com.looker.feature_player.di
 
 import android.content.Context
 import com.looker.data_music.data.AlbumsRepository
-import com.looker.howlmusic.service.MusicServiceConnection
+import com.looker.feature_player.service.MusicServiceConnection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

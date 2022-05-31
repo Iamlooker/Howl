@@ -1,9 +1,5 @@
 package com.looker.howlmusic.ui
 
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
-import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_ALL
-import android.support.v4.media.session.PlaybackStateCompat.SHUFFLE_MODE_NONE
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Shuffle
@@ -15,14 +11,17 @@ import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
 import com.looker.data_music.data.AlbumsRepository
-import com.looker.howlmusic.service.EMPTY_PLAYBACK_STATE
-import com.looker.howlmusic.service.MusicService
-import com.looker.howlmusic.service.MusicServiceConnection
-import com.looker.howlmusic.utils.extension.*
+import com.looker.feature_player.service.MusicService
+import com.looker.feature_player.service.MusicServiceConnection
+import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_ALL
+import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_NONE
+import com.looker.feature_player.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,17 +36,12 @@ class HowlViewModel
 
 	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
 
+	private val playbackState = musicServiceConnection.playbackState
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
 	val shuffleMode = musicServiceConnection.shuffleMode
 	val isPlaying = musicServiceConnection.isPlaying
 	val toggle = if (backdropValue.value == SheetsState.VISIBLE) shuffleMode else isPlaying
-
-	private val playbackState = musicServiceConnection.playbackState.stateIn(
-		scope = viewModelScope,
-		started = SharingStarted.WhileSubscribed(5000),
-		initialValue = EMPTY_PLAYBACK_STATE
-	)
 
 	private val _songDuration = MutableStateFlow(0L)
 	private val _currentAlbum = MutableStateFlow(Album())
@@ -64,21 +58,11 @@ class HowlViewModel
 	val songsList = _songsList.asStateFlow()
 
 	init {
-		musicServiceConnection.subscribe(
-			MEDIA_ROOT_ID,
-			object : SubscriptionCallback() {
-				override fun onChildrenLoaded(
-					parentId: String,
-					children: MutableList<MediaBrowserCompat.MediaItem>
-				) {
-					super.onChildrenLoaded(parentId, children)
-					val items = children.map { it.toSong }
-					viewModelScope.launch {
-						_songsList.emit(Resource.Success(items))
-					}
-				}
+		musicServiceConnection.subscribe(MEDIA_ROOT_ID) {
+			viewModelScope.launch {
+				_songsList.emit(Resource.Success(it))
 			}
-		)
+		}
 		viewModelScope.launch(Dispatchers.IO) {
 			albumsRepository.getAllAlbums().collect { _albumsList.emit(it) }
 		}
@@ -131,7 +115,10 @@ class HowlViewModel
 					}
 				}
 			} else {
-				if (mediaItem.mediaId.isNotEmpty()) transportControls.playFromMediaId(mediaItem.mediaId, null)
+				if (mediaItem.mediaId.isNotEmpty()) transportControls.playFromMediaId(
+					mediaItem.mediaId,
+					null
+				)
 				else Unit
 			}
 		}

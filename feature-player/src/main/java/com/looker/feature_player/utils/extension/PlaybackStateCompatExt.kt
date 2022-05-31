@@ -1,4 +1,4 @@
-package com.looker.howlmusic.utils.extension
+package com.looker.feature_player.utils.extension
 
 import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat
