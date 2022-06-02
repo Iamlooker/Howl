@@ -70,7 +70,6 @@ fun Home(
 			).value
 		},
 		header = {
-			Log.e("recompose", "recomposed")
 			PlayerHeader(
 				modifier = Modifier
 					.backgroundGradient(dominantColorState.color.overBackground())
