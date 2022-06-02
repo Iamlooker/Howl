@@ -1,7 +1,9 @@
 package com.looker.howlmusic.ui
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -19,6 +21,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,27 +53,27 @@ fun Home(
 	items: Array<HomeScreens>,
 	viewModel: HowlViewModel = viewModel()
 ) {
+	val configuration = LocalConfiguration.current
 	val state = rememberBackdropScaffoldState(Concealed)
 	val currentSong by viewModel.nowPlaying.collectAsState()
 	val isPlaying by viewModel.isPlaying.collectAsState()
 	val dominantColorState = rememberDominantColorState()
+	val expandedHeight = remember(configuration) { configuration.screenHeightDp.dp / 3 }
 
 	Backdrop(
 		state = state,
-		isPlaying = isPlaying,
+		// Best solution for now
+		isPlaying = {
+			animateDpAsState(
+				targetValue = if (isPlaying) expandedHeight else BackdropScaffoldDefaults.PeekHeight,
+				animationSpec = tween(LocalDurations.current.fast)
+			).value
+		},
 		header = {
-			val backgroundColor by animateColorAsState(
-				targetValue = dominantColorState.color.overBackground(),
-				animationSpec = tween(LocalDurations.current.crossFade)
-			)
-
-			LaunchedEffect(currentSong.toSong.albumArt) {
-				dominantColorState.updateColorsFromImageUrl(currentSong.toSong.albumArt)
-			}
-
+			Log.e("recompose", "recomposed")
 			PlayerHeader(
 				modifier = Modifier
-					.backgroundGradient(backgroundColor)
+					.backgroundGradient(dominantColorState.color.overBackground())
 					.statusBarsPadding(),
 				songText = {
 					AnimatedText(
@@ -117,6 +120,9 @@ fun Home(
 					}
 				}
 			) {
+				LaunchedEffect(currentSong.toSong.albumArt) {
+					dominantColorState.updateColorsFromImageUrl(currentSong.toSong.albumArt)
+				}
 				val imageCorner by animateIntAsState(
 					targetValue = if (isPlaying) 50 else 15,
 					animationSpec = tween(LocalDurations.current.crossFade)
