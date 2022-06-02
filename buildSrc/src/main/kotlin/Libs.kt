@@ -4,7 +4,7 @@ object Classpath {
 }
 
 object Core {
-	private const val coreVersion = "1.8.0-rc02"
+	private const val coreVersion = "1.8.0"
 	const val core = "androidx.core:core-ktx:$coreVersion"
 }
 
@@ -14,8 +14,8 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0-beta02"
-	private const val composeVersion = "1.2.0-beta02"
+	const val composeCompiler = "1.2.0-beta03"
+	private const val composeVersion = "1.2.0-beta03"
 	private const val activityComposeVersion = "1.5.0-rc01"
 	private const val navigationVersion = "2.5.0-rc01"
 
