@@ -15,7 +15,6 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.util.EventLogger
 import com.looker.constants.Constants.MEDIA_ROOT_ID
-import com.looker.core_model.Song
 import com.looker.feature_player.service.callback.MusicPlaybackPreparer
 import com.looker.feature_player.service.callback.MusicPlayerEventListener
 import com.looker.feature_player.service.callback.MusicPlayerNotificationListener
