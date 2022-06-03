@@ -33,7 +33,6 @@ import com.looker.components.*
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.state.SheetsState
-import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
 import com.looker.feature_player.ui.Controls
@@ -65,7 +64,7 @@ fun Home(
 		isPlaying = {
 			animateDpAsState(
 				targetValue = if (isPlaying) expandedHeight else BackdropScaffoldDefaults.PeekHeight,
-				animationSpec = tween(LocalDurations.current.fast)
+				animationSpec = tween(LocalDurations.current.crossFade)
 			).value
 		},
 		header = {
@@ -149,18 +148,24 @@ fun Home(
 			val albumDominant = rememberDominantColorState()
 			val scope = rememberCoroutineScope()
 
-			LaunchedEffect(currentAlbum) {
-				albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt)
-			}
-
 			FrontLayer(
 				navController = navController,
 				items = items,
 				bottomSheetState = bottomSheetState,
 				songsList = songsList,
 				albumsList = albumsList,
-				currentAlbum = currentAlbum,
-				albumsDominantColor = albumDominant.color,
+				sheetContent = {
+					LaunchedEffect(currentAlbum) {
+						albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt)
+					}
+					AlbumsBottomSheetContent(
+						currentAlbum = currentAlbum,
+						songsList = songsList.data?.filter { it.albumArt == currentAlbum.albumArt }
+							?: emptyList(),
+						dominantColor = albumDominant.color.copy(0.4f),
+						onSongClick = { viewModel.onSongClick(it) }
+					)
+				},
 				onSongClick = { viewModel.onSongClick(it) },
 				openPlayer = {
 					scope.launch {
@@ -171,7 +176,7 @@ fun Home(
 					scope.launch {
 						bottomSheetState.animateTo(
 							ModalBottomSheetValue.HalfExpanded,
-							TweenSpec(400)
+							TweenSpec(500)
 						)
 					}
 					viewModel.onAlbumClick(it)
@@ -222,25 +227,16 @@ fun FrontLayer(
 	navController: NavHostController,
 	items: Array<HomeScreens>,
 	bottomSheetState: ModalBottomSheetState,
-	songsList: Resource<List<Song>>,
-	albumsList: List<Album>,
-	currentAlbum: Album,
-	albumsDominantColor: Color,
+	songsList: ResourceSongs,
+	albumsList: ResourceAlbums,
+	sheetContent: @Composable ColumnScope.() -> Unit,
 	openPlayer: () -> Unit,
 	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Album) -> Unit,
 ) {
 	BottomSheets(
 		state = bottomSheetState,
-		sheetContent = {
-			AlbumsBottomSheetContent(
-				currentAlbum = currentAlbum,
-				songsList = songsList.data?.filter { it.albumArt == currentAlbum.albumArt }
-					?: emptyList(),
-				dominantColor = albumsDominantColor.copy(0.4f),
-				onSongClick = onSongClick
-			)
-		}
+		sheetContent = sheetContent
 	) {
 		Scaffold(
 			bottomBar = {
@@ -285,7 +281,7 @@ fun FrontLayer(
 				HomeNavGraph(
 					navController = navController,
 					songsList = songsList,
-					albumsList = albumsList.distinctBy { it.albumId },
+					albumsList = albumsList,
 					onSongClick = onSongClick,
 					onAlbumClick = onAlbumClick
 				)

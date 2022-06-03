@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 typealias ResourceSongs = Resource<List<Song>>
+typealias ResourceAlbums = Resource<List<Album>>
 
 @HiltViewModel
 class HowlViewModel
@@ -47,7 +48,7 @@ class HowlViewModel
 	private val _currentAlbum = MutableStateFlow(Album())
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 	private val _progress = MutableStateFlow(0F)
-	private val _albumsList = MutableStateFlow(emptyList<Album>())
+	private val _albumsList = MutableStateFlow<ResourceAlbums>(Resource.Loading(listOf()))
 	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
 
 
@@ -64,7 +65,9 @@ class HowlViewModel
 			}
 		}
 		viewModelScope.launch(Dispatchers.IO) {
-			albumsRepository.getAllAlbums().collect { _albumsList.emit(it) }
+			albumsRepository.getAllAlbums().collect { albums ->
+				_albumsList.emit(Resource.Success(albums.distinctBy { it.albumId }))
+			}
 		}
 
 		updateCurrentPlayerPosition()

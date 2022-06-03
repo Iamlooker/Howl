@@ -12,6 +12,8 @@ import androidx.navigation.compose.composable
 import com.looker.constants.Resource
 import com.looker.core_model.Album
 import com.looker.core_model.Song
+import com.looker.howlmusic.ui.ResourceAlbums
+import com.looker.howlmusic.ui.ResourceSongs
 import com.looker.howlmusic.ui.components.MainScreens.HOME
 import com.looker.ui_albums.Albums
 import com.looker.ui_songs.Songs
@@ -32,8 +34,8 @@ enum class HomeScreens(
 @Composable
 fun HomeNavGraph(
 	navController: NavHostController,
-	songsList: Resource<List<Song>>,
-	albumsList: List<Album>,
+	songsList: ResourceSongs,
+	albumsList: ResourceAlbums,
 	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Album) -> Unit,
 ) {
@@ -51,8 +53,8 @@ fun HomeNavGraph(
 }
 
 internal fun NavGraphBuilder.homeGraph(
-	songsList: Resource<List<Song>>,
-	albumsList: List<Album>,
+	songsList: ResourceSongs,
+	albumsList: ResourceAlbums,
 	onSongClick: (Song) -> Unit,
 	onAlbumClick: (Album) -> Unit,
 ) {
