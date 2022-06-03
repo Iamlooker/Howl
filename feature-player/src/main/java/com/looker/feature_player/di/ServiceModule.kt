@@ -1,6 +1,7 @@
 package com.looker.feature_player.di
 
 import android.content.Context
+import android.support.v4.media.MediaMetadataCompat
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
@@ -8,6 +9,7 @@ import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.data_music.data.SongsRepository
+import com.looker.feature_player.service.DataSource
 import com.looker.feature_player.service.MusicSource
 import dagger.Module
 import dagger.Provides
@@ -59,5 +61,5 @@ object ServiceModule {
 	@Provides
 	fun provideMusicSource(
 		songsRepository: SongsRepository
-	): MusicSource = MusicSource(songsRepository)
+	): DataSource<MediaMetadataCompat> = MusicSource(songsRepository)
 }

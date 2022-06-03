@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.util.EventLogger
 import com.looker.constants.Constants.MEDIA_ROOT_ID
+import com.looker.core_model.Song
 import com.looker.feature_player.service.callback.MusicPlaybackPreparer
 import com.looker.feature_player.service.callback.MusicPlayerEventListener
 import com.looker.feature_player.service.callback.MusicPlayerNotificationListener
@@ -35,7 +36,7 @@ class MusicService : MediaBrowserServiceCompat() {
 	lateinit var exoPlayer: ExoPlayer
 
 	@Inject
-	lateinit var musicSource: MusicSource
+	lateinit var musicSource: DataSource<MediaMetadataCompat>
 
 	private val serviceJob = SupervisorJob()
 	private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
@@ -84,7 +85,7 @@ class MusicService : MediaBrowserServiceCompat() {
 		val musicPlaybackPreparer = MusicPlaybackPreparer(musicSource) {
 			currentSong = it
 			preparePlayer(
-				songs = musicSource.songs,
+				songs = musicSource.data,
 				itemToPlay = it,
 				playNow = true
 			)
@@ -104,7 +105,7 @@ class MusicService : MediaBrowserServiceCompat() {
 
 	private inner class MusicQueueNavigator : TimelineQueueNavigator(mediaSession) {
 		override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
-			return musicSource.songs[windowIndex].description
+			return musicSource.data[windowIndex].description
 		}
 	}
 
@@ -134,11 +135,11 @@ class MusicService : MediaBrowserServiceCompat() {
 	) {
 		when (parentId) {
 			MEDIA_ROOT_ID -> {
-				val resultsSent = musicSource.whenReady { isInitialized ->
+				val resultsSent = musicSource.sourceReady { isInitialized ->
 					if (isInitialized) {
 						result.sendResult(musicSource.asMediaItem())
-						if (!isPlayerInitialized && musicSource.songs.isNotEmpty()) {
-							preparePlayer(musicSource.songs, musicSource.songs[0], false)
+						if (!isPlayerInitialized && musicSource.data.isNotEmpty()) {
+							preparePlayer(musicSource.data, musicSource.data[0], false)
 							isPlayerInitialized = true
 						}
 					} else {

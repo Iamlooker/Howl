@@ -17,9 +17,9 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-class MusicSource @Inject constructor(private val songsRepository: SongsRepository) {
+class MusicSource @Inject constructor(private val songsRepository: SongsRepository) : DataSource<MediaMetadataCompat>{
 
-	var songs = emptyList<MediaMetadataCompat>()
+	override var data = emptyList<MediaMetadataCompat>()
 
 	private var state: State = State.STATE_CREATED
 		set(value) {
@@ -39,12 +39,12 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 		state = State.STATE_INITIALIZING
 	}
 
-	suspend fun load() {
+	override suspend fun load() {
 		fetchMediaData()?.let { songList ->
-			songs = songList
+			data = songList
 			state = State.STATE_INITIALIZED
 		} ?: run {
-			songs = emptyList()
+			data = emptyList()
 			state = State.STATE_ERROR
 		}
 	}
@@ -57,9 +57,9 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 		}
 	}
 
-	fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {
+	override fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource {
 		val concatenatingMediaSource = ConcatenatingMediaSource()
-		songs.forEach { song ->
+		data.forEach { song ->
 			val mediaItem = MediaItem.fromUri(song.getString(METADATA_KEY_MEDIA_URI) ?: "null")
 			val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
 				.createMediaSource(mediaItem)
@@ -68,7 +68,7 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 		return concatenatingMediaSource
 	}
 
-	fun asMediaItem() = songs.map { song ->
+	override fun asMediaItem() = data.map { song ->
 		val mediaUri = song.getString(METADATA_KEY_MEDIA_URI) ?: "null"
 		val description = MediaDescriptionCompat.Builder()
 			.setMediaUri(mediaUri.toUri())
@@ -82,22 +82,15 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 
 	private val onReadyListeners = mutableListOf<(Boolean) -> Unit>()
 
-	fun whenReady(performAction: (Boolean) -> Unit): Boolean =
+	override fun sourceReady(action: (Boolean) -> Unit): Boolean =
 		when (state) {
 			State.STATE_CREATED, State.STATE_INITIALIZING -> {
-				onReadyListeners += performAction
+				onReadyListeners += action
 				false
 			}
 			else -> {
-				performAction(state != State.STATE_ERROR)
+				action(state != State.STATE_ERROR)
 				true
 			}
 		}
-}
-
-enum class State {
-	STATE_CREATED,
-	STATE_INITIALIZING,
-	STATE_INITIALIZED,
-	STATE_ERROR
 }
