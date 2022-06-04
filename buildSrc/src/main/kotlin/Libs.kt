@@ -31,6 +31,12 @@ object Compose {
 	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
+object Coroutines {
+	private const val coroutinesVersion = "1.6.2"
+	const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+	const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+}
+
 object Excludes {
 	const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
 }
@@ -48,6 +54,8 @@ object Hilt {
 	const val android = "com.google.dagger:hilt-android:$hiltVersion"
 	const val compiler = "com.google.dagger:hilt-compiler:$hiltVersion"
 	const val plugin = "dagger.hilt.android.plugin"
+	const val work = "androidx.hilt:hilt-work:1.0.0"
+	const val navigation = "androidx.hilt:hilt-navigation-compose:1.0.0"
 }
 
 object Lifecycle {
@@ -68,6 +76,16 @@ object Room {
 	const val roomKtx = "androidx.room:room-ktx:$roomVersion"
 }
 
+object Startup {
+	private const val startupVersion = "1.1.1"
+	const val lib = "androidx.startup:startup-runtime:$startupVersion"
+}
+
 object Version {
 	const val kotlinVersion = "1.6.21"
+}
+
+object WorkManager {
+	private const val workVersion = "2.7.1"
+	const val ktx = "androidx.work:work-runtime-ktx:$workVersion"
 }

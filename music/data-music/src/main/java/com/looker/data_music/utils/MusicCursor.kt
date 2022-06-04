@@ -13,7 +13,6 @@ object MusicCursor {
 
 	private const val isMusic = MediaStore.Audio.Media.IS_MUSIC + " != 0"
 
-	@SuppressLint("Recycle")
 	fun generateCursor(
 		context: Context,
 		projection: Array<String>,
