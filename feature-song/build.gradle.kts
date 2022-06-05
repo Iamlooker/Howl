@@ -31,6 +31,15 @@ android {
 	kotlinOptions {
 		jvmTarget = "11"
 	}
+
+	buildFeatures {
+		compose = true
+		buildConfig = false
+	}
+
+	composeOptions {
+		kotlinCompilerExtensionVersion = Compose.composeCompiler
+	}
 }
 
 dependencies {
@@ -43,6 +52,8 @@ dependencies {
 	implementation(project(Modules.featurePlayer))
 
 	implementation(Lifecycle.lifecycleViewModelCompose)
+
+	implementation(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Hilt.android)
 	kapt(Hilt.compiler)

@@ -41,10 +41,6 @@ android {
 	buildFeatures {
 		compose = true
 		buildConfig = false
-		aidl = false
-		renderScript = false
-		resValues = false
-		shaders = false
 	}
 
 	composeOptions {
@@ -63,28 +59,29 @@ dependencies {
 	implementation(project(Modules.onBoarding))
 	implementation(project(Modules.constants))
 	implementation(project(Modules.coreModel))
+	implementation(project(Modules.coreData))
+	implementation(project(Modules.coreUi))
+	implementation(project(Modules.coreDatabase))
+	implementation(project(Modules.coreCommon))
+	implementation(project(Modules.coreNavigation))
 	implementation(project(Modules.dataMusic))
 	implementation(project(Modules.uiSongs))
 	implementation(project(Modules.uiAlbums))
 	implementation(project(Modules.featurePlayer))
+	implementation(project(Modules.featureSong))
 	implementation(project(Modules.components))
+
+	implementation(Startup.lib)
 
 	implementation(Core.core)
 
-	implementation(Coil.coil)
-
 	implementation(Compose.activity)
-	implementation(Compose.animation)
-	implementation(Compose.runtime)
-	implementation(Compose.icons)
-	implementation(Compose.material)
-	implementation(Compose.foundation)
 	implementation(Compose.navigation)
-	implementation(Compose.ui)
 
 	implementation(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Hilt.android)
+	implementation(Hilt.work)
 	kapt(Hilt.compiler)
 
 	debugImplementation(Compose.tooling)

@@ -6,18 +6,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import com.looker.components.localComposers.LocalDurations
-import com.looker.core_data.data.SongsData
-import com.looker.core_database.dao.SongDao
 import com.looker.howlmusic.ui.Home
 import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.onboarding.OnBoardingPage
 import com.looker.onboarding.utils.checkReadPermission
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import javax.inject.Inject
 
 @HiltAndroidApp
 class HowlApp : Application(), ImageLoaderFactory {

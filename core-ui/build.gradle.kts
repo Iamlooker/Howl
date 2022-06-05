@@ -29,6 +29,15 @@ android {
 	kotlinOptions {
 		jvmTarget = "11"
 	}
+
+	buildFeatures {
+		compose = true
+		buildConfig = false
+	}
+
+	composeOptions {
+		kotlinCompilerExtensionVersion = Compose.composeCompiler
+	}
 }
 
 dependencies {
