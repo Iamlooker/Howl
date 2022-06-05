@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface AlbumsRepository {
 	fun getAlbumsStream(): Flow<List<Album>>
 	fun getAlbumStream(albumId: Long): Flow<Album>
+	suspend fun syncData(): Boolean
 }

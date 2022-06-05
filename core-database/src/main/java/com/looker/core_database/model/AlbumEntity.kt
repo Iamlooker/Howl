@@ -19,3 +19,10 @@ fun AlbumEntity.asExternalModel() = Album(
 	artist = artist,
 	albumArt = albumArt
 )
+
+fun Album.asEntity() = AlbumEntity(
+	albumId = albumId,
+	name = name,
+	artist = artist,
+	albumArt = albumArt
+)

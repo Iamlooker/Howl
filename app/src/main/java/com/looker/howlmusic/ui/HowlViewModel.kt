@@ -65,9 +65,7 @@ class HowlViewModel
 			}
 		}
 		viewModelScope.launch(Dispatchers.IO) {
-			albumsRepository.getAllAlbums().collect { albums ->
-				_albumsList.emit(Resource.Success(albums.distinctBy { it.albumId }))
-			}
+			_albumsList.emit(Resource.Success(albumsRepository.getAllAlbums().distinctBy { it.albumId }))
 		}
 
 		updateCurrentPlayerPosition()

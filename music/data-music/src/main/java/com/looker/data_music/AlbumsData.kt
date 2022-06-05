@@ -18,12 +18,11 @@ class AlbumsData(private val context: Context) {
 		const val sortOrderAlbum = MediaStore.Audio.Media.ALBUM + " COLLATE NOCASE ASC"
 	}
 
-	suspend fun createAlbumsList(): Flow<List<Album>> = flow {
+	suspend fun createAlbumsList(): List<Album> {
 		val list = mutableListOf<Album>()
 		getAlbumFlow().collect { list.add(it) }
-		emit(list)
+		return list
 	}
-
 
 	private fun getAlbumFlow(): Flow<Album> = flow {
 
