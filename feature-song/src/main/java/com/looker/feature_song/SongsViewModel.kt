@@ -9,7 +9,10 @@ import com.looker.core_model.Song
 import com.looker.feature_player.service.MusicServiceConnection
 import com.looker.feature_player.utils.extension.isPrepared
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,11 +24,8 @@ class SongsViewModel @Inject constructor(
 	private val songsStream: Flow<Result<List<Song>>> =
 		songsRepository.getSongsStream().asResult()
 
-	val songsState: StateFlow<SongScreenUiState> = combine(
-		songsStream,
-		emptyFlow<Unit>()
-	) { songsResult, _ ->
-		val songs = when(songsResult) {
+	val songsState = songsStream.map { songsResult ->
+		val songs = when (songsResult) {
 			Result.Loading -> SongUiState.Loading
 			is Result.Error -> SongUiState.Error
 			is Result.Success -> SongUiState.Success(songsResult.data)

@@ -19,7 +19,7 @@ class HowlApp : Application(), ImageLoaderFactory {
 	override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this).crossfade(100).build()
 	override fun onCreate() {
 		super.onCreate()
-		GetData.initialize(this)
+		if (checkReadPermission(this)) GetData.initialize(this)
 	}
 }
 

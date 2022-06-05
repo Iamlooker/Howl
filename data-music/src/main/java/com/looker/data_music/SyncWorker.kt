@@ -3,21 +3,18 @@ package com.looker.data_music
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.*
-import com.looker.core_database.dao.SongDao
-import com.looker.core_database.model.asEntity
+import com.looker.core_data.repository.SongsRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import javax.inject.Inject
 
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
 	@Assisted val appContext: Context,
 	@Assisted workerParams: WorkerParameters,
-	val songDao: SongDao
+	private val songsRepository: SongsRepository
 ) : CoroutineWorker(appContext, workerParams) {
 	override suspend fun doWork(): Result {
-		val songs = SongsData(appContext).createSongsList().map { it.asEntity() }
-		songDao.insertOrIgnoreSongs(songs)
+		songsRepository.syncData()
 		return Result.success()
 	}
 
