@@ -6,6 +6,7 @@ object Modules {
 	const val uiAlbums = ":music:ui-albums"
 	const val constants = ":constants"
 	const val dataMusic = ":music:data-music"
+	const val newDataMusic = ":data-music"
 	const val coreUi = ":core-ui"
 	const val coreModel = ":core-model"
 	const val coreCommon = ":core-common"

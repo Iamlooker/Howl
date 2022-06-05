@@ -65,6 +65,7 @@ dependencies {
 	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreNavigation))
 	implementation(project(Modules.dataMusic))
+	implementation(project(Modules.newDataMusic))
 	implementation(project(Modules.uiSongs))
 	implementation(project(Modules.uiAlbums))
 	implementation(project(Modules.featurePlayer))
@@ -83,6 +84,7 @@ dependencies {
 	implementation(Hilt.android)
 	implementation(Hilt.work)
 	kapt(Hilt.compiler)
+	kapt(Hilt.androidX)
 
 	debugImplementation(Compose.tooling)
 }
