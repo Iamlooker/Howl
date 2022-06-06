@@ -2,11 +2,13 @@ package com.looker.core_data.repository.impl
 
 import android.content.Context
 import com.looker.core_data.repository.AlbumsRepository
+import com.looker.core_data.repository.SongsRepository
 import com.looker.core_database.dao.AlbumDao
 import com.looker.core_database.model.AlbumEntity
 import com.looker.core_database.model.asEntity
 import com.looker.core_database.model.asExternalModel
 import com.looker.core_model.Album
+import com.looker.core_model.Song
 import com.looker.data_music.AlbumsData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +18,7 @@ import javax.inject.Inject
 class AlbumsRepositoryImpl @Inject constructor(
 	@ApplicationContext
 	private val appContext: Context,
+	private val songsRepository: SongsRepository,
 	private val albumDao: AlbumDao
 ) : AlbumsRepository {
 	override fun getAlbumsStream(): Flow<List<Album>> =
@@ -26,6 +29,8 @@ class AlbumsRepositoryImpl @Inject constructor(
 		albumDao.getAlbumEntityStream(albumId).map {
 			it.asExternalModel()
 		}
+
+	override fun getRelatedSongs(): Flow<List<Song>> = songsRepository.getSongsStream()
 
 	override suspend fun syncData(): Boolean {
 		val albums = AlbumsData(appContext).createAlbumsList().map { it.asEntity() }

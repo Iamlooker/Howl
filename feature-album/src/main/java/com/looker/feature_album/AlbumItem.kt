@@ -1,11 +1,15 @@
-package com.looker.ui_albums.components
+package com.looker.feature_album
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import com.looker.components.LargeCard
 import com.looker.components.localComposers.LocalDurations
@@ -14,9 +18,9 @@ import com.looker.core_model.Album
 import kotlinx.coroutines.launch
 
 @Composable
-fun AlbumsCard(
-	modifier: Modifier = Modifier,
+fun AlbumItem(
 	album: Album,
+	modifier: Modifier = Modifier,
 	cardWidth: Dp,
 	onClick: () -> Unit
 ) {

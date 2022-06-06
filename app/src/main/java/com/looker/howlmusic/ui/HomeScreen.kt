@@ -33,15 +33,12 @@ import com.looker.components.*
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.state.SheetsState
-import com.looker.core_model.Album
-import com.looker.core_model.Song
 import com.looker.feature_player.ui.Controls
 import com.looker.feature_player.ui.PlayerHeader
 import com.looker.feature_player.ui.components.PlayPauseIcon
 import com.looker.feature_player.ui.components.SeekBar
 import com.looker.feature_player.utils.extension.toSong
 import com.looker.howlmusic.ui.components.*
-import com.looker.ui_albums.AlbumsBottomSheetContent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -138,48 +135,15 @@ fun Home(
 			}
 		},
 		frontLayerContent = {
-			val bottomSheetState =
-				rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-
-			val albumsList by viewModel.albumsList.collectAsState()
-			val songsList by viewModel.songsList.collectAsState()
-			val currentAlbum by viewModel.currentAlbum.collectAsState()
-
-			val albumDominant = rememberDominantColorState()
 			val scope = rememberCoroutineScope()
 
 			FrontLayer(
 				navController = navController,
 				items = items,
-				bottomSheetState = bottomSheetState,
-				songsList = songsList,
-				albumsList = albumsList,
-				sheetContent = {
-					LaunchedEffect(currentAlbum) {
-						albumDominant.updateColorsFromImageUrl(currentAlbum.albumArt)
-					}
-					AlbumsBottomSheetContent(
-						currentAlbum = currentAlbum,
-						songsList = songsList.data?.filter { it.albumArt == currentAlbum.albumArt }
-							?: emptyList(),
-						dominantColor = albumDominant.color.copy(0.4f),
-						onSongClick = { viewModel.onSongClick(it) }
-					)
-				},
-				onSongClick = { viewModel.onSongClick(it) },
 				openPlayer = {
 					scope.launch {
 						state.animateTo(Revealed, TweenSpec(400))
 					}
-				},
-				onAlbumClick = {
-					scope.launch {
-						bottomSheetState.animateTo(
-							ModalBottomSheetValue.HalfExpanded,
-							TweenSpec(500)
-						)
-					}
-					viewModel.onAlbumClick(it)
 				}
 			)
 		},
@@ -226,66 +190,49 @@ fun Home(
 fun FrontLayer(
 	navController: NavHostController,
 	items: Array<HomeScreens>,
-	bottomSheetState: ModalBottomSheetState,
-	songsList: ResourceSongs,
-	albumsList: ResourceAlbums,
-	sheetContent: @Composable ColumnScope.() -> Unit,
-	openPlayer: () -> Unit,
-	onSongClick: (Song) -> Unit,
-	onAlbumClick: (Album) -> Unit,
+	openPlayer: () -> Unit
 ) {
-	BottomSheets(
-		state = bottomSheetState,
-		sheetContent = sheetContent
-	) {
-		Scaffold(
-			bottomBar = {
-				val navBackStackEntry by navController.currentBackStackEntryAsState()
-				val currentDestination = navBackStackEntry?.destination
-				BottomAppBar(
-					modifier = Modifier.windowInsetsBottomHeight(
-						WindowInsets.navigationBars.add(WindowInsets(bottom = 56.dp))
-					)
-				) {
-					items.forEach { screen ->
-						BottomNavigationItems(
-							modifier = Modifier.navigationBarsPadding(),
-							icon = screen.icon,
-							label = screen.title,
-							selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-							onSelected = {
-								navController.navigate(screen.route) {
-									popUpTo(navController.graph.findStartDestination().id) {
-										saveState = true
-									}
-									launchSingleTop = true
-									restoreState = true
+	Scaffold(
+		bottomBar = {
+			val navBackStackEntry by navController.currentBackStackEntryAsState()
+			val currentDestination = navBackStackEntry?.destination
+			BottomAppBar(
+				modifier = Modifier.windowInsetsBottomHeight(
+					WindowInsets.navigationBars.add(WindowInsets(bottom = 56.dp))
+				)
+			) {
+				items.forEach { screen ->
+					BottomNavigationItems(
+						modifier = Modifier.navigationBarsPadding(),
+						icon = screen.icon,
+						label = screen.title,
+						selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+						onSelected = {
+							navController.navigate(screen.route) {
+								popUpTo(navController.graph.findStartDestination().id) {
+									saveState = true
 								}
+								launchSingleTop = true
+								restoreState = true
 							}
-						)
-					}
+						}
+					)
 				}
-			},
-			floatingActionButton = {
-				OpaqueIconButton(
-					backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(),
-					contentPadding = PaddingValues(vertical = 16.dp),
-					onClick = openPlayer,
-					shape = MaterialTheme.shapes.small,
-					icon = Icons.Rounded.KeyboardArrowDown
-				)
 			}
-		) { bottomNavigationPadding ->
-			Column(Modifier.padding(bottomNavigationPadding)) {
-				HandleIcon { openPlayer() }
-				HomeNavGraph(
-					navController = navController,
-					songsList = songsList,
-					albumsList = albumsList,
-					onSongClick = onSongClick,
-					onAlbumClick = onAlbumClick
-				)
-			}
+		},
+		floatingActionButton = {
+			OpaqueIconButton(
+				backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(),
+				contentPadding = PaddingValues(vertical = 16.dp),
+				onClick = openPlayer,
+				shape = MaterialTheme.shapes.small,
+				icon = Icons.Rounded.KeyboardArrowDown
+			)
+		}
+	) { bottomNavigationPadding ->
+		Column(Modifier.padding(bottomNavigationPadding)) {
+			HandleIcon { openPlayer() }
+			HomeNavGraph(navController = navController)
 		}
 	}
 }

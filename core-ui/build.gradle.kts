@@ -42,15 +42,22 @@ android {
 
 dependencies {
 	implementation(project(Modules.coreModel))
-	implementation(project(Modules.components))
+	api(project(Modules.components))
 
 	implementation(Core.core)
 
 	api(Coil.coil)
+	api(Compose.activity)
 	api(Compose.runtime)
 	api(Compose.ui)
 	api(Compose.animation)
 	api(Compose.foundation)
 	api(Compose.icons)
 	api(Compose.material)
+
+	// Preview
+	debugApi("androidx.customview:customview:1.2.0-alpha01")
+	debugApi("androidx.customview:customview-poolingcontainer:1.0.0-beta02")
+	api(Compose.preview)
+	debugApi(Compose.tooling)
 }

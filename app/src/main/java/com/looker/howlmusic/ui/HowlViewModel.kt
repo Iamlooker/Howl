@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.components.state.SheetsState
 import com.looker.constants.Constants.MEDIA_ROOT_ID
-import com.looker.constants.Resource
-import com.looker.core_model.Album
 import com.looker.core_model.Song
-import com.looker.data_music.data.AlbumsRepository
 import com.looker.feature_player.service.MusicService
 import com.looker.feature_player.service.MusicServiceConnection
 import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_ALL
@@ -25,14 +22,10 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-typealias ResourceSongs = Resource<List<Song>>
-typealias ResourceAlbums = Resource<List<Album>>
-
 @HiltViewModel
 class HowlViewModel
 @Inject constructor(
-	private val musicServiceConnection: MusicServiceConnection,
-	private val albumsRepository: AlbumsRepository
+	private val musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
 
 	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
@@ -45,27 +38,16 @@ class HowlViewModel
 	val toggle = if (backdropValue.value == SheetsState.VISIBLE) shuffleMode else isPlaying
 
 	private val _songDuration = MutableStateFlow(0L)
-	private val _currentAlbum = MutableStateFlow(Album())
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
 	private val _progress = MutableStateFlow(0F)
-	private val _albumsList = MutableStateFlow<ResourceAlbums>(Resource.Loading(listOf()))
-	private val _songsList = MutableStateFlow<ResourceSongs>(Resource.Loading(listOf()))
 
 
-	val currentAlbum = _currentAlbum.asStateFlow()
 	val toggleIcon = _toggleIcon.asStateFlow()
 	val progress = _progress.asStateFlow()
-	val albumsList = _albumsList.asStateFlow()
-	val songsList = _songsList.asStateFlow()
 
 	init {
 		musicServiceConnection.subscribe(MEDIA_ROOT_ID) {
-			viewModelScope.launch {
-				_songsList.emit(Resource.Success(it))
-			}
-		}
-		viewModelScope.launch(Dispatchers.IO) {
-			_albumsList.emit(Resource.Success(albumsRepository.getAllAlbums().distinctBy { it.albumId }))
+
 		}
 
 		updateCurrentPlayerPosition()
@@ -88,14 +70,6 @@ class HowlViewModel
 			SheetsState.VISIBLE -> shuffleModeToggle()
 		}
 	}
-
-	fun onAlbumClick(album: Album) {
-		viewModelScope.launch(Dispatchers.IO) {
-			albumsList.collect { _currentAlbum.emit(album) }
-		}
-	}
-
-	fun onSongClick(song: Song) = playMedia(song, false)
 
 	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
 		val nowPlaying = musicServiceConnection.nowPlaying.value

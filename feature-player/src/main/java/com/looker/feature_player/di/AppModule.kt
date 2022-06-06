@@ -1,7 +1,6 @@
 package com.looker.feature_player.di
 
 import android.content.Context
-import com.looker.data_music.data.AlbumsRepository
 import com.looker.feature_player.service.MusicServiceConnection
 import dagger.Module
 import dagger.Provides
@@ -13,16 +12,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
 	@Singleton
 	@Provides
 	fun provideMusicServiceConnection(
 		@ApplicationContext context: Context
 	): MusicServiceConnection = MusicServiceConnection(context)
-
-	@Singleton
-	@Provides
-	fun provideAlbumsRepository(
-		@ApplicationContext context: Context
-	): AlbumsRepository = AlbumsRepository(context)
 }

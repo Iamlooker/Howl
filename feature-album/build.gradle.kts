@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-	compileSdk = Android.targetSdk
+	compileSdk = Android.compileSdk
 
 	defaultConfig {
 		minSdk = Android.minSdk
-		targetSdk = Android.targetSdk
+		targetSdk = Android.compileSdk
 
 		consumerProguardFiles("consumer-rules.pro")
 	}
@@ -25,43 +25,36 @@ android {
 		}
 	}
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.VERSION_11
+		targetCompatibility = JavaVersion.VERSION_11
 	}
+	kotlinOptions {
+		jvmTarget = "11"
+	}
+
 	buildFeatures {
 		compose = true
 		buildConfig = false
-		aidl = false
-		renderScript = false
-		resValues = false
-		shaders = false
 	}
+
 	composeOptions {
 		kotlinCompilerExtensionVersion = Compose.composeCompiler
-	}
-	kotlinOptions {
-		jvmTarget = "1.8"
 	}
 }
 
 dependencies {
+	implementation(project(Modules.coreDatabase))
 	implementation(project(Modules.coreModel))
+	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreData))
-	implementation(project(Modules.constants))
-	implementation(project(Modules.components))
+	implementation(project(Modules.coreNavigation))
+	implementation(project(Modules.coreUi))
+	implementation(project(Modules.featurePlayer))
 
-	implementation(Core.core)
+	implementation(Lifecycle.lifecycleViewModelCompose)
 
-	implementation(Compose.icons)
-	implementation(Compose.foundation)
-	implementation(Compose.runtime)
-	implementation(Compose.material)
-	implementation(Compose.ui)
-	debugImplementation(Compose.tooling)
-
-	implementation(ExoPlayer.exoplayer)
 	implementation(ExoPlayer.exoplayerMediaSession)
 
-	kapt(Hilt.compiler)
 	implementation(Hilt.android)
+	kapt(Hilt.compiler)
 }

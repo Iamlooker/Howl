@@ -8,7 +8,7 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.looker.data_music.data.SongsRepository
+import com.looker.core_data.repository.SongsRepository
 import com.looker.feature_player.service.DataSource
 import com.looker.feature_player.service.MusicSource
 import dagger.Module
@@ -50,12 +50,6 @@ object ServiceModule {
 	): ExoPlayer = ExoPlayer.Builder(context, renderersFactory)
 		.setAudioAttributes(audioAttributes, true)
 		.build()
-
-	@ServiceScoped
-	@Provides
-	fun provideSongsRepository(
-		@ApplicationContext context: Context
-	): SongsRepository = SongsRepository(context)
 
 	@ServiceScoped
 	@Provides

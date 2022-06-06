@@ -18,10 +18,11 @@ fun Modifier.backgroundGradient(
 	color: Color,
 	@FloatRange(from = 0.0, to = 1.0) startYPercentage: Float = 1f,
 	@FloatRange(from = 0.0, to = 1.0) endYPercentage: Float = 0f,
+	animationDuration: Int = 500
 ): Modifier = composed {
 	val animateColor by animateColorAsState(
 		targetValue = color,
-		animationSpec = tween(LocalDurations.current.crossFade)
+		animationSpec = tween(animationDuration)
 	)
 	val colors = remember(animateColor) {
 		listOf(animateColor.copy(alpha = 0f), animateColor)

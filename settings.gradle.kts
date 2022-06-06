@@ -24,8 +24,6 @@ include(":components")
 
 include(":music")
 include(":music:data-music")
-include(":music:ui-songs")
-include(":music:ui-albums")
 
 include(":core-model")
 include(":feature-player")
@@ -36,3 +34,4 @@ include(":feature-song")
 include(":core-navigation")
 include(":core-ui")
 include(":data-music")
+include(":feature-album")

@@ -25,9 +25,7 @@ private fun LazyListScope.songsList(songs: SongUiState, onClick: (Song) -> Unit 
 		is SongUiState.Success -> items(songs.songs) {
 			SongItem(onClick = { onClick(it) }, song = it)
 		}
-		SongUiState.Loading -> item {
-			LoadingState()
-		}
+		SongUiState.Loading -> item { LoadingState() }
 		SongUiState.Error -> item { Text("Error") }
 	}
 }

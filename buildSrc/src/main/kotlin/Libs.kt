@@ -26,6 +26,7 @@ object Compose {
 	const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
 	const val material = "androidx.compose.material:material:$composeVersion"
 	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
+	const val preview = "androidx.compose.ui:ui-tooling-preview:$composeVersion"
 	const val ui = "androidx.compose.ui:ui:$composeVersion"
 	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
 	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"

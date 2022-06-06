@@ -62,20 +62,14 @@ dependencies {
 	implementation(project(Modules.coreDatabase))
 	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreNavigation))
-	implementation(project(Modules.dataMusic))
 	implementation(project(Modules.newDataMusic))
-	implementation(project(Modules.uiSongs))
-	implementation(project(Modules.uiAlbums))
 	implementation(project(Modules.featurePlayer))
 	implementation(project(Modules.featureSong))
-	implementation(project(Modules.components))
+	implementation(project(Modules.featureAlbum))
 
 	implementation(Startup.lib)
 
 	implementation(Core.core)
-
-	implementation(Compose.activity)
-	implementation(Compose.navigation)
 
 	implementation(ExoPlayer.exoplayerMediaSession)
 
@@ -83,8 +77,6 @@ dependencies {
 	implementation(Hilt.work)
 	kapt(Hilt.compiler)
 	kapt(Hilt.androidX)
-
-	debugImplementation(Compose.tooling)
 }
 
 kapt {

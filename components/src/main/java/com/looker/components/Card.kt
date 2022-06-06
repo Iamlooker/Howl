@@ -8,6 +8,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.semantics
@@ -76,8 +78,8 @@ fun LargeCard(
 	onClick: () -> Unit,
 ) {
 	MaterialCard(
-		modifier = modifier.padding(8.dp),
-		backgroundColor = cardColor,
+		modifier = modifier.padding(8.dp).clip(imageShape).drawBehind { drawRect(cardColor) },
+		backgroundColor = Color.Transparent,
 		onClick = onClick
 	) {
 		LargeCardItem(

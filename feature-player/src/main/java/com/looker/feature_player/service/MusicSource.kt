@@ -10,14 +10,17 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.looker.data_music.data.SongsRepository
+import com.looker.core_data.repository.SongsRepository
 import com.looker.feature_player.utils.extension.toMediaMetadataCompat
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-class MusicSource @Inject constructor(private val songsRepository: SongsRepository) : DataSource<MediaMetadataCompat>{
+class MusicSource @Inject constructor(private val songsRepository: SongsRepository) :
+	DataSource<MediaMetadataCompat> {
 
 	override var data = emptyList<MediaMetadataCompat>()
 
@@ -51,7 +54,10 @@ class MusicSource @Inject constructor(private val songsRepository: SongsReposito
 
 	private suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
 		try {
-			songsRepository.getAllSongs().map { it.toMediaMetadataCompat }
+			songsRepository
+				.getSongsStream()
+				.map { songs -> songs.map { it.toMediaMetadataCompat } }
+				.first()
 		} catch (ioException: IOException) {
 			null
 		}
