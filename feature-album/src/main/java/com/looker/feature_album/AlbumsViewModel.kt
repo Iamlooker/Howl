@@ -20,6 +20,10 @@ class AlbumsViewModel @Inject constructor(
 	albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
+	init {
+		viewModelScope.launch { albumsRepository.syncData() }
+	}
+
 	private val _currentAlbum = MutableStateFlow(Album())
 	val currentAlbum = _currentAlbum.asStateFlow()
 

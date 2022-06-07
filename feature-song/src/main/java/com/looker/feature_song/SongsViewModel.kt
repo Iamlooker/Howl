@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +21,10 @@ class SongsViewModel @Inject constructor(
 	private val musicServiceConnection: MusicServiceConnection,
 	songsRepository: SongsRepository
 ) : ViewModel() {
+
+	init {
+		viewModelScope.launch { songsRepository.syncData() }
+	}
 
 	private val songsStream: Flow<Result<List<Song>>> =
 		songsRepository.getSongsStream().asResult()

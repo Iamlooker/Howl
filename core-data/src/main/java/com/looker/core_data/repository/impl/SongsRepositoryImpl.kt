@@ -35,6 +35,6 @@ class SongsRepositoryImpl @Inject constructor(
 	override suspend fun syncData(): Boolean {
 		val songs = SongsData(appContext).createSongsList().map { it.asEntity() }
 		songDao.insertOrIgnoreSongs(songs)
-		return true
+		return songs.isNotEmpty()
 	}
 }
