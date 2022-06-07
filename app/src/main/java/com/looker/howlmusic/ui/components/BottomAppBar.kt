@@ -1,6 +1,5 @@
 package com.looker.howlmusic.ui.components
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
