@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui.components
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
@@ -7,10 +8,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -22,23 +20,42 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.localComposers.LocalElevations
 import com.looker.components.overBackground
+import com.looker.howlmusic.navigation.TOP_LEVEL_DESTINATIONS
+import com.looker.howlmusic.navigation.TopLevelDestination
 
 @Composable
 fun BottomAppBar(
 	modifier: Modifier = Modifier,
-	bottomAppBarItem: @Composable RowScope.() -> Unit
+	currentDestination: NavDestination?,
+	onNavigate: (TopLevelDestination) -> Unit
 ) {
-	BottomNavigation(
-		modifier = modifier
-			.clip(MaterialTheme.shapes.small)
-			.background(MaterialTheme.colors.surface),
-		backgroundColor = MaterialTheme.colors.surface,
-		elevation = LocalElevations.current.default,
-		content = bottomAppBarItem
-	)
+	Surface(
+		modifier = modifier,
+		color = MaterialTheme.colors.surface,
+		shape = MaterialTheme.shapes.small
+	) {
+		BottomNavigation(elevation = LocalElevations.current.default) {
+			TOP_LEVEL_DESTINATIONS.forEach { destination ->
+				val selected =
+					currentDestination?.hierarchy?.any { it.route == destination.route } == true
+
+				Log.e("recompose", destination.toString())
+				BottomNavigationItems(
+					modifier = Modifier.navigationBarsPadding(),
+					icon = destination.icon,
+					label = destination.label,
+					selected = selected
+				) {
+					onNavigate(destination)
+				}
+			}
+		}
+	}
 }
 
 @Composable

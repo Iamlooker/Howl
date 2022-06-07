@@ -29,9 +29,8 @@ fun App() {
 		val context = LocalContext.current.applicationContext
 		var canReadStorage by remember { mutableStateOf(checkReadPermission(context)) }
 		val navController = rememberNavController()
-		val items = remember { HomeScreens.values() }
 
-		if (canReadStorage) Home(navController, items)
+		if (canReadStorage) Home(navController)
 		else OnBoardingPage { canReadStorage = it }
 	}
 }

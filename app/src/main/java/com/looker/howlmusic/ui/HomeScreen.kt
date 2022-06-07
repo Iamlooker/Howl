@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
@@ -24,8 +25,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
@@ -38,14 +37,16 @@ import com.looker.feature_player.ui.PlayerHeader
 import com.looker.feature_player.ui.components.PlayPauseIcon
 import com.looker.feature_player.ui.components.SeekBar
 import com.looker.feature_player.utils.extension.toSong
-import com.looker.howlmusic.ui.components.*
+import com.looker.howlmusic.navigation.TopLevelNavigation
+import com.looker.howlmusic.ui.components.Backdrop
+import com.looker.howlmusic.ui.components.BottomAppBar
+import com.looker.howlmusic.ui.components.HomeNavGraph
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Home(
 	navController: NavHostController,
-	items: Array<HomeScreens>,
 	viewModel: HowlViewModel = viewModel()
 ) {
 	val configuration = LocalConfiguration.current
@@ -139,7 +140,6 @@ fun Home(
 
 			FrontLayer(
 				navController = navController,
-				items = items,
 				openPlayer = {
 					scope.launch {
 						state.animateTo(Revealed, TweenSpec(400))
@@ -189,9 +189,11 @@ fun Home(
 @Composable
 fun FrontLayer(
 	navController: NavHostController,
-	items: Array<HomeScreens>,
 	openPlayer: () -> Unit
 ) {
+	val topLevelNavigation = remember(navController) {
+		TopLevelNavigation(navController)
+	}
 	Scaffold(
 		bottomBar = {
 			val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -199,26 +201,10 @@ fun FrontLayer(
 			BottomAppBar(
 				modifier = Modifier.windowInsetsBottomHeight(
 					WindowInsets.navigationBars.add(WindowInsets(bottom = 56.dp))
-				)
-			) {
-				items.forEach { screen ->
-					BottomNavigationItems(
-						modifier = Modifier.navigationBarsPadding(),
-						icon = screen.icon,
-						label = screen.title,
-						selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-						onSelected = {
-							navController.navigate(screen.route) {
-								popUpTo(navController.graph.findStartDestination().id) {
-									saveState = true
-								}
-								launchSingleTop = true
-								restoreState = true
-							}
-						}
-					)
-				}
-			}
+				),
+				currentDestination = currentDestination,
+				onNavigate = topLevelNavigation::navigateUp
+			)
 		},
 		floatingActionButton = {
 			OpaqueIconButton(
