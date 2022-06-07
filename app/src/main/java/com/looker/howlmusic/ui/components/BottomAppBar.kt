@@ -44,7 +44,6 @@ fun BottomAppBar(
 				val selected =
 					currentDestination?.hierarchy?.any { it.route == destination.route } == true
 
-				Log.e("recompose", destination.toString())
 				BottomNavigationItems(
 					modifier = Modifier.navigationBarsPadding(),
 					icon = destination.icon,
