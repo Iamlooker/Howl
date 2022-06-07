@@ -37,9 +37,9 @@ class SongsData(private val context: Context) {
 				do {
 					val songId = it.getLong(0)
 					val albumId = it.getLong(1)
-					val songName = it.getString(2)
-					val artistName = it.getString(3)
-					val albumName = it.getString(4)
+					val songName = it.getString(2) ?: ""
+					val artistName = it.getString(3) ?: ""
+					val albumName = it.getString(4) ?: ""
 					val songDurationMillis = it.getLong(5)
 					val songUri = "$externalUri/$songId"
 					val albumArt = "content://media/external/audio/albumart/$albumId"
