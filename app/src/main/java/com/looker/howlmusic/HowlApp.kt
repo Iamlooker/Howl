@@ -8,7 +8,6 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.looker.data_music.GetData
 import com.looker.howlmusic.ui.Home
-import com.looker.howlmusic.ui.components.HomeScreens
 import com.looker.howlmusic.ui.theme.HowlMusicTheme
 import com.looker.onboarding.OnBoardingPage
 import com.looker.onboarding.utils.checkReadPermission

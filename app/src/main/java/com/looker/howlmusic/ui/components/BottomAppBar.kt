@@ -38,7 +38,10 @@ fun BottomAppBar(
 		color = MaterialTheme.colors.surface,
 		shape = MaterialTheme.shapes.small
 	) {
-		BottomNavigation(elevation = LocalElevations.current.default) {
+		BottomNavigation(
+			backgroundColor = Color.Transparent,
+			elevation = LocalElevations.current.default
+		) {
 			TOP_LEVEL_DESTINATIONS.forEach { destination ->
 				val selected =
 					currentDestination?.hierarchy?.any { it.route == destination.route } == true
@@ -65,7 +68,7 @@ fun RowScope.BottomNavigationItems(
 	selectedContentColor: Color = MaterialTheme.colors.primary,
 	selectedBackgroundColor: Color = MaterialTheme.colors.primaryVariant,
 	unselectedContentColor: Color = MaterialTheme.colors.onSurface,
-	unselectedBackgroundColor: Color = MaterialTheme.colors.surface,
+	unselectedBackgroundColor: Color = Color.Transparent,
 	interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
 	onSelected: () -> Unit
 ) {
