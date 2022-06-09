@@ -1,6 +1,5 @@
 package com.looker.onboarding.utils
 
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
@@ -27,7 +26,7 @@ sealed class ButtonState(
 
 	object WaitingAction : ButtonState(
 		text = "Grant Permission",
-		icon = { CircularProgressIndicator() },
+		icon = { },
 		color = orange
 	)
 }
