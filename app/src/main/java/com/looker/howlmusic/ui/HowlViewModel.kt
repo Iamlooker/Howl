@@ -46,10 +46,7 @@ class HowlViewModel
 	val progress = _progress.asStateFlow()
 
 	init {
-		musicServiceConnection.subscribe(MEDIA_ROOT_ID) {
-
-		}
-
+		musicServiceConnection.subscribe(MEDIA_ROOT_ID)
 		updateCurrentPlayerPosition()
 	}
 

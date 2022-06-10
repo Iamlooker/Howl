@@ -1,6 +1,5 @@
 package com.looker.howlmusic.ui
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
@@ -217,7 +216,7 @@ fun FrontLayer(
 		}
 	) { bottomNavigationPadding ->
 		Column(Modifier.padding(bottomNavigationPadding)) {
-			HandleIcon { openPlayer() }
+			HandleIcon(onClick = openPlayer)
 			HomeNavGraph(navController = navController)
 		}
 	}

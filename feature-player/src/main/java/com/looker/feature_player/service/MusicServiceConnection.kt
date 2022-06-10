@@ -48,7 +48,7 @@ class MusicServiceConnection(context: Context) {
 		null
 	).apply { connect() }
 
-	fun subscribe(parentId: String, callback: (List<Song>) -> Unit) {
+	fun subscribe(parentId: String, callback: (List<Song>) -> Unit = {}) {
 		mediaBrowser.subscribe(
 			parentId,
 			object : SubscriptionCallback() {
