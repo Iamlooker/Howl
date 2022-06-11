@@ -30,11 +30,11 @@ class HowlViewModel
 
 	val backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 
-	private val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
-	private val shuffleMode = musicServiceConnection.shuffleMode
-
 	val isPlaying = musicServiceConnection.isPlaying
+
+	private val nowPlaying = musicServiceConnection.nowPlaying
+	private val shuffleMode = musicServiceConnection.shuffleMode
 
 	val toggleStream =
 		combine(shuffleMode, isPlaying, backdropValue) { shuffling, playing, backdrop ->
