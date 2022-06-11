@@ -22,6 +22,13 @@ android {
 			)
 		}
 	}
+	buildFeatures {
+		buildConfig = false
+		aidl = false
+		renderScript = false
+		resValues = false
+		shaders = false
+	}
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_11
 		targetCompatibility = JavaVersion.VERSION_11

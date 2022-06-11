@@ -29,12 +29,14 @@ android {
 	kotlinOptions {
 		jvmTarget = "11"
 	}
-
 	buildFeatures {
 		compose = true
 		buildConfig = false
+		aidl = false
+		renderScript = false
+		resValues = false
+		shaders = false
 	}
-
 	composeOptions {
 		kotlinCompilerExtensionVersion = Compose.composeCompiler
 	}

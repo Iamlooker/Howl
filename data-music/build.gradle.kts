@@ -28,6 +28,13 @@ android {
 		sourceCompatibility = JavaVersion.VERSION_11
 		targetCompatibility = JavaVersion.VERSION_11
 	}
+	buildFeatures {
+		buildConfig = false
+		aidl = false
+		renderScript = false
+		resValues = false
+		shaders = false
+	}
 	kotlinOptions {
 		jvmTarget = "11"
 	}

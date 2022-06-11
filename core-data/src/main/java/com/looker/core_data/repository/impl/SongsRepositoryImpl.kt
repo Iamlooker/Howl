@@ -2,7 +2,6 @@ package com.looker.core_data.repository.impl
 
 import android.content.Context
 import com.looker.core_data.repository.SongsRepository
-import com.looker.core_database.dao.AlbumDao
 import com.looker.core_database.dao.SongDao
 import com.looker.core_database.model.SongEntity
 import com.looker.core_database.model.asEntity
@@ -17,8 +16,7 @@ import javax.inject.Inject
 class SongsRepositoryImpl @Inject constructor(
 	@ApplicationContext
 	private val appContext: Context,
-	private val songDao: SongDao,
-	private val albumDao: AlbumDao
+	private val songDao: SongDao
 ) : SongsRepository {
 	override fun getSongsStream(): Flow<List<Song>> =
 		songDao.getSongEntitiesStream()

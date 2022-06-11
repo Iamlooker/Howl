@@ -3,6 +3,7 @@ package com.looker.howlmusic.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Album
 import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -21,6 +22,7 @@ class TopLevelNavigation(private val navController: NavHostController) {
 	}
 }
 
+@Immutable
 data class TopLevelDestination(
 	val route: String,
 	val icon: ImageVector,
