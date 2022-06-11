@@ -1,7 +1,6 @@
 package com.looker.howlmusic.ui
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -10,6 +9,7 @@ import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,13 +26,13 @@ import com.looker.components.OpaqueIconButton
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.overBackground
 import com.looker.components.state.SheetsState
+import com.looker.constants.states.ToggleState
 import com.looker.feature_player.ui.Controls
 import com.looker.feature_player.ui.PlayerHeader
 import com.looker.howlmusic.navigation.TopLevelNavigation
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -42,13 +42,13 @@ fun Home(
 ) {
 	val configuration = LocalConfiguration.current
 	val state = rememberBackdropScaffoldState(Concealed)
-	val isPlaying by viewModel.isPlaying.collectAsState()
 	val expandedHeight = remember(configuration) { configuration.screenHeightDp.dp / 3 }
 
 	Backdrop(
 		state = state,
 		// Best solution for now
 		isPlaying = {
+			val isPlaying by viewModel.isPlaying.collectAsState()
 			animateDpAsState(
 				targetValue = if (isPlaying) expandedHeight else BackdropScaffoldDefaults.PeekHeight,
 				animationSpec = tween(LocalDurations.current.crossFade)
@@ -56,15 +56,13 @@ fun Home(
 		},
 		header = {
 			PlayerHeader {
-				val toggle by viewModel.toggle.collectAsState()
-
+				val toggleState by viewModel.toggleStream.collectAsState()
 				val toggleColor by animateColorAsState(
 					targetValue =
-					if (toggle) MaterialTheme.colors.secondaryVariant.overBackground()
+					if (toggleState.enabled) MaterialTheme.colors.secondaryVariant.overBackground()
 					else MaterialTheme.colors.background,
 					animationSpec = tween(LocalDurations.current.crossFade)
 				)
-
 				Button(
 					modifier = Modifier
 						.clip(MaterialTheme.shapes.medium)
@@ -74,30 +72,25 @@ fun Home(
 					elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
 					onClick = { viewModel.onToggleClick() },
 				) {
+					val playIcon by viewModel.playIcon.collectAsState()
+					val toggleIcon = when (toggleState.toggleState) {
+						ToggleState.PlayControl -> playIcon
+						ToggleState.Shuffle -> Icons.Rounded.Shuffle
+					}
 					LaunchedEffect(state.currentValue) {
 						viewModel.backdropValue.value = when (state.currentValue) {
 							Concealed -> SheetsState.HIDDEN
 							Revealed -> SheetsState.VISIBLE
 						}
-						viewModel.updateToggleIcon()
 					}
-
-					val toggleIcon by viewModel.toggleIcon.collectAsState()
-
 					Icon(imageVector = toggleIcon, contentDescription = null)
 				}
 			}
 		},
 		frontLayerContent = {
-			val scope = rememberCoroutineScope()
-
 			FrontLayer(
 				navController = navController,
-				openPlayer = {
-					scope.launch {
-						state.animateTo(Revealed, TweenSpec(400))
-					}
-				}
+				openPlayer = { viewModel.openPlayer(state) }
 			)
 		},
 		backLayerContent = { Controls() }

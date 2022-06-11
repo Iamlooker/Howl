@@ -1,6 +1,11 @@
 package com.looker.constants.states
 
-sealed class ToggleState(var enabled: Boolean = false) {
+data class ToggleButtonState(
+	val toggleState: ToggleState,
+	val enabled: Boolean
+)
+
+sealed class ToggleState {
 	object Shuffle : ToggleState()
 	object PlayControl : ToggleState()
 }

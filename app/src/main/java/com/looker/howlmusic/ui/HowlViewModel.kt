@@ -1,22 +1,26 @@
 package com.looker.howlmusic.ui
 
 import android.util.Log
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.animation.core.TweenSpec
+import androidx.compose.material.BackdropScaffoldState
+import androidx.compose.material.BackdropValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.components.state.SheetsState
 import com.looker.constants.Constants.MEDIA_ROOT_ID
+import com.looker.constants.states.ToggleButtonState
+import com.looker.constants.states.ToggleState
 import com.looker.core_model.Song
 import com.looker.feature_player.service.MusicServiceConnection
 import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_ALL
 import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_NONE
 import com.looker.feature_player.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,34 +32,32 @@ class HowlViewModel
 
 	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
 
-	val nowPlaying = musicServiceConnection.nowPlaying
+	private val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
-	val shuffleMode = musicServiceConnection.shuffleMode
-	val isPlaying = musicServiceConnection.isPlaying
-	val toggle = if (backdropValue.value == SheetsState.VISIBLE) shuffleMode else isPlaying
+	private val shuffleMode = musicServiceConnection.shuffleMode
 
-	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
-	val toggleIcon = _toggleIcon.asStateFlow()
+	val isPlaying = musicServiceConnection.isPlaying
+
+	val toggleStream =
+		combine(shuffleMode, isPlaying, backdropValue) { shuffling, playing, backdrop ->
+			when (backdrop) {
+				SheetsState.VISIBLE -> ToggleButtonState(ToggleState.Shuffle, shuffling)
+				SheetsState.HIDDEN -> ToggleButtonState(ToggleState.PlayControl, playing)
+			}
+		}.stateIn(
+			scope = viewModelScope,
+			started = SharingStarted.WhileSubscribed(5000),
+			initialValue = ToggleButtonState(ToggleState.PlayControl, false)
+		)
 
 	init {
 		musicServiceConnection.subscribe(MEDIA_ROOT_ID)
 	}
 
-	fun updateToggleIcon() {
-		viewModelScope.launch(Dispatchers.Default) {
-			playIcon.collectLatest {
-				_toggleIcon.value = when (backdropValue.value) {
-					SheetsState.HIDDEN -> it
-					SheetsState.VISIBLE -> Icons.Rounded.Shuffle
-				}
-			}
-		}
-	}
-
 	fun onToggleClick() {
-		when (backdropValue.value) {
-			SheetsState.HIDDEN -> playMedia(nowPlaying.value.toSong)
-			SheetsState.VISIBLE -> shuffleModeToggle()
+		when (toggleStream.value.toggleState) {
+			ToggleState.PlayControl -> playMedia(nowPlaying.value.toSong)
+			ToggleState.Shuffle -> shuffleModeToggle()
 		}
 	}
 
@@ -90,6 +92,13 @@ class HowlViewModel
 	private fun shuffleModeToggle() {
 		val transportControls = musicServiceConnection.transportControls
 		transportControls.setShuffleMode(if (shuffleMode.value) SHUFFLE_MODE_NONE else SHUFFLE_MODE_ALL)
+	}
+
+	@OptIn(ExperimentalMaterialApi::class)
+	fun openPlayer(state: BackdropScaffoldState) {
+		viewModelScope.launch {
+			state.animateTo(BackdropValue.Revealed, TweenSpec(400))
+		}
 	}
 
 	override fun onCleared() {
