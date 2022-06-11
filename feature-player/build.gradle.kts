@@ -25,8 +25,8 @@ android {
 		}
 	}
 	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.VERSION_11
+		targetCompatibility = JavaVersion.VERSION_11
 	}
 	buildFeatures {
 		compose = true
@@ -40,28 +40,22 @@ android {
 		kotlinCompilerExtensionVersion = Compose.composeCompiler
 	}
 	kotlinOptions {
-		jvmTarget = "1.8"
+		jvmTarget = "11"
 	}
 }
 
 dependencies {
 	implementation(project(Modules.coreModel))
 	implementation(project(Modules.coreData))
+	implementation(project(Modules.coreUi))
 	implementation(project(Modules.constants))
-	implementation(project(Modules.components))
-
-	implementation(Core.core)
-
-	implementation(Compose.icons)
-	implementation(Compose.foundation)
-	implementation(Compose.runtime)
-	implementation(Compose.material)
-	implementation(Compose.ui)
-	debugImplementation(Compose.tooling)
 
 	implementation(ExoPlayer.exoplayer)
 	implementation(ExoPlayer.exoplayerMediaSession)
 
+	implementation(Lifecycle.lifecycleViewModelCompose)
+
 	kapt(Hilt.compiler)
 	implementation(Hilt.android)
+	implementation(Hilt.navigation)
 }

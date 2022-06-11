@@ -34,11 +34,17 @@ android {
 
 	kotlinOptions {
 		freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
+		jvmTarget = "11"
 	}
 
 	buildFeatures {
 		compose = true
 		buildConfig = false
+	}
+
+	compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_11
+		targetCompatibility = JavaVersion.VERSION_11
 	}
 
 	composeOptions {

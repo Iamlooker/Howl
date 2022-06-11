@@ -8,14 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.looker.components.state.SheetsState
 import com.looker.constants.Constants.MEDIA_ROOT_ID
 import com.looker.core_model.Song
-import com.looker.feature_player.service.MusicService
 import com.looker.feature_player.service.MusicServiceConnection
 import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_ALL
 import com.looker.feature_player.utils.ShuffleMode.SHUFFLE_MODE_NONE
 import com.looker.feature_player.utils.extension.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -30,24 +28,17 @@ class HowlViewModel
 
 	val backdropValue = MutableStateFlow<SheetsState>(SheetsState.HIDDEN)
 
-	private val playbackState = musicServiceConnection.playbackState
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
 	val shuffleMode = musicServiceConnection.shuffleMode
 	val isPlaying = musicServiceConnection.isPlaying
 	val toggle = if (backdropValue.value == SheetsState.VISIBLE) shuffleMode else isPlaying
 
-	private val _songDuration = MutableStateFlow(0L)
 	private val _toggleIcon = MutableStateFlow(Icons.Rounded.Shuffle)
-	private val _progress = MutableStateFlow(0F)
-
-
 	val toggleIcon = _toggleIcon.asStateFlow()
-	val progress = _progress.asStateFlow()
 
 	init {
 		musicServiceConnection.subscribe(MEDIA_ROOT_ID)
-		updateCurrentPlayerPosition()
 	}
 
 	fun updateToggleIcon() {
@@ -68,7 +59,7 @@ class HowlViewModel
 		}
 	}
 
-	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
+	private fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
 		val nowPlaying = musicServiceConnection.nowPlaying.value
 		val transportControls = musicServiceConnection.transportControls
 
@@ -96,38 +87,9 @@ class HowlViewModel
 		}
 	}
 
-	fun onSeek(seekTo: Float) {
-		viewModelScope.launch { _progress.emit(seekTo) }
-	}
-
-	fun onSeeked() {
-		musicServiceConnection.transportControls.seekTo((_songDuration.value * progress.value).toLong())
-	}
-
-	fun playNext() {
-		musicServiceConnection.transportControls.skipToNext()
-	}
-
-	fun playPrevious() {
-		musicServiceConnection.transportControls.skipToPrevious()
-	}
-
 	private fun shuffleModeToggle() {
 		val transportControls = musicServiceConnection.transportControls
 		transportControls.setShuffleMode(if (shuffleMode.value) SHUFFLE_MODE_NONE else SHUFFLE_MODE_ALL)
-	}
-
-	private fun updateCurrentPlayerPosition() {
-		viewModelScope.launch(Dispatchers.IO) {
-			while (true) {
-				val pos = playbackState.value.currentPlaybackPosition.toFloat()
-				if (progress.value != pos) {
-					_progress.emit(pos / MusicService.songDuration)
-					_songDuration.emit(MusicService.songDuration)
-				}
-				delay(500)
-			}
-		}
 	}
 
 	override fun onCleared() {
