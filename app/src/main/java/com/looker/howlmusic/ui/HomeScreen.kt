@@ -1,6 +1,7 @@
 package com.looker.howlmusic.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
@@ -25,14 +26,17 @@ import com.looker.components.HandleIcon
 import com.looker.components.OpaqueIconButton
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.overBackground
-import com.looker.components.state.SheetsState
-import com.looker.constants.states.ToggleState
+import com.looker.components.state.SheetsState.HIDDEN
+import com.looker.components.state.SheetsState.VISIBLE
+import com.looker.constants.states.ToggleState.PlayControl
+import com.looker.constants.states.ToggleState.Shuffle
 import com.looker.feature_player.ui.Controls
 import com.looker.feature_player.ui.PlayerHeader
 import com.looker.howlmusic.navigation.TopLevelNavigation
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar
 import com.looker.howlmusic.ui.components.HomeNavGraph
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -74,13 +78,13 @@ fun Home(
 				) {
 					val playIcon by viewModel.playIcon.collectAsState()
 					val toggleIcon = when (toggleState.toggleState) {
-						ToggleState.PlayControl -> playIcon
-						ToggleState.Shuffle -> Icons.Rounded.Shuffle
+						PlayControl -> playIcon
+						Shuffle -> Icons.Rounded.Shuffle
 					}
 					LaunchedEffect(state.currentValue) {
 						viewModel.backdropValue.value = when (state.currentValue) {
-							Concealed -> SheetsState.HIDDEN
-							Revealed -> SheetsState.VISIBLE
+							Concealed -> HIDDEN
+							Revealed -> VISIBLE
 						}
 					}
 					Icon(imageVector = toggleIcon, contentDescription = null)
@@ -88,9 +92,12 @@ fun Home(
 			}
 		},
 		frontLayerContent = {
+			val scope = rememberCoroutineScope()
 			FrontLayer(
 				navController = navController,
-				openPlayer = { viewModel.openPlayer(state) }
+				openPlayer = {
+					scope.launch { state.animateTo(Revealed, TweenSpec(400)) }
+				}
 			)
 		},
 		backLayerContent = { Controls() }
