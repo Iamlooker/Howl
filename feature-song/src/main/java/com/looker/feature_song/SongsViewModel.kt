@@ -1,5 +1,6 @@
 package com.looker.feature_song
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.core_common.result.Result
@@ -22,9 +23,7 @@ class SongsViewModel @Inject constructor(
 	songsRepository: SongsRepository
 ) : ViewModel() {
 
-	init {
-		viewModelScope.launch { songsRepository.syncData() }
-	}
+	init { viewModelScope.launch { songsRepository.syncData() } }
 
 	private val songsStream: Flow<Result<List<Song>>> =
 		songsRepository.getSongsStream().asResult()
@@ -53,6 +52,7 @@ class SongsViewModel @Inject constructor(
 	}
 }
 
+@Immutable
 data class SongScreenUiState(val songsState: SongUiState)
 
 sealed interface SongUiState {

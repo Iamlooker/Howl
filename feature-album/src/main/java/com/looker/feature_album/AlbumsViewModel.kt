@@ -1,5 +1,6 @@
 package com.looker.feature_album
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.core_common.result.Result
@@ -20,9 +21,7 @@ class AlbumsViewModel @Inject constructor(
 	albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
-	init {
-		viewModelScope.launch { albumsRepository.syncData() }
-	}
+	init { viewModelScope.launch { albumsRepository.syncData() } }
 
 	private val _currentAlbum = MutableStateFlow(Album())
 	val currentAlbum = _currentAlbum.asStateFlow()
@@ -76,6 +75,7 @@ class AlbumsViewModel @Inject constructor(
 	}
 }
 
+@Immutable
 data class AlbumScreenUiState(val albumsState: AlbumUiState)
 
 sealed interface AlbumUiState {
@@ -84,6 +84,7 @@ sealed interface AlbumUiState {
 	object Loading : AlbumUiState
 }
 
+@Immutable
 data class SongListUiState(val songsState: SongUiState)
 
 sealed interface SongUiState {
