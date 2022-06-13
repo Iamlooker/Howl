@@ -1,5 +1,6 @@
 package com.looker.howlmusic.ui
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
@@ -10,7 +11,6 @@ import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.Shuffle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,8 +28,6 @@ import com.looker.components.localComposers.LocalDurations
 import com.looker.components.overBackground
 import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.state.SheetsState.VISIBLE
-import com.looker.constants.states.ToggleState.PlayControl
-import com.looker.constants.states.ToggleState.Shuffle
 import com.looker.feature_player.ui.Controls
 import com.looker.feature_player.ui.PlayerHeader
 import com.looker.howlmusic.navigation.TopLevelNavigation
@@ -45,7 +43,16 @@ fun Home(
 	viewModel: HowlViewModel = viewModel()
 ) {
 	val configuration = LocalConfiguration.current
-	val state = rememberBackdropScaffoldState(Concealed)
+	val state = rememberBackdropScaffoldState(
+		initialValue = Concealed,
+		confirmStateChange = {
+			viewModel.backdropValue.value = when (it) {
+				Concealed -> HIDDEN
+				Revealed -> VISIBLE
+			}
+			true
+		}
+	)
 	val expandedHeight = remember(configuration) { configuration.screenHeightDp.dp / 3 }
 
 	Backdrop(
@@ -76,18 +83,10 @@ fun Home(
 					elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
 					onClick = { viewModel.onToggleClick() },
 				) {
-					val playIcon by viewModel.playIcon.collectAsState()
-					val toggleIcon = when (toggleState.toggleState) {
-						PlayControl -> playIcon
-						Shuffle -> Icons.Rounded.Shuffle
+					val toggleIcon by remember(toggleState) { mutableStateOf(toggleState.icon) }
+					Crossfade(toggleIcon) {
+						Icon(imageVector = it, contentDescription = null)
 					}
-					LaunchedEffect(state.currentValue) {
-						viewModel.backdropValue.value = when (state.currentValue) {
-							Concealed -> HIDDEN
-							Revealed -> VISIBLE
-						}
-					}
-					Icon(imageVector = toggleIcon, contentDescription = null)
 				}
 			}
 		},
@@ -96,7 +95,13 @@ fun Home(
 			FrontLayer(
 				navController = navController,
 				openPlayer = {
-					scope.launch { state.animateTo(Revealed, TweenSpec(400)) }
+					scope.launch {
+						state.animateTo(Revealed, TweenSpec(400))
+						viewModel.backdropValue.value = when (state.currentValue) {
+							Concealed -> HIDDEN
+							Revealed -> VISIBLE
+						}
+					}
 				}
 			)
 		},
