@@ -81,7 +81,7 @@ fun Home(
 						.drawBehind { drawRect(toggleColor) },
 					colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
 					elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
-					onClick = { viewModel.onToggleClick() },
+					onClick = viewModel::onToggleClick,
 				) {
 					val toggleIcon by remember(toggleState) { mutableStateOf(toggleState.icon) }
 					Crossfade(toggleIcon) {

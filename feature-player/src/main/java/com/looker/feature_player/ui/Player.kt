@@ -124,8 +124,8 @@ fun Controls(
 			SeekBar(
 				modifier = Modifier.height(60.dp),
 				progress = progress,
-				onValueChange = { viewModel.onSeek(it) },
-				onValueChanged = { viewModel.onSeeked() }
+				onValueChange = viewModel::onSeek,
+				onValueChanged = viewModel::onSeeked
 			)
 		}
 	}

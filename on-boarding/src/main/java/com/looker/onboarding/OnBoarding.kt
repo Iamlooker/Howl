@@ -59,8 +59,8 @@ fun OnBoardingPage(
 		handlePermissions(
 			context,
 			permissionLauncher,
-			onGranted = { viewModel.onPermissionGranted() },
-			onDenied = { viewModel.onPermissionDenied() }
+			onGranted = viewModel::onPermissionGranted,
+			onDenied = viewModel::onPermissionDenied
 		)
 	}
 

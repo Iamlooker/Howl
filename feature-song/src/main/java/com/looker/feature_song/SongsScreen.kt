@@ -22,7 +22,7 @@ fun SongRoute(
 
 private fun LazyListScope.songsList(songs: SongUiState, onClick: (Song) -> Unit = {}) {
 	when (songs) {
-		is SongUiState.Success -> items(songs.songs) {
+		is SongUiState.Success -> items(items = songs.songs, key = { it.mediaId }) {
 			SongItem(onClick = { onClick(it) }, song = it)
 		}
 		SongUiState.Loading -> item { LoadingState() }

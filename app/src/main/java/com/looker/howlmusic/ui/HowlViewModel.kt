@@ -36,8 +36,6 @@ class HowlViewModel
 ) : ViewModel() {
 
 	val backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
-
-	val playIcon = musicServiceConnection.playIcon
 	val isPlaying = musicServiceConnection.isPlaying
 
 	private val nowPlaying = musicServiceConnection.nowPlaying
@@ -49,10 +47,10 @@ class HowlViewModel
 			isPlaying,
 			backdropValue,
 			musicServiceConnection.playIcon
-		) { shuffling, playing, backdrop, icon ->
+		) { shuffling, playing, backdrop, playIcon ->
 			when (backdrop) {
 				VISIBLE -> ToggleButtonState(Shuffle, shuffling, Icons.Rounded.Shuffle)
-				HIDDEN -> ToggleButtonState(PlayControl, playing, icon)
+				HIDDEN -> ToggleButtonState(PlayControl, playing, playIcon)
 			}
 		}.stateIn(
 			scope = viewModelScope,

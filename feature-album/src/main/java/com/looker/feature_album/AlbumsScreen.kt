@@ -68,7 +68,7 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 
 private fun LazyGridScope.albumsList(albums: AlbumUiState, onClick: (Album) -> Unit = {}) {
 	when (albums) {
-		is AlbumUiState.Success -> items(albums.albums) {
+		is AlbumUiState.Success -> items(items = albums.albums, key = { it.albumId }) {
 			AlbumItem(album = it, cardWidth = 150.dp, onClick = { onClick(it) })
 		}
 		AlbumUiState.Loading -> item { LoadingState() }
@@ -78,7 +78,7 @@ private fun LazyGridScope.albumsList(albums: AlbumUiState, onClick: (Album) -> U
 
 private fun LazyListScope.songsList(songs: SongUiState, onClick: (Song) -> Unit = {}) {
 	when (songs) {
-		is SongUiState.Success -> items(songs.songs) {
+		is SongUiState.Success -> items(items = songs.songs, key = { it.mediaId }) {
 			SongItem(onClick = { onClick(it) }, song = it)
 		}
 		SongUiState.Loading -> item { LoadingState() }
