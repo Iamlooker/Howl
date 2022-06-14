@@ -6,7 +6,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,19 +15,17 @@ import com.looker.core_model.Album
 
 @Composable
 fun AlbumsDetailsItem(
-	album: Album,
 	modifier: Modifier = Modifier,
+	albumText: @Composable () -> Unit,
 	albumArt: @Composable BoxScope.() -> Unit
 ) {
 	Column(
-		modifier = modifier
-			.clip(MaterialTheme.shapes.large)
-			.background(MaterialTheme.colors.background),
+		modifier = modifier.background(MaterialTheme.colors.background, MaterialTheme.shapes.large),
 		verticalArrangement = Arrangement.Top,
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		DetailsArt(albumArt = albumArt)
-		DetailsText(albumName = album.name, artistName = album.artist)
+		albumText()
 		Spacer(modifier = Modifier.height(20.dp))
 	}
 }
@@ -42,8 +39,9 @@ fun DetailsArt(
 		modifier = modifier
 			.fillMaxWidth()
 			.height(320.dp)
-			.padding(20.dp)
-	) { albumArt() }
+			.padding(20.dp),
+		content = albumArt
+	)
 }
 
 @Composable
@@ -65,12 +63,7 @@ fun DetailsText(
 @Preview
 @Composable
 fun AlbumDetailPreview() {
-	AlbumsDetailsItem(
-		Album(
-			name = "Title",
-			artist = "Artist Name"
-		)
-	) {
+	AlbumsDetailsItem(albumText = {}) {
 		HowlImage(
 			modifier = Modifier.matchParentSize(),
 			data = "",

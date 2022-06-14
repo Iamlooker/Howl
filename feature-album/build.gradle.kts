@@ -29,6 +29,7 @@ android {
 		targetCompatibility = JavaVersion.VERSION_11
 	}
 	kotlinOptions {
+		freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
 		jvmTarget = "11"
 	}
 	buildFeatures {

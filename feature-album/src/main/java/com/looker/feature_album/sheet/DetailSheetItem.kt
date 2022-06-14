@@ -1,32 +1,29 @@
 package com.looker.feature_album.sheet
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.looker.core_model.Album
 
 @Composable
 fun DetailSheetContent(
-	album: Album,
 	modifier: Modifier = Modifier,
-	songsList: LazyListScope.() -> Unit,
+	songsList: @Composable () -> Unit,
+	albumText: @Composable () -> Unit,
 	albumArt: @Composable BoxScope.() -> Unit
 ) {
-	Column(modifier.padding(16.dp)) {
-		AlbumsDetailsItem(album = album, albumArt = albumArt)
-		LazyColumn(
-			modifier = Modifier
-				.padding(16.dp)
-				.clip(MaterialTheme.shapes.medium)
-				.background(MaterialTheme.colors.background),
-			content = songsList
-		)
+	val scrollState = rememberScrollState()
+	Column(
+		modifier
+			.padding(horizontal = 16.dp)
+			.verticalScroll(scrollState)
+	) {
+		Spacer(modifier = Modifier.height(16.dp))
+		AlbumsDetailsItem(albumText = albumText, albumArt = albumArt)
+		songsList()
 		Spacer(modifier = Modifier.height(24.dp))
 	}
 }
