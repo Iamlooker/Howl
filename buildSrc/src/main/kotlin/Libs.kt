@@ -14,10 +14,10 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0-beta03"
-	private const val composeVersion = "1.2.0-beta03"
+	const val composeCompiler = "1.2.0-rc01"
+	private const val composeVersion = "1.2.0-rc01"
 	private const val activityComposeVersion = "1.5.0-rc01"
-	private const val navigationVersion = "2.4.2"
+	private const val navigationVersion = "2.5.0-rc02"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -63,7 +63,7 @@ object Hilt {
 }
 
 object Lifecycle {
-	private const val lifecycleVersion = "2.4.1"
+	private const val lifecycleVersion = "2.5.0-rc02"
 	const val lifecycleViewModelCompose =
 		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }
