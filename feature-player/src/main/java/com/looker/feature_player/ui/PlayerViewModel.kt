@@ -1,12 +1,13 @@
 package com.looker.feature_player.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.core_model.Song
 import com.looker.feature_player.service.MusicService
 import com.looker.feature_player.service.MusicServiceConnection
-import com.looker.feature_player.utils.extension.*
+import com.looker.feature_player.utils.extension.currentPlaybackPosition
+import com.looker.feature_player.utils.extension.isPlayEnabled
+import com.looker.feature_player.utils.extension.isPlaying
+import com.looker.feature_player.utils.extension.isPrepared
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -25,31 +26,24 @@ class PlayerViewModel
 		updateCurrentPlayerPosition()
 	}
 
-	private val playbackState = musicServiceConnection.playbackState
 	private val _songDuration = MutableStateFlow(0L)
 	private val _progress = MutableStateFlow(0F)
-
 	val progress = _progress.asStateFlow()
+
+	private val playbackState = musicServiceConnection.playbackState
 	val isPlaying = musicServiceConnection.isPlaying
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
 
-	fun playMedia(pauseAllowed: Boolean = true) {
+	fun playMedia() {
 		val transportControls = musicServiceConnection.transportControls
 
 		val isPrepared = playbackState.value.isPrepared
 		playbackState.value.let { playbackState ->
 			if (isPrepared) {
 				when {
-					playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
+					playbackState.isPlaying -> transportControls.pause()
 					playbackState.isPlayEnabled -> transportControls.play()
-					else -> {
-						Log.w(
-							"PlayerViewModel",
-							"Playable item clicked but neither play nor pause are enabled!" +
-									" (mediaId=)"
-						)
-					}
 				}
 			}
 		}
