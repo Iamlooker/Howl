@@ -1,14 +1,17 @@
 package com.looker.feature_player.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.looker.components.OpaqueIconButton
+import com.looker.components.ext.translate
 import com.looker.components.overBackground
 
 @Composable
@@ -21,12 +24,15 @@ fun PlayAndSkipButton(
 		modifier = modifier.fillMaxWidth(),
 		horizontalArrangement = Arrangement.spacedBy(20.dp)
 	) {
+		val interactionSource = remember { MutableInteractionSource() }
 		playButton()
 		OpaqueIconButton(
 			modifier = Modifier
 				.height(60.dp)
-				.weight(1f),
+				.weight(1f)
+				.translate(interactionSource, maxX = 10f),
 			onClick = skipNextClick,
+			interactionSource = interactionSource,
 			backgroundColor = MaterialTheme.colors.secondaryVariant.overBackground(0.9f),
 			contentColor = MaterialTheme.colors.onSecondary,
 			icon = Icons.Rounded.SkipNext
@@ -44,11 +50,14 @@ fun PreviousAndSeekBar(
 		modifier = modifier.fillMaxWidth(),
 		horizontalArrangement = Arrangement.spacedBy(20.dp)
 	) {
+		val interactionSource = remember { MutableInteractionSource() }
 		OpaqueIconButton(
 			modifier = Modifier
 				.height(60.dp)
-				.weight(1f),
+				.weight(1f)
+				.translate(interactionSource, maxX = -10f),
 			onClick = skipPrevClick,
+			interactionSource = interactionSource,
 			backgroundColor = MaterialTheme.colors.secondaryVariant.overBackground(0.9f),
 			contentColor = MaterialTheme.colors.onSecondary,
 			icon = Icons.Rounded.SkipPrevious

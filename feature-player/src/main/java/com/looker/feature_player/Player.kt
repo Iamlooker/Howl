@@ -108,7 +108,8 @@ fun Controls(
 					},
 				onClick = { viewModel.playMedia() },
 				backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(0.9f),
-				contentColor = MaterialTheme.colors.onPrimary
+				contentColor = MaterialTheme.colors.onPrimary,
+				shape = RoundedCornerShape(15)
 			) {
 				val playIcon by viewModel.playIcon.collectAsState()
 				PlayPauseIcon(playIcon)

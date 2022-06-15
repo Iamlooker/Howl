@@ -1,8 +1,13 @@
 package com.looker.components.ext
 
 import androidx.annotation.FloatRange
+import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -12,7 +17,21 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.looker.components.localComposers.LocalDurations
+import androidx.compose.ui.graphics.graphicsLayer
+
+fun Modifier.translate(
+	interactionSource: MutableInteractionSource = MutableInteractionSource(),
+	maxX: Float = 0f,
+	maxY: Float = 0f
+): Modifier = composed {
+	val isPressed by interactionSource.collectIsPressedAsState()
+	val offsetX by animateFloatAsState(targetValue = if (isPressed) maxX else 0f)
+	val offsetY by animateFloatAsState(targetValue = if (isPressed) maxY else 0f)
+	Modifier.graphicsLayer {
+		translationX = offsetX
+		translationY = offsetY
+	}
+}
 
 fun Modifier.backgroundGradient(
 	color: Color,
