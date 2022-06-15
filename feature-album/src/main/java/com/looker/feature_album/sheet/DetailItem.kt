@@ -7,11 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.looker.components.HowlImage
 import com.looker.components.TitleSubText
-import com.looker.core_model.Album
 
 @Composable
 fun AlbumsDetailsItem(
@@ -58,16 +55,4 @@ fun DetailsText(
 		textAlign = TextAlign.Center,
 		maxLines = 1
 	)
-}
-
-@Preview
-@Composable
-fun AlbumDetailPreview() {
-	AlbumsDetailsItem(albumText = {}) {
-		HowlImage(
-			modifier = Modifier.matchParentSize(),
-			data = "",
-			shape = MaterialTheme.shapes.large
-		)
-	}
 }
