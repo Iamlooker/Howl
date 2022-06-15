@@ -34,12 +34,12 @@ class PlayerViewModel
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
 
-	fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
+	fun playMedia(pauseAllowed: Boolean = true) {
 		val transportControls = musicServiceConnection.transportControls
 
 		val isPrepared = playbackState.value.isPrepared
 		playbackState.value.let { playbackState ->
-			if (isPrepared && mediaItem.mediaId == nowPlaying.value.id) {
+			if (isPrepared) {
 				when {
 					playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
 					playbackState.isPlayEnabled -> transportControls.play()
@@ -47,16 +47,10 @@ class PlayerViewModel
 						Log.w(
 							"PlayerViewModel",
 							"Playable item clicked but neither play nor pause are enabled!" +
-									" (mediaId=${mediaItem.mediaId})"
+									" (mediaId=)"
 						)
 					}
 				}
-			} else {
-				if (mediaItem.mediaId.isNotEmpty()) transportControls.playFromMediaId(
-					mediaItem.mediaId,
-					null
-				)
-				else Unit
 			}
 		}
 	}

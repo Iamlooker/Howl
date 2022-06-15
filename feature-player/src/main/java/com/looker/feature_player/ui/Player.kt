@@ -33,8 +33,6 @@ fun PlayerHeader(
 	toggleIcon: @Composable BoxScope.() -> Unit
 ) {
 	val dominantColorState = rememberDominantColorState()
-	val currentSong by viewModel.nowPlaying.collectAsState()
-	val isPlaying by viewModel.isPlaying.collectAsState()
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
@@ -43,15 +41,17 @@ fun PlayerHeader(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		LaunchedEffect(currentSong.toSong.albumArt) {
-			dominantColorState.updateColorsFromImageUrl(currentSong.toSong.albumArt)
-		}
+		val currentSong by viewModel.nowPlaying.collectAsState()
 		AlbumArt(
 			modifier = Modifier
 				.fillMaxWidth()
 				.fillMaxHeight(0.27f),
 			button = toggleIcon,
 		) {
+			LaunchedEffect(currentSong.toSong.albumArt) {
+				dominantColorState.updateColorsFromImageUrl(currentSong.toSong.albumArt)
+			}
+			val isPlaying by viewModel.isPlaying.collectAsState()
 			val imageCorner by animateIntAsState(
 				targetValue = if (isPlaying) 50 else 15,
 				animationSpec = tween(LocalDurations.current.crossFade)
@@ -88,15 +88,12 @@ fun Controls(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel()
 ) {
-	val isPlaying by viewModel.isPlaying.collectAsState()
-	val currentSong by viewModel.nowPlaying.collectAsState()
 	Column(
 		modifier = modifier.padding(20.dp),
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		PlayAndSkipButton(
-			skipNextClick = viewModel::playNext
-		) {
+		val isPlaying by viewModel.isPlaying.collectAsState()
+		PlayAndSkipButton(skipNextClick = viewModel::playNext) {
 			val buttonShape by animateIntAsState(
 				targetValue = if (isPlaying) 50 else 15,
 				animationSpec = tween(LocalDurations.current.crossFade)
@@ -109,7 +106,7 @@ fun Controls(
 						clip = true
 						shape = RoundedCornerShape(buttonShape)
 					},
-				onClick = { viewModel.playMedia(currentSong.toSong) },
+				onClick = { viewModel.playMedia() },
 				backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(0.9f),
 				contentColor = MaterialTheme.colors.onPrimary
 			) {

@@ -40,6 +40,7 @@ android {
 		kotlinCompilerExtensionVersion = Compose.composeCompiler
 	}
 	kotlinOptions {
+		freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
 		jvmTarget = "11"
 	}
 }
