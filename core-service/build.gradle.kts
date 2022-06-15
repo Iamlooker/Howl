@@ -28,36 +28,30 @@ android {
 		sourceCompatibility = JavaVersion.VERSION_11
 		targetCompatibility = JavaVersion.VERSION_11
 	}
-	kotlinOptions {
-		freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
-		jvmTarget = "11"
-	}
 	buildFeatures {
-		compose = true
+		compose = false
 		buildConfig = false
 		aidl = false
 		renderScript = false
 		resValues = false
 		shaders = false
 	}
-	composeOptions {
-		kotlinCompilerExtensionVersion = Compose.composeCompiler
+	kotlinOptions {
+		jvmTarget = "11"
 	}
 }
 
 dependencies {
-	implementation(project(Modules.coreDatabase))
 	implementation(project(Modules.coreModel))
-	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreData))
-	implementation(project(Modules.coreNavigation))
-	implementation(project(Modules.coreUi))
-	implementation(project(Modules.coreService))
-	implementation(project(Modules.featurePlayer))
+	implementation(project(Modules.constants))
+	implementation(project(Modules.components))
+
+	api(ExoPlayer.exoplayer)
+	api(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Lifecycle.lifecycleViewModelCompose)
-
-	implementation(ExoPlayer.exoplayerMediaSession)
+	implementation(Compose.icons)
 
 	implementation(Hilt.android)
 	kapt(Hilt.compiler)

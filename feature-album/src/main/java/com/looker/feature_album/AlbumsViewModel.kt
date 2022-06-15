@@ -8,8 +8,8 @@ import com.looker.core_common.result.asResult
 import com.looker.core_data.repository.AlbumsRepository
 import com.looker.core_model.Album
 import com.looker.core_model.Song
-import com.looker.feature_player.service.MusicServiceConnection
-import com.looker.feature_player.utils.extension.isPrepared
+import com.looker.core_service.MusicServiceConnection
+import com.looker.core_service.utils.extension.isPrepared
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -21,7 +21,9 @@ class AlbumsViewModel @Inject constructor(
 	albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
-	init { viewModelScope.launch { albumsRepository.syncData() } }
+	init {
+		viewModelScope.launch { albumsRepository.syncData() }
+	}
 
 	private val _currentAlbum = MutableStateFlow(Album())
 	val currentAlbum = _currentAlbum.asStateFlow()

@@ -51,6 +51,7 @@ dependencies {
 	implementation(project(Modules.coreData))
 	implementation(project(Modules.coreNavigation))
 	implementation(project(Modules.coreUi))
+	implementation(project(Modules.coreService))
 	implementation(project(Modules.featurePlayer))
 
 	implementation(Lifecycle.lifecycleViewModelCompose)

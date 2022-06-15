@@ -7,8 +7,8 @@ import com.looker.core_common.result.Result
 import com.looker.core_common.result.asResult
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_model.Song
-import com.looker.feature_player.service.MusicServiceConnection
-import com.looker.feature_player.utils.extension.isPrepared
+import com.looker.core_service.MusicServiceConnection
+import com.looker.core_service.utils.extension.isPrepared
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

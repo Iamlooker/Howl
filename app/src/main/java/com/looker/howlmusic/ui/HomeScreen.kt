@@ -28,8 +28,8 @@ import com.looker.components.localComposers.LocalDurations
 import com.looker.components.overBackground
 import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.state.SheetsState.VISIBLE
-import com.looker.feature_player.ui.Controls
-import com.looker.feature_player.ui.PlayerHeader
+import com.looker.feature_player.Controls
+import com.looker.feature_player.PlayerHeader
 import com.looker.howlmusic.navigation.TopLevelNavigation
 import com.looker.howlmusic.ui.components.Backdrop
 import com.looker.howlmusic.ui.components.BottomAppBar

@@ -70,6 +70,7 @@ dependencies {
 	implementation(project(Modules.coreData))
 	implementation(project(Modules.coreUi))
 	implementation(project(Modules.coreDatabase))
+	implementation(project(Modules.coreService))
 	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreNavigation))
 	implementation(project(Modules.newDataMusic))
