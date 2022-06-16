@@ -31,11 +31,10 @@ class AlbumsData(private val context: Context) {
 		albumCursor?.let {
 			if (it.moveToFirst()) {
 				do {
-					val albumArtLong = it.getLong(0)
 					val albumId = it.getLong(0)
 					val albumName = it.getString(1) ?: ""
 					val artistName = it.getString(2) ?: ""
-					val albumArt = "content://media/external/audio/albumart/$albumArtLong"
+					val albumArt = "content://media/external/audio/albumart/$albumId"
 					emit(
 						Album(
 							albumId = albumId,

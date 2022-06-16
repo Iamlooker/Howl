@@ -1,6 +1,5 @@
 package com.looker.data_music.utils
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri

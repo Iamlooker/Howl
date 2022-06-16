@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-	compileSdk = Android.targetSdk
+	compileSdk = Android.compileSdk
 
 	defaultConfig {
 		minSdk = Android.minSdk
-		targetSdk = Android.targetSdk
+		targetSdk = Android.compileSdk
 
 		consumerProguardFiles("consumer-rules.pro")
 	}

@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         minSdk = Android.minSdk
-        targetSdk = Android.targetSdk
+        targetSdk = Android.compileSdk
         versionCode = Android.versionCode
         versionName = Android.versionName
 
