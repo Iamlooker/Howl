@@ -39,6 +39,9 @@ jobs:
     - name: Build release APK
       run: ./gradlew assembleRelease
       
+    - name: Rename APK
+      run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/HowlMusic.apk
+      
     - uses: r0adkll/sign-android-release@v1
       name: Sign app APK
       id: sign_app
