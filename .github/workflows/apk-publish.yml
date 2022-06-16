@@ -8,7 +8,7 @@ on:
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
@@ -40,7 +40,7 @@ jobs:
       run: ./gradlew assembleRelease
       
     - name: Rename APK
-      run: ls app/build/outputs/apk/release
+      run: mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/HowlMusic.apk
       
     - uses: r0adkll/sign-android-release@v1
       name: Sign app APK
