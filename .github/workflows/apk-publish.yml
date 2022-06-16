@@ -1,4 +1,4 @@
-name: Gradle Package
+name: Build Release APK
 
 on:
   workflow_dispatch:
@@ -36,7 +36,7 @@ jobs:
     - name: Grant execution permission to Gradle Wrapper
       run: chmod +x gradlew
       
-    - name: Build release APK
+    - name: Build Release APK
       run: ./gradlew assembleRelease
       
     - name: Rename APK
