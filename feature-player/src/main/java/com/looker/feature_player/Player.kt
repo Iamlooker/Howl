@@ -45,12 +45,14 @@ import com.looker.feature_player.components.PlayPauseIcon
 import com.looker.feature_player.components.PreviousAndSeekBar
 import com.looker.feature_player.components.SeekBar
 import com.looker.feature_player.components.SongText
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel(),
-	onSheetStateChange: @Composable () -> SheetsState
+	onSheetStateChange: () -> StateFlow<SheetsState>
 ) {
 	val dominantColorState = rememberDominantColorState()
 	Column(
@@ -67,7 +69,11 @@ fun PlayerHeader(
 				.fillMaxWidth()
 				.fillMaxHeight(0.27f),
 			button = {
-				viewModel.setBackdrop(onSheetStateChange())
+				LaunchedEffect(onSheetStateChange) {
+					onSheetStateChange().collectLatest {
+						viewModel.setBackdrop(it)
+					}
+				}
 				val toggleButtonState by viewModel.toggleStream.collectAsState()
 				val toggleColor by animateColorAsState(
 					targetValue =

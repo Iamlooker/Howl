@@ -76,10 +76,7 @@ fun Home(
 			).value
 		},
 		header = {
-			PlayerHeader {
-				val sheet by viewModel.backdropValue.collectAsState()
-				sheet
-			}
+			PlayerHeader { viewModel.backdropValue }
 		},
 		frontLayerContent = {
 			val scope = rememberCoroutineScope()
@@ -87,13 +84,8 @@ fun Home(
 				navController = navController,
 				openPlayer = {
 					scope.launch {
+						viewModel.setBackDrop(VISIBLE)
 						state.animateTo(Revealed, TweenSpec(400))
-						viewModel.setBackDrop(
-							when (state.currentValue) {
-								Concealed -> HIDDEN
-								Revealed -> VISIBLE
-							}
-						)
 					}
 				}
 			)
