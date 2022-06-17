@@ -1,27 +1,17 @@
 package com.looker.howlmusic.ui
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.components.state.SheetsState
 import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.state.SheetsState.VISIBLE
 import com.looker.core_common.Constants.MEDIA_ROOT_ID
-import com.looker.core_common.states.ToggleState
+import com.looker.core_common.states.ToggleButtonState
 import com.looker.core_common.states.ToggleState.PlayControl
 import com.looker.core_common.states.ToggleState.Shuffle
-import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.utils.ShuffleMode.SHUFFLE_MODE_ALL
-import com.looker.core_service.utils.ShuffleMode.SHUFFLE_MODE_NONE
-import com.looker.core_service.utils.extension.isPlayEnabled
-import com.looker.core_service.utils.extension.isPlaying
-import com.looker.core_service.utils.extension.isPrepared
-import com.looker.core_service.utils.extension.toSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,7 +28,6 @@ class HowlViewModel
 	val backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 	val isPlaying = musicServiceConnection.isPlaying
 
-	private val nowPlaying = musicServiceConnection.nowPlaying
 	private val isShuffling = musicServiceConnection.shuffleMode
 
 	val toggleStream =
@@ -62,46 +51,8 @@ class HowlViewModel
 		musicServiceConnection.subscribe(MEDIA_ROOT_ID)
 	}
 
-	fun onToggleClick() {
-		when (toggleStream.value.toggleState) {
-			PlayControl -> playMedia(nowPlaying.value.toSong)
-			Shuffle -> shuffleModeToggle()
-		}
-	}
-
-	private fun playMedia(mediaItem: Song, pauseAllowed: Boolean = true) {
-		val transportControls = musicServiceConnection.transportControls
-		val isPrepared = musicServiceConnection.playbackState.value.isPrepared
-		musicServiceConnection.playbackState.value.let { playbackState ->
-			if (isPrepared) {
-				when {
-					playbackState.isPlaying -> if (pauseAllowed) transportControls.pause() else Unit
-					playbackState.isPlayEnabled -> transportControls.play()
-					else -> {
-						Log.w(
-							"HowlViewModel",
-							"Playable item clicked but neither play nor pause are enabled!" +
-									" (mediaId=${mediaItem.mediaId})"
-						)
-					}
-				}
-			}
-		}
-	}
-
-	private fun shuffleModeToggle() {
-		val transportControls = musicServiceConnection.transportControls
-		transportControls.setShuffleMode(if (isShuffling.value) SHUFFLE_MODE_NONE else SHUFFLE_MODE_ALL)
-	}
-
 	override fun onCleared() {
 		super.onCleared()
 		musicServiceConnection.unsubscribe(MEDIA_ROOT_ID)
 	}
 }
-
-data class ToggleButtonState(
-	val toggleState: ToggleState,
-	val enabled: Boolean,
-	val icon: ImageVector = Icons.Rounded.PlayArrow
-)

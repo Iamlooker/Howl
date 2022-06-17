@@ -2,8 +2,10 @@ package com.looker.feature_player
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.looker.core_common.states.ToggleState
 import com.looker.core_service.MusicService
 import com.looker.core_service.MusicServiceConnection
+import com.looker.core_service.utils.ShuffleMode
 import com.looker.core_service.utils.extension.currentPlaybackPosition
 import com.looker.core_service.utils.extension.isPlayEnabled
 import com.looker.core_service.utils.extension.isPlaying
@@ -31,6 +33,7 @@ class PlayerViewModel
 	val progress = _progress.asStateFlow()
 
 	private val playbackState = musicServiceConnection.playbackState
+	private val isShuffling = musicServiceConnection.shuffleMode
 	val isPlaying = musicServiceConnection.isPlaying
 	val nowPlaying = musicServiceConnection.nowPlaying
 	val playIcon = musicServiceConnection.playIcon
@@ -63,6 +66,18 @@ class PlayerViewModel
 
 	fun playPrevious() {
 		musicServiceConnection.transportControls.skipToPrevious()
+	}
+
+	fun onToggleClick(toggleState: ToggleState) {
+		when (toggleState) {
+			ToggleState.PlayControl -> playMedia()
+			ToggleState.Shuffle -> shuffleModeToggle()
+		}
+	}
+
+	private fun shuffleModeToggle() {
+		val transportControls = musicServiceConnection.transportControls
+		transportControls.setShuffleMode(if (isShuffling.value) ShuffleMode.SHUFFLE_MODE_NONE else ShuffleMode.SHUFFLE_MODE_ALL)
 	}
 
 	private fun updateCurrentPlayerPosition() {

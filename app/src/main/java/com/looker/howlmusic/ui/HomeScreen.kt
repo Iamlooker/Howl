@@ -1,22 +1,30 @@
 package com.looker.howlmusic.ui
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.material.BackdropScaffoldDefaults
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.material.rememberBackdropScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -66,29 +74,7 @@ fun Home(
 			).value
 		},
 		header = {
-			PlayerHeader {
-				val toggleState by viewModel.toggleStream.collectAsState()
-				val toggleColor by animateColorAsState(
-					targetValue =
-					if (toggleState.enabled) MaterialTheme.colors.secondaryVariant.overBackground()
-					else MaterialTheme.colors.background,
-					animationSpec = tween(LocalDurations.current.crossFade)
-				)
-				Button(
-					modifier = Modifier
-						.clip(MaterialTheme.shapes.medium)
-						.align(Alignment.BottomEnd)
-						.drawBehind { drawRect(toggleColor) },
-					colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-					elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
-					onClick = viewModel::onToggleClick,
-				) {
-					val toggleIcon by remember(toggleState) { mutableStateOf(toggleState.icon) }
-					Crossfade(toggleIcon) {
-						Icon(imageVector = it, contentDescription = null)
-					}
-				}
-			}
+			PlayerHeader { viewModel.toggleStream.value }
 		},
 		frontLayerContent = {
 			val scope = rememberCoroutineScope()
