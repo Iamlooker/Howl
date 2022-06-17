@@ -18,6 +18,7 @@ object Compose {
 	private const val composeVersion = "1.2.0-rc01"
 	private const val activityComposeVersion = "1.5.0-rc01"
 	private const val navigationVersion = "2.5.0-rc02"
+	private const val material3Version = "1.0.0-alpha13"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -25,6 +26,7 @@ object Compose {
 	const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
 	const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
 	const val material = "androidx.compose.material:material:$composeVersion"
+	const val material3 = "androidx.compose.material3:material3:$material3Version"
 	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
 	const val preview = "androidx.compose.ui:ui-tooling-preview:$composeVersion"
 	const val ui = "androidx.compose.ui:ui:$composeVersion"
