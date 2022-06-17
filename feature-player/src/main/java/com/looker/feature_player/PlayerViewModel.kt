@@ -1,7 +1,13 @@
 package com.looker.feature_player
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Shuffle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.looker.components.state.SheetsState
+import com.looker.components.state.SheetsState.HIDDEN
+import com.looker.components.state.SheetsState.VISIBLE
+import com.looker.core_common.states.ToggleButtonState
 import com.looker.core_common.states.ToggleState
 import com.looker.core_service.MusicService
 import com.looker.core_service.MusicServiceConnection
@@ -14,7 +20,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,6 +37,7 @@ class PlayerViewModel
 		updateCurrentPlayerPosition()
 	}
 
+	private val backdropValue = MutableStateFlow<SheetsState>(HIDDEN)
 	private val _songDuration = MutableStateFlow(0L)
 	private val _progress = MutableStateFlow(0F)
 	val progress = _progress.asStateFlow()
@@ -51,6 +61,27 @@ class PlayerViewModel
 			}
 		}
 	}
+
+	fun setBackdrop(state: SheetsState) {
+		backdropValue.value = state
+	}
+
+	val toggleStream =
+		combine(
+			isShuffling,
+			isPlaying,
+			backdropValue,
+			playIcon
+		) { shuffling, playing, backdrop, playIcon ->
+			when (backdrop) {
+				VISIBLE -> ToggleButtonState(ToggleState.Shuffle, shuffling, Icons.Rounded.Shuffle)
+				HIDDEN -> ToggleButtonState(ToggleState.PlayControl, playing, playIcon)
+			}
+		}.stateIn(
+			scope = viewModelScope,
+			started = SharingStarted.WhileSubscribed(5000),
+			initialValue = ToggleButtonState(ToggleState.PlayControl, false)
+		)
 
 	fun onSeek(seekTo: Float) {
 		viewModelScope.launch { _progress.emit(seekTo) }

@@ -54,10 +54,12 @@ fun Home(
 	val state = rememberBackdropScaffoldState(
 		initialValue = Concealed,
 		confirmStateChange = {
-			viewModel.backdropValue.value = when (it) {
-				Concealed -> HIDDEN
-				Revealed -> VISIBLE
-			}
+			viewModel.setBackDrop(
+				when (it) {
+					Concealed -> HIDDEN
+					Revealed -> VISIBLE
+				}
+			)
 			true
 		}
 	)
@@ -74,7 +76,10 @@ fun Home(
 			).value
 		},
 		header = {
-			PlayerHeader { viewModel.toggleStream.value }
+			PlayerHeader {
+				val sheet by viewModel.backdropValue.collectAsState()
+				sheet
+			}
 		},
 		frontLayerContent = {
 			val scope = rememberCoroutineScope()
@@ -83,10 +88,12 @@ fun Home(
 				openPlayer = {
 					scope.launch {
 						state.animateTo(Revealed, TweenSpec(400))
-						viewModel.backdropValue.value = when (state.currentValue) {
-							Concealed -> HIDDEN
-							Revealed -> VISIBLE
-						}
+						viewModel.setBackDrop(
+							when (state.currentValue) {
+								Concealed -> HIDDEN
+								Revealed -> VISIBLE
+							}
+						)
 					}
 				}
 			)

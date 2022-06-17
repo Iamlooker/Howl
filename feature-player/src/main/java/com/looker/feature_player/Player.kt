@@ -1,6 +1,5 @@
 package com.looker.feature_player
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
@@ -14,12 +13,10 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,7 +37,7 @@ import com.looker.components.ext.backgroundGradient
 import com.looker.components.localComposers.LocalDurations
 import com.looker.components.overBackground
 import com.looker.components.rememberDominantColorState
-import com.looker.core_common.states.ToggleButtonState
+import com.looker.components.state.SheetsState
 import com.looker.core_service.utils.extension.toSong
 import com.looker.feature_player.components.AlbumArt
 import com.looker.feature_player.components.PlayAndSkipButton
@@ -53,7 +50,7 @@ import com.looker.feature_player.components.SongText
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel(),
-	onToggleStateChange: () -> ToggleButtonState
+	onSheetStateChange: @Composable () -> SheetsState
 ) {
 	val dominantColorState = rememberDominantColorState()
 	Column(
@@ -70,7 +67,8 @@ fun PlayerHeader(
 				.fillMaxWidth()
 				.fillMaxHeight(0.27f),
 			button = {
-				val toggleButtonState by remember { derivedStateOf(onToggleStateChange) }
+				viewModel.setBackdrop(onSheetStateChange())
+				val toggleButtonState by viewModel.toggleStream.collectAsState()
 				val toggleColor by animateColorAsState(
 					targetValue =
 					if (toggleButtonState.enabled) MaterialTheme.colors.secondaryVariant.overBackground()
@@ -87,9 +85,7 @@ fun PlayerHeader(
 					onClick = { viewModel.onToggleClick(toggleButtonState.toggleState) },
 				) {
 					val toggleIcon by remember(toggleButtonState) { mutableStateOf(toggleButtonState.icon) }
-					Crossfade(toggleIcon) {
-						Icon(imageVector = it, contentDescription = null)
-					}
+					PlayPauseIcon(icon = toggleIcon)
 				}
 			},
 		) {
