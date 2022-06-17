@@ -46,7 +46,6 @@ dependencies {
 	implementation(project(Modules.dataMusic))
 
 	implementation(Coroutines.android)
-	implementation(WorkManager.ktx)
 
 	implementation(Hilt.android)
 	implementation(Hilt.work)

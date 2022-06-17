@@ -46,14 +46,12 @@ android {
 }
 
 dependencies {
-	implementation(project(Modules.coreDatabase))
 	implementation(project(Modules.coreModel))
 	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreData))
 	implementation(project(Modules.coreNavigation))
 	implementation(project(Modules.coreUi))
 	implementation(project(Modules.coreService))
-	implementation(project(Modules.featurePlayer))
 
 	implementation(Lifecycle.lifecycleViewModelCompose)
 

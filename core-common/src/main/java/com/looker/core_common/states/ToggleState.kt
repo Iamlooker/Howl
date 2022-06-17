@@ -1,4 +1,4 @@
-package com.looker.constants.states
+package com.looker.core_common.states
 
 sealed class ToggleState {
 	object Shuffle : ToggleState()

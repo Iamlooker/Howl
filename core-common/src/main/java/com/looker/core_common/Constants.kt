@@ -1,4 +1,4 @@
-package com.looker.constants
+package com.looker.core_common
 
 object Constants {
 

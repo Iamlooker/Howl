@@ -63,26 +63,22 @@ android {
 }
 
 dependencies {
-
-	implementation(project(Modules.onBoarding))
-	implementation(project(Modules.constants))
-	implementation(project(Modules.coreModel))
-	implementation(project(Modules.coreData))
-	implementation(project(Modules.coreUi))
-	implementation(project(Modules.coreDatabase))
-	implementation(project(Modules.coreService))
-	implementation(project(Modules.coreCommon))
-	implementation(project(Modules.coreNavigation))
-	implementation(project(Modules.newDataMusic))
 	implementation(project(Modules.featurePlayer))
 	implementation(project(Modules.featureSong))
 	implementation(project(Modules.featureAlbum))
+	implementation(project(Modules.onBoarding))
+
+	implementation(project(Modules.coreModel))
+	implementation(project(Modules.coreCommon))
+	implementation(project(Modules.coreUi))
+	implementation(project(Modules.coreService))
+	implementation(project(Modules.coreNavigation))
+	implementation(project(Modules.newDataMusic))
+
 
 	implementation(Startup.lib)
 
 	implementation(Core.core)
-
-	implementation(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Hilt.android)
 	implementation(Hilt.work)

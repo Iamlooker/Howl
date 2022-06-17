@@ -10,10 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.looker.components.state.SheetsState
 import com.looker.components.state.SheetsState.HIDDEN
 import com.looker.components.state.SheetsState.VISIBLE
-import com.looker.constants.Constants.MEDIA_ROOT_ID
-import com.looker.constants.states.ToggleState
-import com.looker.constants.states.ToggleState.PlayControl
-import com.looker.constants.states.ToggleState.Shuffle
+import com.looker.core_common.Constants.MEDIA_ROOT_ID
+import com.looker.core_common.states.ToggleState
+import com.looker.core_common.states.ToggleState.PlayControl
+import com.looker.core_common.states.ToggleState.Shuffle
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.utils.ShuffleMode.SHUFFLE_MODE_ALL

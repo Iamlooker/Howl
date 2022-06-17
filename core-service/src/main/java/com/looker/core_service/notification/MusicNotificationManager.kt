@@ -8,8 +8,8 @@ import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.looker.components.toBitmap
-import com.looker.constants.Constants.NOTIFICATION_CHANNEL_ID
-import com.looker.constants.Constants.NOTIFICATION_ID
+import com.looker.core_common.Constants.NOTIFICATION_CHANNEL_ID
+import com.looker.core_common.Constants.NOTIFICATION_ID
 import com.looker.core_service.R
 
 class MusicNotificationManager(

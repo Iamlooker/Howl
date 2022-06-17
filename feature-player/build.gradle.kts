@@ -46,15 +46,10 @@ android {
 }
 
 dependencies {
+	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreModel))
-	implementation(project(Modules.coreData))
 	implementation(project(Modules.coreUi))
 	implementation(project(Modules.coreService))
-	implementation(project(Modules.constants))
-	implementation(project(Modules.coreService))
-
-	implementation(ExoPlayer.exoplayer)
-	implementation(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Lifecycle.lifecycleViewModelCompose)
 

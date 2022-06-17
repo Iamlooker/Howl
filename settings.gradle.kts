@@ -19,7 +19,6 @@ include(":on-boarding")
 
 include(":app")
 
-include(":constants")
 include(":components")
 
 include(":music")

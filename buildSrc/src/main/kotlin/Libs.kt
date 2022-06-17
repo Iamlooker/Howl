@@ -44,7 +44,8 @@ object Excludes {
 
 object ExoPlayer {
 	private const val exoplayerVersion = "2.17.1"
-	const val exoplayer = "com.google.android.exoplayer:exoplayer:$exoplayerVersion"
+	const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
+	const val exoplayerUi = "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
 	const val exoplayerMediaSession =
 		"com.google.android.exoplayer:extension-mediasession:$exoplayerVersion"
 }

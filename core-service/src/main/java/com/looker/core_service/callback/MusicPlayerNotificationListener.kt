@@ -4,7 +4,7 @@ import android.app.Notification
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.looker.constants.Constants.NOTIFICATION_ID
+import com.looker.core_common.Constants.NOTIFICATION_ID
 import com.looker.core_service.MusicService
 
 class MusicPlayerNotificationListener(

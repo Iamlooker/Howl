@@ -44,10 +44,11 @@ android {
 dependencies {
 	implementation(project(Modules.coreModel))
 	implementation(project(Modules.coreData))
-	implementation(project(Modules.constants))
+	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.components))
 
-	api(ExoPlayer.exoplayer)
+	api(ExoPlayer.exoplayerCore)
+	api(ExoPlayer.exoplayerUi)
 	api(ExoPlayer.exoplayerMediaSession)
 
 	implementation(Lifecycle.lifecycleViewModelCompose)
