@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.Flow
 interface AlbumsRepository {
 	fun getAlbumsStream(): Flow<List<Album>>
 	fun getAlbumStream(albumId: Long): Flow<Album>
-	fun getRelatedSongs(): Flow<List<Song>>
+	fun getRelatedSongs(albumId: Long): Flow<List<Song>>
 	suspend fun syncData(): Boolean
+
+	//Temp
+	fun getAllSongs(): Flow<List<Song>>
 }

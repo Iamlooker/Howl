@@ -11,14 +11,20 @@ import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.utils.extension.isPrepared
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AlbumsViewModel @Inject constructor(
 	private val musicServiceConnection: MusicServiceConnection,
-	albumsRepository: AlbumsRepository
+	private val albumsRepository: AlbumsRepository
 ) : ViewModel() {
 
 	init {
@@ -31,8 +37,8 @@ class AlbumsViewModel @Inject constructor(
 	private val albumsStream: Flow<Result<List<Album>>> =
 		albumsRepository.getAlbumsStream().asResult()
 
-	private val songsStream: Flow<Result<List<Song>>> =
-		albumsRepository.getRelatedSongs().asResult()
+	private fun songsStream(): Flow<Result<List<Song>>> =
+		albumsRepository.getAllSongs().asResult()
 
 	val albumsState = albumsStream.map { albumsResult ->
 		val albums = when (albumsResult) {
@@ -47,13 +53,14 @@ class AlbumsViewModel @Inject constructor(
 		initialValue = AlbumScreenUiState(AlbumUiState.Loading)
 	)
 
-	val songsState = songsStream.combine(currentAlbum) { songsResult, currentAlbum ->
+	val songsState = currentAlbum.combine(songsStream()) { currentAlbum, songsResult ->
 		val songs = when (songsResult) {
 			Result.Loading -> SongUiState.Loading
 			is Result.Error -> SongUiState.Error
 			is Result.Success -> SongUiState.Success(
 				currentAlbum.albumId,
-				songsResult.data.filter { it.albumId == currentAlbum.albumId })
+				songsResult.data.filter { it.albumId == currentAlbum.albumId }
+			)
 		}
 		SongListUiState(songs)
 	}.stateIn(

@@ -30,11 +30,15 @@ class AlbumsRepositoryImpl @Inject constructor(
 			it.asExternalModel()
 		}
 
-	override fun getRelatedSongs(): Flow<List<Song>> = songsRepository.getSongsStream()
+	override fun getRelatedSongs(albumId: Long): Flow<List<Song>> =
+		songsRepository.getSongForAlbum(albumId)
 
 	override suspend fun syncData(): Boolean {
 		val albums = AlbumsData(appContext).createAlbumsList().map { it.asEntity() }
 		albumDao.insertOrIgnoreAlbums(albums)
 		return albums.isNotEmpty()
 	}
+
+	override fun getAllSongs(): Flow<List<Song>> =
+		songsRepository.getSongsStream()
 }
