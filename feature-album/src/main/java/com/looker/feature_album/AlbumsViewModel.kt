@@ -3,6 +3,7 @@ package com.looker.feature_album
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.looker.core_common.mapAndStateIn
 import com.looker.core_common.result.Result
 import com.looker.core_common.result.asResult
 import com.looker.core_data.repository.AlbumsRepository
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,18 +40,17 @@ class AlbumsViewModel @Inject constructor(
 	private fun songsStream(): Flow<Result<List<Song>>> =
 		albumsRepository.getAllSongs().asResult()
 
-	val albumsState = albumsStream.map { albumsResult ->
+	val albumsState = albumsStream.mapAndStateIn(
+		scope = viewModelScope,
+		initialValue = AlbumScreenUiState(AlbumUiState.Loading)
+	) { albumsResult ->
 		val albums = when (albumsResult) {
 			Result.Loading -> AlbumUiState.Loading
 			is Result.Error -> AlbumUiState.Error
 			is Result.Success -> AlbumUiState.Success(albumsResult.data)
 		}
 		AlbumScreenUiState(albums)
-	}.stateIn(
-		scope = viewModelScope,
-		started = SharingStarted.WhileSubscribed(5000),
-		initialValue = AlbumScreenUiState(AlbumUiState.Loading)
-	)
+	}
 
 	val songsState = currentAlbum.combine(songsStream()) { currentAlbum, songsResult ->
 		val songs = when (songsResult) {
