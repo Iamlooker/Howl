@@ -19,13 +19,12 @@ inline fun Song.playPauseMedia(
 ) {
 	val transportControls = musicServiceConnection.transportControls
 	val playbackStateCompat = musicServiceConnection.playbackState.value
-	val isPrepared = playbackStateCompat.isPrepared
+	val isPrepared = playbackStateCompat.isPrepared or mediaId.isNotEmpty() or mediaId.isNotBlank()
 
 	if (isPrepared && playNewOrOld()) {
 		playbackStateCompat.let { playbackState ->
 			when {
-				playbackState.isPlaying ->
-					if (canPause) transportControls.pause()
+				playbackState.isPlaying -> if (canPause) transportControls.pause()
 				playbackState.isPlayEnabled -> transportControls.play()
 				else -> onFailure()
 			}
