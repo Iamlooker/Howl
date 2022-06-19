@@ -9,7 +9,7 @@ import com.looker.core_common.result.asResult
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.utils.extension.isPrepared
+import com.looker.core_service.utils.extension.playPauseMedia
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -41,12 +41,9 @@ class SongsViewModel @Inject constructor(
 	}
 
 	fun playSong(song: Song) {
-		val transportControls = musicServiceConnection.transportControls
-		val isPrepared = musicServiceConnection.playbackState.value.isPrepared
-
-		if (isPrepared && song.mediaId.isNotEmpty()) transportControls.playFromMediaId(
-			song.mediaId,
-			null
+		song.playPauseMedia(
+			musicServiceConnection = musicServiceConnection,
+			canPause = false
 		)
 	}
 }

@@ -13,9 +13,7 @@ import com.looker.core_service.MusicService
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.utils.ShuffleMode
 import com.looker.core_service.utils.extension.currentPlaybackPosition
-import com.looker.core_service.utils.extension.isPlayEnabled
-import com.looker.core_service.utils.extension.isPlaying
-import com.looker.core_service.utils.extension.isPrepared
+import com.looker.core_service.utils.extension.playPauseMedia
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -49,17 +47,10 @@ class PlayerViewModel
 	val playIcon = musicServiceConnection.playIcon
 
 	fun playMedia() {
-		val transportControls = musicServiceConnection.transportControls
-
-		val isPrepared = playbackState.value.isPrepared
-		playbackState.value.let { playbackState ->
-			if (isPrepared) {
-				when {
-					playbackState.isPlaying -> transportControls.pause()
-					playbackState.isPlayEnabled -> transportControls.play()
-				}
-			}
-		}
+		nowPlaying.value.playPauseMedia(
+			musicServiceConnection = musicServiceConnection,
+			playNewOrOld = { true }
+		)
 	}
 
 	fun setBackdrop(state: SheetsState) {
