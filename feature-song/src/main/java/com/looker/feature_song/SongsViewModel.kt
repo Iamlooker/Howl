@@ -1,6 +1,5 @@
 package com.looker.feature_song
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.core_common.combineAndStateIn
@@ -11,6 +10,8 @@ import com.looker.core_data.repository.SongsRepository
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.utils.extension.playPauseMedia
+import com.looker.core_ui.SongListUiState
+import com.looker.core_ui.SongUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class SongsViewModel @Inject constructor(
 		songsStream,
 		blacklistsRepository.getBlacklistSongs(),
 		scope = viewModelScope,
-		initialValue = SongScreenUiState(SongUiState.Loading)
+		initialValue = SongListUiState(SongUiState.Loading)
 	) { songsResult, blacklist ->
 		val blacklistedSongs = blacklist.flatMap { it.songsFromAlbum }
 		val songs = when (songsResult) {
@@ -44,7 +45,7 @@ class SongsViewModel @Inject constructor(
 				songsResult.data.filterNot { it.albumId.toString() in blacklistedSongs }
 			)
 		}
-		SongScreenUiState(songs)
+		SongListUiState(songs)
 	}
 
 	fun playSong(song: Song) {
@@ -53,13 +54,4 @@ class SongsViewModel @Inject constructor(
 			canPause = false
 		)
 	}
-}
-
-@Immutable
-data class SongScreenUiState(val songsState: SongUiState)
-
-sealed interface SongUiState {
-	data class Success(val songs: List<Song>) : SongUiState
-	object Error : SongUiState
-	object Loading : SongUiState
 }

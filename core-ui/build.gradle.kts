@@ -43,7 +43,7 @@ android {
 }
 
 dependencies {
-	implementation(project(Modules.coreModel))
+	api(project(Modules.coreModel))
 	api(project(Modules.components))
 
 	implementation(Core.core)

@@ -14,6 +14,8 @@ import com.looker.core_model.Blacklist
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.utils.extension.playPauseMedia
+import com.looker.core_ui.SongListUiState
+import com.looker.core_ui.SongUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,8 +70,8 @@ class AlbumsViewModel @Inject constructor(
 			Result.Loading -> SongUiState.Loading
 			is Result.Error -> SongUiState.Error
 			is Result.Success -> SongUiState.Success(
-				currentAlbum.albumId.toString() in blacklistSongsFromAlbum,
-				songsResult.data.filter { it.albumId == currentAlbum.albumId }
+				songsResult.data.filter { it.albumId == currentAlbum.albumId },
+				currentAlbum.albumId.toString() in blacklistSongsFromAlbum
 			)
 		}
 		SongListUiState(songs)
@@ -103,13 +105,4 @@ sealed interface AlbumUiState {
 	data class Success(val albums: List<Album>) : AlbumUiState
 	object Error : AlbumUiState
 	object Loading : AlbumUiState
-}
-
-@Immutable
-data class SongListUiState(val songsState: SongUiState)
-
-sealed interface SongUiState {
-	data class Success(val songsAreBlacklisted: Boolean, val songs: List<Song>) : SongUiState
-	object Error : SongUiState
-	object Loading : SongUiState
 }

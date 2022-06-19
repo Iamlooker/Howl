@@ -68,7 +68,6 @@ dependencies {
 	implementation(project(Modules.featureAlbum))
 	implementation(project(Modules.onBoarding))
 
-	implementation(project(Modules.coreModel))
 	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreUi))
 	implementation(project(Modules.coreService))

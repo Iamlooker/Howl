@@ -1,6 +1,5 @@
 package com.looker.feature_album
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -28,9 +27,9 @@ import com.looker.components.HowlImage
 import com.looker.components.ext.backgroundGradient
 import com.looker.components.rememberDominantColorState
 import com.looker.core_model.Album
-import com.looker.core_model.Song
 import com.looker.core_ui.LoadingState
-import com.looker.core_ui.SongItem
+import com.looker.core_ui.SongUiState
+import com.looker.core_ui.SongsList
 import com.looker.core_ui.SwitchPreference
 import com.looker.feature_album.sheet.DetailSheetContent
 import com.looker.feature_album.sheet.DetailsText
@@ -106,20 +105,5 @@ private fun LazyGridScope.albumsList(albums: AlbumUiState, onClick: (Album) -> U
 		}
 		AlbumUiState.Loading -> item { LoadingState() }
 		AlbumUiState.Error -> item { Text(text = "Error") }
-	}
-}
-
-@Composable
-private fun SongsList(songs: SongUiState, onClick: (Song) -> Unit = {}) {
-	when (songs) {
-		is SongUiState.Success -> {
-			Column {
-				songs.songs.forEach {
-					SongItem(onClick = { onClick(it) }, song = it)
-				}
-			}
-		}
-		SongUiState.Loading -> LoadingState()
-		SongUiState.Error -> Text("Error")
 	}
 }
