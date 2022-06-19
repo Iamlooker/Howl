@@ -2,6 +2,7 @@ package com.looker.core_service
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -64,7 +65,7 @@ class MusicService : MediaBrowserServiceCompat() {
 		val activityIntent = packageManager?.getLaunchIntentForPackage(packageName)?.let {
 			PendingIntent.getActivity(
 				this, 0, it,
-				PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+				PendingIntent.FLAG_UPDATE_CURRENT or if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
 			)
 		}
 

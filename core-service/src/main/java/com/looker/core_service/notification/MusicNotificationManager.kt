@@ -3,14 +3,19 @@ package com.looker.core_service.notification
 import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Bitmap
+import android.net.Uri
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.looker.components.toBitmap
+import com.looker.components.bitmap
 import com.looker.core_common.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.core_common.Constants.NOTIFICATION_ID
 import com.looker.core_service.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class MusicNotificationManager(
 	private val context: Context,
@@ -20,6 +25,8 @@ class MusicNotificationManager(
 ) {
 
 	private val notificationManager: PlayerNotificationManager
+	private val serviceJob = SupervisorJob()
+	private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
 	init {
 		val mediaController = MediaControllerCompat(context, sessionToken)
@@ -49,6 +56,10 @@ class MusicNotificationManager(
 
 	private inner class DescriptionAdapter(private val mediaController: MediaControllerCompat) :
 		PlayerNotificationManager.MediaDescriptionAdapter {
+
+		var currentIconUri: Uri? = null
+		var currentBitmap: Bitmap? = null
+
 		override fun getCurrentContentTitle(player: Player): CharSequence {
 			newSongCallback()
 			return mediaController.metadata.description.title.toString()
@@ -66,12 +77,19 @@ class MusicNotificationManager(
 			player: Player,
 			callback: PlayerNotificationManager.BitmapCallback
 		): Bitmap? {
-			var bitmap: Bitmap? = null
-			toBitmap(
-				context = context,
-				data = mediaController.metadata.description.iconUri.toString()
-			) { bitmap = it }
-			return bitmap
+			val iconUri = mediaController.metadata.description.iconUri
+			return if (currentIconUri != iconUri || currentBitmap == null) {
+				currentIconUri = iconUri
+				serviceScope.launch {
+					currentBitmap = iconUri?.let { retrieveBitmap(it) }
+					currentBitmap?.let { callback.onBitmap(it) }
+				}
+				null
+			} else {
+				currentBitmap
+			}
 		}
+
+		private suspend fun retrieveBitmap(uri: Uri): Bitmap = uri.toString().bitmap(context)
 	}
 }
