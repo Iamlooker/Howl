@@ -5,15 +5,10 @@ import com.google.android.exoplayer2.source.ConcatenatingMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 interface DataSource<T> {
-
 	var data: List<T>
-
 	suspend fun load()
-
 	fun asMediaSource(dataSourceFactory: DefaultDataSource.Factory): ConcatenatingMediaSource
-
 	fun asMediaItem(): MutableList<MediaBrowserCompat.MediaItem>
-
 	fun sourceReady(action: (Boolean) -> Unit): Boolean
 }
 

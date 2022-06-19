@@ -13,6 +13,7 @@ fun DetailSheetContent(
 	modifier: Modifier = Modifier,
 	songsList: @Composable () -> Unit,
 	albumText: @Composable () -> Unit,
+	preference: @Composable () -> Unit,
 	albumArt: @Composable BoxScope.() -> Unit
 ) {
 	val scrollState = rememberScrollState()
@@ -23,6 +24,7 @@ fun DetailSheetContent(
 	) {
 		Spacer(modifier = Modifier.height(16.dp))
 		AlbumsDetailsItem(albumText = albumText, albumArt = albumArt)
+		preference()
 		songsList()
 		Spacer(modifier = Modifier.height(24.dp))
 	}

@@ -8,6 +8,7 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.RenderersFactory
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_service.data.DataSource
 import com.looker.core_service.data.MusicSource
@@ -54,7 +55,8 @@ object ServiceModule {
 	@ServiceScoped
 	@Provides
 	fun provideMusicSource(
-		songsRepository: SongsRepository
+		songsRepository: SongsRepository,
+		blacklistsRepository: BlacklistsRepository
 	): DataSource<MediaMetadataCompat> =
-		MusicSource(songsRepository)
+		MusicSource(songsRepository, blacklistsRepository)
 }

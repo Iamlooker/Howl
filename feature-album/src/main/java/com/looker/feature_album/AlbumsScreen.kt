@@ -16,7 +16,9 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import com.looker.core_model.Album
 import com.looker.core_model.Song
 import com.looker.core_ui.LoadingState
 import com.looker.core_ui.SongItem
+import com.looker.core_ui.SwitchPreference
 import com.looker.feature_album.sheet.DetailSheetContent
 import com.looker.feature_album.sheet.DetailsText
 import kotlinx.coroutines.launch
@@ -51,6 +54,20 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 				modifier = Modifier.backgroundGradient(bottomSheetDominantColorState.color.copy(0.4f)),
 				albumText = {
 					DetailsText(albumName = currentAlbum.name, artistName = currentAlbum.artist)
+				},
+				preference = {
+					val checked by remember {
+						derivedStateOf {
+							if (songs.songsState is SongUiState.Success)
+								(songs.songsState as SongUiState.Success).songsAreBlacklisted
+							else false
+						}
+					}
+					SwitchPreference(
+						text = "Hide these songs from Home page",
+						checked = checked,
+						onCheckedChange = { viewModel.blacklistSongs(currentAlbum, it) }
+					)
 				},
 				songsList = {
 					Surface(

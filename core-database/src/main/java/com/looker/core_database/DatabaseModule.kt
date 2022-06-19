@@ -16,9 +16,9 @@ object DatabaseModule {
 	@Singleton
 	fun provideHowlDatabase(
 		@ApplicationContext context: Context
-	) : HowlDatabase = Room.databaseBuilder(
+	): HowlDatabase = Room.databaseBuilder(
 		context,
 		HowlDatabase::class.java,
 		"howl-database"
-	).build()
+	).fallbackToDestructiveMigration().build()
 }

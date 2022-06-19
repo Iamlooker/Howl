@@ -3,9 +3,10 @@ package com.looker.feature_song
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.core_common.mapAndStateIn
+import com.looker.core_common.combineAndStateIn
 import com.looker.core_common.result.Result
 import com.looker.core_common.result.asResult
+import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SongsViewModel @Inject constructor(
 	private val musicServiceConnection: MusicServiceConnection,
-	songsRepository: SongsRepository
+	songsRepository: SongsRepository,
+	blacklistsRepository: BlacklistsRepository
 ) : ViewModel() {
 
 	init {
@@ -28,14 +30,19 @@ class SongsViewModel @Inject constructor(
 	private val songsStream: Flow<Result<List<Song>>> =
 		songsRepository.getSongsStream().asResult()
 
-	val songsState = songsStream.mapAndStateIn(
+	val songsState = combineAndStateIn(
+		songsStream,
+		blacklistsRepository.getBlacklistSongs(),
 		scope = viewModelScope,
 		initialValue = SongScreenUiState(SongUiState.Loading)
-	) { songsResult ->
+	) { songsResult, blacklist ->
+		val blacklistedSongs = blacklist.flatMap { it.songsFromAlbum }
 		val songs = when (songsResult) {
 			Result.Loading -> SongUiState.Loading
 			is Result.Error -> SongUiState.Error
-			is Result.Success -> SongUiState.Success(songsResult.data)
+			is Result.Success -> SongUiState.Success(
+				songsResult.data.filterNot { it.albumId.toString() in blacklistedSongs }
+			)
 		}
 		SongScreenUiState(songs)
 	}
