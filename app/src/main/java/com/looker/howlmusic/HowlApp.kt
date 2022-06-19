@@ -16,8 +16,8 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class HowlApp : Application(), ImageLoaderFactory {
 	override fun newImageLoader(): ImageLoader = ImageLoader.Builder(this)
-		.crossfade(100)
 		.error(R.drawable.error_image)
+		.crossfade(100)
 		.build()
 
 	override fun onCreate() {
