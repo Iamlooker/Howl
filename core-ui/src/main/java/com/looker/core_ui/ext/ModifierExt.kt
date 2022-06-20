@@ -1,9 +1,7 @@
-package com.looker.components.ext
+package com.looker.core_ui.ext
 
 import androidx.annotation.FloatRange
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource

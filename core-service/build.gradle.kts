@@ -45,7 +45,7 @@ dependencies {
 	implementation(project(Modules.coreModel))
 	implementation(project(Modules.coreData))
 	implementation(project(Modules.coreCommon))
-	implementation(project(Modules.components))
+	implementation(project(Modules.coreUi))
 
 	api(ExoPlayer.exoplayerCore)
 	api(ExoPlayer.exoplayerUi)

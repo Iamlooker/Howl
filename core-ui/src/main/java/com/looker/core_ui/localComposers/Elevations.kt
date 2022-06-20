@@ -1,4 +1,4 @@
-package com.looker.components.localComposers
+package com.looker.core_ui.localComposers
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf

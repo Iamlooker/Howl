@@ -44,9 +44,9 @@ android {
 
 dependencies {
 	api(project(Modules.coreModel))
-	api(project(Modules.components))
 
 	implementation(Core.core)
+	implementation(Palette.palette)
 
 	api(Coil.coil)
 	api(Compose.activity)

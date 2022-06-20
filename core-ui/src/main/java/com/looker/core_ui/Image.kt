@@ -1,4 +1,4 @@
-package com.looker.components
+package com.looker.core_ui
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -1,6 +1,14 @@
-package com.looker.components
+package com.looker.core_ui
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
@@ -16,7 +24,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.looker.components.localComposers.LocalElevations
+import com.looker.core_ui.localComposers.LocalElevations
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -78,7 +86,10 @@ fun LargeCard(
 	onClick: () -> Unit,
 ) {
 	MaterialCard(
-		modifier = modifier.padding(8.dp).clip(imageShape).drawBehind { drawRect(cardColor) },
+		modifier = modifier
+			.padding(8.dp)
+			.clip(imageShape)
+			.drawBehind { drawRect(cardColor) },
 		backgroundColor = Color.Transparent,
 		onClick = onClick
 	) {

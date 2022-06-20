@@ -22,10 +22,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.looker.components.BottomSheets
-import com.looker.components.HowlImage
-import com.looker.components.ext.backgroundGradient
-import com.looker.components.rememberDominantColorState
+import com.looker.core_ui.BottomSheets
+import com.looker.core_ui.HowlImage
+import com.looker.core_ui.ext.backgroundGradient
+import com.looker.core_ui.rememberDominantColorState
 import com.looker.core_model.Album
 import com.looker.core_ui.LoadingState
 import com.looker.core_ui.SongUiState

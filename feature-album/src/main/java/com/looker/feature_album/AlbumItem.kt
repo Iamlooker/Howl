@@ -2,19 +2,15 @@ package com.looker.feature_album
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import com.looker.components.LargeCard
-import com.looker.components.localComposers.LocalDurations
-import com.looker.components.rememberDominantColorState
 import com.looker.core_model.Album
+import com.looker.core_ui.LargeCard
+import com.looker.core_ui.localComposers.LocalDurations
+import com.looker.core_ui.rememberDominantColorState
 import kotlinx.coroutines.launch
 
 @Composable

@@ -4,9 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Shuffle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.components.state.SheetsState
-import com.looker.components.state.SheetsState.HIDDEN
-import com.looker.components.state.SheetsState.VISIBLE
+import com.looker.core_common.states.SheetsState
+import com.looker.core_common.states.SheetsState.HIDDEN
+import com.looker.core_common.states.SheetsState.VISIBLE
 import com.looker.core_common.states.ToggleButtonState
 import com.looker.core_common.states.ToggleState
 import com.looker.core_service.MusicService

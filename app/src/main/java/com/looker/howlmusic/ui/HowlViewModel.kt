@@ -2,8 +2,8 @@ package com.looker.howlmusic.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.looker.components.state.SheetsState
-import com.looker.components.state.SheetsState.HIDDEN
+import com.looker.core_common.states.SheetsState
+import com.looker.core_common.states.SheetsState.HIDDEN
 import com.looker.core_common.Constants.MEDIA_ROOT_ID
 import com.looker.core_service.MusicServiceConnection
 import dagger.hilt.android.lifecycle.HiltViewModel

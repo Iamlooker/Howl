@@ -1,6 +1,5 @@
 object Modules {
 	const val app = ":app"
-	const val components = ":components"
 	const val onBoarding = ":on-boarding"
 	const val dataMusic = ":music:data-music"
 	const val newDataMusic = ":data-music"
