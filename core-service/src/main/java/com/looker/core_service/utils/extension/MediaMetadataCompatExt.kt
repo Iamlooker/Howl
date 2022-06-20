@@ -1,17 +1,21 @@
 package com.looker.core_service.utils.extension
 
 import android.support.v4.media.MediaMetadataCompat
+import android.util.Log
 import com.looker.core_model.Song
 
 inline val MediaMetadataCompat?.toSong
-	get() = this?.description?.let {
-		Song(
-			mediaId = it.mediaId.toString(),
-			pathUri = it.mediaUri.toString(),
-			name = it.title.toString(),
-			artist = it.subtitle.toString(),
-			albumArt = it.iconUri.toString()
-		)
+	get() = this?.let { metadata ->
+		metadata.description.let {
+			Song(
+				mediaId = it.mediaId.toString(),
+				pathUri = it.mediaUri.toString(),
+				name = it.title.toString(),
+				artist = it.subtitle.toString(),
+				albumArt = it.iconUri.toString(),
+				duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+			)
+		}
 	} ?: Song()
 
 inline val Song.toMediaMetadataCompat: MediaMetadataCompat
@@ -27,6 +31,7 @@ inline val Song.toMediaMetadataCompat: MediaMetadataCompat
 			.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, song.artist)
 			.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_DESCRIPTION, song.artist)
 			.putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.album)
+			.putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
 			.build()
 	}
 

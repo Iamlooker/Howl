@@ -8,7 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 
-class MusicPlaybackPreparer(
+internal class MusicPlaybackPreparer(
 	private val musicSource: com.looker.core_service.data.DataSource<MediaMetadataCompat>,
 	private val playerPrepared: (MediaMetadataCompat?) -> Unit
 ) : MediaSessionConnector.PlaybackPreparer {
@@ -17,9 +17,7 @@ class MusicPlaybackPreparer(
 		command: String,
 		extras: Bundle?,
 		cb: ResultReceiver?
-	): Boolean {
-		return false
-	}
+	): Boolean = false
 
 	override fun getSupportedPrepareActions(): Long =
 		PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID or PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID

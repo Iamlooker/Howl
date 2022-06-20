@@ -1,5 +1,6 @@
 package com.looker.core_service
 
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
@@ -8,17 +9,20 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
+import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.google.android.exoplayer2.util.EventLogger
+import com.looker.core_common.Constants
 import com.looker.core_common.Constants.MEDIA_ROOT_ID
 import com.looker.core_service.callback.MusicPlaybackPreparer
-import com.looker.core_service.callback.MusicPlayerEventListener
-import com.looker.core_service.callback.MusicPlayerNotificationListener
 import com.looker.core_service.data.DataSource
 import com.looker.core_service.notification.MusicNotificationManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +55,7 @@ class MusicService : MediaBrowserServiceCompat() {
 	private lateinit var mediaSessionConnector: MediaSessionConnector
 	private lateinit var musicPlayerEventListener: MusicPlayerEventListener
 
-	var isForegroundServiceOn = false
+	private var isForegroundServiceOn = false
 
 	private var currentSong: MediaMetadataCompat? = null
 
@@ -78,10 +82,8 @@ class MusicService : MediaBrowserServiceCompat() {
 		musicNotificationManager = MusicNotificationManager(
 			context = this,
 			sessionToken = mediaSession.sessionToken,
-			notificationListener = MusicPlayerNotificationListener(this)
-		) {
-			songDuration = exoPlayer.duration
-		}
+			notificationListener = MusicPlayerNotificationListener()
+		)
 
 		val musicPlaybackPreparer = MusicPlaybackPreparer(musicSource) {
 			currentSong = it
@@ -97,7 +99,7 @@ class MusicService : MediaBrowserServiceCompat() {
 		mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
 		mediaSessionConnector.setPlayer(exoPlayer)
 
-		musicPlayerEventListener = MusicPlayerEventListener(this)
+		musicPlayerEventListener = MusicPlayerEventListener()
 
 		exoPlayer.addListener(musicPlayerEventListener)
 		exoPlayer.addAnalyticsListener(EventLogger(null))
@@ -170,8 +172,46 @@ class MusicService : MediaBrowserServiceCompat() {
 		exoPlayer.release()
 	}
 
-	companion object {
-		var songDuration = 0L
-			private set
+	private inner class MusicPlayerNotificationListener :
+		PlayerNotificationManager.NotificationListener {
+		override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+			stopForeground(true)
+			isForegroundServiceOn = false
+			stopSelf()
+		}
+
+		override fun onNotificationPosted(
+			notificationId: Int,
+			notification: Notification,
+			ongoing: Boolean
+		) {
+			if (ongoing && !isForegroundServiceOn) {
+				ContextCompat.startForegroundService(
+					applicationContext,
+					Intent(applicationContext, this@MusicService.javaClass)
+				)
+				startForeground(Constants.NOTIFICATION_ID, notification)
+				isForegroundServiceOn = true
+			}
+		}
+	}
+
+	private inner class MusicPlayerEventListener : Player.Listener {
+
+		override fun onPlaybackStateChanged(playbackState: Int) {
+			when (playbackState) {
+				Player.STATE_BUFFERING,
+				Player.STATE_READY -> {
+					musicNotificationManager.showNotification(exoPlayer)
+					stopForeground(false)
+					isForegroundServiceOn = false
+				}
+				else -> musicNotificationManager.hideNotification()
+			}
+		}
+
+		override fun onPlayerError(error: PlaybackException) {
+			Toast.makeText(applicationContext, "Error Occurred", Toast.LENGTH_SHORT).show()
+		}
 	}
 }

@@ -27,13 +27,14 @@ class MusicSource @Inject constructor(
 
 	override var data = emptyList<MediaMetadataCompat>()
 
-	private var state: State = State.STATE_CREATED
+	@State
+	private var state: Int = STATE_CREATED
 		set(value) {
-			if (value == State.STATE_INITIALIZED || value == State.STATE_ERROR) {
+			if (value == STATE_INITIALIZED || value == STATE_ERROR) {
 				synchronized(onReadyListeners) {
 					field = value
 					onReadyListeners.forEach { listener ->
-						listener(state == State.STATE_INITIALIZED)
+						listener(state == STATE_INITIALIZED)
 					}
 				}
 			} else {
@@ -42,16 +43,16 @@ class MusicSource @Inject constructor(
 		}
 
 	init {
-		state = State.STATE_INITIALIZING
+		state = STATE_INITIALIZING
 	}
 
 	override suspend fun load() {
 		fetchMediaData()?.let { songList ->
 			data = songList
-			state = State.STATE_INITIALIZED
+			state = STATE_INITIALIZED
 		} ?: run {
 			data = emptyList()
-			state = State.STATE_ERROR
+			state = STATE_ERROR
 		}
 	}
 
@@ -99,12 +100,12 @@ class MusicSource @Inject constructor(
 
 	override fun sourceReady(action: (Boolean) -> Unit): Boolean =
 		when (state) {
-			State.STATE_CREATED, State.STATE_INITIALIZING -> {
+			STATE_CREATED, STATE_INITIALIZING -> {
 				onReadyListeners += action
 				false
 			}
 			else -> {
-				action(state != State.STATE_ERROR)
+				action(state != STATE_ERROR)
 				true
 			}
 		}

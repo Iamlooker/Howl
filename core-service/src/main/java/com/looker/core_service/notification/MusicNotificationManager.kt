@@ -8,10 +8,10 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
-import com.looker.core_ui.bitmap
 import com.looker.core_common.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.core_common.Constants.NOTIFICATION_ID
 import com.looker.core_service.R
+import com.looker.core_ui.bitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,8 +20,7 @@ import kotlinx.coroutines.launch
 class MusicNotificationManager(
 	private val context: Context,
 	sessionToken: MediaSessionCompat.Token,
-	notificationListener: PlayerNotificationManager.NotificationListener,
-	private val newSongCallback: () -> Unit
+	notificationListener: PlayerNotificationManager.NotificationListener
 ) {
 
 	private val notificationManager: PlayerNotificationManager
@@ -50,6 +49,10 @@ class MusicNotificationManager(
 				}
 	}
 
+	fun hideNotification() {
+		notificationManager.setPlayer(null)
+	}
+
 	fun showNotification(player: Player) {
 		notificationManager.setPlayer(player)
 	}
@@ -60,18 +63,14 @@ class MusicNotificationManager(
 		var currentIconUri: Uri? = null
 		var currentBitmap: Bitmap? = null
 
-		override fun getCurrentContentTitle(player: Player): CharSequence {
-			newSongCallback()
-			return mediaController.metadata.description.title.toString()
-		}
+		override fun getCurrentContentTitle(player: Player): CharSequence =
+			mediaController.metadata.description.title.toString()
 
-		override fun createCurrentContentIntent(player: Player): PendingIntent? {
-			return mediaController.sessionActivity
-		}
+		override fun createCurrentContentIntent(player: Player): PendingIntent? =
+			mediaController.sessionActivity
 
-		override fun getCurrentContentText(player: Player): CharSequence? {
-			return mediaController.metadata.description.subtitle
-		}
+		override fun getCurrentContentText(player: Player): CharSequence? =
+			mediaController.metadata.description.subtitle
 
 		override fun getCurrentLargeIcon(
 			player: Player,
@@ -85,9 +84,7 @@ class MusicNotificationManager(
 					currentBitmap?.let { callback.onBitmap(it) }
 				}
 				null
-			} else {
-				currentBitmap
-			}
+			} else currentBitmap
 		}
 
 		private suspend fun retrieveBitmap(uri: Uri): Bitmap = uri.toString().bitmap(context)

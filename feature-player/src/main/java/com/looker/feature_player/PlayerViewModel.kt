@@ -9,11 +9,13 @@ import com.looker.core_common.states.SheetsState.HIDDEN
 import com.looker.core_common.states.SheetsState.VISIBLE
 import com.looker.core_common.states.ToggleButtonState
 import com.looker.core_common.states.ToggleState
-import com.looker.core_service.MusicService
 import com.looker.core_service.MusicServiceConnection
+import com.looker.core_service.utils.SHUFFLE_MODE_ALL
+import com.looker.core_service.utils.SHUFFLE_MODE_NONE
 import com.looker.core_service.utils.ShuffleMode
 import com.looker.core_service.utils.extension.currentPlaybackPosition
 import com.looker.core_service.utils.extension.playPauseMedia
+import com.looker.core_service.utils.extension.toSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,10 +30,10 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayerViewModel
 @Inject constructor(
-	private val musicServiceConnection: MusicServiceConnection
+	musicServiceConnection: MusicServiceConnection
 ) : ViewModel() {
 
-	init {
+	private val musicServiceConnection = musicServiceConnection.also {
 		updateCurrentPlayerPosition()
 	}
 
@@ -99,19 +101,23 @@ class PlayerViewModel
 
 	private fun shuffleModeToggle() {
 		val transportControls = musicServiceConnection.transportControls
-		transportControls.setShuffleMode(if (isShuffling.value) ShuffleMode.SHUFFLE_MODE_NONE else ShuffleMode.SHUFFLE_MODE_ALL)
+		@ShuffleMode
+		transportControls.setShuffleMode(if (isShuffling.value) SHUFFLE_MODE_NONE else SHUFFLE_MODE_ALL)
 	}
 
 	private fun updateCurrentPlayerPosition() {
 		viewModelScope.launch(Dispatchers.IO) {
 			while (true) {
-				val pos = playbackState.value.currentPlaybackPosition.toFloat()
-				if (progress.value != pos) {
-					_progress.emit(pos / MusicService.songDuration)
-					_songDuration.emit(MusicService.songDuration)
+				val pos = playbackState.value.currentPlaybackPosition
+				val songDuration = nowPlaying.value.toSong.duration
+				if (progress.value != pos && songDuration > 0) {
+					_progress.emit(pos / songDuration)
+					_songDuration.emit(songDuration)
 				}
-				delay(500)
+				delay(POSITION_UPDATE_INTERVAL_MILLIS)
 			}
 		}
 	}
 }
+
+private const val POSITION_UPDATE_INTERVAL_MILLIS = 100L

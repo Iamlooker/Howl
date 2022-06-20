@@ -162,9 +162,7 @@ fun Controls(
 				PlayPauseIcon(playIcon)
 			}
 		}
-		PreviousAndSeekBar(
-			skipPrevClick = viewModel::playPrevious
-		) {
+		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
 			val progress by viewModel.progress.collectAsState()
 			SeekBar(
 				modifier = Modifier.height(60.dp),
