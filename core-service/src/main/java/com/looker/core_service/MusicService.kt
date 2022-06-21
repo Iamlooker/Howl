@@ -9,6 +9,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
@@ -98,11 +99,12 @@ class MusicService : MediaBrowserServiceCompat() {
 		musicPlayerEventListener = MusicPlayerEventListener()
 
 		exoPlayer.addListener(musicPlayerEventListener)
-		exoPlayer.addAnalyticsListener(EventLogger(null))
+		exoPlayer.addAnalyticsListener(EventLogger())
 		musicNotificationManager.showNotification(exoPlayer)
 	}
 
 	private inner class MusicQueueNavigator : TimelineQueueNavigator(mediaSession) {
+
 		override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat =
 			musicSource.data[windowIndex].description
 	}
@@ -186,7 +188,6 @@ class MusicService : MediaBrowserServiceCompat() {
 	}
 
 	private inner class MusicPlayerEventListener : Player.Listener {
-
 		override fun onPlaybackStateChanged(playbackState: Int) {
 			when (playbackState) {
 				Player.STATE_BUFFERING,

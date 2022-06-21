@@ -39,7 +39,7 @@ object ServiceModule {
 	@Provides
 	fun provideAudioAttributes(): AudioAttributes = AudioAttributes.Builder()
 		.setUsage(C.USAGE_MEDIA)
-		.setContentType(C.CONTENT_TYPE_MUSIC)
+		.setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
 		.build()
 
 	@ServiceScoped
@@ -50,6 +50,7 @@ object ServiceModule {
 		audioAttributes: AudioAttributes
 	): ExoPlayer = ExoPlayer.Builder(context, renderersFactory)
 		.setAudioAttributes(audioAttributes, true)
+		.setUsePlatformDiagnostics(false)
 		.build()
 
 	@ServiceScoped

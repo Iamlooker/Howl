@@ -1,6 +1,7 @@
 package com.looker.feature_player
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -78,7 +79,7 @@ fun PlayerHeader(
 				val toggleButtonState by viewModel.toggleStream.collectAsState()
 				val toggleColor by animateColorAsState(
 					targetValue =
-					if (toggleButtonState.enabled) MaterialTheme.colors.secondaryVariant.overBackground()
+					if (toggleButtonState.enabled) MaterialTheme.colors.secondaryVariant.overBackground(0.5f)
 					else MaterialTheme.colors.background,
 					animationSpec = tween(LocalDurations.current.crossFade)
 				)
@@ -104,12 +105,18 @@ fun PlayerHeader(
 				targetValue = if (isPlaying) 50 else 15,
 				animationSpec = tween(LocalDurations.current.crossFade)
 			)
+			val scale by animateFloatAsState(
+				targetValue = if (isPlaying) 1f else 0.95f,
+				animationSpec = tween(LocalDurations.current.crossFade)
+			)
 			AsyncImage(
 				modifier = Modifier
 					.matchParentSize()
 					.graphicsLayer {
 						clip = true
 						shape = RoundedCornerShape(imageCorner)
+						scaleX = scale
+						scaleY = scale
 					},
 				model = currentSong.toSong.albumArt,
 				contentScale = ContentScale.Crop,

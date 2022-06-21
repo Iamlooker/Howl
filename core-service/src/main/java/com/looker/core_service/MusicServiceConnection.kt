@@ -26,7 +26,7 @@ class MusicServiceConnection(context: Context) {
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _playbackState = MutableStateFlow(EMPTY_PLAYBACK_STATE)
 	private val _nowPlaying = MutableStateFlow(NOTHING_PLAYING)
-	private val _currentQueue = MutableStateFlow<List<Song>>(emptyList())
+	private val _currentQueue = MutableStateFlow<List<CustomQueueItem>>(emptyList())
 
 	val shuffleMode = _shuffleMode.asStateFlow()
 	val isPlaying = _isPlaying.asStateFlow()
@@ -95,8 +95,9 @@ class MusicServiceConnection(context: Context) {
 	private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
 
 		override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
-			super.onQueueChanged(queue)
-			_currentQueue.value = queue?.map { it.description.toSong } ?: emptyList()
+			_currentQueue.value = queue?.map {
+				CustomQueueItem(it.queueId, it.description.toSong)
+			} ?: emptyList()
 		}
 
 		override fun onShuffleModeChanged(shuffleMode: Int) {
@@ -123,6 +124,11 @@ class MusicServiceConnection(context: Context) {
 		}
 	}
 }
+
+data class CustomQueueItem(
+	val queueId: Long,
+	val song: Song
+)
 
 val EMPTY_PLAYBACK_STATE: PlaybackStateCompat = PlaybackStateCompat.Builder()
 	.setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
