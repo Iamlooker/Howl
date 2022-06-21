@@ -57,8 +57,6 @@ class MusicService : MediaBrowserServiceCompat() {
 
 	private var isForegroundServiceOn = false
 
-	private var currentSong: MediaMetadataCompat? = null
-
 	private var isPlayerInitialized = false
 
 	override fun onCreate() {
@@ -86,9 +84,7 @@ class MusicService : MediaBrowserServiceCompat() {
 		)
 
 		val musicPlaybackPreparer = MusicPlaybackPreparer(musicSource) {
-			currentSong = it
 			preparePlayer(
-				songs = musicSource.data,
 				itemToPlay = it,
 				playNow = true
 			)
@@ -107,17 +103,16 @@ class MusicService : MediaBrowserServiceCompat() {
 	}
 
 	private inner class MusicQueueNavigator : TimelineQueueNavigator(mediaSession) {
-		override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat {
-			return musicSource.data[windowIndex].description
-		}
+		override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat =
+			musicSource.data[windowIndex].description
 	}
 
 	private fun preparePlayer(
-		songs: List<MediaMetadataCompat>,
-		itemToPlay: MediaMetadataCompat?,
-		playNow: Boolean
+		songs: List<MediaMetadataCompat> = musicSource.data,
+		itemToPlay: MediaMetadataCompat? = null,
+		playNow: Boolean = false
 	) {
-		val currentSongIndex = if (currentSong == null) 0 else songs.indexOf(itemToPlay)
+		val currentSongIndex = if (itemToPlay == null) 0 else songs.indexOf(itemToPlay)
 		exoPlayer.setMediaSource(musicSource.asMediaSource(dataSourceFactory))
 		exoPlayer.prepare()
 		exoPlayer.seekTo(currentSongIndex, 0L)
@@ -128,9 +123,7 @@ class MusicService : MediaBrowserServiceCompat() {
 		clientPackageName: String,
 		clientUid: Int,
 		rootHints: Bundle?
-	): BrowserRoot {
-		return BrowserRoot(MEDIA_ROOT_ID, null)
-	}
+	): BrowserRoot = BrowserRoot(MEDIA_ROOT_ID, null)
 
 	override fun onLoadChildren(
 		parentId: String,
@@ -142,16 +135,12 @@ class MusicService : MediaBrowserServiceCompat() {
 					if (isInitialized) {
 						result.sendResult(musicSource.asMediaItem())
 						if (!isPlayerInitialized && musicSource.data.isNotEmpty()) {
-							preparePlayer(musicSource.data, musicSource.data[0], false)
+							preparePlayer()
 							isPlayerInitialized = true
 						}
-					} else {
-						result.sendResult(null)
-					}
+					} else result.sendResult(null)
 				}
-				if (!resultsSent) {
-					result.detach()
-				}
+				if (!resultsSent) result.detach()
 			}
 		}
 	}

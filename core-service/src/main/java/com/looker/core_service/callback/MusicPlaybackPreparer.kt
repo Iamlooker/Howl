@@ -7,9 +7,10 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
+import com.looker.core_service.data.DataSource
 
 internal class MusicPlaybackPreparer(
-	private val musicSource: com.looker.core_service.data.DataSource<MediaMetadataCompat>,
+	private val musicSource: DataSource<MediaMetadataCompat>,
 	private val playerPrepared: (MediaMetadataCompat?) -> Unit
 ) : MediaSessionConnector.PlaybackPreparer {
 	override fun onCommand(
@@ -34,5 +35,4 @@ internal class MusicPlaybackPreparer(
 	override fun onPrepareFromSearch(query: String, playWhenReady: Boolean, extras: Bundle?) = Unit
 
 	override fun onPrepareFromUri(uri: Uri, playWhenReady: Boolean, extras: Bundle?) = Unit
-
 }

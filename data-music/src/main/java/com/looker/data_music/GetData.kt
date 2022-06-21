@@ -15,7 +15,7 @@ object GetData {
 
 const val GetDataWork = "GetDataWork"
 
-class GetDataInitializer : Initializer<GetData> {
+internal class GetDataInitializer : Initializer<GetData> {
 	override fun create(context: Context): GetData {
 		WorkManager.getInstance(context).apply {
 			enqueueUniqueWork(

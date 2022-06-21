@@ -12,6 +12,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
+import com.looker.core_model.Song
 import com.looker.core_service.utils.extension.toMediaMetadataCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
@@ -62,13 +63,14 @@ class MusicSource @Inject constructor(
 	) { songsResult, blacklist ->
 		val blacklistedSongs = blacklist.flatMap { it.songsFromAlbum }
 		songsResult.filterNot { it.albumId.toString() in blacklistedSongs }
-			.map { it.toMediaMetadataCompat }
+			.map(Song::toMediaMetadataCompat)
 	}
 
 	private suspend fun fetchMediaData() = withContext(Dispatchers.IO) {
 		try {
 			songsState.first()
 		} catch (ioException: IOException) {
+			ioException.printStackTrace()
 			null
 		}
 	}

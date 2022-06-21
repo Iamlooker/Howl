@@ -25,7 +25,7 @@ internal fun KClass<out CoroutineWorker>.delegatedData() =
 		.putString(WORKER_CLASS_NAME, qualifiedName)
 		.build()
 
-class DelegatingWorker(
+internal class DelegatingWorker(
 	appContext: Context,
 	workerParams: WorkerParameters,
 ) : CoroutineWorker(appContext, workerParams) {

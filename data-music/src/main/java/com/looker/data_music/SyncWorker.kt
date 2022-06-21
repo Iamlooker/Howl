@@ -9,7 +9,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
 @HiltWorker
-class SyncWorker @AssistedInject constructor(
+internal class SyncWorker @AssistedInject constructor(
 	@Assisted val appContext: Context,
 	@Assisted workerParams: WorkerParameters,
 	private val songsRepository: SongsRepository,
