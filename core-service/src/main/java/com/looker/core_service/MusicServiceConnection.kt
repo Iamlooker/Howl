@@ -6,6 +6,7 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
@@ -25,12 +26,14 @@ class MusicServiceConnection(context: Context) {
 	private val _playIcon = MutableStateFlow(Icons.Rounded.PlayArrow)
 	private val _playbackState = MutableStateFlow(EMPTY_PLAYBACK_STATE)
 	private val _nowPlaying = MutableStateFlow(NOTHING_PLAYING)
+	private val _currentQueue = MutableStateFlow<List<Song>>(emptyList())
 
 	val shuffleMode = _shuffleMode.asStateFlow()
 	val isPlaying = _isPlaying.asStateFlow()
 	val playIcon = _playIcon.asStateFlow()
 	val playbackState = _playbackState.asStateFlow()
 	val nowPlaying = _nowPlaying.asStateFlow()
+	val currentQueue = _currentQueue.asStateFlow()
 
 	private var previousPlayState: Boolean = false
 
@@ -90,6 +93,11 @@ class MusicServiceConnection(context: Context) {
 	}
 
 	private inner class MediaControllerCallback : MediaControllerCompat.Callback() {
+
+		override fun onQueueChanged(queue: MutableList<MediaSessionCompat.QueueItem>?) {
+			super.onQueueChanged(queue)
+			_currentQueue.value = queue?.map { it.description.toSong } ?: emptyList()
+		}
 
 		override fun onShuffleModeChanged(shuffleMode: Int) {
 			super.onShuffleModeChanged(shuffleMode)

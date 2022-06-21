@@ -59,7 +59,7 @@ class AlbumsViewModel @Inject constructor(
 		val albums = when (albumsResult) {
 			Result.Loading -> AlbumUiState.Loading
 			is Result.Error -> AlbumUiState.Error
-			is Result.Success -> AlbumUiState.Success(albumsResult.data)
+			is Result.Success -> AlbumUiState.Success(albumsResult.data.sortedBy { it.name })
 		}
 		AlbumScreenUiState(albums)
 	}

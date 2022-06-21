@@ -45,6 +45,7 @@ import com.looker.feature_player.components.PlayPauseIcon
 import com.looker.feature_player.components.PreviousAndSeekBar
 import com.looker.feature_player.components.SeekBar
 import com.looker.feature_player.components.SongText
+import com.looker.feature_player.queue.PlayerQueue
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 
@@ -127,6 +128,7 @@ fun PlayerHeader(
 				fontWeight = FontWeight.SemiBold
 			)
 		}
+		PlayerQueue()
 	}
 }
 

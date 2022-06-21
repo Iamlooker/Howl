@@ -18,6 +18,11 @@ val HowlTypography = Typography(
 		fontWeight = FontWeight.Normal,
 		fontSize = 13.sp
 	),
+	h5 = TextStyle(
+		fontWeight = FontWeight.Medium,
+		fontSize = 24.sp,
+		letterSpacing = 0.sp
+	),
 	h6 = TextStyle(
 		fontWeight = FontWeight.SemiBold,
 		fontSize = 17.sp
