@@ -37,5 +37,5 @@ interface AlbumDao {
             WHERE albumId in (:ids)
         """
 	)
-	suspend fun deleteAlbums(ids: List<String>)
+	suspend fun deleteAlbums(ids: List<Long>)
 }

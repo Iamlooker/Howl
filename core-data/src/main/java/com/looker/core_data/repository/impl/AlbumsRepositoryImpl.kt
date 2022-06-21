@@ -1,6 +1,7 @@
 package com.looker.core_data.repository.impl
 
 import android.content.Context
+import android.util.Log
 import com.looker.core_data.repository.AlbumsRepository
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_database.dao.AlbumDao
@@ -12,6 +13,7 @@ import com.looker.core_model.Song
 import com.looker.data_music.AlbumsData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -26,15 +28,19 @@ class AlbumsRepositoryImpl @Inject constructor(
 			.map { it.map(AlbumEntity::asExternalModel) }
 
 	override fun getAlbumStream(albumId: Long): Flow<Album> =
-		albumDao.getAlbumEntityStream(albumId).map {
-			it.asExternalModel()
-		}
+		albumDao.getAlbumEntityStream(albumId).map(AlbumEntity::asExternalModel)
 
 	override fun getRelatedSongs(albumId: Long): Flow<List<Song>> =
 		songsRepository.getSongForAlbum(albumId)
 
 	override suspend fun syncData(): Boolean {
 		val albums = AlbumsData(appContext).createAlbumsList().map { it.asEntity() }
+		getAlbumsStream().first { albumsList ->
+			val removedAlbums = albumsList.filter { it.asEntity() !in albums }
+				.map(Album::albumId)
+			albumDao.deleteAlbums(removedAlbums)
+			true
+		}
 		albumDao.insertOrIgnoreAlbums(albums)
 		return albums.isNotEmpty()
 	}

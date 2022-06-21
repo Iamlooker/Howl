@@ -10,6 +10,7 @@ import com.looker.core_model.Song
 import com.looker.data_music.SongsData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class SongsRepositoryImpl @Inject constructor(
 
 	override fun getSongStream(mediaId: String): Flow<Song> =
 		songDao.getSongEntityStream(mediaId)
-			.map { it.asExternalModel() }
+			.map(SongEntity::asExternalModel)
 
 	override fun getSongForAlbum(albumId: Long): Flow<List<Song>> =
 		songDao.getSongEntitiesStream()
@@ -32,6 +33,12 @@ class SongsRepositoryImpl @Inject constructor(
 
 	override suspend fun syncData(): Boolean {
 		val songs = SongsData(appContext).createSongsList().map { it.asEntity() }
+		getSongsStream().first { songsList ->
+			val removedSongs = songsList.filter { it.asEntity() !in songs }
+				.map(Song::mediaId)
+			songDao.deleteSongs(removedSongs)
+			true
+		}
 		songDao.insertOrIgnoreSongs(songs)
 		return songs.isNotEmpty()
 	}

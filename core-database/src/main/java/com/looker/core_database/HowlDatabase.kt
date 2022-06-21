@@ -17,14 +17,12 @@ import com.looker.core_database.utils.InstantConverters
 		AlbumEntity::class,
 		BlacklistEntity::class
 	],
-	version = 3,
+	version = 4,
 
-)
-@TypeConverters(
-	InstantConverters::class
-)
+	)
+@TypeConverters(InstantConverters::class)
 abstract class HowlDatabase : RoomDatabase() {
-	abstract fun songDao() : SongDao
-	abstract fun albumDao() : AlbumDao
-	abstract fun blacklistDao() : BlacklistDao
+	abstract fun songDao(): SongDao
+	abstract fun albumDao(): AlbumDao
+	abstract fun blacklistDao(): BlacklistDao
 }

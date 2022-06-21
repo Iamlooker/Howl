@@ -14,6 +14,7 @@ import com.looker.core_ui.SongListUiState
 import com.looker.core_ui.SongUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,12 +25,17 @@ class SongsViewModel @Inject constructor(
 	blacklistsRepository: BlacklistsRepository
 ) : ViewModel() {
 
-	init {
-		viewModelScope.launch { songsRepository.syncData() }
-	}
-
 	private val songsStream: Flow<Result<List<Song>>> =
 		songsRepository.getSongsStream().asResult()
+
+	init {
+		viewModelScope.launch {
+			songsStream.collectLatest {
+				if (it is Result.Success && it.data.isEmpty())
+					songsRepository.syncData()
+			}
+		}
+	}
 
 	val songsState = combineAndStateIn(
 		songsStream,

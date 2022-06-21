@@ -20,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,8 +31,16 @@ class AlbumsViewModel @Inject constructor(
 	private val blacklistsRepository: BlacklistsRepository
 ) : ViewModel() {
 
+	private val albumsStream: Flow<Result<List<Album>>> =
+		albumsRepository.getAlbumsStream().asResult()
+
 	init {
-		viewModelScope.launch { albumsRepository.syncData() }
+		viewModelScope.launch {
+			albumsStream.collectLatest {
+				if (it is Result.Success && it.data.isEmpty())
+					albumsRepository.syncData()
+			}
+		}
 	}
 
 	private val _currentAlbum = MutableStateFlow(Album())
@@ -39,9 +48,6 @@ class AlbumsViewModel @Inject constructor(
 
 	private val blacklistStream =
 		blacklistsRepository.getBlacklistSongs()
-
-	private val albumsStream: Flow<Result<List<Album>>> =
-		albumsRepository.getAlbumsStream().asResult()
 
 	private val songsStream: Flow<Result<List<Song>>> =
 		albumsRepository.getAllSongs().asResult()
