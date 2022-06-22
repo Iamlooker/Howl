@@ -1,26 +1,13 @@
 package com.looker.feature_player
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,20 +19,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.looker.core_common.states.SheetsState
+import com.looker.core_service.utils.extension.toSong
 import com.looker.core_ui.AnimatedText
 import com.looker.core_ui.OpaqueIconButton
 import com.looker.core_ui.ext.backgroundGradient
 import com.looker.core_ui.localComposers.LocalDurations
 import com.looker.core_ui.overBackground
 import com.looker.core_ui.rememberDominantColorState
-import com.looker.core_common.states.SheetsState
-import com.looker.core_service.utils.extension.toSong
-import com.looker.feature_player.components.AlbumArt
-import com.looker.feature_player.components.PlayAndSkipButton
-import com.looker.feature_player.components.PlayPauseIcon
-import com.looker.feature_player.components.PreviousAndSeekBar
-import com.looker.feature_player.components.SeekBar
-import com.looker.feature_player.components.SongText
+import com.looker.feature_player.components.*
 import com.looker.feature_player.queue.PlayerQueue
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -57,6 +39,9 @@ fun PlayerHeader(
 	onSheetStateChange: () -> StateFlow<SheetsState>
 ) {
 	val dominantColorState = rememberDominantColorState()
+	val isPlaying by viewModel.isPlaying.collectAsState()
+	val currentSong by viewModel.nowPlaying.collectAsState()
+	val toggleButtonState by viewModel.toggleStream.collectAsState()
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
@@ -65,21 +50,18 @@ fun PlayerHeader(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		val currentSong by viewModel.nowPlaying.collectAsState()
 		AlbumArt(
 			modifier = Modifier
 				.fillMaxWidth()
 				.fillMaxHeight(0.27f),
 			button = {
 				LaunchedEffect(onSheetStateChange) {
-					onSheetStateChange().collectLatest {
-						viewModel.setBackdrop(it)
-					}
+					onSheetStateChange().collectLatest { viewModel.setBackdrop(it) }
 				}
-				val toggleButtonState by viewModel.toggleStream.collectAsState()
 				val toggleColor by animateColorAsState(
 					targetValue =
-					if (toggleButtonState.enabled) MaterialTheme.colors.secondaryVariant.overBackground(0.5f)
+					if (toggleButtonState.enabled) MaterialTheme.colors.secondaryVariant
+						.overBackground(0.9f)
 					else MaterialTheme.colors.background,
 					animationSpec = tween(LocalDurations.current.crossFade)
 				)
@@ -100,15 +82,22 @@ fun PlayerHeader(
 			LaunchedEffect(currentSong.toSong.albumArt) {
 				dominantColorState.updateColorsFromImageUrl(currentSong.toSong.albumArt)
 			}
-			val isPlaying by viewModel.isPlaying.collectAsState()
-			val imageCorner by animateIntAsState(
-				targetValue = if (isPlaying) 50 else 15,
-				animationSpec = tween(LocalDurations.current.crossFade)
+			val transition = updateTransition(
+				targetState = isPlaying,
+				label = "Album Art Transition"
 			)
-			val scale by animateFloatAsState(
-				targetValue = if (isPlaying) 1f else 0.95f,
-				animationSpec = tween(LocalDurations.current.crossFade)
-			)
+			val imageCorner by transition.animateInt(
+				label = "Corner Size",
+				transitionSpec = { tween(LocalDurations.current.crossFade) }
+			) {
+				if (it) 50 else 15
+			}
+			val scale by transition.animateFloat(
+				label = "Scale",
+				transitionSpec = { tween(LocalDurations.current.crossFade) }
+			) {
+				if (it) 1f else 0.95f
+			}
 			AsyncImage(
 				modifier = Modifier
 					.matchParentSize()
@@ -144,11 +133,13 @@ fun Controls(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel()
 ) {
+	val isPlaying by viewModel.isPlaying.collectAsState()
+	val playIcon by viewModel.playIcon.collectAsState()
+	val progress by viewModel.progress.collectAsState()
 	Column(
 		modifier = modifier.padding(20.dp),
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		val isPlaying by viewModel.isPlaying.collectAsState()
 		PlayAndSkipButton(skipNextClick = viewModel::playNext) {
 			val buttonShape by animateIntAsState(
 				targetValue = if (isPlaying) 50 else 15,
@@ -167,12 +158,10 @@ fun Controls(
 				contentColor = MaterialTheme.colors.onPrimary,
 				shape = RoundedCornerShape(15)
 			) {
-				val playIcon by viewModel.playIcon.collectAsState()
 				PlayPauseIcon(playIcon)
 			}
 		}
 		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
-			val progress by viewModel.progress.collectAsState()
 			SeekBar(
 				modifier = Modifier.height(60.dp),
 				progress = progress,

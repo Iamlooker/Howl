@@ -19,11 +19,7 @@ import com.looker.core_service.utils.extension.toSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -76,21 +72,23 @@ class PlayerViewModel
 			initialValue = ToggleButtonState(ToggleState.PlayControl, false)
 		)
 
+	private var updatePosition = true
+
 	fun onSeek(seekTo: Float) {
+		updatePosition = false
 		viewModelScope.launch { _progress.emit(seekTo) }
 	}
 
 	fun onSeeked() {
+		updatePosition = false
 		musicServiceConnection.transportControls.seekTo((_songDuration.value * progress.value).toLong())
+		updatePosition = true
+
 	}
 
-	fun playNext() {
-		musicServiceConnection.transportControls.skipToNext()
-	}
+	fun playNext() = musicServiceConnection.transportControls.skipToNext()
 
-	fun playPrevious() {
-		musicServiceConnection.transportControls.skipToPrevious()
-	}
+	fun playPrevious() = musicServiceConnection.transportControls.skipToPrevious()
 
 	fun onToggleClick(toggleState: ToggleState) {
 		when (toggleState) {
@@ -110,7 +108,7 @@ class PlayerViewModel
 			while (true) {
 				val pos = playbackState.value.currentPlaybackPosition
 				val songDuration = nowPlaying.value.toSong.duration
-				if (progress.value != pos && songDuration > 0) {
+				if (progress.value != pos && updatePosition && songDuration > 0) {
 					_progress.emit(pos / songDuration)
 					_songDuration.emit(songDuration)
 				}
@@ -120,4 +118,4 @@ class PlayerViewModel
 	}
 }
 
-private const val POSITION_UPDATE_INTERVAL_MILLIS = 100L
+private const val POSITION_UPDATE_INTERVAL_MILLIS = 250L
