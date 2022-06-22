@@ -72,7 +72,7 @@ fun ExpandedQueue(
 	songsList: LazyListScope.() -> Unit
 ) {
 	Scaffold(
-		modifier = modifier,
+		modifier = modifier.clip(MaterialTheme.shapes.large),
 		topBar = {
 			Surface(
 				modifier = Modifier.fillMaxWidth(),
