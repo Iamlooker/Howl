@@ -1,7 +1,10 @@
 package com.looker.feature_player
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateInt
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -24,7 +27,6 @@ import com.looker.core_service.utils.extension.toSong
 import com.looker.core_ui.AnimatedText
 import com.looker.core_ui.OpaqueIconButton
 import com.looker.core_ui.ext.backgroundGradient
-import com.looker.core_ui.localComposers.LocalDurations
 import com.looker.core_ui.overBackground
 import com.looker.core_ui.rememberDominantColorState
 import com.looker.feature_player.components.*
@@ -62,8 +64,7 @@ fun PlayerHeader(
 					targetValue =
 					if (toggleButtonState.enabled) MaterialTheme.colors.secondaryVariant
 						.overBackground(0.9f)
-					else MaterialTheme.colors.background,
-					animationSpec = tween(LocalDurations.current.crossFade)
+					else MaterialTheme.colors.background
 				)
 				Button(
 					modifier = Modifier
@@ -86,16 +87,10 @@ fun PlayerHeader(
 				targetState = isPlaying,
 				label = "Album Art Transition"
 			)
-			val imageCorner by transition.animateInt(
-				label = "Corner Size",
-				transitionSpec = { tween(LocalDurations.current.crossFade) }
-			) {
+			val imageCorner by transition.animateInt(label = "Corner Size") {
 				if (it) 50 else 15
 			}
-			val scale by transition.animateFloat(
-				label = "Scale",
-				transitionSpec = { tween(LocalDurations.current.crossFade) }
-			) {
+			val scale by transition.animateFloat(label = "Scale") {
 				if (it) 1f else 0.95f
 			}
 			AsyncImage(
@@ -141,10 +136,7 @@ fun Controls(
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
 		PlayAndSkipButton(skipNextClick = viewModel::playNext) {
-			val buttonShape by animateIntAsState(
-				targetValue = if (isPlaying) 50 else 15,
-				animationSpec = tween(LocalDurations.current.crossFade)
-			)
+			val buttonShape by animateIntAsState(targetValue = if (isPlaying) 50 else 15)
 			OpaqueIconButton(
 				modifier = Modifier
 					.height(60.dp)

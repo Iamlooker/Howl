@@ -1,8 +1,10 @@
 package com.looker.howlmusic.ui.components
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -21,7 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.looker.core_ui.localComposers.LocalDurations
 import com.looker.core_ui.localComposers.LocalElevations
 import com.looker.core_ui.overBackground
 import com.looker.howlmusic.navigation.TOP_LEVEL_DESTINATIONS
@@ -73,17 +74,22 @@ fun RowScope.BottomNavigationItems(
 	onSelected: () -> Unit
 ) {
 
-	val backgroundColor by animateColorAsState(
-		targetValue = if (selected) selectedBackgroundColor.overBackground()
-		else unselectedBackgroundColor,
-		animationSpec = tween(LocalDurations.current.crossFade)
-	)
+	val transition =
+		updateTransition(targetState = selected, label = "Bottom Navigation Transition")
 
-	val itemColor by animateColorAsState(
-		targetValue = if (selected) selectedContentColor
-		else unselectedContentColor.overBackground(0.5f),
-		animationSpec = tween(LocalDurations.current.crossFade)
-	)
+	val backgroundColor by transition.animateColor(
+		transitionSpec = { spring(stiffness = Spring.StiffnessLow) }, label = ""
+	) {
+		if (it) selectedBackgroundColor.overBackground()
+		else unselectedBackgroundColor
+	}
+
+	val itemColor by transition.animateColor(
+		transitionSpec = { spring(stiffness = Spring.StiffnessLow) }, label = ""
+	) {
+		if (it) selectedContentColor
+		else unselectedContentColor.overBackground(0.5f)
+	}
 
 	Box(
 		modifier = modifier
@@ -126,7 +132,9 @@ fun BaselineBottomNavigationItem(
 		Icon(imageVector = icon, tint = itemColor, contentDescription = null)
 		Spacer(modifier = Modifier.width(4.dp))
 		Text(
-			modifier = Modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
+			modifier = Modifier.animateContentSize(
+				spring(stiffness = Spring.StiffnessLow)
+			),
 			text = if (isSelected) label else "",
 			color = itemColor,
 			fontWeight = FontWeight.SemiBold

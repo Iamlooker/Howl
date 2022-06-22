@@ -1,41 +1,24 @@
 package com.looker.howlmusic.ui
 
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
-import androidx.compose.material.BackdropScaffoldDefaults
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
-import androidx.compose.material.rememberBackdropScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.looker.core_ui.HandleIcon
-import com.looker.core_ui.OpaqueIconButton
-import com.looker.core_ui.localComposers.LocalDurations
-import com.looker.core_ui.overBackground
 import com.looker.core_common.states.SheetsState.HIDDEN
 import com.looker.core_common.states.SheetsState.VISIBLE
+import com.looker.core_ui.HandleIcon
+import com.looker.core_ui.OpaqueIconButton
+import com.looker.core_ui.overBackground
 import com.looker.feature_player.Controls
 import com.looker.feature_player.PlayerHeader
 import com.looker.howlmusic.navigation.TopLevelNavigation
@@ -71,8 +54,8 @@ fun Home(
 		isPlaying = {
 			val isPlaying by viewModel.isPlaying.collectAsState()
 			animateDpAsState(
-				targetValue = if (isPlaying) expandedHeight else BackdropScaffoldDefaults.PeekHeight,
-				animationSpec = tween(LocalDurations.current.crossFade)
+				targetValue = if (isPlaying) expandedHeight
+				else BackdropScaffoldDefaults.PeekHeight
 			).value
 		},
 		header = {
@@ -85,7 +68,7 @@ fun Home(
 				openPlayer = {
 					scope.launch {
 						viewModel.setBackDrop(VISIBLE)
-						state.animateTo(Revealed, TweenSpec(400))
+						state.animateTo(Revealed)
 					}
 				}
 			)

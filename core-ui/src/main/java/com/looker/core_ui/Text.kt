@@ -1,7 +1,6 @@
 package com.looker.core_ui
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -16,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.looker.core_ui.localComposers.LocalDurations
 
 @Composable
 fun AnimatedText(
@@ -29,7 +27,7 @@ fun AnimatedText(
 	fontWeight: FontWeight = FontWeight.Medium
 ) {
 	Text(
-		modifier = modifier.animateContentSize(tween(LocalDurations.current.fadeIn)),
+		modifier = modifier.animateContentSize(),
 		text = text,
 		style = style,
 		maxLines = maxLines,

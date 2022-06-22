@@ -2,8 +2,9 @@ package com.looker.core_ui.ext
 
 import androidx.annotation.FloatRange
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.getValue
@@ -34,12 +35,11 @@ fun Modifier.translate(
 fun Modifier.backgroundGradient(
 	color: Color,
 	@FloatRange(from = 0.0, to = 1.0) startYPercentage: Float = 1f,
-	@FloatRange(from = 0.0, to = 1.0) endYPercentage: Float = 0f,
-	animationDuration: Int = 500
+	@FloatRange(from = 0.0, to = 1.0) endYPercentage: Float = 0f
 ): Modifier = composed {
 	val animateColor by animateColorAsState(
 		targetValue = color,
-		animationSpec = tween(animationDuration)
+		animationSpec = spring(stiffness = Spring.StiffnessLow)
 	)
 	val colors = remember(animateColor) {
 		listOf(animateColor.copy(alpha = 0f), animateColor)
