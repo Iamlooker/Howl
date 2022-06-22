@@ -25,7 +25,7 @@ fun Modifier.translate(
 	val isPressed by interactionSource.collectIsPressedAsState()
 	val offsetX by animateFloatAsState(targetValue = if (isPressed) maxX else 0f)
 	val offsetY by animateFloatAsState(targetValue = if (isPressed) maxY else 0f)
-	Modifier.graphicsLayer {
+	graphicsLayer {
 		translationX = offsetX
 		translationY = offsetY
 	}
