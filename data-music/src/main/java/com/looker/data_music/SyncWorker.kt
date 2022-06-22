@@ -18,6 +18,7 @@ internal class SyncWorker @AssistedInject constructor(
 	override suspend fun doWork(): Result {
 		songsRepository.syncData()
 		albumsRepository.syncData()
+		songsRepository.cleanup()
 		return Result.success()
 	}
 

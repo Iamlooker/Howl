@@ -8,4 +8,5 @@ interface SongsRepository {
 	fun getSongStream(mediaId: String): Flow<Song>
 	fun getSongForAlbum(albumId: Long): Flow<List<Song>>
 	suspend fun syncData(): Boolean
+	suspend fun cleanup(): Boolean
 }

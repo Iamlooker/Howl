@@ -33,13 +33,20 @@ class SongsRepositoryImpl @Inject constructor(
 
 	override suspend fun syncData(): Boolean {
 		val songs = SongsData(appContext).createSongsList().map { it.asEntity() }
+		songDao.insertOrIgnoreSongs(songs)
+		return songs.isNotEmpty()
+	}
+
+	override suspend fun cleanup(): Boolean {
+		val songs = SongsData(appContext).createSongsList().map { it.asEntity() }
 		getSongsStream().first { songsList ->
-			val removedSongs = songsList.filter { it.asEntity() !in songs }
-				.map(Song::mediaId)
-			songDao.deleteSongs(removedSongs)
+			if (songsList.isNotEmpty()) {
+				val removedSongs = songsList.filter { it.asEntity() !in songs }
+					.map(Song::mediaId)
+				songDao.deleteSongs(removedSongs)
+			}
 			true
 		}
-		songDao.insertOrIgnoreSongs(songs)
 		return songs.isNotEmpty()
 	}
 }
