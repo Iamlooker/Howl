@@ -19,7 +19,7 @@ inline fun Song.playPauseMedia(
 ) {
 	val transportControls = musicServiceConnection.transportControls
 	val playbackStateCompat = musicServiceConnection.playbackState.value
-	val isPrepared = playbackStateCompat.isPrepared or mediaId.isNotEmpty() or mediaId.isNotBlank()
+	val isPrepared = playbackStateCompat.isPrepared
 
 	if (isPrepared && playNewOrOld()) {
 		playbackStateCompat.let { playbackState ->
@@ -29,5 +29,7 @@ inline fun Song.playPauseMedia(
 				else -> onFailure()
 			}
 		}
-	} else transportControls.playFromMediaId(mediaId, null)
+	} else if (mediaId.isNotEmpty() or mediaId.isNotBlank()) {
+		transportControls.playFromMediaId(mediaId, null)
+	}
 }

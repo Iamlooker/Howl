@@ -104,7 +104,6 @@ class MusicService : MediaBrowserServiceCompat() {
 	}
 
 	private inner class MusicQueueNavigator : TimelineQueueNavigator(mediaSession) {
-
 		override fun getMediaDescription(player: Player, windowIndex: Int): MediaDescriptionCompat =
 			musicSource.data[windowIndex].description
 	}
