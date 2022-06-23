@@ -55,7 +55,7 @@ fun PlayerHeader(
 		AlbumArt(
 			modifier = Modifier
 				.fillMaxWidth()
-				.fillMaxHeight(0.27f),
+				.height(250.dp),
 			button = {
 				LaunchedEffect(onSheetStateChange) {
 					onSheetStateChange().collectLatest { viewModel.setBackdrop(it) }

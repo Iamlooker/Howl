@@ -1,15 +1,19 @@
 package com.looker.howlmusic.ui
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -33,7 +37,6 @@ fun Home(
 	navController: NavHostController,
 	viewModel: HowlViewModel = viewModel()
 ) {
-	val configuration = LocalConfiguration.current
 	val state = rememberBackdropScaffoldState(
 		initialValue = Concealed,
 		confirmStateChange = {
@@ -46,16 +49,17 @@ fun Home(
 			true
 		}
 	)
-	val expandedHeight = remember(configuration) { configuration.screenHeightDp.dp / 3 }
 
 	Backdrop(
 		state = state,
 		// Best solution for now
 		isPlaying = {
+			val expandedHeight =
+				WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 270.dp
 			val isPlaying by viewModel.isPlaying.collectAsState()
 			animateDpAsState(
 				targetValue = if (isPlaying) expandedHeight
-				else BackdropScaffoldDefaults.PeekHeight
+				else WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
 			).value
 		},
 		header = {
@@ -68,7 +72,7 @@ fun Home(
 				openPlayer = {
 					scope.launch {
 						viewModel.setBackDrop(VISIBLE)
-						state.animateTo(Revealed)
+						state.animateTo(Revealed, anim = spring(stiffness = Spring.StiffnessLow))
 					}
 				}
 			)
@@ -77,7 +81,6 @@ fun Home(
 	)
 }
 
-@ExperimentalMaterialApi
 @Composable
 fun FrontLayer(
 	navController: NavHostController,

@@ -14,8 +14,8 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0-rc01"
-	private const val composeVersion = "1.2.0-rc01"
+	const val composeCompiler = "1.2.0-rc02"
+	private const val composeVersion = "1.2.0-rc02"
 	private const val activityComposeVersion = "1.5.0-rc01"
 	private const val navigationVersion = "2.5.0-rc02"
 	private const val material3Version = "1.0.0-alpha13"
