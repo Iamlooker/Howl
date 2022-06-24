@@ -29,7 +29,6 @@ import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSource
-import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.exoplayer2.util.Util.constrainValue
 import com.looker.core_common.Constants
 import com.looker.core_common.Constants.MEDIA_ROOT_ID
@@ -101,15 +100,15 @@ class MusicService : MediaBrowserServiceCompat() {
 
 		serviceScope.launch { musicSource.load() }
 
-		mediaSessionConnector = MediaSessionConnector(mediaSession)
-		mediaSessionConnector.setPlaybackPreparer(MusicPlaybackPreparer())
-		mediaSessionConnector.setQueueNavigator(MusicQueueNavigator())
-		mediaSessionConnector.setPlayer(exoPlayer)
+		mediaSessionConnector = MediaSessionConnector(mediaSession).apply {
+			setPlaybackPreparer(MusicPlaybackPreparer())
+			setQueueNavigator(MusicQueueNavigator())
+			setPlayer(exoPlayer)
+		}
 
 		musicPlayerEventListener = MusicPlayerEventListener()
 
 		exoPlayer.addListener(musicPlayerEventListener)
-		exoPlayer.addAnalyticsListener(EventLogger())
 		musicNotificationManager.showNotification(exoPlayer)
 	}
 

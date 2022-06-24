@@ -236,14 +236,14 @@ private fun CustomTrack(
 ) {
 	val inactiveTrackColor = colors.trackColor(enabled, active = false)
 	val activeTrackColor = colors.trackColor(enabled, active = true)
-	val deltaXAnim = rememberInfiniteTransition()
-	val dx by deltaXAnim.animateFloat(
-		initialValue = 0f,
-		targetValue = waveWidth,
-		animationSpec = infiniteRepeatable(
-			animation = tween(1000, easing = LinearEasing)
-		)
-	)
+//	val deltaXAnim = rememberInfiniteTransition()
+//	val dx by deltaXAnim.animateFloat(
+//		initialValue = 0f,
+//		targetValue = waveWidth,
+//		animationSpec = infiniteRepeatable(
+//			animation = tween(1000, easing = LinearEasing)
+//		)
+//	)
 
 	Canvas(modifier) {
 		val sliderLeft = Offset(thumbPx, center.y)
@@ -270,7 +270,7 @@ private fun CustomTrack(
 			val offsetY =
 				((cos(x * (2f * PI / waveWidth)) * (waveHeight / (2)) + (waveHeight / 2)).toFloat()
 						+ (sliderValueStart.y - (waveHeight / 2)))
-			val offsetX = x - dx
+			val offsetX = x.toFloat()
 			if (offsetX < sliderValueEnd.x && offsetX > sliderValueStart.x)
 				points.add(Offset(offsetX, offsetY))
 		}
