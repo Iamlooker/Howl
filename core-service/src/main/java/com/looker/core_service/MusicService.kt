@@ -210,7 +210,7 @@ class MusicService : MediaBrowserServiceCompat() {
 				Player.STATE_READY -> {
 					musicNotificationManager.showNotification(exoPlayer)
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-						stopForeground(Service.STOP_FOREGROUND_REMOVE)
+						stopForeground(Service.STOP_FOREGROUND_DETACH)
 					} else stopForeground(true)
 					isForegroundServiceOn = false
 				}
