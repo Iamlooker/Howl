@@ -63,7 +63,6 @@ fun OnBoardingPage(
 			onDenied = viewModel::onPermissionDenied
 		)
 	}
-
 }
 
 @Composable

@@ -44,6 +44,8 @@ jobs:
         alias: ${{ secrets.KEYSTORE_ALIAS }}
         keyStorePassword: ${{ secrets.KEYSTORE_PASS }}
         keyPassword: ${{ secrets.KEY_PASS }}
+      env:
+        BUILD_TOOLS_VERSION: "33.0.0"
 
     - uses: actions/upload-artifact@v3.1.0 
       with:
