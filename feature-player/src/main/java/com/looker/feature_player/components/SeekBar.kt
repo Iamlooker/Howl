@@ -1,9 +1,9 @@
 package com.looker.feature_player.components
 
 import androidx.annotation.FloatRange
-import androidx.compose.material.Slider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.looker.core_ui.WaveySeekbar
 
 @Composable
 fun SeekBar(
@@ -13,7 +13,7 @@ fun SeekBar(
 	onValueChange: (Float) -> Unit,
 	onValueChanged: () -> Unit
 ) {
-	Slider(
+	WaveySeekbar(
 		modifier = modifier,
 		value = progress,
 		onValueChange = onValueChange,

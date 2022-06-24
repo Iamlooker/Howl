@@ -10,12 +10,7 @@ import com.looker.core_common.states.SheetsState.VISIBLE
 import com.looker.core_common.states.ToggleButtonState
 import com.looker.core_common.states.ToggleState
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.utils.SHUFFLE_MODE_ALL
-import com.looker.core_service.utils.SHUFFLE_MODE_NONE
-import com.looker.core_service.utils.ShuffleMode
-import com.looker.core_service.utils.extension.currentPlaybackPosition
-import com.looker.core_service.utils.extension.playPauseMedia
-import com.looker.core_service.utils.extension.toSong
+import com.looker.core_service.extensions.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -107,7 +102,7 @@ class PlayerViewModel
 		viewModelScope.launch(Dispatchers.IO) {
 			while (true) {
 				val pos = playbackState.value.currentPlaybackPosition
-				val songDuration = nowPlaying.value.toSong.duration
+				val songDuration = nowPlaying.value.duration
 				if (progress.value != pos && updatePosition && songDuration > 0) {
 					_progress.emit(pos / songDuration)
 					_songDuration.emit(songDuration)

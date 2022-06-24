@@ -1,4 +1,4 @@
-package com.looker.core_service.notification
+package com.looker.core_service
 
 import android.app.PendingIntent
 import android.content.Context
@@ -10,7 +10,6 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.looker.core_common.Constants.NOTIFICATION_CHANNEL_ID
 import com.looker.core_common.Constants.NOTIFICATION_ID
-import com.looker.core_service.R
 import com.looker.core_ui.bitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

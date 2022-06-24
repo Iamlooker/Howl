@@ -1,7 +1,6 @@
 package com.looker.core_service.di
 
 import android.content.Context
-import android.support.v4.media.MediaMetadataCompat
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
@@ -10,8 +9,9 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
-import com.looker.core_service.data.DataSource
-import com.looker.core_service.data.MusicSource
+import com.looker.core_service.PersistentStorage
+import com.looker.core_service.library.MusicSource
+import com.looker.core_service.library.OfflineMusicSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +51,7 @@ object ServiceModule {
 	): ExoPlayer = ExoPlayer.Builder(context, renderersFactory)
 		.setAudioAttributes(audioAttributes, true)
 		.setUsePlatformDiagnostics(false)
+		.setHandleAudioBecomingNoisy(true)
 		.build()
 
 	@ServiceScoped
@@ -58,6 +59,12 @@ object ServiceModule {
 	fun provideMusicSource(
 		songsRepository: SongsRepository,
 		blacklistsRepository: BlacklistsRepository
-	): DataSource<MediaMetadataCompat> =
-		MusicSource(songsRepository, blacklistsRepository)
+	): MusicSource =
+		OfflineMusicSource(songsRepository, blacklistsRepository)
+
+	@ServiceScoped
+	@Provides
+	fun providePersistentStorage(
+		@ApplicationContext context: Context
+	): PersistentStorage = PersistentStorage.getInstance(context)
 }

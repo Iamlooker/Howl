@@ -12,9 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import com.looker.core_model.Song
-import com.looker.core_service.utils.extension.id
-import com.looker.core_service.utils.extension.isPlaying
-import com.looker.core_service.utils.extension.toSong
+import com.looker.core_service.extensions.id
+import com.looker.core_service.extensions.isPlaying
+import com.looker.core_service.extensions.toSong
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -116,11 +116,11 @@ class MusicServiceConnection(context: Context) {
 
 		override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
 			_nowPlaying.value = if (metadata?.id == null) NOTHING_PLAYING else metadata
-
 		}
 
 		override fun onSessionDestroyed() {
 			mediaBrowserConnectionCallback.onConnectionSuspended()
+			mediaBrowser.disconnect()
 		}
 	}
 }

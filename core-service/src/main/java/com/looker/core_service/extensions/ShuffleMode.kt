@@ -1,4 +1,4 @@
-package com.looker.core_service.utils
+package com.looker.core_service.extensions
 
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.annotation.IntDef
