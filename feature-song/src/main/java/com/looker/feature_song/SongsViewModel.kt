@@ -9,7 +9,7 @@ import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.utils.extension.playPauseMedia
+import com.looker.core_service.extensions.playPauseMedia
 import com.looker.core_ui.SongListUiState
 import com.looker.core_ui.SongUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

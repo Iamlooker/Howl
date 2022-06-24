@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.looker.core_common.states.SheetsState
-import com.looker.core_service.utils.extension.toSong
+import com.looker.core_service.extensions.toSong
 import com.looker.core_ui.AnimatedText
 import com.looker.core_ui.OpaqueIconButton
 import com.looker.core_ui.ext.backgroundGradient

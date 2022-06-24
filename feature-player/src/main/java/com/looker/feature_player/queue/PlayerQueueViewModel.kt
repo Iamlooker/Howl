@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.looker.core_common.combineAndStateIn
 import com.looker.core_service.CustomQueueItem
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.utils.extension.toSong
+import com.looker.core_service.extensions.toSong
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filter
 import javax.inject.Inject

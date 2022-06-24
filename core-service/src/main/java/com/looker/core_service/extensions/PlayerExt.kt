@@ -1,4 +1,4 @@
-package com.looker.core_service.utils.extension
+package com.looker.core_service.extensions
 
 import android.support.v4.media.MediaMetadataCompat
 import com.looker.core_model.Song

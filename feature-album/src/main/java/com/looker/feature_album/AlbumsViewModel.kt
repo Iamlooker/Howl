@@ -13,7 +13,7 @@ import com.looker.core_model.Album
 import com.looker.core_model.Blacklist
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.utils.extension.playPauseMedia
+import com.looker.core_service.extensions.playPauseMedia
 import com.looker.core_ui.SongListUiState
 import com.looker.core_ui.SongUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -98,7 +98,14 @@ class AlbumsViewModel @Inject constructor(
 
 	fun blacklistSongs(album: Album, add: Boolean = true) {
 		viewModelScope.launch {
-			if (add) blacklistsRepository.addToBlacklist(Blacklist(songsFromAlbum = setOf(album.albumId.toString())))
+			val songs =
+				if (songsState.value.songsState is SongUiState.Success) (songsState.value.songsState as SongUiState.Success).songs else emptyList()
+			if (add) blacklistsRepository.addToBlacklist(
+				Blacklist(
+					songs = songs.map { it.mediaId }.toSet(),
+					songsFromAlbum = setOf(album.albumId.toString())
+				)
+			)
 			else blacklistsRepository.allowSongsFromAlbum(setOf(album.albumId.toString()))
 		}
 	}
