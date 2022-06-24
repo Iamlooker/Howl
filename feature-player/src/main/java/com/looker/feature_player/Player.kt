@@ -91,7 +91,11 @@ fun PlayerHeader(
 					onClick = { viewModel.onToggleClick(toggleButtonState.toggleState) },
 				) {
 					val toggleIcon by remember(toggleButtonState) { mutableStateOf(toggleButtonState.icon) }
-					PlayPauseIcon(icon = toggleIcon)
+					PlayPauseIcon(
+						icon = toggleIcon,
+						tint = if (toggleButtonState.enabled) MaterialTheme.colors.onSecondary
+						else MaterialTheme.colors.onBackground
+					)
 				}
 			},
 		) {

@@ -1,6 +1,7 @@
 package com.looker.core_ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,7 +18,7 @@ fun SongItem(
 		imageUrl = song.albumArt,
 		title = song.name,
 		subText = song.artist,
-		imageSize = 62.dp,
+		imageSize = 56.dp,
 		onClick = onClick
 	)
 }
