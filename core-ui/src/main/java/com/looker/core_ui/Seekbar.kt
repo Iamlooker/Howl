@@ -1,10 +1,5 @@
 package com.looker.core_ui
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.MutatorMutex
@@ -68,9 +63,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.abs
-import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sin
 
 private const val waveWidth = 50F
 private const val waveHeight = 10F
@@ -266,13 +261,12 @@ private fun CustomTrack(
 		)
 		val points = mutableListOf<Offset>()
 
-		for (x in 0..(size.width.toInt() + 35)) {
+		for (x in (sliderValueStart.x.toInt())..(sliderValueEnd.x.toInt())) {
 			val offsetY =
-				((cos(x * (2f * PI / waveWidth)) * (waveHeight / (2)) + (waveHeight / 2)).toFloat()
+				((sin(x * (2f * PI / waveWidth)) * (waveHeight / (2)) + (waveHeight / 2)).toFloat()
 						+ (sliderValueStart.y - (waveHeight / 2)))
 			val offsetX = x.toFloat()
-			if (offsetX < sliderValueEnd.x && offsetX > sliderValueStart.x)
-				points.add(Offset(offsetX, offsetY))
+			points.add(Offset(offsetX, offsetY))
 		}
 		drawPoints(
 			points = points,
