@@ -89,7 +89,7 @@ fun ExpandedQueue(
 					Text(
 						modifier = Modifier.align(Alignment.Center),
 						text = "Now Playing",
-						style = MaterialTheme.typography.h5
+						style = MaterialTheme.typography.h3
 					)
 				}
 			}

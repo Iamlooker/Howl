@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -91,7 +92,11 @@ fun PlayerHeader(
 					onClick = { viewModel.onToggleClick(toggleButtonState.toggleState) },
 				) {
 					val toggleIcon by remember(toggleButtonState) { mutableStateOf(toggleButtonState.icon) }
-					PlayPauseIcon(icon = toggleIcon)
+					PlayPauseIcon(
+						icon = toggleIcon,
+						tint = if (toggleButtonState.enabled) MaterialTheme.colors.onSecondary
+						else MaterialTheme.colors.onBackground
+					)
 				}
 			},
 		) {
@@ -125,13 +130,13 @@ fun PlayerHeader(
 		SongText {
 			AnimatedText(
 				text = currentSong.toSong.name,
-				maxLines = 2,
-				style = MaterialTheme.typography.h4
+				style = MaterialTheme.typography.h2,
+				maxLines = 2
 			)
 			AnimatedText(
 				text = currentSong.toSong.artist,
-				style = MaterialTheme.typography.subtitle1,
-				fontWeight = FontWeight.SemiBold
+				style = MaterialTheme.typography.h4,
+				textColor = LocalContentColor.current.copy(0.8f)
 			)
 		}
 		PlayerQueue()

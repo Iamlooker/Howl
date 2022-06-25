@@ -48,6 +48,7 @@ fun PlayerQueue(viewModel: PlayerQueueViewModel = hiltViewModel()) {
 					Text(
 						text = nextItem.song.name,
 						maxLines = 1,
+						style = MaterialTheme.typography.caption,
 						overflow = TextOverflow.Ellipsis
 					)
 				}

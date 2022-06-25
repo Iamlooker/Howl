@@ -2,14 +2,21 @@ package com.looker.feature_player.components
 
 import androidx.compose.animation.*
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun PlayPauseIcon(icon: ImageVector) {
+fun PlayPauseIcon(
+	icon: ImageVector,
+	tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
+) {
 	AnimatedContent(
 		targetState = icon,
 		transitionSpec = {
@@ -26,6 +33,6 @@ fun PlayPauseIcon(icon: ImageVector) {
 		}
 
 	) {
-		Icon(imageVector = it, contentDescription = null)
+		Icon(imageVector = it, tint = tint, contentDescription = null)
 	}
 }

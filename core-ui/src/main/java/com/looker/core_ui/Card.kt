@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -55,7 +56,7 @@ fun SmallCard(
 	title: String?,
 	subText: String?,
 	imageSize: Dp,
-	imageShape: CornerBasedShape = MaterialTheme.shapes.small,
+	imageShape: CornerBasedShape = RoundedCornerShape(8.dp),
 	onClick: () -> Unit,
 ) {
 	MaterialCard(
@@ -64,7 +65,7 @@ fun SmallCard(
 		onClick = onClick
 	) {
 		SmallCardItem(
-			modifier = Modifier.padding(8.dp),
+			modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
 			imageUrl = imageUrl,
 			imageShape = imageShape,
 			imageSize = imageSize,
@@ -156,8 +157,8 @@ private fun LargeCardItem(
 		TitleSubText(
 			title = title ?: "",
 			subText = secondaryText ?: "",
-			titleTextStyle = MaterialTheme.typography.h6,
-			subTextTextStyle = MaterialTheme.typography.body2,
+			titleTextStyle = MaterialTheme.typography.body1,
+			subTextTextStyle = MaterialTheme.typography.subtitle1,
 			itemTextAlignment = Alignment.CenterHorizontally,
 			textAlign = TextAlign.Center,
 			maxLines = 2
