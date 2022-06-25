@@ -157,8 +157,8 @@ private fun LargeCardItem(
 		TitleSubText(
 			title = title ?: "",
 			subText = secondaryText ?: "",
-			titleTextStyle = MaterialTheme.typography.h6,
-			subTextTextStyle = MaterialTheme.typography.body2,
+			titleTextStyle = MaterialTheme.typography.body1,
+			subTextTextStyle = MaterialTheme.typography.subtitle1,
 			itemTextAlignment = Alignment.CenterHorizontally,
 			textAlign = TextAlign.Center,
 			maxLines = 2

@@ -49,8 +49,8 @@ fun DetailsText(
 	TitleSubText(
 		title = albumName,
 		subText = artistName,
-		titleTextStyle = MaterialTheme.typography.h5,
-		subTextTextStyle = MaterialTheme.typography.body1,
+		titleTextStyle = MaterialTheme.typography.h3,
+		subTextTextStyle = MaterialTheme.typography.h5,
 		itemTextAlignment = Alignment.CenterHorizontally,
 		textAlign = TextAlign.Center,
 		maxLines = 1

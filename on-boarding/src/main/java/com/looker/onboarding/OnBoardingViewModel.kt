@@ -3,7 +3,6 @@ package com.looker.onboarding
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.onboarding.utils.ButtonState
@@ -26,22 +25,15 @@ class OnBoardingViewModel : ViewModel() {
 
 	val bannerText = buildAnnotatedString {
 
-		withStyle(
-			style = SpanStyle(fontSize = 24.sp)
-		) {
+		withStyle(style = SpanStyle()) {
 			append("Whoops")
 		}
 		withStyle(
-			style = SpanStyle(
-				color = buttonState.value.color,
-				fontSize = 24.sp
-			)
+			style = SpanStyle(color = buttonState.value.color)
 		) {
 			append(" Nothing ")
 		}
-		withStyle(
-			style = SpanStyle(fontSize = 24.sp)
-		) {
+		withStyle(style = SpanStyle()) {
 			append("Here")
 		}
 	}

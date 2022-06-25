@@ -3,7 +3,7 @@ package com.looker.onboarding.utils
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.DoneAll
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -14,7 +14,7 @@ sealed class ButtonState(
 ) {
 	object GRANTED : ButtonState(
 		text = "Granted",
-		icon = { Icon(imageVector = Icons.Rounded.DoneAll, contentDescription = null) },
+		icon = { Icon(imageVector = Icons.Rounded.Done, contentDescription = null) },
 		color = green
 	)
 

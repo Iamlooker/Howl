@@ -2,6 +2,8 @@ package com.looker.feature_player.components
 
 import androidx.compose.animation.*
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -13,7 +15,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 @Composable
 fun PlayPauseIcon(
 	icon: ImageVector,
-	tint: Color = MaterialTheme.colors.onBackground
+	tint: Color = LocalContentColor.current.copy(alpha = LocalContentAlpha.current)
 ) {
 	AnimatedContent(
 		targetState = icon,
