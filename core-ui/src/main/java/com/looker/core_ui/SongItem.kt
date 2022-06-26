@@ -14,7 +14,7 @@ fun SongItem(
 	song: Song
 ) {
 	SmallCard(
-		modifier = modifier.fillMaxWidth(),
+		modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp),
 		imageUrl = song.albumArt,
 		title = song.name,
 		subText = song.artist,
