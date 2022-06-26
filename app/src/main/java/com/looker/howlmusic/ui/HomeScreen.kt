@@ -20,9 +20,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.looker.core_common.states.SheetsState.HIDDEN
 import com.looker.core_common.states.SheetsState.VISIBLE
-import com.looker.core_ui.HandleIcon
-import com.looker.core_ui.OpaqueIconButton
-import com.looker.core_ui.overBackground
+import com.looker.core_ui.components.HandleIcon
+import com.looker.core_ui.components.OpaqueIconButton
+import com.looker.core_ui.components.overBackground
 import com.looker.feature_player.Controls
 import com.looker.feature_player.PlayerHeader
 import com.looker.howlmusic.navigation.TopLevelNavigation

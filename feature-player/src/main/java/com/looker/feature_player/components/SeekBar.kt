@@ -3,7 +3,7 @@ package com.looker.feature_player.components
 import androidx.annotation.FloatRange
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.looker.core_ui.WaveySeekbar
+import com.looker.core_ui.components.WaveySeekbar
 
 @Composable
 fun SeekBar(

@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import com.looker.core_model.Album
-import com.looker.core_ui.LargeCard
-import com.looker.core_ui.rememberDominantColorState
+import com.looker.core_ui.components.LargeCard
+import com.looker.core_ui.components.rememberDominantColorState
 import kotlinx.coroutines.launch
 
 @Composable

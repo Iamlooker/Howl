@@ -1,4 +1,4 @@
-package com.looker.core_ui
+package com.looker.core_ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,16 +56,17 @@ fun SmallCard(
 	title: String?,
 	subText: String?,
 	imageSize: Dp,
+	cardShape: CornerBasedShape = MaterialTheme.shapes.large,
 	imageShape: CornerBasedShape = RoundedCornerShape(8.dp),
 	onClick: () -> Unit,
 ) {
 	MaterialCard(
 		modifier = modifier,
-		shape = imageShape,
+		shape = cardShape,
 		onClick = onClick
 	) {
 		SmallCardItem(
-			modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+			modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
 			imageUrl = imageUrl,
 			imageShape = imageShape,
 			imageSize = imageSize,

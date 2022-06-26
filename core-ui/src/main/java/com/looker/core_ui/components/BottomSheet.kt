@@ -1,4 +1,4 @@
-package com.looker.core_ui
+package com.looker.core_ui.components
 
 import androidx.annotation.FloatRange
 import androidx.compose.animation.core.animateFloatAsState

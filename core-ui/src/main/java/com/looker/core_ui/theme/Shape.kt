@@ -1,4 +1,4 @@
-package com.looker.howlmusic.ui.theme
+package com.looker.core_ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
