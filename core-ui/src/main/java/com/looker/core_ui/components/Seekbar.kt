@@ -76,7 +76,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
-private const val waveWidth = 50F
+private const val waveWidth = 75F
 private const val waveHeight = 10F
 
 internal val ThumbRadius = 8.dp
@@ -245,7 +245,7 @@ private fun CustomTrack(
 		initialValue = 0f,
 		targetValue = waveWidth,
 		animationSpec = infiniteRepeatable(
-			animation = tween(1000, easing = LinearEasing)
+			animation = tween(1500, easing = LinearEasing)
 		)
 	)
 	Canvas(modifier) {

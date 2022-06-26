@@ -101,7 +101,7 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 private fun LazyGridScope.albumsList(albums: AlbumUiState, onClick: (Album) -> Unit = {}) {
 	when (albums) {
 		is AlbumUiState.Success -> items(items = albums.albums, key = { it.albumId }) {
-			AlbumItem(album = it, cardWidth = 150.dp, onClick = { onClick(it) })
+			AlbumItem(album = it, cardWidth = 175.dp, onClick = { onClick(it) })
 		}
 		AlbumUiState.Loading -> item { LoadingState() }
 		AlbumUiState.Error -> item { Text(text = "Error") }
