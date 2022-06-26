@@ -1,4 +1,4 @@
-package com.looker.core_ui
+package com.looker.core_ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +14,9 @@ fun SongItem(
 	song: Song
 ) {
 	SmallCard(
-		modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp),
+		modifier = modifier
+			.fillMaxWidth()
+			.padding(horizontal = 8.dp),
 		imageUrl = song.albumArt,
 		title = song.name,
 		subText = song.artist,

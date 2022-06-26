@@ -1,4 +1,4 @@
-package com.looker.howlmusic.ui.theme
+package com.looker.core_ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.looker.howlmusic.R
+import com.looker.core_ui.R
 
 val Poppin = FontFamily(
 	Font(R.font.poppins_regular),

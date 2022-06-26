@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.looker.core_ui.OpaqueIconButton
+import com.looker.core_ui.components.OpaqueIconButton
 import com.looker.core_ui.ext.translate
-import com.looker.core_ui.overBackground
+import com.looker.core_ui.components.overBackground
 
 @Composable
 fun PlayAndSkipButton(

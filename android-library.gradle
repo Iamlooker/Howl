@@ -55,5 +55,4 @@ dependencies {
     implementation Compose.runtime
     implementation Compose.material
     implementation Compose.ui
-    debugImplementation Compose.tooling
 }

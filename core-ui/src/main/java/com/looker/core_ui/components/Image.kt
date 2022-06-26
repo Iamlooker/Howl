@@ -1,4 +1,4 @@
-package com.looker.core_ui
+package com.looker.core_ui.components
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -19,6 +19,7 @@ import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import coil.size.Scale
+import com.looker.core_ui.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

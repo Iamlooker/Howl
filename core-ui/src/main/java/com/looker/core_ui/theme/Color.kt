@@ -1,4 +1,4 @@
-package com.looker.howlmusic.ui.theme
+package com.looker.core_ui.theme
 
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors

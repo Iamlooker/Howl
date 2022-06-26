@@ -1,4 +1,4 @@
-package com.looker.core_ui
+package com.looker.core_ui.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues

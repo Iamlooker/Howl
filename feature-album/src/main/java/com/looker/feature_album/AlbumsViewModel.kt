@@ -14,8 +14,8 @@ import com.looker.core_model.Blacklist
 import com.looker.core_model.Song
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.extensions.playPauseMedia
-import com.looker.core_ui.SongListUiState
-import com.looker.core_ui.SongUiState
+import com.looker.core_ui.components.SongListUiState
+import com.looker.core_ui.components.SongUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
