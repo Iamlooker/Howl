@@ -1,5 +1,10 @@
 package com.looker.core_ui.components
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.MutatorMutex
@@ -48,8 +53,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.clipRect
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.debugInspectorInfo
@@ -67,7 +76,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
-private const val waveWidth = 50F
+private const val waveWidth = 75F
 private const val waveHeight = 10F
 
 internal val ThumbRadius = 8.dp
@@ -231,15 +240,14 @@ private fun CustomTrack(
 ) {
 	val inactiveTrackColor = colors.trackColor(enabled, active = false)
 	val activeTrackColor = colors.trackColor(enabled, active = true)
-//	val deltaXAnim = rememberInfiniteTransition()
-//	val dx by deltaXAnim.animateFloat(
-//		initialValue = 0f,
-//		targetValue = waveWidth,
-//		animationSpec = infiniteRepeatable(
-//			animation = tween(1000, easing = LinearEasing)
-//		)
-//	)
-
+	val deltaXAnim = rememberInfiniteTransition()
+	val dx by deltaXAnim.animateFloat(
+		initialValue = 0f,
+		targetValue = waveWidth,
+		animationSpec = infiniteRepeatable(
+			animation = tween(1500, easing = LinearEasing)
+		)
+	)
 	Canvas(modifier) {
 		val sliderLeft = Offset(thumbPx, center.y)
 		val sliderRight = Offset(size.width - thumbPx, center.y)
@@ -259,22 +267,15 @@ private fun CustomTrack(
 			sliderLeft.x + (sliderRight.x - sliderLeft.x) * 0f,
 			center.y
 		)
-		val points = mutableListOf<Offset>()
-
-		for (x in (sliderValueStart.x.toInt())..(sliderValueEnd.x.toInt())) {
-			val offsetY =
-				((sin(x * (2f * PI / waveWidth)) * (waveHeight / (2)) + (waveHeight / 2)).toFloat()
-						+ (sliderValueStart.y - (waveHeight / 2)))
-			val offsetX = x.toFloat()
-			points.add(Offset(offsetX, offsetY))
+		clipRect(left = sliderValueStart.x, right = sliderValueEnd.x) {
+			drawWave(
+				from = sliderValueStart,
+				to = sliderValueEnd,
+				strokeWidth = trackStrokeWidth,
+				color = activeTrackColor,
+				translate = dx
+			)
 		}
-		drawPoints(
-			points = points,
-			strokeWidth = trackStrokeWidth,
-			pointMode = PointMode.Points,
-			color = activeTrackColor.value,
-			cap = StrokeCap.Round
-		)
 	}
 }
 
@@ -421,5 +422,32 @@ private class SliderDraggableState(
 
 	override fun dispatchRawDelta(delta: Float) {
 		return onDelta(delta)
+	}
+}
+
+fun DrawScope.drawWave(
+	from: Offset,
+	to: Offset,
+	strokeWidth: Float,
+	color: State<Color>,
+	translate: Float
+) {
+	val points = mutableListOf<Offset>()
+
+	for (x in (from.x.toInt())..(to.x.toInt() + waveWidth.toInt())) {
+		val offsetY =
+			((sin(x * (2f * PI / waveWidth)) * (waveHeight / (2)) + (waveHeight / 2)).toFloat()
+					+ (from.y - (waveHeight / 2)))
+		val offsetX = x.toFloat()
+		points.add(Offset(offsetX, offsetY))
+	}
+	translate(-translate) {
+		drawPoints(
+			points = points,
+			strokeWidth = strokeWidth,
+			pointMode = PointMode.Points,
+			color = color.value,
+			cap = StrokeCap.Round
+		)
 	}
 }

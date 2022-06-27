@@ -22,15 +22,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.looker.core_model.Album
 import com.looker.core_ui.components.BottomSheets
 import com.looker.core_ui.components.HowlImage
-import com.looker.core_ui.ext.backgroundGradient
-import com.looker.core_ui.components.rememberDominantColorState
-import com.looker.core_model.Album
 import com.looker.core_ui.components.LoadingState
 import com.looker.core_ui.components.SongUiState
 import com.looker.core_ui.components.SongsList
 import com.looker.core_ui.components.SwitchPreference
+import com.looker.core_ui.components.rememberDominantColorState
+import com.looker.core_ui.ext.backgroundGradient
 import com.looker.feature_album.sheet.DetailSheetContent
 import com.looker.feature_album.sheet.DetailsText
 import kotlinx.coroutines.launch
@@ -89,7 +89,7 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 			}
 		}
 	) {
-		LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+		LazyVerticalGrid(columns = GridCells.Adaptive(150.dp)) {
 			albumsList(albums.albumsState) {
 				viewModel.setCurrentAlbum(it)
 				scope.launch { bottomSheetState.show() }
@@ -101,7 +101,7 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 private fun LazyGridScope.albumsList(albums: AlbumUiState, onClick: (Album) -> Unit = {}) {
 	when (albums) {
 		is AlbumUiState.Success -> items(items = albums.albums, key = { it.albumId }) {
-			AlbumItem(album = it, cardWidth = 150.dp, onClick = { onClick(it) })
+			AlbumItem(album = it, cardWidth = 175.dp, onClick = { onClick(it) })
 		}
 		AlbumUiState.Loading -> item { LoadingState() }
 		AlbumUiState.Error -> item { Text(text = "Error") }

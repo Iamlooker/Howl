@@ -113,4 +113,4 @@ class PlayerViewModel
 	}
 }
 
-private const val POSITION_UPDATE_INTERVAL_MILLIS = 250L
+private const val POSITION_UPDATE_INTERVAL_MILLIS = 100L
