@@ -35,7 +35,7 @@ object Compose {
 }
 
 object Coroutines {
-	private const val coroutinesVersion = "1.6.2"
+	private const val coroutinesVersion = "1.6.3"
 	const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
 	const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 }
