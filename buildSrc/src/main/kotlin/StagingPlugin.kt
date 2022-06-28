@@ -8,11 +8,9 @@ class StagingPlugin : Plugin<Project> {
 		val androidComponents = project.extensions.getByType(ApplicationAndroidComponentsExtension::class.java)
 		androidComponents.finalizeDsl { extension ->
 			extension.buildTypes.create("staging").let {
-				it.initWith(extension.buildTypes.getByName("debug"))
-				it.isMinifyEnabled = true
-				it.isShrinkResources = true
-				it.proguardFiles("proguard-android-optimize.txt")
+				it.initWith(extension.buildTypes.getByName("release"))
 				it.applicationIdSuffix = ".staging"
+				it.signingConfig = extension.signingConfigs.getByName("debug")
 			}
 		}
 	}
@@ -23,8 +21,7 @@ class ModuleStagingPlugin : Plugin<Project> {
 		val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
 		androidComponents.finalizeDsl { extension ->
 			extension.buildTypes.create("staging").let {
-				it.initWith(extension.buildTypes.getByName("debug"))
-				it.isMinifyEnabled = true
+				it.initWith(extension.buildTypes.getByName("release"))
 				it.proguardFiles("proguard-android-optimize.txt")
 			}
 		}
