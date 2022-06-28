@@ -29,13 +29,12 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.looker.core_common.states.SheetsState
 import com.looker.core_service.extensions.toSong
 import com.looker.core_ui.components.AnimatedText
+import com.looker.core_ui.components.HowlImage
 import com.looker.core_ui.components.OpaqueIconButton
 import com.looker.core_ui.components.overBackground
 import com.looker.core_ui.components.rememberDominantColorState
@@ -113,7 +112,7 @@ fun PlayerHeader(
 			val scale by transition.animateFloat(label = "Scale") {
 				if (it) 1f else 0.95f
 			}
-			AsyncImage(
+			HowlImage(
 				modifier = Modifier
 					.matchParentSize()
 					.graphicsLayer {
@@ -122,9 +121,7 @@ fun PlayerHeader(
 						scaleX = scale
 						scaleY = scale
 					},
-				model = currentSong.toSong.albumArt,
-				contentScale = ContentScale.Crop,
-				contentDescription = "Album Art"
+				data = currentSong.toSong.albumArt
 			)
 		}
 		SongText {
