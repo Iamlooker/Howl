@@ -50,7 +50,9 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 		state = bottomSheetState,
 		sheetContent = {
 			DetailSheetContent(
-				modifier = Modifier.backgroundGradient(bottomSheetDominantColorState.color.copy(0.4f)),
+				modifier = Modifier.backgroundGradient {
+					bottomSheetDominantColorState.color.copy(0.4f)
+				},
 				albumText = {
 					DetailsText(albumName = currentAlbum.name, artistName = currentAlbum.artist)
 				},

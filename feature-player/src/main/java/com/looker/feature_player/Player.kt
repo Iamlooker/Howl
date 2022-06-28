@@ -62,7 +62,7 @@ fun PlayerHeader(
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
-			.backgroundGradient(dominantColorState.color.overBackground())
+			.backgroundGradient { dominantColorState.color.overBackground() }
 			.statusBarsPadding(),
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(20.dp)
