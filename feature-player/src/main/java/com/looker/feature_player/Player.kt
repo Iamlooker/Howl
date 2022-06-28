@@ -51,7 +51,7 @@ import com.looker.feature_player.queue.PlayerQueue
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel(),
-	onSheetStateChange: () -> SheetsState
+	onSheetStateChange: () -> SheetsState = { SheetsState.HIDDEN }
 ) {
 	val dominantColorState = rememberDominantColorState()
 	val isPlaying by viewModel.isPlaying.collectAsState()
