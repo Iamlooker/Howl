@@ -10,7 +10,7 @@ repositories {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-	kotlinOptions.apiVersion = "1.3"
+	kotlinOptions.apiVersion = "1.6"
 }
 
 dependencies {
