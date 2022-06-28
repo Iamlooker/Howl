@@ -52,7 +52,6 @@ fun Home(
 
 	Backdrop(
 		state = state,
-		// Best solution for now
 		isPlaying = {
 			val expandedHeight =
 				WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 270.dp
