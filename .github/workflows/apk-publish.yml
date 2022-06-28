@@ -30,7 +30,7 @@ jobs:
       run: chmod +x gradlew
       
     - name: Build Release APK
-      run: ./gradlew assembleRelease
+      run: ./gradlew assembleStaging
       
     - name: Rename APK
       run: mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/HowlMusic.apk

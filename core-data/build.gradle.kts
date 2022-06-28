@@ -4,6 +4,8 @@ plugins {
 	kotlin("kapt")
 }
 
+apply<ModuleStagingPlugin>()
+
 android {
 	compileSdk = Android.compileSdk
 

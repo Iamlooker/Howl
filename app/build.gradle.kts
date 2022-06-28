@@ -5,6 +5,8 @@ plugins {
 	id(Hilt.plugin)
 }
 
+apply<StagingPlugin>()
+
 android {
 	compileSdk = Android.compileSdk
 	buildToolsVersion = "33.0.0"

@@ -5,6 +5,8 @@ plugins {
 	id(Hilt.plugin)
 }
 
+apply<ModuleStagingPlugin>()
+
 android {
 	compileSdk = Android.compileSdk
 
