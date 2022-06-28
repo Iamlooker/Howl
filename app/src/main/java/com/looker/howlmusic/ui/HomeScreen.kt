@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.looker.core_common.states.SheetsState
 import com.looker.core_common.states.SheetsState.HIDDEN
 import com.looker.core_common.states.SheetsState.VISIBLE
 import com.looker.core_ui.components.HandleIcon
@@ -49,6 +50,7 @@ fun Home(
 			true
 		}
 	)
+	val backdropValue by viewModel.backdropValue.collectAsState()
 
 	Backdrop(
 		state = state,
@@ -62,13 +64,15 @@ fun Home(
 			).value
 		},
 		header = {
-			val backdropValue by viewModel.backdropValue.collectAsState()
 			PlayerHeader { backdropValue }
 		},
 		frontLayerContent = {
 			val scope = rememberCoroutineScope()
 			FrontLayer(
 				navController = navController,
+				handleIcon = {
+					if (backdropValue == VISIBLE) 0f else 1f
+				},
 				openPlayer = {
 					scope.launch {
 						viewModel.setBackDrop(VISIBLE)
@@ -84,6 +88,7 @@ fun Home(
 @Composable
 fun FrontLayer(
 	navController: NavHostController,
+	handleIcon: () -> Float,
 	openPlayer: () -> Unit
 ) {
 	val topLevelNavigation = remember(navController) {
@@ -112,7 +117,7 @@ fun FrontLayer(
 		}
 	) { bottomNavigationPadding ->
 		Column(Modifier.padding(bottomNavigationPadding)) {
-			HandleIcon(onClick = openPlayer)
+			HandleIcon(onClick = openPlayer, angle = handleIcon)
 			HomeNavGraph(navController = navController)
 		}
 	}
