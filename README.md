@@ -19,11 +19,15 @@
 
 ## :camera: Screenshots
 
-<img src="metadata/en-US/images/phoneScreenshots/now_playing.png" width="32%" alt="Now Playing" />
+<img src="metadata/en-US/images/phoneScreenshots/image1.png" width="20%" alt="Now Playing" />
 
-<img src="metadata/en-US/images/phoneScreenshots/song_playing.png" width="32%" alt="Songs" />
+<img src="metadata/en-US/images/phoneScreenshots/image2.png" width="20%" alt="Songs" />
 
-<img src="metadata/en-US/images/phoneScreenshots/albums_page.png" width="32%" alt="Albums" />
+<img src="metadata/en-US/images/phoneScreenshots/image3.png" width="20%" alt="Albums" />
+
+<img src="metadata/en-US/images/phoneScreenshots/image4.png" width="20%" alt="Songs" />
+
+<img src="metadata/en-US/images/phoneScreenshots/image5.png" width="20%" alt="Albums" />
 
   
 ## :iphone: Download
