@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -93,9 +94,11 @@ fun PlayerHeader(
 				) {
 					val toggleIcon by remember(toggleButtonState) { mutableStateOf(toggleButtonState.icon) }
 					PlayPauseIcon(
-						icon = toggleIcon,
-						tint = if (toggleButtonState.enabled) MaterialTheme.colors.onSecondary
-						else MaterialTheme.colors.onBackground
+						tint = {
+							if (toggleButtonState.enabled) MaterialTheme.colors.onSecondary
+							else MaterialTheme.colors.onBackground
+						},
+						icon = { toggleIcon }
 					)
 				}
 			},
@@ -165,12 +168,12 @@ fun Controls(
 						clip = true
 						shape = RoundedCornerShape(buttonShape)
 					},
-				onClick = { viewModel.playMedia() },
+				onClick = viewModel::playMedia,
 				backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(0.9f),
 				contentColor = MaterialTheme.colors.onPrimary,
-				shape = RoundedCornerShape(15)
+				shape = RectangleShape
 			) {
-				PlayPauseIcon(playIcon)
+				PlayPauseIcon { playIcon }
 			}
 		}
 		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
