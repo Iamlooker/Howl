@@ -33,7 +33,7 @@ jobs:
       run: ./gradlew assembleStaging
       
     - name: Rename APK
-      run: mv app/build/outputs/apk/staging/app-release-unsigned.apk app/build/outputs/apk/release/HowlMusic.apk
+      run: mv app/build/outputs/apk/staging/*.apk app/build/outputs/apk/release/HowlMusic.apk
       
     - uses: r0adkll/sign-android-release@v1
       name: Sign app APK
