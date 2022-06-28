@@ -63,7 +63,8 @@ fun Home(
 			).value
 		},
 		header = {
-			PlayerHeader { viewModel.backdropValue }
+			val backdropValue by viewModel.backdropValue.collectAsState()
+			PlayerHeader { backdropValue }
 		},
 		frontLayerContent = {
 			val scope = rememberCoroutineScope()

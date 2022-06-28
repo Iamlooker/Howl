@@ -39,6 +39,7 @@ import com.looker.core_ui.components.OpaqueIconButton
 import com.looker.core_ui.ext.backgroundGradient
 import com.looker.core_ui.components.overBackground
 import com.looker.core_ui.components.rememberDominantColorState
+import com.looker.core_ui.ext.backgroundGradient
 import com.looker.feature_player.components.AlbumArt
 import com.looker.feature_player.components.PlayAndSkipButton
 import com.looker.feature_player.components.PlayPauseIcon
@@ -53,7 +54,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel(),
-	onSheetStateChange: () -> StateFlow<SheetsState>
+	onSheetStateChange: () -> SheetsState
 ) {
 	val dominantColorState = rememberDominantColorState()
 	val isPlaying by viewModel.isPlaying.collectAsState()
@@ -72,8 +73,8 @@ fun PlayerHeader(
 				.fillMaxWidth()
 				.height(250.dp),
 			button = {
-				LaunchedEffect(onSheetStateChange) {
-					onSheetStateChange().collectLatest { viewModel.setBackdrop(it) }
+				LaunchedEffect(onSheetStateChange()) {
+					viewModel.setBackdrop(onSheetStateChange())
 				}
 				val toggleColor by animateColorAsState(
 					targetValue =
