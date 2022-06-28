@@ -29,9 +29,11 @@ android {
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-rules.pro"
 			)
+			resValue("string", "app_name", "Howl")
 		}
 		getByName("debug") {
 			applicationIdSuffix = ".debug"
+			resValue("string", "app_name", "Howl-debug")
 		}
 	}
 
@@ -45,7 +47,6 @@ android {
 		buildConfig = false
 		aidl = false
 		renderScript = false
-		resValues = false
 		shaders = false
 	}
 

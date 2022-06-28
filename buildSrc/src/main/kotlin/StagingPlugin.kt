@@ -11,6 +11,7 @@ class StagingPlugin : Plugin<Project> {
 				it.initWith(extension.buildTypes.getByName("release"))
 				it.applicationIdSuffix = ".staging"
 				it.signingConfig = extension.signingConfigs.getByName("debug")
+				it.resValue("string", "app_name", "Howl-staging")
 			}
 		}
 	}
