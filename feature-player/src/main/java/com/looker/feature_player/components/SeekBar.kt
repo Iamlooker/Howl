@@ -9,13 +9,13 @@ import com.looker.core_ui.components.WaveySeekbar
 fun SeekBar(
 	modifier: Modifier = Modifier,
 	@FloatRange(from = 0.0, to = 1.0)
-	progress: Float,
+	progress: () -> Float,
 	onValueChange: (Float) -> Unit,
 	onValueChanged: () -> Unit
 ) {
 	WaveySeekbar(
 		modifier = modifier,
-		value = progress,
+		value = progress(),
 		onValueChange = onValueChange,
 		onValueChangeFinished = onValueChanged
 	)

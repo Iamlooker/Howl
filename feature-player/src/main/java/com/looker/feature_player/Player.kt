@@ -37,7 +37,6 @@ import com.looker.core_common.states.SheetsState
 import com.looker.core_service.extensions.toSong
 import com.looker.core_ui.components.AnimatedText
 import com.looker.core_ui.components.OpaqueIconButton
-import com.looker.core_ui.ext.backgroundGradient
 import com.looker.core_ui.components.overBackground
 import com.looker.core_ui.components.rememberDominantColorState
 import com.looker.core_ui.ext.backgroundGradient
@@ -48,8 +47,6 @@ import com.looker.feature_player.components.PreviousAndSeekBar
 import com.looker.feature_player.components.SeekBar
 import com.looker.feature_player.components.SongText
 import com.looker.feature_player.queue.PlayerQueue
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PlayerHeader(
@@ -179,7 +176,7 @@ fun Controls(
 		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
 			SeekBar(
 				modifier = Modifier.height(60.dp),
-				progress = progress,
+				progress = { progress },
 				onValueChange = viewModel::onSeek,
 				onValueChanged = viewModel::onSeeked
 			)
