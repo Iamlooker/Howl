@@ -27,18 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.looker.core_common.states.SheetsState
 import com.looker.core_service.extensions.toSong
 import com.looker.core_ui.components.AnimatedText
+import com.looker.core_ui.components.HowlImage
 import com.looker.core_ui.components.OpaqueIconButton
-import com.looker.core_ui.ext.backgroundGradient
 import com.looker.core_ui.components.overBackground
 import com.looker.core_ui.components.rememberDominantColorState
+import com.looker.core_ui.ext.backgroundGradient
 import com.looker.feature_player.components.AlbumArt
 import com.looker.feature_player.components.PlayAndSkipButton
 import com.looker.feature_player.components.PlayPauseIcon
@@ -46,14 +46,12 @@ import com.looker.feature_player.components.PreviousAndSeekBar
 import com.looker.feature_player.components.SeekBar
 import com.looker.feature_player.components.SongText
 import com.looker.feature_player.queue.PlayerQueue
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
 	viewModel: PlayerViewModel = hiltViewModel(),
-	onSheetStateChange: () -> StateFlow<SheetsState>
+	onSheetStateChange: () -> SheetsState = { SheetsState.HIDDEN }
 ) {
 	val dominantColorState = rememberDominantColorState()
 	val isPlaying by viewModel.isPlaying.collectAsState()
@@ -62,7 +60,7 @@ fun PlayerHeader(
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
-			.backgroundGradient(dominantColorState.color.overBackground())
+			.backgroundGradient { dominantColorState.color.overBackground() }
 			.statusBarsPadding(),
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(20.dp)
@@ -72,8 +70,8 @@ fun PlayerHeader(
 				.fillMaxWidth()
 				.height(250.dp),
 			button = {
-				LaunchedEffect(onSheetStateChange) {
-					onSheetStateChange().collectLatest { viewModel.setBackdrop(it) }
+				LaunchedEffect(onSheetStateChange()) {
+					viewModel.setBackdrop(onSheetStateChange())
 				}
 				val toggleColor by animateColorAsState(
 					targetValue =
@@ -92,9 +90,11 @@ fun PlayerHeader(
 				) {
 					val toggleIcon by remember(toggleButtonState) { mutableStateOf(toggleButtonState.icon) }
 					PlayPauseIcon(
-						icon = toggleIcon,
-						tint = if (toggleButtonState.enabled) MaterialTheme.colors.onSecondary
-						else MaterialTheme.colors.onBackground
+						tint = {
+							if (toggleButtonState.enabled) MaterialTheme.colors.onSecondary
+							else MaterialTheme.colors.onBackground
+						},
+						icon = { toggleIcon }
 					)
 				}
 			},
@@ -112,7 +112,7 @@ fun PlayerHeader(
 			val scale by transition.animateFloat(label = "Scale") {
 				if (it) 1f else 0.95f
 			}
-			AsyncImage(
+			HowlImage(
 				modifier = Modifier
 					.matchParentSize()
 					.graphicsLayer {
@@ -121,9 +121,7 @@ fun PlayerHeader(
 						scaleX = scale
 						scaleY = scale
 					},
-				model = currentSong.toSong.albumArt,
-				contentScale = ContentScale.Crop,
-				contentDescription = "Album Art"
+				data = currentSong.toSong.albumArt
 			)
 		}
 		SongText {
@@ -164,18 +162,18 @@ fun Controls(
 						clip = true
 						shape = RoundedCornerShape(buttonShape)
 					},
-				onClick = { viewModel.playMedia() },
+				onClick = viewModel::playMedia,
 				backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(0.9f),
 				contentColor = MaterialTheme.colors.onPrimary,
-				shape = RoundedCornerShape(15)
+				shape = RectangleShape
 			) {
-				PlayPauseIcon(playIcon)
+				PlayPauseIcon { playIcon }
 			}
 		}
 		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
 			SeekBar(
 				modifier = Modifier.height(60.dp),
-				progress = progress,
+				progress = { progress },
 				onValueChange = viewModel::onSeek,
 				onValueChanged = viewModel::onSeeked
 			)

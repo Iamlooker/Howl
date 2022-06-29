@@ -17,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 fun Int.toColor() = Color(this)
 
 @Composable
+@Stable
 fun Color.overBackground(
 	alpha: Float = 0.3f,
 	backgroundColor: Color = MaterialTheme.colors.background,

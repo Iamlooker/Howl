@@ -3,6 +3,8 @@ plugins {
 	id("org.jetbrains.kotlin.android")
 }
 
+apply<ModuleStagingPlugin>()
+
 android {
 	compileSdk = Android.compileSdk
 

@@ -270,7 +270,7 @@ private fun CustomTrack(
 		clipRect(left = sliderValueStart.x, right = sliderValueEnd.x) {
 			drawWave(
 				from = sliderValueStart,
-				to = sliderValueEnd,
+				to = sliderRight,
 				strokeWidth = trackStrokeWidth,
 				color = activeTrackColor,
 				translate = dx

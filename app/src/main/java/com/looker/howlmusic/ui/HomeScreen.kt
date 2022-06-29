@@ -3,7 +3,15 @@ package com.looker.howlmusic.ui
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material.BackdropValue.Concealed
 import androidx.compose.material.BackdropValue.Revealed
 import androidx.compose.material.ExperimentalMaterialApi
@@ -12,7 +20,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.rememberBackdropScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,10 +61,10 @@ fun Home(
 			true
 		}
 	)
+	val backdropValue by viewModel.backdropValue.collectAsState()
 
 	Backdrop(
 		state = state,
-		// Best solution for now
 		isPlaying = {
 			val expandedHeight =
 				WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 270.dp
@@ -63,12 +75,15 @@ fun Home(
 			).value
 		},
 		header = {
-			PlayerHeader { viewModel.backdropValue }
+			PlayerHeader { backdropValue }
 		},
 		frontLayerContent = {
 			val scope = rememberCoroutineScope()
 			FrontLayer(
 				navController = navController,
+				handleIcon = {
+					if (backdropValue == VISIBLE) 0f else 1f
+				},
 				openPlayer = {
 					scope.launch {
 						viewModel.setBackDrop(VISIBLE)
@@ -84,6 +99,7 @@ fun Home(
 @Composable
 fun FrontLayer(
 	navController: NavHostController,
+	handleIcon: () -> Float,
 	openPlayer: () -> Unit
 ) {
 	val topLevelNavigation = remember(navController) {
@@ -112,7 +128,7 @@ fun FrontLayer(
 		}
 	) { bottomNavigationPadding ->
 		Column(Modifier.padding(bottomNavigationPadding)) {
-			HandleIcon(onClick = openPlayer)
+			HandleIcon(onClick = openPlayer, angle = handleIcon)
 			HomeNavGraph(navController = navController)
 		}
 	}

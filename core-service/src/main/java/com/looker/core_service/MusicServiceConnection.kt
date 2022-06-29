@@ -107,11 +107,11 @@ class MusicServiceConnection(context: Context) {
 		}
 
 		override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+			if (state?.isPlaying != previousPlayState) _isPlaying.value = state?.isPlaying == true
 			_playbackState.value = state ?: EMPTY_PLAYBACK_STATE
+			previousPlayState = state?.isPlaying == true
 			_playIcon.value = if (state?.isPlaying == true) Icons.Rounded.Pause
 			else Icons.Rounded.PlayArrow
-			if (state?.isPlaying != previousPlayState) _isPlaying.value = state?.isPlaying == true
-			previousPlayState = state?.isPlaying == true
 		}
 
 		override fun onMetadataChanged(metadata: MediaMetadataCompat?) {

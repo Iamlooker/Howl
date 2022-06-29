@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.looker.core_ui.localComposers.LocalElevations
 
@@ -48,7 +49,7 @@ fun BottomSheets(
 @Composable
 fun HandleIcon(
 	@FloatRange(from = 0.0, to = 1.0)
-	angle: Float = 1F,
+	angle: () -> Float = { 1F },
 	backgroundColor: Color = MaterialTheme.colors.background,
 	onClick: () -> Unit = {}
 ) {
@@ -71,20 +72,22 @@ fun HandleIcon(
 @Composable
 fun CanvasHandleIcon(
 	modifier: Modifier = Modifier,
-	angle: Float,
-	color: Color = MaterialTheme.colors.onBackground
+	color: Color = MaterialTheme.colors.onBackground,
+	angle: () -> Float
 ) {
-	val animateIcon by animateFloatAsState(targetValue = angle * 2)
+	val animateIcon by animateFloatAsState(targetValue = angle() * 2)
 
 	Canvas(modifier = modifier) {
 		drawLine(
 			color = color,
 			strokeWidth = 5f,
+			cap = StrokeCap.Round,
 			start = Offset(0f, center.y),
 			end = Offset(center.x, animateIcon * center.y)
 		)
 		drawLine(
 			color = color,
+			cap = StrokeCap.Round,
 			strokeWidth = 5f,
 			start = Offset(center.x, animateIcon * center.y),
 			end = Offset(size.width, center.y)
