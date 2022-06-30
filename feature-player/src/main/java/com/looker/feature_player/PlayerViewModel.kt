@@ -1,20 +1,29 @@
 package com.looker.feature_player
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Shuffle
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.core_common.states.SheetsState
 import com.looker.core_common.states.SheetsState.HIDDEN
 import com.looker.core_common.states.SheetsState.VISIBLE
-import com.looker.core_common.states.ToggleButtonState
-import com.looker.core_common.states.ToggleState
 import com.looker.core_service.MusicServiceConnection
-import com.looker.core_service.extensions.*
+import com.looker.core_service.extensions.SHUFFLE_MODE_ALL
+import com.looker.core_service.extensions.SHUFFLE_MODE_NONE
+import com.looker.core_service.extensions.ShuffleMode
+import com.looker.core_service.extensions.currentPlaybackPosition
+import com.looker.core_service.extensions.duration
+import com.looker.core_service.extensions.playPauseMedia
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -112,5 +121,16 @@ class PlayerViewModel
 		}
 	}
 }
+
+sealed class ToggleState {
+	object Shuffle : ToggleState()
+	object PlayControl : ToggleState()
+}
+
+data class ToggleButtonState(
+	val toggleState: ToggleState,
+	val enabled: Boolean,
+	val icon: ImageVector = Icons.Rounded.PlayArrow
+)
 
 private const val POSITION_UPDATE_INTERVAL_MILLIS = 100L
