@@ -2,6 +2,7 @@ plugins {
 	id("com.android.library")
 	id("org.jetbrains.kotlin.android")
 	kotlin("kapt")
+	id("com.google.devtools.ksp") version ("1.7.0-1.0.6")
 	id(Hilt.plugin)
 }
 
@@ -47,7 +48,7 @@ dependencies {
 
 	implementation(Room.roomKtx)
 	implementation(Room.roomRuntime)
-	kapt(Room.roomCompiler)
+	ksp(Room.roomCompiler)
 
 	implementation(Hilt.android)
 	kapt(Hilt.compiler)

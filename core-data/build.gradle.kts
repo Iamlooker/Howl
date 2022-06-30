@@ -50,6 +50,5 @@ dependencies {
 	implementation(Coroutines.android)
 
 	implementation(Hilt.android)
-	implementation(Hilt.work)
 	kapt(Hilt.compiler)
 }
