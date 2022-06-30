@@ -42,5 +42,5 @@ android {
 
 dependencies {
 	implementation(project(Modules.coreModel))
-	implementation(Core.core)
+	implementation(Coroutines.core)
 }
