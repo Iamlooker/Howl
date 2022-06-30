@@ -121,7 +121,7 @@ fun PlayerHeader(
 						scaleX = scale
 						scaleY = scale
 					},
-				data = currentSong.toSong.albumArt
+				data = { currentSong.toSong.albumArt }
 			)
 		}
 		SongText {

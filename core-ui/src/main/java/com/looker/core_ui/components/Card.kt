@@ -121,7 +121,7 @@ private fun SmallCardItem(
 	) {
 		HowlImage(
 			modifier = Modifier.size(imageSize),
-			data = imageUrl,
+			data = { imageUrl },
 			shape = imageShape
 		)
 		Spacer(modifier = Modifier.width(8.dp))
@@ -152,7 +152,7 @@ private fun LargeCardItem(
 			modifier = Modifier
 				.fillMaxWidth()
 				.height(imageSize),
-			data = imageUrl,
+			data = { imageUrl },
 			shape = imageShape
 		)
 		TitleSubText(
