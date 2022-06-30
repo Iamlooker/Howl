@@ -29,6 +29,7 @@ android {
 		targetCompatibility = JavaVersion.VERSION_11
 	}
 	buildFeatures {
+		compose = true
 		buildConfig = false
 		aidl = false
 		renderScript = false
