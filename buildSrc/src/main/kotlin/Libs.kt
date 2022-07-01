@@ -1,8 +1,3 @@
-object Classpath {
-	const val gradleKotlin =
-		"org.jetbrains.kotlin:kotlin-gradle-plugin:${Version.kotlinVersion}"
-}
-
 object Core {
 	private const val coreVersion = "1.8.0"
 	const val core = "androidx.core:core-ktx:$coreVersion"
@@ -14,11 +9,11 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0-rc02"
-	private const val composeVersion = "1.2.0-rc02"
-	private const val activityComposeVersion = "1.5.0-rc01"
-	private const val navigationVersion = "2.5.0-rc02"
-	private const val material3Version = "1.0.0-alpha13"
+	const val composeCompiler = "1.2.0"
+	private const val composeVersion = "1.2.0-rc03"
+	private const val activityComposeVersion = "1.5.0"
+	private const val navigationVersion = "2.5.0"
+	private const val material3Version = "1.0.0-alpha14"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -66,7 +61,7 @@ object Hilt {
 }
 
 object Lifecycle {
-	private const val lifecycleVersion = "2.5.0-rc02"
+	private const val lifecycleVersion = "2.5.0"
 	const val lifecycleViewModelCompose =
 		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
 }
@@ -89,7 +84,7 @@ object Startup {
 }
 
 object Version {
-	const val kotlinVersion = "1.6.21"
+	const val kotlinVersion = "1.7.0"
 }
 
 object WorkManager {

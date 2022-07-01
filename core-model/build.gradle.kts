@@ -39,7 +39,3 @@ android {
 		jvmTarget = "11"
 	}
 }
-
-dependencies {
-	implementation(Core.core)
-}

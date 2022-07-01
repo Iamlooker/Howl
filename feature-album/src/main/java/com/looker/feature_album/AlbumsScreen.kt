@@ -85,8 +85,8 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 				}
 				HowlImage(
 					modifier = Modifier.matchParentSize(),
-					data = currentAlbum.albumArt,
-					shape = MaterialTheme.shapes.large
+					shape = MaterialTheme.shapes.large,
+					data = { currentAlbum.albumArt }
 				)
 			}
 		}

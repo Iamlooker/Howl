@@ -54,13 +54,13 @@ suspend fun Int.bitmap(context: Context): Bitmap = withContext(Dispatchers.IO) {
 @Composable
 fun HowlImage(
 	modifier: Modifier = Modifier,
-	data: String?,
+	data: () -> String?,
 	contentScale: ContentScale = ContentScale.Crop,
 	shape: CornerBasedShape = MaterialTheme.shapes.medium
 ) {
 	Box(modifier) {
 		AsyncImage(
-			model = data,
+			model = data(),
 			contentDescription = null,
 			contentScale = contentScale,
 			modifier = Modifier

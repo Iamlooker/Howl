@@ -78,9 +78,6 @@ dependencies {
 	implementation(project(Modules.coreNavigation))
 	implementation(project(Modules.newDataMusic))
 
-
-	implementation(Startup.lib)
-
 	implementation(Core.core)
 
 	implementation(Hilt.android)
