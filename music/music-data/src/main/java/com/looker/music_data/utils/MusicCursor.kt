@@ -1,4 +1,4 @@
-package com.looker.data_music.utils
+package com.looker.music_data.utils
 
 import android.content.Context
 import android.database.Cursor

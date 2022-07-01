@@ -9,6 +9,7 @@ apply<ModuleStagingPlugin>()
 
 android {
 	compileSdk = Android.compileSdk
+	namespace = "com.looker.feature_player"
 
 	defaultConfig {
 		minSdk = Android.minSdk

@@ -9,7 +9,7 @@ import com.looker.core_database.model.asEntity
 import com.looker.core_database.model.asExternalModel
 import com.looker.core_model.Album
 import com.looker.core_model.Song
-import com.looker.data_music.AlbumsData
+import com.looker.music_data.AlbumsData
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
