@@ -1,17 +1,20 @@
 package com.looker.core_ui.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.Modifier
 import com.looker.core_common.order.SongOrder
 import com.looker.core_model.Song
 
+@OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.songsList(songs: SongUiState, onClick: (Song) -> Unit = {}) {
 	basicSongsList(songsState = songs) {
-		SongItem(onClick = { onClick(it) }, song = it)
+		SongItem(modifier = Modifier.animateItemPlacement(),onClick = { onClick(it) }, song = it)
 	}
 }
 

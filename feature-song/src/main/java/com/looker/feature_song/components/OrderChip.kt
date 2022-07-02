@@ -16,7 +16,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.DoneAll
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -57,7 +57,6 @@ fun OrderChips(
 		OrderChip(
 			text = "Ascending",
 			isSelected = order.order is OrderType.Ascending,
-			selectedIcon = true,
 			icon = {
 				Icon(imageVector = Icons.Rounded.FilterList, contentDescription = null)
 			}
@@ -67,7 +66,6 @@ fun OrderChips(
 		OrderChip(
 			text = "Descending",
 			isSelected = order.order is OrderType.Descending,
-			selectedIcon = true,
 			icon = {
 				Icon(
 					modifier = Modifier.rotate(180f),
@@ -87,7 +85,6 @@ fun OrderChip(
 	text: String,
 	modifier: Modifier = Modifier,
 	isSelected: Boolean = false,
-	selectedIcon: Boolean = false,
 	icon: (@Composable () -> Unit)? = null,
 	onClick: () -> Unit
 ) {
@@ -96,8 +93,8 @@ fun OrderChip(
 		selected = isSelected,
 		onClick = onClick
 	) {
-		if (selectedIcon && isSelected) {
-			Icon(imageVector = Icons.Rounded.DoneAll, contentDescription = null)
+		if (isSelected) {
+			Icon(imageVector = Icons.Rounded.Done, contentDescription = null)
 		} else if (!isSelected && icon != null) {
 			icon()
 		}
