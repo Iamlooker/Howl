@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreModel))
 	implementation(project(Modules.coreDatabase))
 	implementation(project(Modules.dataMusic))

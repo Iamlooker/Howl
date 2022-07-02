@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import com.looker.core_common.order.SongOrder
 import com.looker.core_model.Song
 
 fun LazyListScope.songsList(songs: SongUiState, onClick: (Song) -> Unit = {}) {
@@ -48,8 +49,11 @@ data class SongListUiState(
 )
 
 sealed interface SongUiState {
-	data class Success(val songs: List<Song>, val songsAreBlacklisted: Boolean = false) :
-		SongUiState
+	data class Success(
+		val songs: List<Song>,
+		val songOrder: SongOrder,
+		val songsAreBlacklisted: Boolean = false
+	) : SongUiState
 
 	object Error : SongUiState
 	object Loading : SongUiState
