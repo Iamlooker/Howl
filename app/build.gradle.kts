@@ -10,6 +10,7 @@ apply<StagingPlugin>()
 android {
 	compileSdk = Android.compileSdk
 	buildToolsVersion = "33.0.0"
+	namespace = "com.looker.howlmusic"
 
 	defaultConfig {
 		applicationId = Android.appId

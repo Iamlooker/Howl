@@ -1,9 +1,9 @@
-package com.looker.data_music
+package com.looker.music_data
 
 import android.content.Context
 import android.provider.MediaStore
 import com.looker.core_model.Album
-import com.looker.data_music.utils.MusicCursor
+import com.looker.music_data.utils.MusicCursor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

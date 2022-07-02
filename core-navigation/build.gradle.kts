@@ -9,6 +9,7 @@ apply<ModuleStagingPlugin>()
 
 android {
 	compileSdk = Android.compileSdk
+	namespace = "com.looker.core_navigation"
 
 	defaultConfig {
 		minSdk = Android.minSdk

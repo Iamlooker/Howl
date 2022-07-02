@@ -20,7 +20,7 @@ include(":on-boarding")
 include(":app")
 
 include(":music")
-include(":music:data-music")
+include(":music:music-data")
 
 include(":core-model")
 include(":feature-player")

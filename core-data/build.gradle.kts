@@ -8,6 +8,7 @@ apply<ModuleStagingPlugin>()
 
 android {
 	compileSdk = Android.compileSdk
+	namespace = "com.looker.core_data"
 
 	defaultConfig {
 		minSdk = Android.minSdk

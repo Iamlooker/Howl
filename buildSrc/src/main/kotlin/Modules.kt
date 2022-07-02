@@ -1,7 +1,7 @@
 object Modules {
 	const val app = ":app"
 	const val onBoarding = ":on-boarding"
-	const val dataMusic = ":music:data-music"
+	const val dataMusic = ":music:music-data"
 	const val newDataMusic = ":data-music"
 	const val coreUi = ":core-ui"
 	const val coreModel = ":core-model"

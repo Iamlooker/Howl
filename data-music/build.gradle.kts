@@ -9,6 +9,7 @@ apply<ModuleStagingPlugin>()
 
 android {
 	compileSdk = Android.compileSdk
+	namespace = "com.looker.data_music"
 
 	defaultConfig {
 		minSdk = Android.minSdk
