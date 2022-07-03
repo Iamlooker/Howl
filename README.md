@@ -14,7 +14,7 @@
 
 - Minimal layout with amazing transitions 
 
-- More will be added as it grows ....
+- More will be added as it grows
 
 
 ## :camera: Screenshots
