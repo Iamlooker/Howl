@@ -3,8 +3,10 @@ package com.looker.feature_album
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.looker.core_common.OrderType
 import com.looker.core_common.combineAndStateIn
 import com.looker.core_common.mapAndStateIn
+import com.looker.core_common.order.SongOrder
 import com.looker.core_common.result.Result
 import com.looker.core_common.result.asResult
 import com.looker.core_data.repository.AlbumsRepository
@@ -77,6 +79,7 @@ class AlbumsViewModel @Inject constructor(
 			is Result.Error -> SongUiState.Error
 			is Result.Success -> SongUiState.Success(
 				songsResult.data.filter { it.albumId == currentAlbum.albumId },
+				SongOrder.Title(OrderType.Ascending),
 				currentAlbum.albumId.toString() in blacklistSongsFromAlbum
 			)
 		}

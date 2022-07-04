@@ -48,6 +48,7 @@ android {
 
 dependencies {
 	api(project(Modules.coreModel))
+	api(project(Modules.coreCommon))
 
 	implementation(Core.core)
 	implementation(Palette.palette)
