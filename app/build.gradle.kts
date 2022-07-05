@@ -65,8 +65,7 @@ android {
 			excludes += Excludes.jniExclude
 		}
 		resources {
-			excludes += Excludes.exclude
-			excludes += Excludes.jniExclude
+			excludes += Excludes.listExclude
 		}
 	}
 }

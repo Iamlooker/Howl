@@ -36,8 +36,16 @@ object Coroutines {
 }
 
 object Excludes {
-	const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
 	const val jniExclude = "/okhttp3/internal/publicsuffix/*"
+	val listExclude: List<String> = listOf(
+		"/DebugProbesKt.bin",
+		"/kotlin/**.kotlin_builtins",
+		"/kotlin/**.kotlin_metadata",
+		"/META-INF/**.kotlin_module",
+		"/META-INF/**.pro",
+		"/META-INF/**.version",
+		"/okhttp3/internal/publicsuffix/*"
+	)
 }
 
 object ExoPlayer {
