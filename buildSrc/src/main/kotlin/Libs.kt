@@ -37,6 +37,7 @@ object Coroutines {
 
 object Excludes {
 	const val exclude = "/META-INF/{AL2.0,LGPL2.1}"
+	const val jniExclude = "/okhttp3/internal/publicsuffix/*"
 }
 
 object ExoPlayer {

@@ -61,8 +61,12 @@ android {
 	}
 
 	packagingOptions {
+		jniLibs {
+			excludes += Excludes.jniExclude
+		}
 		resources {
 			excludes += Excludes.exclude
+			excludes += Excludes.jniExclude
 		}
 	}
 }
