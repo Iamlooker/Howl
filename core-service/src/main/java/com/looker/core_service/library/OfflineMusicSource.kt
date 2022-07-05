@@ -4,7 +4,6 @@ import android.support.v4.media.MediaMetadataCompat
 import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
 import com.looker.core_model.Song
-import com.looker.core_service.extensions.id
 import com.looker.core_service.extensions.toMediaMetadataCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -37,11 +36,12 @@ internal class OfflineMusicSource @Inject constructor(
 	): List<MediaMetadataCompat> {
 		return withContext(Dispatchers.IO) {
 			val blacklistSong =
-				blacklistsRepository.getBlacklistSongs().first().flatMap { it.songs }
-			val musicMetadatas: List<MediaMetadataCompat> =
-				songsRepository.getSongsStream().first().map(Song::toMediaMetadataCompat)
-			musicMetadatas.forEach { it.description.extras?.putAll(it.bundle) }
-			musicMetadatas.filterNot { it.id in blacklistSong }
+				blacklistsRepository.getBlacklistSongs().first().flatMap { it.songsFromAlbum }
+			val allSongs = songsRepository.getSongsStream().first()
+				.filterNot { it.albumId.toString() in blacklistSong }
+				.map(Song::toMediaMetadataCompat)
+			allSongs.forEach { it.description.extras?.putAll(it.bundle) }
+			allSongs
 		}
 	}
 }
