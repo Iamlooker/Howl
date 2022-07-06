@@ -5,8 +5,10 @@ import android.provider.MediaStore
 import com.looker.core_model.Song
 import com.looker.music_data.utils.MusicCursor
 import com.looker.music_data.utils.MusicCursor.externalUri
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 class SongsData(private val context: Context) {
 
@@ -59,5 +61,5 @@ class SongsData(private val context: Context) {
 			}
 			it.close()
 		}
-	}
+	}.flowOn(Dispatchers.IO)
 }

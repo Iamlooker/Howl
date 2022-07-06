@@ -29,7 +29,7 @@ class SongsViewModel @Inject constructor(
 	init {
 		viewModelScope.launch {
 			getSongs(SongOrder.Title(OrderType.Ascending)).collectLatest {
-				songsRepository.syncData()
+				if (it.isEmpty()) songsRepository.syncData()
 			}
 		}
 		getSong(SongOrder.Title(OrderType.Ascending))
