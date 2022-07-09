@@ -33,7 +33,7 @@ class AlbumsRepositoryImpl @Inject constructor(
 		songsRepository.getSongForAlbum(albumId)
 
 	override suspend fun syncData(): Boolean {
-		val albums = AlbumsData(appContext).createAlbumsList().map { it.asEntity() }
+		val albums = AlbumsData(appContext).getAllAlbums().map { it.asEntity() }
 		getAlbumsStream().first { albumsList ->
 			val removedAlbums = albumsList.filter { it.asEntity() !in albums }
 				.map(Album::albumId)

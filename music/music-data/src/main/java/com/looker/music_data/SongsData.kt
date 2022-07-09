@@ -5,10 +5,10 @@ import android.provider.MediaStore
 import com.looker.core_model.Song
 import com.looker.music_data.utils.MusicCursor
 import com.looker.music_data.utils.MusicCursor.externalUri
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 class SongsData(private val context: Context) {
 
@@ -24,42 +24,46 @@ class SongsData(private val context: Context) {
 		const val sortOrderSong = MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC"
 	}
 
-	suspend fun createSongsList(): List<Song> {
-		val song = mutableListOf<Song>()
-		getSongFlow().collect { song.add(it) }
-		return song
+	private val songCursor by lazy {
+		MusicCursor.generateCursor(
+			context,
+			songsProjections,
+			sortOrderSong
+		)
 	}
 
-	private fun getSongFlow(): Flow<Song> = flow {
-
-		val songCursor = MusicCursor.generateCursor(context, songsProjections, sortOrderSong)
-
-		songCursor?.let {
-			if (it.moveToFirst()) {
-				do {
-					val songId = it.getLong(0)
-					val albumId = it.getLong(1)
-					val songName = it.getString(2) ?: ""
-					val artistName = it.getString(3) ?: ""
-					val albumName = it.getString(4) ?: ""
-					val songDurationMillis = it.getLong(5)
-					val songUri = "$externalUri/$songId"
-					val albumArt = "content://media/external/audio/albumart/$albumId"
-					emit(
-						Song(
-							mediaId = songId.toString(),
-							albumId = albumId,
-							pathUri = songUri,
-							name = songName,
-							artist = artistName,
-							album = albumName,
-							duration = songDurationMillis,
-							albumArt = albumArt
-						)
-					)
-				} while (it.moveToNext())
+	suspend fun getAllSongs(): List<Song> {
+		val songs = mutableListOf<Deferred<Song>>()
+		coroutineScope {
+			songCursor?.let { cursor ->
+				if (cursor.moveToFirst()) {
+					do {
+						val songId = cursor.getLong(0)
+						val albumId = cursor.getLong(1)
+						val songName = cursor.getString(2) ?: ""
+						val artistName = cursor.getString(3) ?: ""
+						val albumName = cursor.getString(4) ?: ""
+						val songDurationMillis = cursor.getLong(5)
+						val songUri = "$externalUri/$songId"
+						val albumArt = "content://media/external/audio/albumart/$albumId"
+						val song = async {
+							Song(
+								mediaId = songId.toString(),
+								albumId = albumId,
+								pathUri = songUri,
+								name = songName,
+								artist = artistName,
+								album = albumName,
+								duration = songDurationMillis,
+								albumArt = albumArt
+							)
+						}
+						songs.add(song)
+					} while (cursor.moveToNext())
+				}
+				cursor.close()
 			}
-			it.close()
 		}
-	}.flowOn(Dispatchers.IO)
+		return songs.awaitAll()
+	}
 }

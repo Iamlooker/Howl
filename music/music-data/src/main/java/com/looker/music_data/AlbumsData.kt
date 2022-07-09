@@ -4,8 +4,10 @@ import android.content.Context
 import android.provider.MediaStore
 import com.looker.core_model.Album
 import com.looker.music_data.utils.MusicCursor
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 class AlbumsData(private val context: Context) {
 
@@ -18,34 +20,38 @@ class AlbumsData(private val context: Context) {
 		const val sortOrderAlbum = MediaStore.Audio.Media.ALBUM + " COLLATE NOCASE ASC"
 	}
 
-	suspend fun createAlbumsList(): List<Album> {
-		val list = mutableListOf<Album>()
-		getAlbumFlow().collect { list.add(it) }
-		return list
+	private val albumCursor by lazy {
+		MusicCursor.generateCursor(
+			context,
+			albumsProjections,
+			sortOrderAlbum
+		)
 	}
 
-	private fun getAlbumFlow(): Flow<Album> = flow {
-
-		val albumCursor = MusicCursor.generateCursor(context, albumsProjections, sortOrderAlbum)
-
-		albumCursor?.let {
-			if (it.moveToFirst()) {
-				do {
-					val albumId = it.getLong(0)
-					val albumName = it.getString(1) ?: ""
-					val artistName = it.getString(2) ?: ""
-					val albumArt = "content://media/external/audio/albumart/$albumId"
-					emit(
-						Album(
-							albumId = albumId,
-							name = albumName,
-							artist = artistName,
-							albumArt = albumArt
-						)
-					)
-				} while (it.moveToNext())
+	suspend fun getAllAlbums(): List<Album> {
+		val albums = mutableListOf<Deferred<Album>>()
+		coroutineScope {
+			albumCursor?.let { cursor ->
+				if (cursor.moveToFirst()) {
+					do {
+						val albumId = cursor.getLong(0)
+						val albumName = cursor.getString(1) ?: ""
+						val artistName = cursor.getString(2) ?: ""
+						val albumArt = "content://media/external/audio/albumart/$albumId"
+						val album = async {
+							Album(
+								albumId = albumId,
+								name = albumName,
+								artist = artistName,
+								albumArt = albumArt
+							)
+						}
+						albums.add(album)
+					} while (cursor.moveToNext())
+				}
+				cursor.close()
 			}
-			it.close()
 		}
+		return albums.awaitAll()
 	}
 }
