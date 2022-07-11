@@ -1,17 +1,13 @@
 package com.looker.feature_album
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,13 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.looker.core_model.Album
-import com.looker.core_ui.components.BottomSheets
-import com.looker.core_ui.components.HowlImage
-import com.looker.core_ui.components.LoadingState
-import com.looker.core_ui.components.SongUiState
-import com.looker.core_ui.components.SongsList
-import com.looker.core_ui.components.SwitchPreference
-import com.looker.core_ui.components.rememberDominantColorState
+import com.looker.core_ui.components.*
 import com.looker.core_ui.ext.backgroundGradient
 import com.looker.feature_album.sheet.DetailSheetContent
 import com.looker.feature_album.sheet.DetailsText
@@ -76,7 +66,9 @@ fun AlbumRoute(viewModel: AlbumsViewModel = hiltViewModel()) {
 						shape = MaterialTheme.shapes.medium,
 						color = MaterialTheme.colors.background
 					) {
-						SongsList(songs.songsState) { viewModel.playSong(it) }
+						Column {
+							SongsList(songs.songsState) { viewModel.playSong(it) }
+						}
 					}
 				}
 			) {
