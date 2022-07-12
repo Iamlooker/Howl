@@ -14,7 +14,7 @@ import com.looker.core_model.Song
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.songsList(songs: SongUiState, onClick: (Song) -> Unit = {}) {
 	basicSongsList(songsState = songs) {
-		SongItem(modifier = Modifier.animateItemPlacement(),onClick = { onClick(it) }, song = it)
+		SongItem(modifier = Modifier.animateItemPlacement(), onClick = { onClick(it) }, song = it)
 	}
 }
 
