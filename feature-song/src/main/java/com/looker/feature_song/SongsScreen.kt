@@ -17,7 +17,7 @@ import com.looker.feature_song.components.OrderChips
 fun SongRoute(
 	viewModel: SongsViewModel = hiltViewModel()
 ) {
-	val songs by viewModel.state.collectAsState()
+	val songs by viewModel.songsState.collectAsState()
 	LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
 		stickyHeader {
 			if (songs.songsState is SongUiState.Success) {

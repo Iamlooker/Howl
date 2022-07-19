@@ -3,10 +3,13 @@ package com.looker.feature_song
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.looker.core_common.OrderType
+import com.looker.core_common.combineAndStateIn
 import com.looker.core_common.order.SongOrder
+import com.looker.core_common.result.Result
+import com.looker.core_common.result.asResult
 import com.looker.core_data.repository.BlacklistsRepository
 import com.looker.core_data.repository.SongsRepository
-import com.looker.core_data.use_case.GetSongs
+import com.looker.core_data.use_case.sortBy
 import com.looker.core_service.MusicServiceConnection
 import com.looker.core_service.extensions.playPauseMedia
 import com.looker.core_ui.components.SongListUiState
@@ -21,46 +24,51 @@ import javax.inject.Inject
 @HiltViewModel
 class SongsViewModel @Inject constructor(
 	private val musicServiceConnection: MusicServiceConnection,
-	private val getSongs: GetSongs,
 	songsRepository: SongsRepository,
-	private val blacklistsRepository: BlacklistsRepository
+	blacklistsRepository: BlacklistsRepository
 ) : ViewModel() {
+
+	private val songsStream = songsRepository.getSongsStream().asResult()
 
 	init {
 		viewModelScope.launch {
-			getSongs(SongOrder.Title(OrderType.Ascending)).collectLatest {
-				if (it.isEmpty()) songsRepository.syncData()
+			songsStream.collectLatest {
+				if (it is Result.Success && it.data.isEmpty())
+					songsRepository.syncData()
 			}
 		}
-		getSong(SongOrder.Title(OrderType.Ascending))
 	}
 
-	private val _state = MutableStateFlow(SongListUiState(SongUiState.Loading))
-	val state = _state.asStateFlow()
+	private val _songOrder = MutableStateFlow<SongOrder>(SongOrder.Title(OrderType.Ascending))
+	private val songOrder = _songOrder.asStateFlow()
 
-	private fun getSong(songOrder: SongOrder) {
-		viewModelScope.launch {
-			getSongs(songOrder).collectLatest { songs ->
-				blacklistsRepository.getBlacklistSongs().collectLatest { blacklist ->
-					val blacklistSongs = blacklist.flatMap { it.songsFromAlbum }
-					_state.emit(
-						SongListUiState(
-							SongUiState.Success(
-								songs = songs.filterNot { it.albumId.toString() in blacklistSongs },
-								songOrder = songOrder
-							)
-						)
-					)
-				}
-			}
+	val songsState = combineAndStateIn(
+		songsStream,
+		songOrder,
+		blacklistsRepository.getBlacklistSongs(),
+		scope = viewModelScope,
+		initialValue = SongListUiState(SongUiState.Loading)
+	) { songsResult, songOrder, blackList ->
+		val blacklistedSongs = blackList.flatMap { it.songs }
+		val blacklistedAlbums = blackList.flatMap { it.songsFromAlbum }
+		val songs = when (songsResult) {
+			is Result.Error -> SongUiState.Error
+			Result.Loading -> SongUiState.Loading
+			is Result.Success -> SongUiState.Success(
+				songsResult.data.filterNot {
+					it.mediaId in blacklistedSongs || it.albumId.toString() in blacklistedAlbums
+				}.sortBy(songOrder),
+				songOrder
+			)
 		}
+		SongListUiState(songs)
 	}
 
 	fun onEvent(event: SongEvent) {
 		when (event) {
 			is SongEvent.Order -> {
 				viewModelScope.launch {
-					getSong(event.songOrder)
+					_songOrder.emit(event.songOrder)
 				}
 			}
 			is SongEvent.PlayMedia -> {
