@@ -1,5 +1,7 @@
 package com.looker.feature_player
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateInt
@@ -49,6 +51,7 @@ import com.looker.feature_player.components.SeekBar
 import com.looker.feature_player.components.SongText
 import com.looker.feature_player.queue.PlayerQueue
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PlayerHeader(
 	modifier: Modifier = Modifier,
@@ -114,18 +117,21 @@ fun PlayerHeader(
 			val scale by transition.animateFloat(label = "Scale") {
 				if (it) 1f else 0.95f
 			}
-			HowlImage(
-				modifier = Modifier
-					.matchParentSize()
-					.graphicsLayer {
+			AnimatedContent(
+				modifier = Modifier.matchParentSize(),
+				targetState = currentSong.toSong.albumArt
+			) {
+				HowlImage(
+					modifier = Modifier.graphicsLayer {
 						clip = true
 						shape = RoundedCornerShape(imageCorner)
 						scaleX = scale
 						scaleY = scale
 					},
-				data = { currentSong.toSong.albumArt },
-				contentScale = ContentScale.FillWidth
-			)
+					data = { it },
+					contentScale = ContentScale.FillWidth
+				)
+			}
 		}
 		SongText {
 			AnimatedText(
