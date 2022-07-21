@@ -1,14 +1,28 @@
 package com.looker.feature_player
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateInt
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,13 +30,23 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.looker.core_common.states.SheetsState
 import com.looker.core_service.extensions.toSong
-import com.looker.core_ui.components.*
+import com.looker.core_ui.components.AnimatedText
+import com.looker.core_ui.components.HowlImage
+import com.looker.core_ui.components.OpaqueIconButton
+import com.looker.core_ui.components.overBackground
+import com.looker.core_ui.components.rememberDominantColorState
 import com.looker.core_ui.ext.backgroundGradient
-import com.looker.feature_player.components.*
+import com.looker.feature_player.components.AlbumArt
+import com.looker.feature_player.components.PlayAndSkipButton
+import com.looker.feature_player.components.PlayPauseIcon
+import com.looker.feature_player.components.PreviousAndSeekBar
+import com.looker.feature_player.components.SeekBar
+import com.looker.feature_player.components.SongText
 import com.looker.feature_player.queue.PlayerQueue
 
 @Composable
@@ -43,11 +67,10 @@ fun PlayerHeader(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-		val animateSize by animateDpAsState(targetValue = if (onSheetStateChange() == SheetsState.HIDDEN) 250.dp else 350.dp)
 		AlbumArt(
 			modifier = Modifier
 				.width(450.dp)
-				.height(animateSize),
+				.height(250.dp),
 			button = {
 				LaunchedEffect(onSheetStateChange()) {
 					viewModel.setBackdrop(onSheetStateChange())
@@ -100,7 +123,8 @@ fun PlayerHeader(
 						scaleX = scale
 						scaleY = scale
 					},
-				data = { currentSong.toSong.albumArt }
+				data = { currentSong.toSong.albumArt },
+				contentScale = ContentScale.FillWidth
 			)
 		}
 		SongText {
