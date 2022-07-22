@@ -14,7 +14,7 @@ fun List<Song>.sortBy(songOrder: SongOrder) = when (songOrder.order) {
 	OrderType.Descending -> {
 		when (songOrder) {
 			is SongOrder.Duration -> sortedByDescending { it.duration }
-			is SongOrder.Title -> sortedBy { it.name }
+			is SongOrder.Title -> sortedByDescending { it.name }
 		}
 	}
 }
