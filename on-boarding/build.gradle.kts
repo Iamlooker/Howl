@@ -50,5 +50,5 @@ dependencies {
 	implementation(project(Modules.coreUi))
 
 	implementation(Core.core)
-	implementation(Lifecycle.lifecycleViewModelCompose)
+	implementation(Lifecycle.viewModelCompose)
 }

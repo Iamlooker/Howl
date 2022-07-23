@@ -53,7 +53,7 @@ dependencies {
 	implementation(project(Modules.coreUi))
 	implementation(project(Modules.coreService))
 
-	implementation(Lifecycle.lifecycleViewModelCompose)
+	implementation(Lifecycle.viewModelCompose)
 
 	kapt(Hilt.compiler)
 	implementation(Hilt.android)

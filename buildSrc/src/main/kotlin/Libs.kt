@@ -57,7 +57,7 @@ object ExoPlayer {
 }
 
 object Hilt {
-	private const val hiltVersion = "2.42"
+	private const val hiltVersion = "2.43"
 	const val classpath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 	const val android = "com.google.dagger:hilt-android:$hiltVersion"
 	const val compiler = "com.google.dagger:hilt-compiler:$hiltVersion"
@@ -70,9 +70,8 @@ object Hilt {
 }
 
 object Lifecycle {
-	private const val lifecycleVersion = "2.5.0"
-	const val lifecycleViewModelCompose =
-		"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
+	private const val version = "2.5.0"
+	const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$version"
 }
 
 object Palette {

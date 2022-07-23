@@ -54,7 +54,7 @@ dependencies {
 	api(ExoPlayer.exoplayerUi)
 	api(ExoPlayer.exoplayerMediaSession)
 
-	implementation(Lifecycle.lifecycleViewModelCompose)
+	implementation(Lifecycle.viewModelCompose)
 
 	implementation(Hilt.android)
 	kapt(Hilt.compiler)
