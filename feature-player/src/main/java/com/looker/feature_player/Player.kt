@@ -129,7 +129,7 @@ fun PlayerHeader(
 						scaleY = scale
 					},
 					data = { it },
-					contentScale = ContentScale.FillWidth
+					contentScale = ContentScale.Crop
 				)
 			}
 		}
