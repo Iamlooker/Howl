@@ -9,10 +9,10 @@ object Coil {
 }
 
 object Compose {
-	const val composeCompiler = "1.2.0"
-	private const val composeVersion = "1.2.0-rc03"
-	private const val activityComposeVersion = "1.5.0"
-	private const val navigationVersion = "2.5.0"
+	const val composeCompiler = "1.3.0-rc01"
+	private const val composeVersion = "1.2.0"
+	private const val activityComposeVersion = "1.5.1"
+	private const val navigationVersion = "2.5.1"
 	private const val material3Version = "1.0.0-alpha14"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
@@ -70,7 +70,7 @@ object Hilt {
 }
 
 object Lifecycle {
-	private const val version = "2.5.0"
+	private const val version = "2.5.1"
 	const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$version"
 }
 
@@ -80,7 +80,7 @@ object Palette {
 }
 
 object Room {
-	private const val roomVersion = "2.4.2"
+	private const val roomVersion = "2.4.3"
 	const val roomRuntime = "androidx.room:room-runtime:$roomVersion"
 	const val roomCompiler = "androidx.room:room-compiler:$roomVersion"
 	const val roomKtx = "androidx.room:room-ktx:$roomVersion"
@@ -92,7 +92,7 @@ object Startup {
 }
 
 object Version {
-	const val kotlinVersion = "1.7.0"
+	const val kotlinVersion = "1.7.10"
 }
 
 object WorkManager {
