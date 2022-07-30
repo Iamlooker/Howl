@@ -3,39 +3,14 @@ plugins {
 	id("org.jetbrains.kotlin.android")
 }
 
-apply<ModuleStagingPlugin>()
+apply<ModuleDefaultPlugin>()
 
 android {
 	compileSdk = Android.compileSdk
 	namespace = "com.looker.onboarding"
 
-	defaultConfig {
-		minSdk = Android.minSdk
-		targetSdk = Android.compileSdk
-
-		consumerProguardFiles("consumer-rules.pro")
-	}
-
-	buildTypes {
-		release {
-			isMinifyEnabled = true
-			proguardFiles(
-				getDefaultProguardFile("proguard-android-optimize.txt"),
-				"proguard-rules.pro"
-			)
-		}
-	}
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_11
-		targetCompatibility = JavaVersion.VERSION_11
-	}
 	buildFeatures {
 		compose = true
-		buildConfig = false
-		aidl = false
-		renderScript = false
-		resValues = false
-		shaders = false
 	}
 	composeOptions {
 		kotlinCompilerExtensionVersion = Compose.composeCompiler

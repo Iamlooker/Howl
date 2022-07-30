@@ -91,8 +91,9 @@ object Startup {
 	const val lib = "androidx.startup:startup-runtime:$startupVersion"
 }
 
-object Version {
-	const val kotlinVersion = "1.7.10"
+object Kotlin {
+	const val version = "1.7.10"
+	const val kspVersion = "1.7.0-1.0.6"
 }
 
 object WorkManager {

@@ -4,39 +4,12 @@ plugins {
 	kotlin("kapt")
 }
 
-apply<ModuleStagingPlugin>()
+apply<ModuleDefaultPlugin>()
 
 android {
 	compileSdk = Android.compileSdk
 	namespace = "com.looker.core_data"
 
-	defaultConfig {
-		minSdk = Android.minSdk
-		targetSdk = Android.compileSdk
-
-		consumerProguardFiles("consumer-rules.pro")
-	}
-
-	buildTypes {
-		release {
-			isMinifyEnabled = true
-			proguardFiles(
-				getDefaultProguardFile("proguard-android-optimize.txt"),
-				"proguard-rules.pro"
-			)
-		}
-	}
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_11
-		targetCompatibility = JavaVersion.VERSION_11
-	}
-	buildFeatures {
-		buildConfig = false
-		aidl = false
-		renderScript = false
-		resValues = false
-		shaders = false
-	}
 	kotlinOptions {
 		jvmTarget = "11"
 	}

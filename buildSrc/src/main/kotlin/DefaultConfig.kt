@@ -20,10 +20,7 @@ class DefaultConfig : Plugin<Project> {
 			extension.buildTypes.getByName("release") {
 				it.isMinifyEnabled = true
 				it.isShrinkResources = true
-				it.proguardFiles(
-					extension.getDefaultProguardFile("proguard-android-optimize.txt"),
-					project.rootProject.file("proguard-rules.pro")
-				)
+				it.proguardFiles(extension.getDefaultProguardFile("proguard-android-optimize.txt"))
 				it.resValue("string", "app_name", "Howl")
 			}
 			extension.buildTypes.getByName("debug") {
@@ -62,13 +59,31 @@ class DefaultConfig : Plugin<Project> {
 	}
 }
 
-class ModuleStagingPlugin : Plugin<Project> {
+class ModuleDefaultPlugin : Plugin<Project> {
 	override fun apply(project: Project) {
 		val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
 		androidComponents.finalizeDsl { extension ->
+			extension.defaultConfig {
+				minSdk = Android.minSdk
+			}
+			extension.buildTypes.getByName("release") {
+				it.isMinifyEnabled = true
+				it.proguardFiles(extension.getDefaultProguardFile("proguard-android-optimize.txt"))
+			}
 			extension.buildTypes.create("staging").let {
 				it.initWith(extension.buildTypes.getByName("release"))
 				it.proguardFiles("proguard-android-optimize.txt")
+			}
+			extension.buildFeatures {
+				buildConfig = false
+				aidl = false
+				renderScript = false
+				resValues = false
+				shaders = false
+			}
+			extension.compileOptions {
+				sourceCompatibility = JavaVersion.VERSION_11
+				targetCompatibility = JavaVersion.VERSION_11
 			}
 		}
 	}
