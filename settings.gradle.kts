@@ -1,35 +1,34 @@
 pluginManagement {
-    repositories {
-        mavenCentral()
-        google()
-        gradlePluginPortal()
+	repositories {
+		mavenCentral()
+		google()
+		gradlePluginPortal()
 
-    }
+	}
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-    }
+	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+	repositories {
+		google()
+		mavenCentral()
+	}
 }
 rootProject.name = "Howl"
 
-include(":on-boarding")
-
-include(":app")
-
-include(":music")
-include(":music:music-data")
-
-include(":core-model")
-include(":feature-player")
-include(":core-common")
-include(":core-data")
-include(":core-database")
-include(":feature-song")
-include(":core-navigation")
-include(":core-ui")
-include(":data-music")
-include(":feature-album")
-include(":core-service")
+include(
+	":app",
+	":core-common",
+	":core-data",
+	":core-database",
+	":core-model",
+	":core-navigation",
+	":core-service",
+	":core-ui",
+	":data-music",
+	":feature-album",
+	":feature-player",
+	":feature-song",
+	":music",
+	":music:music-data",
+	":on-boarding"
+)

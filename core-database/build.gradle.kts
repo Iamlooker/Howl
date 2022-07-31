@@ -2,7 +2,7 @@ plugins {
 	id("com.android.library")
 	id("org.jetbrains.kotlin.android")
 	kotlin("kapt")
-	id("com.google.devtools.ksp") version Kotlin.kspVersion
+	id("com.google.devtools.ksp")
 	id(Hilt.plugin)
 }
 
