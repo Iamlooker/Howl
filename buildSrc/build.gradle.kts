@@ -14,7 +14,7 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 dependencies {
-	implementation("com.android.tools.build:gradle-api:7.2.1")
+	implementation("com.android.tools.build:gradle-api:7.2.2")
 	implementation(kotlin("stdlib"))
 	gradleApi()
 }
