@@ -74,6 +74,12 @@ object Lifecycle {
 	const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$version"
 }
 
+object Media {
+	private const val version = "1.0.0-beta02"
+	const val exoplayer = "androidx.media3:media3-exoplayer:$version"
+	const val session = "androidx.media3:media3-session:$version"
+}
+
 object Palette {
 	private const val paletteVersion = "1.0.0"
 	const val palette = "androidx.palette:palette-ktx:$paletteVersion"
