@@ -10,19 +10,22 @@ data class AlbumEntity(
 	val albumId: Long,
 	val name: String,
 	val artist: String,
-	val albumArt: String
+	val albumArt: String,
+	val numberOfSongs: Int
 )
 
 fun AlbumEntity.asExternalModel() = Album(
 	albumId = albumId,
 	name = name,
 	artist = artist,
-	albumArt = albumArt
+	albumArt = albumArt,
+	numberOfSongs = numberOfSongs
 )
 
 fun Album.asEntity() = AlbumEntity(
 	albumId = albumId,
 	name = name,
 	artist = artist,
-	albumArt = albumArt
+	albumArt = albumArt,
+	numberOfSongs = numberOfSongs
 )
