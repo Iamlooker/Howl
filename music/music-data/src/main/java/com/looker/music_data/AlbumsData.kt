@@ -13,11 +13,12 @@ class AlbumsData(private val context: Context) {
 
 	companion object {
 		val albumsProjections = arrayOf(
-			MediaStore.Audio.Media.ALBUM_ID,
-			MediaStore.Audio.Media.ALBUM,
-			MediaStore.Audio.Media.ARTIST,
+			MediaStore.Audio.Albums.ALBUM_ID,
+			MediaStore.Audio.Albums.ALBUM,
+			MediaStore.Audio.Albums.ARTIST,
+			MediaStore.Audio.Albums.NUMBER_OF_SONGS
 		)
-		const val sortOrderAlbum = MediaStore.Audio.Media.ALBUM + " COLLATE NOCASE ASC"
+		const val sortOrderAlbum = MediaStore.Audio.Albums.ALBUM + " COLLATE NOCASE ASC"
 	}
 
 	private val albumCursor by lazy {
@@ -38,12 +39,14 @@ class AlbumsData(private val context: Context) {
 						val albumName = cursor.getString(1) ?: ""
 						val artistName = cursor.getString(2) ?: ""
 						val albumArt = "content://media/external/audio/albumart/$albumId"
+						val numberOfSongs = cursor.getInt(3)
 						val album = async {
 							Album(
 								albumId = albumId,
 								name = albumName,
 								artist = artistName,
-								albumArt = albumArt
+								albumArt = albumArt,
+								numberOfSongs = numberOfSongs
 							)
 						}
 						albums.add(album)
