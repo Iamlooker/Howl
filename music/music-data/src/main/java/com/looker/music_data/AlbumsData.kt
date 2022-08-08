@@ -15,8 +15,7 @@ class AlbumsData(private val context: Context) {
 		val albumsProjections = arrayOf(
 			MediaStore.Audio.Albums.ALBUM_ID,
 			MediaStore.Audio.Albums.ALBUM,
-			MediaStore.Audio.Albums.ARTIST,
-			MediaStore.Audio.Albums.NUMBER_OF_SONGS
+			MediaStore.Audio.Albums.ARTIST
 		)
 		const val sortOrderAlbum = MediaStore.Audio.Albums.ALBUM + " COLLATE NOCASE ASC"
 	}
@@ -39,14 +38,12 @@ class AlbumsData(private val context: Context) {
 						val albumName = cursor.getString(1) ?: ""
 						val artistName = cursor.getString(2) ?: ""
 						val albumArt = "content://media/external/audio/albumart/$albumId"
-						val numberOfSongs = cursor.getInt(3)
 						val album = async {
 							Album(
 								albumId = albumId,
 								name = albumName,
 								artist = artistName,
 								albumArt = albumArt,
-								numberOfSongs = numberOfSongs
 							)
 						}
 						albums.add(album)

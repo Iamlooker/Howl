@@ -17,7 +17,7 @@ import com.looker.core_database.utils.InstantConverters
 		AlbumEntity::class,
 		BlacklistEntity::class
 	],
-	version = 5
+	version = 6
 )
 @TypeConverters(InstantConverters::class)
 abstract class HowlDatabase : RoomDatabase() {
