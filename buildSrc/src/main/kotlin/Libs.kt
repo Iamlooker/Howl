@@ -4,16 +4,16 @@ object Core {
 }
 
 object Coil {
-	private const val coilVersion = "2.1.0"
+	private const val coilVersion = "2.2.0"
 	const val coil = "io.coil-kt:coil-compose:$coilVersion"
 }
 
 object Compose {
-	const val composeCompiler = "1.3.0-rc02"
-	private const val composeVersion = "1.3.0-alpha02"
+	const val composeCompiler = "1.3.0"
+	private const val composeVersion = "1.3.0-beta01"
 	private const val activityComposeVersion = "1.5.1"
 	private const val navigationVersion = "2.5.1"
-	private const val material3Version = "1.0.0-alpha15"
+	private const val material3Version = "1.0.0-beta01"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -57,7 +57,7 @@ object ExoPlayer {
 }
 
 object Hilt {
-	private const val hiltVersion = "2.43"
+	private const val hiltVersion = "2.43.2"
 	const val classpath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 	const val android = "com.google.dagger:hilt-android:$hiltVersion"
 	const val compiler = "com.google.dagger:hilt-compiler:$hiltVersion"
