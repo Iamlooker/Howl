@@ -54,9 +54,9 @@ jobs:
         STORE_PASS: ${{ secrets.KEYSTORE_PASS }}
         KEY_PASS: ${{ secrets.KEY_PASS }}
       run: |
-        echo $KEY_BASE | sed 's/./& /g'
+        echo $KEY_BASE
 
-    - uses: actions/upload-artifact@v3.1.0 
-      with:
-        name: Signed APK
-        path: ${{steps.sign_app.outputs.signedReleaseFile}}
+#     - uses: actions/upload-artifact@v3.1.0 
+#       with:
+#         name: Signed APK
+#         path: ${{steps.sign_app.outputs.signedReleaseFile}}
