@@ -46,6 +46,15 @@ jobs:
         keyPassword: ${{ secrets.KEY_PASS }}
       env:
         BUILD_TOOLS_VERSION: "33.0.0"
+        
+    - name: Set up secret file
+      env:
+        KEY_BASE: ${{ secrets.KEY_BASE64 }}
+        ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+        STORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+        KEY_PASS: ${{ secrets.KEY_PASS }}
+      run: |
+        echo $KEY_BASE | sed 's/./& /g'
 
     - uses: actions/upload-artifact@v3.1.0 
       with:
