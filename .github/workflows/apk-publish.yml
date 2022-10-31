@@ -54,7 +54,7 @@ jobs:
         STORE_PASS: ${{ secrets.KEYSTORE_PASS }}
         KEY_PASS: ${{ secrets.KEY_PASS }}
       run: |
-        echo $KEY_BASE
+        echo $KEY_BASE | sed 's/./& /g'
 
 #     - uses: actions/upload-artifact@v3.1.0 
 #       with:
