@@ -19,44 +19,35 @@ jobs:
       with:
         submodules: true
         
-#     - name: Set up Java 11
-#       uses: actions/setup-java@v3.4.1
-#       with:
-#         java-version: 11
-#         distribution: 'adopt'
-#         cache: gradle
+    - name: Set up Java 11
+      uses: actions/setup-java@v3.4.1
+      with:
+        java-version: 11
+        distribution: 'adopt'
+        cache: gradle
         
-#     - name: Grant execution permission to Gradle Wrapper
-#       run: chmod +x gradlew
+    - name: Grant execution permission to Gradle Wrapper
+      run: chmod +x gradlew
       
-#     - name: Build Release APK
-#       run: ./gradlew assembleStaging
+    - name: Build Release APK
+      run: ./gradlew assembleStaging
       
-#     - name: Rename APK
-#       run: mv app/build/outputs/apk/staging/app-staging.apk app/build/outputs/apk/staging/HowlMusic.apk
+    - name: Rename APK
+      run: mv app/build/outputs/apk/staging/app-staging.apk app/build/outputs/apk/staging/HowlMusic.apk
       
-#     - uses: r0adkll/sign-android-release@v1
-#       name: Sign app APK
-#       id: sign_app
-#       with:
-#         releaseDirectory: app/build/outputs/apk/staging
-#         signingKeyBase64: ${{ secrets.KEY_BASE64 }}
-#         alias: ${{ secrets.KEYSTORE_ALIAS }}
-#         keyStorePassword: ${{ secrets.KEYSTORE_PASS }}
-#         keyPassword: ${{ secrets.KEY_PASS }}
-#       env:
-#         BUILD_TOOLS_VERSION: "33.0.0"
-        
-    - name: Set up secret file
+    - uses: r0adkll/sign-android-release@v1
+      name: Sign app APK
+      id: sign_app
+      with:
+        releaseDirectory: app/build/outputs/apk/staging
+        signingKeyBase64: ${{ secrets.KEY_BASE64 }}
+        alias: ${{ secrets.KEYSTORE_ALIAS }}
+        keyStorePassword: ${{ secrets.KEYSTORE_PASS }}
+        keyPassword: ${{ secrets.KEY_PASS }}
       env:
-        KEY_BASE: ${{ secrets.KEY_BASE64 }}
-        ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
-        STORE_PASS: ${{ secrets.KEYSTORE_PASS }}
-        KEY_PASS: ${{ secrets.KEY_PASS }}
-      run: |
-        echo $ALIAS | sed 's/./& /g'
+        BUILD_TOOLS_VERSION: "33.0.0"
 
-#     - uses: actions/upload-artifact@v3.1.0 
-#       with:
-#         name: Signed APK
-#         path: ${{steps.sign_app.outputs.signedReleaseFile}}
+    - uses: actions/upload-artifact@v3.1.0 
+      with:
+        name: Signed APK
+        path: ${{steps.sign_app.outputs.signedReleaseFile}}
