@@ -3,51 +3,40 @@ name: Build Release APK
 on:
   workflow_dispatch:
   push:
-    branches: [ stable ]
+    branches:
+      - stable
 
 jobs:
-  build:
-
+  build-release-apk:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
+    continue-on-error: true
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v2.4.2
-      with:
-        submodules: true
-        
-    - name: Set up Java 11
-      uses: actions/setup-java@v3.4.1
-      with:
-        java-version: 11
-        distribution: 'adopt'
-        cache: gradle
-        
-    - name: Grant execution permission to Gradle Wrapper
-      run: chmod +x gradlew
-      
-    - name: Build Release APK
-      run: ./gradlew assembleStaging
-      
-    - name: Rename APK
-      run: mv app/build/outputs/apk/staging/app-staging.apk app/build/outputs/apk/staging/HowlMusic.apk
-      
-    - uses: r0adkll/sign-android-release@v1
-      name: Sign app APK
-      id: sign_app
-      with:
-        releaseDirectory: app/build/outputs/apk/staging
-        signingKeyBase64: ${{ secrets.KEY_BASE64 }}
-        alias: ${{ secrets.KEYSTORE_ALIAS }}
-        keyStorePassword: ${{ secrets.KEYSTORE_PASS }}
-        keyPassword: ${{ secrets.KEY_PASS }}
-      env:
-        BUILD_TOOLS_VERSION: "33.0.0"
-
-    - uses: actions/upload-artifact@v3.1.0 
-      with:
-        name: Signed APK
-        path: ${{steps.sign_app.outputs.signedReleaseFile}}
+      - name: Check out repository
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: 17
+      - uses: gradle/gradle-build-action@v2
+      - name: Write sign info
+        if: github.repository == 'Iamlooker/Howl'
+        run: |
+          if [ ! -z "${{ secrets.KEY_BASE64 }}" ]; then
+            echo storePassword='${{ secrets.KEYSTORE_PASS }}' >> keystore.properties
+            echo keyAlias='${{ secrets.KEYSTORE_ALIAS }}' >> keystore.properties
+            echo keyPassword='${{ secrets.KEY_PASS }}' >> keystore.properties
+            echo storeFile='${{ github.workspace }}/key.jks' >> keystore.properties
+            echo ${{ secrets.KEY_BASE64 }} | base64 --decode > ${{ github.workspace }}/key.jks
+          fi
+      - name: Grant execution permission to Gradle Wrapper
+        run: chmod +x gradlew
+      - name: Build Release APK
+        run: ./gradlew assembleStaging
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Signed APK
+          path: app/build/outputs/apk/staging/*.apk
