@@ -26,6 +26,8 @@ fun LazyListScope.basicSongsList(
 		is SongUiState.Success -> items(
 			items = songsState.songs,
 			key = { it.mediaId },
+			// Because all are same
+			contentType = { },
 			itemContent = songItem
 		)
 		SongUiState.Loading -> item { LoadingState() }

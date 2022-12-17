@@ -5,10 +5,7 @@ import android.provider.MediaStore
 import com.looker.core_model.Song
 import com.looker.music_data.utils.MusicCursor
 import com.looker.music_data.utils.MusicCursor.externalUri
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 
 class SongsData(private val context: Context) {
 
@@ -34,8 +31,8 @@ class SongsData(private val context: Context) {
 
 	suspend fun getAllSongs(): List<Song> {
 		val songs = mutableListOf<Deferred<Song>>()
-		coroutineScope {
-			songCursor?.let { cursor ->
+		withContext(Dispatchers.IO) {
+			songCursor?.use { cursor ->
 				if (cursor.moveToFirst()) {
 					do {
 						val songId = cursor.getLong(0)
@@ -61,7 +58,6 @@ class SongsData(private val context: Context) {
 						songs.add(song)
 					} while (cursor.moveToNext())
 				}
-				cursor.close()
 			}
 		}
 		return songs.awaitAll()

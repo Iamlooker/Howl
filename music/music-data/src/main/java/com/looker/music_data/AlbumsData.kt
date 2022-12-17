@@ -4,10 +4,7 @@ import android.content.Context
 import android.provider.MediaStore
 import com.looker.core_model.Album
 import com.looker.music_data.utils.MusicCursor
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 
 class AlbumsData(private val context: Context) {
 
@@ -30,8 +27,8 @@ class AlbumsData(private val context: Context) {
 
 	suspend fun getAllAlbums(): List<Album> {
 		val albums = mutableListOf<Deferred<Album>>()
-		coroutineScope {
-			albumCursor?.let { cursor ->
+		withContext(Dispatchers.IO) {
+			albumCursor?.use { cursor ->
 				if (cursor.moveToFirst()) {
 					do {
 						val albumId = cursor.getLong(0)
@@ -49,7 +46,6 @@ class AlbumsData(private val context: Context) {
 						albums.add(album)
 					} while (cursor.moveToNext())
 				}
-				cursor.close()
 			}
 		}
 		return albums.awaitAll()

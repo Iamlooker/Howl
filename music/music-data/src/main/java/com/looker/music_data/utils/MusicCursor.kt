@@ -18,7 +18,7 @@ object MusicCursor {
 		sortOrder: String
 	): Cursor? =
 		try {
-			context.contentResolver.query(
+			context.applicationContext.contentResolver.query(
 				externalUri,
 				projection,
 				isMusic,
