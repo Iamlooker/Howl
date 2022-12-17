@@ -7,8 +7,8 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.looker.feature_album.navigation.AlbumDestination
-import com.looker.feature_song.navigation.SongDestination
+import com.looker.core.album.navigation.AlbumDestination
+import com.looker.core.song.navigation.SongDestination
 
 class TopLevelNavigation(private val navController: NavHostController) {
 	fun navigateUp(destination: TopLevelDestination) {

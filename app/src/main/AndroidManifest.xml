@@ -52,7 +52,7 @@
         </activity>
 
         <service
-            android:name="com.looker.core_service.MusicService"
+            android:name="com.looker.core.service.MusicService"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
