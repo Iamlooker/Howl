@@ -1,19 +1,19 @@
 object Core {
-	private const val coreVersion = "1.8.0"
+	private const val coreVersion = "1.9.0"
 	const val core = "androidx.core:core-ktx:$coreVersion"
 }
 
 object Coil {
-	private const val coilVersion = "2.2.0"
+	private const val coilVersion = "2.2.2"
 	const val coil = "io.coil-kt:coil-compose:$coilVersion"
 }
 
 object Compose {
-	const val composeCompiler = "1.3.0"
-	private const val composeVersion = "1.3.0-beta01"
-	private const val activityComposeVersion = "1.5.1"
-	private const val navigationVersion = "2.5.1"
-	private const val material3Version = "1.0.0-beta01"
+	const val composeCompiler = "1.3.2"
+	private const val composeVersion = "1.3.1"
+	private const val activityComposeVersion = "1.6.1"
+	private const val navigationVersion = "2.5.3"
+	private const val material3Version = "1.0.1"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
@@ -49,7 +49,7 @@ object Excludes {
 }
 
 object ExoPlayer {
-	private const val exoplayerVersion = "2.18.0"
+	private const val exoplayerVersion = "2.18.1"
 	const val exoplayerCore = "com.google.android.exoplayer:exoplayer-core:$exoplayerVersion"
 	const val exoplayerUi = "com.google.android.exoplayer:exoplayer-ui:$exoplayerVersion"
 	const val exoplayerMediaSession =
@@ -57,7 +57,7 @@ object ExoPlayer {
 }
 
 object Hilt {
-	private const val hiltVersion = "2.43.2"
+	private const val hiltVersion = "2.44.2"
 	const val classpath = "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
 	const val android = "com.google.dagger:hilt-android:$hiltVersion"
 	const val compiler = "com.google.dagger:hilt-compiler:$hiltVersion"
@@ -98,8 +98,8 @@ object Startup {
 }
 
 object Kotlin {
-	const val version = "1.7.10"
-	const val kspVersion = "1.7.10-1.0.6"
+	const val version = "1.7.20"
+	const val kspVersion = "1.7.20-1.0.8"
 }
 
 object WorkManager {
