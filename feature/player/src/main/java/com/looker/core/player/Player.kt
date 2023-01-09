@@ -7,24 +7,13 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateInt
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,20 +25,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.looker.core.common.states.SheetsState
-import com.looker.core.service.extensions.toSong
-import com.looker.core.ui.components.AnimatedText
-import com.looker.core.ui.components.HowlImage
-import com.looker.core.ui.components.OpaqueIconButton
-import com.looker.core.ui.components.overBackground
-import com.looker.core.ui.components.rememberDominantColorState
-import com.looker.core.ui.ext.backgroundGradient
-import com.looker.core.player.components.AlbumArt
-import com.looker.core.player.components.PlayAndSkipButton
-import com.looker.core.player.components.PlayPauseIcon
-import com.looker.core.player.components.PreviousAndSeekBar
-import com.looker.core.player.components.SeekBar
-import com.looker.core.player.components.SongText
+import com.looker.core.player.components.*
 import com.looker.core.player.queue.PlayerQueue
+import com.looker.core.service.extensions.toSong
+import com.looker.core.ui.components.*
+import com.looker.core.ui.ext.backgroundGradient
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -134,6 +114,7 @@ fun PlayerHeader(
 			}
 		}
 		SongText {
+			WaterMark(text = currentSong.toSong.name)
 			AnimatedText(
 				text = currentSong.toSong.name,
 				style = MaterialTheme.typography.h2,
@@ -142,7 +123,7 @@ fun PlayerHeader(
 			AnimatedText(
 				text = currentSong.toSong.artist,
 				style = MaterialTheme.typography.h4,
-				textColor = LocalContentColor.current.copy(0.8f)
+				textColor = LocalContentColor.current.copy(0.7f)
 			)
 		}
 		PlayerQueue()

@@ -1,20 +1,51 @@
 package com.looker.core.ui.components
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFontFamilyResolver
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun WaterMark(text: String, style: TextStyle = MaterialTheme.typography.h1) {
+	val textMeasurer = TextMeasurer(
+		LocalFontFamilyResolver.current,
+		LocalDensity.current,
+		LocalLayoutDirection.current
+	)
+	val result = textMeasurer.measure(
+		AnnotatedString(
+			text = text, spanStyle = SpanStyle(
+				color = LocalContentColor.current.copy(0.07f),
+				fontSize = style.fontSize,
+				fontWeight = style.fontWeight,
+				fontStyle = style.fontStyle,
+				fontFamily = style.fontFamily,
+				letterSpacing = style.letterSpacing
+			)
+		)
+	)
+	Canvas(Modifier.fillMaxWidth()) {
+		drawText(textLayoutResult = result)
+	}
+}
 
 @Composable
 fun AnimatedText(

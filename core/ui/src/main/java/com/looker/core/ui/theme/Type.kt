@@ -22,7 +22,7 @@ val HowlTypography = Typography(
 		fontFamily = Poppin,
 		fontWeight = FontWeight.SemiBold,
 		fontStyle = FontStyle.Italic,
-		fontSize = 34.sp,
+		fontSize = 56.sp,
 		letterSpacing = (-1).sp
 	),
 	h2 = TextStyle(

@@ -104,7 +104,7 @@ fun OnBoardContent(
 
 			Text(
 				text = bannerText,
-				style = MaterialTheme.typography.h1,
+				style = MaterialTheme.typography.h2,
 				textAlign = TextAlign.Center
 			)
 
