@@ -65,7 +65,7 @@ fun Home(
 
 	Backdrop(
 		state = state,
-		isPlaying = {
+		peekHeight = {
 			val expandedHeight =
 				WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 270.dp
 			val isPlaying by viewModel.isPlaying.collectAsState()

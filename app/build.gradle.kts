@@ -10,7 +10,7 @@ apply<DefaultConfig>()
 android {
 	compileSdk = Android.compileSdk
 	buildToolsVersion = "33.0.0"
-	namespace = "com.looker.howlmusic"
+	namespace = Android.appId
 
 	kotlinOptions {
 		freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
@@ -19,6 +19,9 @@ android {
 }
 
 dependencies {
+	val composeBom = platform(Compose.composeBom)
+	implementation(composeBom)
+
 	implementation(project(Modules.featurePlayer))
 	implementation(project(Modules.featureSong))
 	implementation(project(Modules.featureAlbum))

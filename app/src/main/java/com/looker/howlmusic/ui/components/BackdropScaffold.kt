@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.Dp
 fun Backdrop(
 	modifier: Modifier = Modifier,
 	state: BackdropScaffoldState,
-	isPlaying: @Composable () -> Dp = { BackdropScaffoldDefaults.PeekHeight },
+	peekHeight: @Composable () -> Dp = { BackdropScaffoldDefaults.PeekHeight },
 	header: @Composable () -> Unit,
 	backLayerContent: @Composable () -> Unit,
 	frontLayerContent: @Composable () -> Unit
@@ -19,7 +19,7 @@ fun Backdrop(
 		modifier = modifier,
 		scaffoldState = state,
 		appBar = header,
-		peekHeight = isPlaying(),
+		peekHeight = peekHeight(),
 		backLayerContent = backLayerContent,
 		frontLayerContent = frontLayerContent,
 		backLayerBackgroundColor = MaterialTheme.colors.background,

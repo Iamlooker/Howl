@@ -9,23 +9,24 @@ object Coil {
 }
 
 object Compose {
+	const val composeBom = "androidx.compose:compose-bom:2023.01.00"
 	const val composeCompiler = "1.3.2"
-	private const val composeVersion = "1.3.1"
+	private const val composeVersion = "1.3.3"
 	private const val activityComposeVersion = "1.6.1"
 	private const val navigationVersion = "2.5.3"
 	private const val material3Version = "1.0.1"
 
 	const val activity = "androidx.activity:activity-compose:$activityComposeVersion"
 
-	const val animation = "androidx.compose.animation:animation:$composeVersion"
-	const val foundation = "androidx.compose.foundation:foundation:$composeVersion"
-	const val icons = "androidx.compose.material:material-icons-extended:$composeVersion"
-	const val material = "androidx.compose.material:material:$composeVersion"
+	const val animation = "androidx.compose.animation:animation"
+	const val foundation = "androidx.compose.foundation:foundation"
+	const val icons = "androidx.compose.material:material-icons-extended"
+	const val material = "androidx.compose.material:material"
 	const val material3 = "androidx.compose.material3:material3:$material3Version"
-	const val tooling = "androidx.compose.ui:ui-tooling:$composeVersion"
-	const val preview = "androidx.compose.ui:ui-tooling-preview:$composeVersion"
-	const val ui = "androidx.compose.ui:ui:$composeVersion"
-	const val runtime = "androidx.compose.runtime:runtime:$composeVersion"
+	const val tooling = "androidx.compose.ui:ui-tooling"
+	const val preview = "androidx.compose.ui:ui-tooling-preview"
+	const val ui = "androidx.compose.ui:ui"
+	const val runtime = "androidx.compose.runtime:runtime"
 	const val navigation = "androidx.navigation:navigation-compose:$navigationVersion"
 }
 
