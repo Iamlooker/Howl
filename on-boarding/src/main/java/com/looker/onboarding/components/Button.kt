@@ -1,5 +1,6 @@
 package com.looker.onboarding.components
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,23 +11,22 @@ import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.looker.onboarding.utils.PermissionButtonState
 
 @Composable
-fun AnimatedButton(
-	buttonText: String,
-	buttonIcon: @Composable () -> Unit,
-	buttonColor: Color,
-	onClick: () -> Unit,
+fun PermissionButton(
+	buttonState: PermissionButtonState,
+	onClick: () -> Unit
 ) {
-
+	val color by animateColorAsState(buttonState.color.copy(0.4f))
 	OutlinedButton(
 		onClick = onClick,
-		colors = buttonColors(backgroundColor = buttonColor.copy(0.4f)),
+		colors = buttonColors(color),
 		shape = CircleShape,
 		contentPadding = PaddingValues(vertical = 20.dp, horizontal = 30.dp)
 	) {
@@ -35,10 +35,10 @@ fun AnimatedButton(
 			horizontalArrangement = Arrangement.spacedBy(5.dp),
 			verticalAlignment = Alignment.CenterVertically
 		) {
-			buttonIcon()
+			buttonState.icon()
 			Text(
 				text = AnnotatedString(
-					text = buttonText
+					text = buttonState.text
 				),
 				modifier = Modifier.animateContentSize()
 			)

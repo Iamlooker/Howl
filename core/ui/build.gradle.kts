@@ -22,6 +22,9 @@ android {
 }
 
 dependencies {
+	val composeBom = platform(Compose.composeBom)
+	implementation(composeBom)
+
 	api(project(Modules.coreModel))
 	api(project(Modules.coreCommon))
 

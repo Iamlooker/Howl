@@ -20,8 +20,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.looker.onboarding.components.AnimatedButton
-import com.looker.onboarding.utils.ButtonState
+import com.looker.onboarding.components.PermissionButton
+import com.looker.onboarding.utils.PermissionButtonState
 import com.looker.onboarding.utils.checkReadPermission
 import com.looker.onboarding.utils.handlePermissions
 import kotlinx.coroutines.delay
@@ -69,7 +69,7 @@ fun OnBoardingPage(
 @Composable
 fun OnBoard(
 	bannerText: AnnotatedString,
-	buttonState: ButtonState,
+	buttonState: PermissionButtonState,
 	onClick: () -> Unit,
 ) {
 	OnBoardContent(
@@ -83,13 +83,11 @@ fun OnBoard(
 @Composable
 fun OnBoardContent(
 	bannerText: AnnotatedString,
-	buttonState: ButtonState,
+	buttonState: PermissionButtonState,
 	painter: Painter,
 	onClick: () -> Unit,
 ) {
-	Surface(
-		modifier = Modifier.fillMaxSize()
-	) {
+	Surface {
 		Column(
 			modifier = Modifier.fillMaxSize(),
 			verticalArrangement = Arrangement.SpaceEvenly,
@@ -108,10 +106,8 @@ fun OnBoardContent(
 				textAlign = TextAlign.Center
 			)
 
-			AnimatedButton(
-				buttonText = buttonState.text,
-				buttonIcon = buttonState.icon,
-				buttonColor = buttonState.color,
+			PermissionButton(
+				buttonState = buttonState,
 				onClick = onClick
 			)
 		}

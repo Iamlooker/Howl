@@ -23,6 +23,9 @@ android {
 }
 
 dependencies {
+	val composeBom = platform(Compose.composeBom)
+	implementation(composeBom)
+
 	implementation(project(Modules.coreCommon))
 	implementation(project(Modules.coreData))
 	implementation(project(Modules.coreNavigation))
