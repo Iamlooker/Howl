@@ -76,11 +76,11 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
-private const val waveWidth = 75F
-private const val waveHeight = 10F
+private const val waveWidth = 50F
+private const val waveHeight = 	5F
 
 internal val ThumbRadius = 8.dp
-internal val TrackHeight = 4.dp
+internal val TrackHeight = 5.dp
 private val SliderHeight = 48.dp
 private val SliderMinWidth = 144.dp
 
