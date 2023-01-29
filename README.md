@@ -30,6 +30,11 @@
 <a href='https://play.google.com/store/apps/details?id=com.looker.howlmusic'><img alt='Get it on Google Play' src='https://f-droid.org/badge/get-it-on.png' width="323" height="125"/></a>
 <a href='https://play.google.com/store/apps/details?id=com.looker.howlmusic'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="323" height="125"/></a>
 
+## :scroll: Licence
+You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications
+to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build &
+install instructions.
+
 ## :wave: Contribute
 ### Check out our [Telegram channel](https://telegram.me/IamlookerBuilds)
 ### Pull Requests are always welcomed!
