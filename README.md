@@ -16,7 +16,7 @@
 
 - Minimal Layout With Amazing Transitions 
 
-- More Comming Soon
+- More Coming Soon
 
 ## :camera: Screenshots
 
