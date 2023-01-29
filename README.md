@@ -6,6 +6,14 @@
 
 ### A *sleek* and *minimal* offline music player made with love
 
+---
+<img src="metadata/en-US/images/phoneScreenshots/image1.jpeg" width="19%" alt="Now Playing" />
+<img src="metadata/en-US/images/phoneScreenshots/image2.jpeg" width="19%" alt="Text1" />
+<img src="metadata/en-US/images/phoneScreenshots/image3.jpeg" width="19%" alt="Songs" />
+<img src="metadata/en-US/images/phoneScreenshots/image4.jpeg" width="19%" alt="Text2" />
+<img src="metadata/en-US/images/phoneScreenshots/image5.jpeg" width="19%" alt="Albums" />
+---
+
 <div align="left">
 
 ## :package: Features 
@@ -18,26 +26,10 @@
 
 - More Coming Soon
 
-## :camera: Screenshots
-
-<img src="metadata/en-US/images/phoneScreenshots/image1.jpeg" width="19%" alt="Now Playing" />
-
-<img src="metadata/en-US/images/phoneScreenshots/image2.jpeg" width="19%" alt="Text1" />
-
-<img src="metadata/en-US/images/phoneScreenshots/image3.jpeg" width="19%" alt="Songs" />
-
-<img src="metadata/en-US/images/phoneScreenshots/image4.jpeg" width="19%" alt="Text2" />
-
-<img src="metadata/en-US/images/phoneScreenshots/image5.jpeg" width="19%" alt="Albums" />
-
-  
 ## :iphone: Download
-
-### [F-Droid](https://apt.izzysoft.de/fdroid/index/apk/com.looker.howlmusic)
-### [Google Play](https://play.google.com/store/apps/details?id=com.looker.howlmusic)
-### [Telegram channel](https://telegram.me/IamlookerBuilds)
-
+<a href='https://play.google.com/store/apps/details?id=com.looker.howlmusic'><img alt='Get it on Google Play' src='https://f-droid.org/badge/get-it-on.png' width="323" height="125"/></a>
+<a href='https://play.google.com/store/apps/details?id=com.looker.howlmusic'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="323" height="125"/></a>
 
 ## :wave: Contribute
-
+### Check out our [Telegram channel](https://telegram.me/IamlookerBuilds)
 ### Pull Requests are always welcomed!
