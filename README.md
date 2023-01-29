@@ -4,18 +4,19 @@
 
 # Howl Music Player
 
-### A sleek and minimal offline music player made with love
+### A *sleek* and *minimal* offline music player made with love
 
 <div align="left">
 
 ## :package: Features 
 
-- Sleek and responsive UI , following material design
+- Sleek and Responsive UI
 
-- Minimal layout with amazing transitions 
+- Material Design
 
-- More will be added as it grows
+- Minimal Layout With Amazing Transitions 
 
+- More Comming Soon
 
 ## :camera: Screenshots
 
@@ -32,7 +33,9 @@
   
 ## :iphone: Download
 
-### Download test apks from [Telegram channel](https://telegram.me/IamlookerBuilds)
+### [F-Droid](https://apt.izzysoft.de/fdroid/index/apk/com.looker.howlmusic)
+### [Google Play](https://play.google.com/store/apps/details?id=com.looker.howlmusic)
+### [Telegram channel](https://telegram.me/IamlookerBuilds)
 
 
 ## :wave: Contribute
