@@ -17,6 +17,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.Title
 import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,15 +39,35 @@ fun OrderChips(
 	Row(
 		modifier = modifier
 			.horizontalScroll(state = rememberScrollState())
-			.padding(horizontal = 8.dp)
+			.padding(horizontal = 2.dp)
 			.background(MaterialTheme.colors.background),
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.spacedBy(4.dp)
 	) {
-		OrderChip(text = "Title", isSelected = order is SongOrder.Title) {
+		OrderChip(
+			text = "Title",
+			isSelected = order is SongOrder.Title,
+			icon = {
+				Icon(
+					imageVector = Icons.Rounded.Title,
+					contentDescription = null
+				)
+			}
+		) {
 			onOrderChange(SongOrder.Title(order.order))
+
 		}
-		OrderChip(text = "Duration", isSelected = order is SongOrder.Duration) {
+		OrderChip(
+			text = "Duration",
+			isSelected = order is SongOrder.Duration,
+			icon = {
+				Icon(
+					modifier = Modifier.rotate(180f),
+					imageVector = Icons.Rounded.Schedule,
+					contentDescription = null
+				)
+			},
+			) {
 			onOrderChange(SongOrder.Duration(order.order))
 		}
 		Spacer(

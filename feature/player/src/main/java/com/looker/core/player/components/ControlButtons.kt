@@ -14,43 +14,21 @@ import com.looker.core.ui.components.OpaqueIconButton
 import com.looker.core.ui.ext.translate
 import com.looker.core.ui.components.overBackground
 
-@Composable
-fun PlayAndSkipButton(
-	modifier: Modifier = Modifier,
-	skipNextClick: () -> Unit,
-	playButton: @Composable RowScope.() -> Unit
-) {
-	Row(
-		modifier = modifier.fillMaxWidth(),
-		horizontalArrangement = Arrangement.spacedBy(20.dp)
-	) {
-		val interactionSource = remember { MutableInteractionSource() }
-		playButton()
-		OpaqueIconButton(
-			modifier = Modifier
-				.height(60.dp)
-				.weight(1f)
-				.translate(interactionSource, maxX = 10f),
-			onClick = skipNextClick,
-			interactionSource = interactionSource,
-			backgroundColor = MaterialTheme.colors.secondaryVariant.overBackground(0.9f),
-			contentColor = MaterialTheme.colors.onSecondary,
-			icon = Icons.Rounded.SkipNext
-		)
-	}
-}
 
 @Composable
-fun PreviousAndSeekBar(
+fun MediaControls(
 	modifier: Modifier = Modifier,
 	skipPrevClick: () -> Unit,
-	progressBar: @Composable () -> Unit
-) {
+	skipNextClick: () -> Unit,
+	playButton: @Composable RowScope.() -> Unit
+){
 	Row(
 		modifier = modifier.fillMaxWidth(),
 		horizontalArrangement = Arrangement.spacedBy(20.dp)
 	) {
 		val interactionSource = remember { MutableInteractionSource() }
+
+
 		OpaqueIconButton(
 			modifier = Modifier
 				.height(60.dp)
@@ -62,8 +40,19 @@ fun PreviousAndSeekBar(
 			contentColor = MaterialTheme.colors.onSecondary,
 			icon = Icons.Rounded.SkipPrevious
 		)
-		Box(modifier = Modifier.weight(3f)) {
-			progressBar()
-		}
+
+		playButton()
+
+		OpaqueIconButton(
+			modifier = Modifier
+				.height(60.dp)
+				.weight(1f)
+				.translate(interactionSource, maxX = 10f),
+			onClick = skipNextClick,
+			interactionSource = interactionSource,
+			backgroundColor = MaterialTheme.colors.secondaryVariant.overBackground(0.9f),
+			contentColor = MaterialTheme.colors.onSecondary,
+			icon = Icons.Rounded.SkipNext
+		)
 	}
 }

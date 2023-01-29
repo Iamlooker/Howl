@@ -114,7 +114,6 @@ fun PlayerHeader(
 			}
 		}
 		SongText {
-			/* WaterMark(text = currentSong.toSong.name) */
 			AnimatedText(
 				text = currentSong.toSong.name,
 				style = MaterialTheme.typography.h2,
@@ -142,13 +141,13 @@ fun Controls(
 		modifier = modifier.padding(20.dp),
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
-			SeekBar(
-				modifier = Modifier.height(60.dp),
-				progress = { progress },
-				onValueChange = viewModel::onSeek,
-				onValueChanged = viewModel::onSeeked
-			)
-		PlayAndSkipButton(skipNextClick = viewModel::playNext) {
+		SeekBar(
+			modifier = Modifier.height(60.dp),
+			progress = { progress },
+			onValueChange = viewModel::onSeek,
+			onValueChanged = viewModel::onSeeked
+		)
+		MediaControls(skipPrevClick = viewModel::playPrevious, skipNextClick = viewModel::playNext){
 			val buttonShape by animateIntAsState(targetValue = if (isPlaying) 50 else 15)
 			OpaqueIconButton(
 				modifier = Modifier
