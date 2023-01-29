@@ -11,7 +11,7 @@ fun AlbumArt(
 	button: @Composable BoxScope.() -> Unit,
 	image: @Composable BoxScope.() -> Unit
 ) {
-	Box(modifier = modifier.padding(horizontal = 20.dp)) {
+	Box(modifier = modifier.padding(horizontal = 5.dp)) {
 		image()
 		button()
 	}

@@ -114,7 +114,7 @@ fun PlayerHeader(
 			}
 		}
 		SongText {
-			WaterMark(text = currentSong.toSong.name)
+			/* WaterMark(text = currentSong.toSong.name) */
 			AnimatedText(
 				text = currentSong.toSong.name,
 				style = MaterialTheme.typography.h2,
@@ -142,6 +142,14 @@ fun Controls(
 		modifier = modifier.padding(20.dp),
 		verticalArrangement = Arrangement.spacedBy(20.dp)
 	) {
+		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
+			SeekBar(
+				modifier = Modifier.height(60.dp),
+				progress = { progress },
+				onValueChange = viewModel::onSeek,
+				onValueChanged = viewModel::onSeeked
+			)
+		}
 		PlayAndSkipButton(skipNextClick = viewModel::playNext) {
 			val buttonShape by animateIntAsState(targetValue = if (isPlaying) 50 else 15)
 			OpaqueIconButton(
@@ -159,14 +167,6 @@ fun Controls(
 			) {
 				PlayPauseIcon { playIcon }
 			}
-		}
-		PreviousAndSeekBar(skipPrevClick = viewModel::playPrevious) {
-			SeekBar(
-				modifier = Modifier.height(60.dp),
-				progress = { progress },
-				onValueChange = viewModel::onSeek,
-				onValueChanged = viewModel::onSeeked
-			)
 		}
 	}
 }

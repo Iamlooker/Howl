@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+/*
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun WaterMark(text: String, style: TextStyle = MaterialTheme.typography.h1) {
@@ -46,6 +47,7 @@ fun WaterMark(text: String, style: TextStyle = MaterialTheme.typography.h1) {
 		drawText(textLayoutResult = result)
 	}
 }
+*/
 
 @Composable
 fun AnimatedText(
