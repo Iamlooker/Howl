@@ -39,3 +39,5 @@ install instructions.
 ## :wave: Contribute
 ### Check out our [Telegram channel](https://telegram.me/IamlookerBuilds)
 ### Pull Requests are always welcomed!
+
+</div>
