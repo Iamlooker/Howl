@@ -14,6 +14,7 @@
 <img src="metadata/en-US/images/phoneScreenshots/image5.jpeg" width="19%" alt="Albums" />
 ---
 
+</div>
 <div align="left">
 
 ## :package: Features 
