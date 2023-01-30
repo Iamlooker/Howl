@@ -41,5 +41,3 @@ install instructions.
 ### Pull Requests are always welcomed!
 
 </div>
-
-Git Test
