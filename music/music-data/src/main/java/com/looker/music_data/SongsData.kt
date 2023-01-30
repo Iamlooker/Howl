@@ -16,7 +16,8 @@ class SongsData(private val context: Context) {
 			MediaStore.Audio.AudioColumns.TITLE,
 			MediaStore.Audio.AudioColumns.ARTIST,
 			MediaStore.Audio.AudioColumns.ALBUM,
-			MediaStore.Audio.AudioColumns.DURATION
+			MediaStore.Audio.AudioColumns.DURATION,
+			MediaStore.Audio.AudioColumns.TRACK
 		)
 		const val sortOrderSong = MediaStore.Audio.Media.TITLE + " COLLATE NOCASE ASC"
 	}
@@ -41,6 +42,7 @@ class SongsData(private val context: Context) {
 						val artistName = cursor.getString(3) ?: ""
 						val albumName = cursor.getString(4) ?: ""
 						val songDurationMillis = cursor.getLong(5)
+						val trackNumber = cursor.getInt(6)
 						val songUri = "$externalUri/$songId"
 						val albumArt = "content://media/external/audio/albumart/$albumId"
 						val song = async {
@@ -48,11 +50,12 @@ class SongsData(private val context: Context) {
 								mediaId = songId.toString(),
 								albumId = albumId,
 								pathUri = songUri,
-								name = songName,
+								name = trackNumber.toString(),
 								artist = artistName,
 								album = albumName,
 								duration = songDurationMillis,
-								albumArt = albumArt
+								albumArt = albumArt,
+								trackNum = trackNumber
 							)
 						}
 						songs.add(song)
