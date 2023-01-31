@@ -117,6 +117,9 @@ fun FrontLayer(
 				onNavigate = topLevelNavigation::navigateUp
 			)
 		},
+
+
+		/*
 		floatingActionButton = {
 			OpaqueIconButton(
 				backgroundColor = MaterialTheme.colors.primaryVariant.overBackground(),
@@ -125,7 +128,10 @@ fun FrontLayer(
 				shape = MaterialTheme.shapes.small,
 				icon = Icons.Rounded.KeyboardArrowDown
 			)
+
 		}
+		 */
+	
 	) { bottomNavigationPadding ->
 		Column(Modifier.padding(bottomNavigationPadding)) {
 			HandleIcon(onClick = openPlayer, angle = handleIcon)

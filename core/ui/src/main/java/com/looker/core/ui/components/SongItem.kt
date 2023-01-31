@@ -20,7 +20,7 @@ fun SongItem(
 		imageUrl = song.albumArt,
 		title = song.name,
 		subText = song.artist,
-		imageSize = 56.dp,
+		imageSize = 64.dp,
 		onClick = onClick
 	)
 }

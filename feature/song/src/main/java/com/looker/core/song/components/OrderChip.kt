@@ -16,8 +16,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.looker.core.common.OrderType
 import com.looker.core.common.order.SongOrder
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -40,12 +40,28 @@ fun OrderChips(
 			.padding(horizontal = 8.dp)
 			.background(MaterialTheme.colors.background),
 		verticalAlignment = Alignment.CenterVertically,
-		horizontalArrangement = Arrangement.spacedBy(4.dp)
+		horizontalArrangement = Arrangement.spacedBy(5.dp)
 	) {
-		OrderChip(text = "Title", isSelected = order is SongOrder.Title) {
+		OrderChip(
+			text = "Title",
+			isSelected = order is SongOrder.Title,
+			icon = {
+				Icon(
+					imageVector = Icons.Rounded.Title,
+					contentDescription = null
+				)
+			}) {
 			onOrderChange(SongOrder.Title(order.order))
 		}
-		OrderChip(text = "Duration", isSelected = order is SongOrder.Duration) {
+		OrderChip(
+			text = "Duration",
+			isSelected = order is SongOrder.Duration,
+			icon = {
+				Icon(
+					imageVector = Icons.Rounded.Schedule,
+					contentDescription = null
+				)
+			}) {
 			onOrderChange(SongOrder.Duration(order.order))
 		}
 		Spacer(
@@ -54,11 +70,15 @@ fun OrderChips(
 				.width(1.dp)
 				.background(MaterialTheme.colors.onBackground)
 		)
+
 		OrderChip(
 			text = "Ascending",
 			isSelected = order.order is OrderType.Ascending,
 			icon = {
-				Icon(imageVector = Icons.Rounded.FilterList, contentDescription = null)
+				Icon(
+					imageVector = Icons.Rounded.FilterList,
+					modifier = Modifier.rotate(180f),
+					contentDescription = null)
 			}
 		) {
 			onOrderChange(order.copy(OrderType.Ascending))
@@ -68,7 +88,6 @@ fun OrderChips(
 			isSelected = order.order is OrderType.Descending,
 			icon = {
 				Icon(
-					modifier = Modifier.rotate(180f),
 					imageVector = Icons.Rounded.FilterList,
 					contentDescription = null
 				)
@@ -95,7 +114,7 @@ fun OrderChip(
 	) {
 		if (isSelected) {
 			Icon(imageVector = Icons.Rounded.Done, contentDescription = null)
-		} else if (!isSelected && icon != null) {
+		} else if (icon != null) {
 			icon()
 		}
 		Spacer(modifier = Modifier.width(4.dp))
